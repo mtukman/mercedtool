@@ -1123,26 +1123,11 @@ def RastersToPoints(Raster,ValueField,OutputName):
     print ('Doing: ' + Raster)
     arcpy.RasterToPoint_conversion(Raster,tempgdb+OutputName,ValueField)
 
-def Clean_Near_Tables():
-    import arcpy
-    import Generic
-    from arcpy import env
-    #Set the Variables
-    ws = 'E:/Temp'
-    arcpy.env.workspace = ws
-    arcpy.env.overwriteOutput = 1
-
-
-def FlagCalc (InputPoints,InputFlagLayer,Output):
-    import arcpy
-    arcpy.MakeFeatureLayer_management(InputPoints,'temp')
-    arcpy.CalculateField_management('temp','flag',0,'PYTHON_9.3')
-    arcpy.SelectLayerByLocation_management('temp','INTERSECT',InputFlagLayer,"",'NEW_SELECTION')
-    arcpy.CalculateField_management('temp','flag',1,'PYTHON_9.3')
-    arcpy.CopyFeatures_management(InputPoints,Output)
-
-
-def LoadMBAs(infolder):
+def LoadCSVs(infolder):
+    """
+    This function takes a folder, and reads every csv in it into a dataframe
+    and appends those dataframes to a list (dflist).
+    """
     import arcpy
     import Generic
     from arcpy import env
@@ -1151,9 +1136,10 @@ def LoadMBAs(infolder):
     arcpy.env.workspace = ws
     arcpy.env.overwriteOutput = 1
     list1 = arcpy.ListTables()
-    global temp
+    global dflist
+    dflist = []
     for i in list1:
-        temp.append(pd.read_csv(ws+ "/" +i))
+        dflist.append(pd.read_csv(ws+ "/" +i))
 
 def FCtoCSV_Single (inputfc,Outpath):
     """
@@ -1170,7 +1156,7 @@ def FCtoCSV_Single (inputfc,Outpath):
     table = inputfc
     outfile = Outpath
 
-#--first lets make a list of all of the fields in the table
+    #--first lets make a list of all of the fields in the table
     fields = arcpy.ListFields(table)
     field_names = [field.name for field in fields]
     print (fields)
@@ -1186,13 +1172,12 @@ def FCtoCSV_Single (inputfc,Outpath):
             for row in cursor:
                 dw.writerow(dict(zip(field_names,row)))
 
-def Merge2csvs(inputcsv1,origcol,newcol,inputcsv2,mergefield,outputcsv):
+def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol = 'none'):
     """
-    This function combines CSVs created by turning rasters into point layers, and
-    by then writing the tables of those point layers into CSVs.
+    This function combines 2 CSVs into a new csv by reading them into pandas dataframes, renaming the
+    column in one if necessary to match the key column names, then merging on the key field.
 
-    The function reviews the CSVs for errors, and if there are no error, the function merges the CSVs on the
-    'pointid' field and saves them to the specified output csv.
+    The reulting merged dataframe is written to the specified CSV.
     """
 
     import arcpy
@@ -1205,14 +1190,17 @@ def Merge2csvs(inputcsv1,origcol,newcol,inputcsv2,mergefield,outputcsv):
     temp = []
     df1 = pd.read_csv(inputcsv1)
     df2 = pd.read_csv(inputcsv2)
-    df1 = df1.rename(columns={origcol : newcol})
+
+    #if the column needs to be changed for the join to work rename it
+    if origcol != 'none':
+        df1 = df1.rename(columns={origcol : newcol})
     result = pd.merge(df1, df2, on=mergefield)
     result.to_csv(outputcsv)
 
 
 def CombineChangeFlag(list1, list2):
     #test comment
-#  This is stubbed out for tukman to work on 
+#  This is stubbed out for tukman to work on
 #    from random import *
 #    randBinList = lambda n: [randint(0,1) for b in range(1,n+1)]
 #
