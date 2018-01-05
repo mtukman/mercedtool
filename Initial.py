@@ -3,6 +3,7 @@ import arcpy
 from arcpy import env
 import Generic
 global pts
+import os
 Generic.set_paths_and_workspaces()
 arcpy.env.overwriteOutput = True
 arcpy.env.extent = Generic.MASK
@@ -13,20 +14,16 @@ import gc
 gc.collect()
 
 
-Generic.LoadCSVs(folder)
-Generic.MergeMultiDF(JoinField,OutputDF, dflist)
+jointables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'JoinTables'))
+value_df = Generic.MergeMultiDF('pointid', jointables)
 
-Generic.LoadCSVs(folder)
-Generic.MergeMultiDF(JoinField,OutputDF, dflist)
 
-Generic.LoadCSVs(folder)
-Generic.MergeMultiDF(JoinField,OutputDF, dflist)
+neartables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'NearTables'))
+near_df = Generic.MergeMultiDF('pointid', neartables)
 
-Generic.LoadCSVs(folder)
-Generic.MergeMultiDF(JoinField,OutputDF, dflist)
 
-carb01 = pd.read_csv()
-carb14 = pd.read_csv()
-carb30 = pd.read_csv()
-#create a dataframe with
+##carb01 = pd.read_csv()
+##carb14 = pd.read_csv()
+##carb30 = pd.read_csv()
+
 

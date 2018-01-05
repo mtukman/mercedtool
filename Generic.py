@@ -1053,12 +1053,13 @@ def Clean_Table (csv,idfield,valuefield = 'TEST',keepfields = [], renamefields =
     #    df.sort_values(idfield,inplace = True)
     df.to_csv(csv)
 
-def MergeMultiDF(JoinField,OutputDF, dflist):
+def MergeMultiDF(JoinField, dflist):
     '''Takes a list of dataframes and joins them on a common field'''
     #mba = pd.concat(temp, axis = 1)
     mba = functools.reduce(lambda left,right: pd.merge(left, right,on=JoinField), dflist)
     OutputDF = mba.loc[:, ~mba.columns.str.contains('^Unnamed')]
     return OutputDF
+
 
 #Make MBA Raster
 def MakeMBARaster(LUT,OutputPath,JoinKey,TargetKey,Lfield):
@@ -1111,6 +1112,22 @@ def LoadCSVs(infolder):
     for i in list1:
         dflist.append(pd.read_csv(os.path.join(ws, i)))
     return dflist
+
+def LoadCSVs(incsv):
+    """
+    This function takes a folder, and reads every csv in it into a dataframe
+    and appends those dataframes to a list (dflist).
+    """
+    import arcpy
+    import Generic
+    import os
+    from arcpy import env
+    #Set the Variables
+    ws = infolder
+    arcpy.env.workspace = ws
+    arcpy.env.overwriteOutput = 1
+    dftemp = pd.read_csv(incsv)
+    return dftemp
 
 
 def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol = 'none'):
