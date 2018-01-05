@@ -18,7 +18,7 @@ jointables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'JoinTables'))
 value_df = Generic.MergeMultiDF('pointid', jointables)
 
 
-neartables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'NearTables'))
+neartables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'NearTables/new'))
 near_df = Generic.MergeMultiDF('pointid', neartables)
 
 

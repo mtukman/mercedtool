@@ -52,7 +52,7 @@ Generic.set_paths_and_workspaces()
 ##Generic.Merge2csvs('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/vector_tables/wetlands.csv','OBJECTID','NEAR_FID','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/NearTables/env_near_wetlands.csv','NEAR_FID','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/NearTables/env_near_wetlands_full.csv')
 ##
 ##
-##Clean Near Tables
+##Clean Near Tables Clean_Table (csv,idfield,valuefield = 'TEST',keepfields = [], renamefields = [],length)
 ##Generic.Clean_Table(Generic.Neartabs + 'NearTable_Wet.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
 ##Generic.Clean_Table(Generic.Neartabs + 'NearTable_Rivers.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
 ##Generic.Clean_Table(Generic.Neartabs + 'NearTable_Rip.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
@@ -62,6 +62,7 @@ Generic.set_paths_and_workspaces()
 ##Generic.Clean_Table(Generic.Neartabs + 'NearTable_WoodyCrop.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
 ##Generic.Clean_Table(Generic.Neartabs + 'NearTable_CPAD.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
 ##Generic.Clean_Table(Generic.Neartabs + 'NearTable_FEMA.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
+Generic.Clean_Table("E:/mercedtool/MASTER_DATA/ValueTables/NearTables/env_near_parks.csv",'IN_FID',20000,keepfields = ['IN_FID','NEAR_DIST'],renamefields = [('IN_FID','pointid'),('NEAR_DIST','near_parks')])
 ##
 ##
 ##Create Spatial Join Lookups
@@ -78,8 +79,8 @@ Generic.set_paths_and_workspaces()
 ##FCs to CSVs
 ##Generic.FCstoCSVs(Generic.tempgdb,Generic.Root_Mid_Path + 'ValueTables/JoinTables/)
 
-Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/HUC12','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/JoinTables/huc12.csv')
-Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/temppts.gdb/terhab','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/JoinTables/terhab.csv')
+#Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/HUC12','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/JoinTables/huc12.csv')
+#Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/temppts.gdb/terhab','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/JoinTables/terhab.csv')
 
 ##
 ##Clean Tables

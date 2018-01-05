@@ -40,7 +40,7 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     arcpy.env.cellSize = LANDFIRE2014
     arcpy.env.snapRaster = LANDFIRE2014
 
-
+    global pts
     #Set Local Variables
     ##
     #Paths
@@ -840,9 +840,9 @@ def create_processing_table(InPoints,inmask):
     import os
     import pandas as pd
     import Generic
-    global pts
     if inmask == 'D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Vectors.gdb/Mask_Dissolved':
         pts = pd.read_csv(Generic.Points_Table)
+        return pts
     else:
         pass
 ##        arcpy.MakeFeatureLayer_management(InPoints,'temp')
@@ -851,7 +851,8 @@ def create_processing_table(InPoints,inmask):
 ##        arcpy.CopyFeatures_management('temp',os.path.join(Generic.tempgdb,'' )
 ##        #fctocsv
 ##        pts = pd.read_csv(os.path.join(Generic.RDP, Generic.MP,'Temp/temp.csv'))
-    return pts
+##        return pts
+
 
 def MergeLCValues():
     import functools
@@ -1016,18 +1017,19 @@ def create_policy_knockouts(slope, outputcsv):
     Final.to_csv(outputcsv)
 
 
-def Clean_Table (csv,idfield,valuefield = 'TEST',keepfields = [], renamefields = []):
+def Clean_Table (csv,idfield,length,keepfields = [], renamefields = [],valuefield = 'TEST'):
     """
     This function takes a csv and check it for consistency (and nulls) and drops fields
     that are unwanted, and renames fields that need to be renamed
     rename fields values must be in tuples where the first value is the existing field and the 2nd value is the new field name.
     example: renamefields = [('Value','Landcover')]
     """
+    import pandas as pd
     print ('reading csv ' + valuefield)
     df = pd.read_csv(csv, usecols = keepfields)
     print ('Finished Loading DF, finding MAX')
     max = df[idfield].max()
-    if max != 5689373:
+    if max != length:
         print ("LENGTH IS WRONG")
         exit
     else:
@@ -1057,6 +1059,8 @@ def Clean_Table (csv,idfield,valuefield = 'TEST',keepfields = [], renamefields =
 def MergeMultiDF(JoinField, dflist):
     '''Takes a list of dataframes and joins them on a common field'''
     #mba = pd.concat(temp, axis = 1)
+    import pandas as pd
+    import functools
     mba = functools.reduce(lambda left,right: pd.merge(left, right,on=JoinField), dflist)
     OutputDF = mba.loc[:, ~mba.columns.str.contains('^Unnamed')]
     return OutputDF
@@ -1104,6 +1108,7 @@ def LoadCSVs(infolder):
     import Generic
     import os
     from arcpy import env
+    import pandas as pd
     #Set the Variables
     ws = infolder
     arcpy.env.workspace = ws
@@ -1112,9 +1117,14 @@ def LoadCSVs(infolder):
     dflist = []
     for i in list1:
         dflist.append(pd.read_csv(os.path.join(ws, i)))
-    return dflist
 
-def LoadCSVs(incsv):
+    newlist = []
+    for i in dflist:
+        newlist.append(i.loc[:, ~i.columns.str.contains('^Unnamed')])
+    print (newlist)
+    return newlist
+
+def LoadCSV(incsv):
     """
     This function takes a folder, and reads every csv in it into a dataframe
     and appends those dataframes to a list (dflist).
@@ -1124,9 +1134,6 @@ def LoadCSVs(incsv):
     import os
     from arcpy import env
     #Set the Variables
-    ws = infolder
-    arcpy.env.workspace = ws
-    arcpy.env.overwriteOutput = 1
     dftemp = pd.read_csv(incsv)
     return dftemp
 
