@@ -145,9 +145,9 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'D:/TGS/pro
     near_rip = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_riparian.csv')
     all_layers.append(near_rip)
 
-    global near_creek
-    near_creek = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_creeks.csv')
-    all_layers.append(near_creek)
+    global near_streams
+    near_streams = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_streams.csv')
+    all_layers.append(near_streams)
 
     global near_cpad
     near_cpad = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_cpad.csv')
@@ -996,65 +996,6 @@ def create_policy_knockouts(slope, outputcsv):
     Final.to_csv(outputcsv)
 
 
-def CombineCSVs(outputcsv):
-    """
-    This function combines CSVs created by turning rasters into point layers, and
-    by then writing the tables of those point layers into CSVs.
-
-    The function reviews the CSVs for errors, and if there are no error, the function merges the CSVs on the
-    'pointid' field and saves them to the specified output csv.
-    """
-
-    import arcpy
-    import functools
-    import pandas as pd
-    ws = "D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/MBTABLES"
-    arcpy.env.workspace = ws
-    arcpy.env.overwriteOutput = 1
-    def CSV_REVIEW (csv,idfield,valuefield,newname):
-        print ('reading csv ' + valuefield)
-        df = pd.read_csv(csv, usecols = [idfield,valuefield])
-        print ('Finished Loading DF, finding MAX')
-        max = df[idfield].max()
-        if max != 5689373:
-            print ("LENGTH IS WRONG")
-            exit
-        else:
-            pass
-        print ('Checking Uniqueness')
-        unique = df[idfield].is_unique
-        print (unique)
-        if unique is True:
-            pass
-        else:
-            print ("ID FIELD IS NOT UNIQUE")
-            exit
-        if valuefield in df:
-            if df[valuefield].dtype == 'O':
-                df[valuefield].fillna('None')
-            else:
-                df[valuefield].fillna(-9999)
-        df = df.rename(columns={valuefield: newname})
-    #    df.sort_values(idfield,inplace = True)
-        df.to_csv(csv)
-
-    CSV_REVIEW(ws+ "/" +'Landcover_2014.csv','pointid','Landcover_','LC')
-    CSV_REVIEW(ws+ "/" +'Merced_Slope.csv','pointid','grid_code','SLP')
-    CSV_REVIEW(ws+ "/" +'Nitrate_2001.csv','pointid','Nitrate_Va','N2V')
-    CSV_REVIEW(ws+ "/" +'Viewshed.csv','pointid','grid_code','View')
-    CSV_REVIEW(ws+ "/" +'WaterDemand2014.csv','pointid','grid_code','H2O')
-    CSV_REVIEW(ws+ "/" +'Crop_Value_LU.csv','pointid','grid_code','Crp_Valu')
-    #
-    templist = arcpy.ListFiles()
-    temp = []
-    for i in templist:
-        temp.append(pd.read_csv(ws+ "/" +i))
-    #mba = pd.concat(temp, axis = 1)
-    mba = functools.reduce(lambda left,right: pd.merge(left,right,on='pointid'), temp)
-    mba = mba.loc[:, ~mba.columns.str.contains('^Unnamed')]
-    mba.to_csv(outputcsv)
-
-
 def Clean_Table (csv,idfield,valuefield = 'TEST',keepfields = [], renamefields = []):
     """
     This function takes a csv and check it for consistency (and nulls) and drops fields
@@ -1100,18 +1041,22 @@ def MergeMultiDF(JoinField,OutputDF):
 
 #Make MBA Raster
 def MakeMBARaster(LUT,OutputPath,JoinKey,TargetKey,Lfield):
+    """
+    This function uses a lookup table and a raster to create a lookup raster.
+    LUT = look up table CSV
+    OutputPath = output raster
+    JoinKey =
+    """
     import arcpy
     import Generic
     from arcpy import env
-    global LC2014
-    r = LC2014
     arcpy.CheckOutExtension("Spatial")
     #Set the Variables
     ws = 'E:/Temp'
     arcpy.env.workspace = ws
     arcpy.env.overwriteOutput = 1
     print ('Making Raster Layer')
-    arcpy.MakeRasterLayer_management(r,'temp')
+    arcpy.MakeRasterLayer_management(raster,'temp')
     arcpy.AddJoin_management('temp',JoinKey,LUT,TargetKey)
     arcpy.CopyRaster_management('temp','temp2.tif')
     tempo = arcpy.sa.Lookup('temp2.tif',Lfield)
@@ -1119,6 +1064,10 @@ def MakeMBARaster(LUT,OutputPath,JoinKey,TargetKey,Lfield):
     tempo.save(OutputPath)
 
 def RastersToPoints(Raster,ValueField,OutputName):
+    """
+    This function takes a raster, a value field and an output FC name, creates a point featureclass
+    from the raster in the temp vector gdb in the Master Data Folder.
+    """
     import arcpy
     print ('Doing: ' + Raster)
     arcpy.RasterToPoint_conversion(Raster,tempgdb+OutputName,ValueField)
@@ -1198,7 +1147,7 @@ def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol 
     result.to_csv(outputcsv)
 
 
-def CombineChangeFlag(list1, list2):
+#def CombineChangeFlag(list1, list2):
     #test comment
 #  This is stubbed out for tukman to work on
 #    from random import *
@@ -1209,7 +1158,7 @@ def CombineChangeFlag(list1, list2):
 #
 #    L3 = [max(a, b) for a, b in zip(a, b)]
 
-def CreateSuitFlags(PandasQuery,TupleOut):
+#def CreateSuitFlags(PandasQuery,TupleOut):
     #import pandas as pd
 
 

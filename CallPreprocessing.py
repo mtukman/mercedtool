@@ -30,6 +30,7 @@ Generic.set_paths_and_workspaces()
 ##arcpy.GenerateNearTable_analysis(Generic.Points,Generic.vects + 'Roads', Generic.neartabs + 'env_near_roads.csv')
 ##arcpy.GenerateNearTable_analysis(Generic.Points,Generic.vects + 'FEMA', Generic.neartabs + 'env_near_fema.csv')
 ##arcpy.GenerateNearTable_analysis(Generic.Points,Generic.vects + 'CPAD', Generic.neartabs + 'env_near_cpad.csv')
+
 ##
 ##
 ##Join Near Tables to Spatial Data
@@ -71,6 +72,7 @@ Generic.set_paths_and_workspaces()
 ##arcpy.SpatialJoin_analysis (Generic.Points,Generic.vects + 'fmmp', Generic.tempgdb + 'fmmp', 'JOIN_ONE_TO_ONE', 'KEEP_ALL')
 ##arcpy.SpatialJoin_analysis (Generic.Points,Generic.vects + 'calenviro', Generic.tempgdb + 'calenviro', 'JOIN_ONE_TO_ONE', 'KEEP_ALL')
 ##arcpy.SpatialJoin_analysis (Generic.Points,Generic.vects + 'sagbi_mod', Generic.tempgdb + 'sagbi_mod', 'JOIN_ONE_TO_ONE', 'KEEP_ALL')
+arcpy.SpatialJoin_analysis (Generic.Points,'D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/New File Geodatabase (2).gdb/SeciesRangeLU_Full', Generic.tempgdb + 'terhab', 'JOIN_ONE_TO_ONE', 'KEEP_ALL')
 ##
 ##FCs to CSVs
 ##Generic.FCtoCSV(Generic.tempgdb,Generic.Root_Mid_Path + 'ValueTables/JoinTables/)
