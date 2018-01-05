@@ -14,11 +14,15 @@ import gc
 gc.collect()
 
 
-jointables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'JoinTables'))
-value_df = Generic.MergeMultiDF('pointid', jointables)
+##jointables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'JoinTables'))
+##value_df = Generic.MergeMultiDF('pointid', jointables)
+#
+#
+#neartables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'NearTables/new'))
+#near_df = Generic.MergeMultiDF('pointid', neartables)
 
 
-neartables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'NearTables/new'))
+neartables = Generic.LoadCSVs("D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/NearTables")
 near_df = Generic.MergeMultiDF('pointid', neartables)
 
 
