@@ -1211,7 +1211,7 @@ def Merge2csvs(inputcsv1,origcol,newcol,inputcsv2,mergefield,outputcsv):
 
 
 def CombineChangeFlag(list1, list2):
-
+#  This is stubbed out for tukman to work on 
 #    from random import *
 #    randBinList = lambda n: [randint(0,1) for b in range(1,n+1)]
 #
@@ -1221,7 +1221,7 @@ def CombineChangeFlag(list1, list2):
 #    L3 = [max(a, b) for a, b in zip(a, b)]
 
 def CreateSuitFlags(PandasQuery,TupleOut):
-    import pandas as pd
+    #import pandas as pd
 
 
     #open_req_list = tuple(list(open_reqs['REQ_NUM']))
