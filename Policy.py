@@ -24,6 +24,13 @@ def create_policy_knockouts(tpz, stream_buffer_dist='500 Feet',slope_threshold=5
     #arcpy.env.scratchFolder = ArcScratchFolder
     #arcpy.env.scratchGDB= ArcScratchGDB
 
+
+    #Figure out what csvs we need
+
+
+    #create the flag
+
+
     arcpy.env.overwriteOutput = True
     arcpy.env.extent = Generic.MASK
     #arcpy.env.mask = Generic.MASK

@@ -1034,10 +1034,12 @@ def Clean_Table (csv,idfield,valuefield = 'TEST',keepfields = [], renamefields =
     #    df.sort_values(idfield,inplace = True)
     df.to_csv(csv)
 
-def MergeMultiDF(JoinField,OutputDF):
+def MergeMultiDF(JoinField,OutputDF, dflist):
+'''Takes a list of dataframes and joins them on a common field'''
     #mba = pd.concat(temp, axis = 1)
-    mba = functools.reduce(lambda left,right: pd.merge(left,right,on=JoinField), temp)
+    mba = functools.reduce(lambda left,right: pd.merge(left, right,on=JoinField), dflist)
     OutputDF = mba.loc[:, ~mba.columns.str.contains('^Unnamed')]
+    return OutputDF
 
 #Make MBA Raster
 def MakeMBARaster(LUT,OutputPath,JoinKey,TargetKey,Lfield):
@@ -1079,6 +1081,7 @@ def LoadCSVs(infolder):
     """
     import arcpy
     import Generic
+    import os
     from arcpy import env
     #Set the Variables
     ws = infolder
@@ -1088,7 +1091,7 @@ def LoadCSVs(infolder):
     global dflist
     dflist = []
     for i in list1:
-        dflist.append(pd.read_csv(ws+ "/" +i))
+        dflist.append(pd.read_csv(os.path.join(ws, i))
 
 def FCtoCSV_Single (inputfc,Outpath):
     """
@@ -1163,7 +1166,6 @@ def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol 
 
 
     #open_req_list = tuple(list(open_reqs['REQ_NUM']))
-
 
 
 
