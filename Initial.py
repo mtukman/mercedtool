@@ -9,7 +9,7 @@ arcpy.env.overwriteOutput = True
 arcpy.env.extent = Generic.MASK
 
 
-Generic.create_processing_table(Generic.Points,Generic.MASK)
+pts = Generic.create_processing_table(Generic.Points,Generic.MASK)
 import gc
 gc.collect()
 

@@ -191,7 +191,7 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     all_layers.append(Air_Pollution)
 
     global Activity_LUT
-    Activity_LUT = os.path.join(root_data_path, midpath, 'LUTables/Activity_LUT.csv')
+    Activity_LUT = os.path.join(root_data_path, midpath, 'trt/trt_reductions.csv')
     all_layers.append(Activity_LUT)
 
 
@@ -833,7 +833,8 @@ Initialization
 """
 def create_processing_table(InPoints,inmask):
     """
-    This function takes the user-defined processing area, selects by location, exports a CSV file and reads the file into a global variable as a Pandas DF.
+    This function takes a point feature class (InPoints) and the user-defined processing area (inmask), selects by location
+    abd exports a CSV file and reads the file into a global variable as a Pandas DF.
     """
     import arcpy
     import os
