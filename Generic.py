@@ -1,5 +1,5 @@
 from __future__ import unicode_literals #Can Delete This
-def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedtool', mask_fc = 'D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Vectors.gdb/Test_Mask', CVA_List_L = '', midpath = 'MASTER_DATA/', output_file_loc = 'P:/Temp', run_name = 'Test', conservation_fc = ''):
+def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedtool', mask_fc = 'D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Vectors.gdb/Test_Mask', CVA_List_L = '', midpath = 'MASTER_DATA', output_file_loc = 'P:/Temp', run_name = 'Test', conservation_fc = ''):
     """Workspace must be a file .gdb and is the place where all temp files and outputs will be placed.
     root_data_path -->  This path the top level folder for the data files (e.g., D:/CLOUD/Shared/Open Space/)
     midpath -->  This path is the path to the data files from roopath down the tree (e.g., Carbon Framework/GIS Data/SAMPLE_DATA/)
@@ -26,11 +26,13 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     all_layers = []
 
     global LANDFIRE2001
-    LANDFIRE2001 = os.path.join(root_data_path, midpath, 'Rasters.gdb/LF2001_Combined')
+##    LANDFIRE2001 = os.path.join(root_data_path, midpath, 'Rasters.gdb/LF2001_Combined')
+    LANDFIRE2001 ='D:/TGS/projects/64 - Merced Carbon/Python\MercedTool/Deliverables/MASTER_DATA/Landcover_Rasters/Landcover_2001.tif'
     all_layers.append(LANDFIRE2001)
 
     global LANDFIRE2014
-    LANDFIRE2014 = os.path.join(root_data_path, midpath, 'Rasters.gdb/LF2014_Combined')
+##    LANDFIRE2014 = os.path.join(root_data_path, midpath, 'Rasters.gdb/LF2014_Combined')
+    LANDFIRE2014 ='D:/TGS/projects/64 - Merced Carbon/Python\MercedTool/Deliverables/MASTER_DATA/Landcover_Rasters/Landcover_2014.tif'
     all_layers.append(LANDFIRE2014)
 
     global SPATIAL_REFERENCE_TEXT
@@ -53,47 +55,39 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     MP = midpath
 
     global Root_Mid_Path
-    Root_Mid_Path = RDP + MP
+    Root_Mid_Path = os.path.join(RDP, MP)
 
     global tempgdb
-    tempgdb = root_data_path+midpath+'temppts.gdb/'
+    tempgdb = os.path.join(root_data_path,midpath,'temppts.gdb')
 
     global MBTABS
-    MBTABS = root_data_path+midpath+'ValueTables/MBATables/'
+    MBTABS = os.path.join(root_data_path,midpath,'ValueTables/MBATables')
 
     global neartabs
-    neartabs = root_data_path+midpath+'ValueTables/NearTables/'
+    neartabs = os.path.join(root_data_path,midpath,'ValueTables/NearTables')
 
     global vects
-    vects = root_data_path+midpath+'Vectors.gdb/'
-
-    global Fulltables
-    Fulltables = root_data_path+midpath+'ValueTables/NearTables/'
+    vects = os.path.join(root_data_path,midpath,'Vectors.gdb')
 
     global lutables
-    lutables = root_data_path+midpath+'LUTables/'
+    lutables = os.path.join(root_data_path,midpath,'LUTables')
 
     global valuetables
-    valuetables = root_data_path+midpath+'ValueTables/'
+    valuetables = os.path.join(root_data_path,midpath,'ValueTables')
 
     global WS
     WS = workspace
-
-    #Rasters
-    global LC2014
-    LC2014 = os.path.join(root_data_path, midpath, 'Landcover_Rasters/Landcover_2014.tif')
-    all_layers.append(LC2014)
 
 
 
     #Vectors
     global Points
-    Points = os.path.join(root_data_path, midpath, 'Vectors.gdb/LFC_Points_Merged')
+    Points = os.path.join('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Vectors.gdb/LFC_Points_Merged')
     all_layers.append(Points)
 
     #Tables
     global Points_Table
-    Points_Table = os.path.join(lutables + 'pointsmerged.csv')
+    Points_Table = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'pointsmerged.csv')
     all_layers.append(Points_Table)
 
     global Carbon2001
@@ -109,31 +103,33 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     all_layers.append(Carbon2030)
 
     global calenviro
-    calenviro = os.path.join(root_data_path+midpath,'ValueTables/JoinTables/', 'env_calenviro.csv')
+    calenviro = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'env_calenviro.csv')
     all_layers.append(calenviro)
 
     global fmmp
-    fmmp = os.path.join(root_data_path+midpath,'ValueTables/JoinTables/', 'env_fmmp.csv')
+    fmmp = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'env_fmmp.csv')
     all_layers.append(fmmp)
 
     global genplan
-    genplan = os.path.join(root_data_path+midpath,'ValueTables/JoinTables/', 'env_genplan.csv')
+    genplan = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'env_genplan.csv')
     all_layers.append(genplan)
 
     global hydrovuln
-    hydrovuln = os.path.join(root_data_path+midpath,'ValueTables/JoinTables/', 'env_hydrovuln.csv')
+    hydrovuln = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'env_hydrovuln.csv')
     all_layers.append(hydrovuln)
 
     global slope
-    slope = os.path.join(root_data_path+midpath,'ValueTables/JoinTables/', 'env_slope.csv')
+    slope = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'env_slope.csv')
     all_layers.append(slope)
 
     global scenic
-    scenic = os.path.join(root_data_path+midpath,'ValueTables/JoinTables/', 'env_scenic.csv')
+    scenic = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'env_scenic.csv')
     all_layers.append(scenic)
 
 
-
+    global lc
+    lc = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'env_landcovers.csv')
+    all_layers.append(lc)
 
 
     #Near Tables
@@ -198,9 +194,7 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     Activity_LUT = os.path.join(root_data_path, midpath, 'LUTables/Activity_LUT.csv')
     all_layers.append(Activity_LUT)
 
-    global lc
-    lc = os.path.join(lutables + 'env_landcovers.csv')
-    all_layers.append(lc)
+
 
 
     #MISC
@@ -849,11 +843,13 @@ def create_processing_table(InPoints,inmask):
     if inmask == 'D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Vectors.gdb/Mask_Dissolved':
         pts = pd.read_csv(Generic.Points_Table)
     else:
-        arcpy.MakeFeatureLayer_management(InPoints,'temp')
-        arcpy.SelectLayerByLocation_management('temp','INTERSECT',inmask)
-        #copy featureclass
-        #fctocsv
-        pts = pd.read_csv(os.path.join(Generic.RDP, Generic.MP,'Temp/temp.csv'))
+        pass
+##        arcpy.MakeFeatureLayer_management(InPoints,'temp')
+##        arcpy.SelectLayerByLocation_management('temp','INTERSECT',inmask)
+##        #copy featureclass
+##        arcpy.CopyFeatures_management('temp',os.path.join(Generic.tempgdb,'' )
+##        #fctocsv
+##        pts = pd.read_csv(os.path.join(Generic.RDP, Generic.MP,'Temp/temp.csv'))
     return pts
 
 def MergeLCValues():
@@ -886,7 +882,7 @@ def  LoadSuitabilityData():
 
 #PREPROCESSING FUNCTIONS
 
-def FCtoCSV (inputgdb,Outpath):
+def FCstoCSVs (inputgdb,Outpath):
     """
     This function takes a workspace with vector feature classes and writes out their tables as CSVs
     to a user defined folder.
@@ -918,7 +914,30 @@ def FCtoCSV (inputgdb,Outpath):
             with arcpy.da.SearchCursor(table,field_names) as cursor:
                 for row in cursor:
                     dw.writerow(dict(zip(field_names,row)))
+def FCtoCSV (inputfc,Outpath):
+    """
+    This function takes a workspace with vector feature classes and writes out their tables as CSVs
+    to a user defined folder.
+    Workspace_FCs is a geodatabase with feature classes.
+    Outpath is the folder where the CSVs are written to.
+    """
+    import arcpy
+    import csv
+    #--first lets make a list of all of the fields in the table
+    fields = arcpy.ListFields(inputfc)
+    field_names = [field.name for field in fields]
+    print (fields)
+    print (field_names)
+    # Now we create the output file and write the table to it
+    with open(Outpath,'w') as f:
+        dw = csv.DictWriter(f,field_names, lineterminator = '\n')
+        #--write all field names to the output file
+        dw.writeheader()
 
+        #--now we make the search cursor that will iterate through the rows of the table
+        with arcpy.da.SearchCursor(inputfc,field_names) as cursor:
+            for row in cursor:
+                dw.writerow(dict(zip(field_names,row)))
 def Make_Flags (Flags,Fieldname):
     """
 
@@ -1035,7 +1054,7 @@ def Clean_Table (csv,idfield,valuefield = 'TEST',keepfields = [], renamefields =
     df.to_csv(csv)
 
 def MergeMultiDF(JoinField,OutputDF, dflist):
-'''Takes a list of dataframes and joins them on a common field'''
+    '''Takes a list of dataframes and joins them on a common field'''
     #mba = pd.concat(temp, axis = 1)
     mba = functools.reduce(lambda left,right: pd.merge(left, right,on=JoinField), dflist)
     OutputDF = mba.loc[:, ~mba.columns.str.contains('^Unnamed')]
@@ -1088,41 +1107,11 @@ def LoadCSVs(infolder):
     arcpy.env.workspace = ws
     arcpy.env.overwriteOutput = 1
     list1 = arcpy.ListTables()
-    global dflist
     dflist = []
     for i in list1:
-        dflist.append(pd.read_csv(os.path.join(ws, i))
+        dflist.append(pd.read_csv(os.path.join(ws, i)))
+    return dflist
 
-def FCtoCSV_Single (inputfc,Outpath):
-    """
-    This function takes a workspace with vector feature classes and writes out their tables as CSVs
-    to a user defined folder.
-    Workspace_FCs is a geodatabase with feature classes.
-    Outpath is the folder where the CSVs are written to.
-    """
-    import arcpy
-    import csv
-    #Set the Variables
-    arcpy.env.workspace = tempwork
-    arcpy.env.overwriteOutput = 1
-    table = inputfc
-    outfile = Outpath
-
-    #--first lets make a list of all of the fields in the table
-    fields = arcpy.ListFields(table)
-    field_names = [field.name for field in fields]
-    print (fields)
-    print (field_names)
-    # Now we create the output file and write the table to it
-    with open(outfile,'w') as f:
-        dw = csv.DictWriter(f,field_names, lineterminator = '\n')
-        #--write all field names to the output file
-        dw.writeheader()
-
-        #--now we make the search cursor that will iterate through the rows of the table
-        with arcpy.da.SearchCursor(table,field_names) as cursor:
-            for row in cursor:
-                dw.writerow(dict(zip(field_names,row)))
 
 def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol = 'none'):
     """
