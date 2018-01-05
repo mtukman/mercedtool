@@ -1211,6 +1211,7 @@ def Merge2csvs(inputcsv1,origcol,newcol,inputcsv2,mergefield,outputcsv):
 
 
 def CombineChangeFlag(list1, list2):
+    #test comment
 #  This is stubbed out for tukman to work on 
 #    from random import *
 #    randBinList = lambda n: [randint(0,1) for b in range(1,n+1)]
