@@ -12,9 +12,21 @@ Generic.create_processing_table(Generic.Points,Generic.MASK)
 import gc
 gc.collect()
 
-Generic.MergeLCValues()
-temp = pts
 
+Generic.LoadCSVs(folder)
+Generic.MergeMultiDF(JoinField,OutputDF, dflist)
 
-#create a dataframe with 
+Generic.LoadCSVs(folder)
+Generic.MergeMultiDF(JoinField,OutputDF, dflist)
+
+Generic.LoadCSVs(folder)
+Generic.MergeMultiDF(JoinField,OutputDF, dflist)
+
+Generic.LoadCSVs(folder)
+Generic.MergeMultiDF(JoinField,OutputDF, dflist)
+
+carb01 = pd.read_csv()
+carb14 = pd.read_csv()
+carb30 = pd.read_csv()
+#create a dataframe with
 
