@@ -131,7 +131,16 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     lc = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_landcovers.csv')
     all_layers.append(lc)
 
+    #Global Variables
+    global value_df
 
+    global near_df
+    
+    global carb01
+    global carb14
+    global carb30
+
+    
     #Near Tables
     global near_river
     near_river = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_rivers.csv')

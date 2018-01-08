@@ -19,10 +19,10 @@ jointabs  = "D:\\TGS\\projects\\64 - Merced Carbon\\Python\\MercedTool\\Delivera
 neartabs  = "D:\\TGS\\projects\\64 - Merced Carbon\\Python\\MercedTool\\Deliverables\\MASTER_DATA\\ValueTables\\NearTables"
 
 jointables = Generic.LoadCSVs(jointabs)
-value_df = Generic.MergeMultiDF('pointid', jointables)
+Generic.value_df = Generic.MergeMultiDF('pointid', jointables)
 
 neartables = Generic.LoadCSVs(neartabs)
-near_df = Generic.MergeMultiDF('pointid', neartables)
+Generic.near_df = Generic.MergeMultiDF('pointid', neartables)
 
 #Sample set
 #jointables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'ValueTables'))
@@ -32,8 +32,8 @@ near_df = Generic.MergeMultiDF('pointid', neartables)
 #near_df = Generic.MergeMultiDF('pointid', neartables)
 
 
-carb01 = pd.read_csv(Generic.Carbon2001)
-carb14 = pd.read_csv(Generic.Carbon2014)
-carb30 = pd.read_csv(Generic.Carbon2030)
+Generic.carb01 = pd.read_csv(Generic.Carbon2001)
+Generic.carb14 = pd.read_csv(Generic.Carbon2014)
+Generic.carb30 = pd.read_csv(Generic.Carbon2030)
 
 
