@@ -1017,7 +1017,7 @@ def create_policy_knockouts(slope, outputcsv):
     Final.to_csv(outputcsv)
 
 
-def Clean_Table (csv,idfield,length,keepfields = [], renamefields = [],valuefield = 'TEST'):
+def Clean_Table (csv,idfield,length=5689373,keepfields = [], renamefields = [],valuefield = 'TEST'):
     """
     This function takes a csv and check it for consistency (and nulls) and drops fields
     that are unwanted, and renames fields that need to be renamed
@@ -1025,13 +1025,16 @@ def Clean_Table (csv,idfield,length,keepfields = [], renamefields = [],valuefiel
     example: renamefields = [('Value','Landcover')]
     """
     import pandas as pd
+    import os
+    import sys
     print ('reading csv ' + valuefield)
     df = pd.read_csv(csv, usecols = keepfields)
+    print (len(df))
     print ('Finished Loading DF, finding MAX')
     max = df[idfield].max()
-    if max != length:
+    if (max != length) or (len(df) != length):
         print ("LENGTH IS WRONG")
-        exit
+        sys.exit()
     else:
         pass
     print ('Checking Uniqueness')
@@ -1054,7 +1057,8 @@ def Clean_Table (csv,idfield,length,keepfields = [], renamefields = [],valuefiel
     else:
         for i in renamefields:
             df = df.rename(columns={i[0]: i[1]})
-    #    df.sort_values(idfield,inplace = True)
+    df.sort_values(idfield,inplace = True)
+    os.rename (csv, os.path.join(os.path.dirname(csv), (os.path.basename(csv).split('.'))[0] + '_orig.csv'))
     df.to_csv(csv)
 
 def MergeMultiDF(JoinField, dflist):
