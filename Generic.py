@@ -70,10 +70,10 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     vects = os.path.join(root_data_path,midpath,'Vectors.gdb')
 
     global lutables
-    lutables = os.path.join(root_data_path,midpath,'LUTables')
+    lutables = os.path.join(root_data_path,midpath,'Tables/LUTables')
 
     global valuetables
-    valuetables = os.path.join(root_data_path,midpath,'Tables')
+    valuetables = os.path.join(root_data_path,midpath,'Tables/ValueTables')
 
     global WS
     WS = workspace
@@ -1178,8 +1178,15 @@ def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol 
 
 
 
-
-
+def list_csvs_in_folder(path_to_folder, filetype, option = 'basename_only'):
+    
+    import arcpy
+    arcpy.env.workspace = path_to_folder
+    
+    if option == 'basename_only':
+        return [i.split('.')[0] for i in arcpy.ListFiles('*.' + filetype)]
+    else:
+        return arcpy.ListFiles('*.' + filetype)
 
 
 
