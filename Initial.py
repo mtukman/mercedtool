@@ -14,20 +14,16 @@ import gc
 gc.collect()
 
 
-##jointables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'JoinTables'))
-##value_df = Generic.MergeMultiDF('pointid', jointables)
-#
-#
-#neartables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'NearTables/new'))
-#near_df = Generic.MergeMultiDF('pointid', neartables)
+jointables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'JoinTables'))
+value_df = Generic.MergeMultiDF('pointid', jointables)
 
 
-neartables = Generic.LoadCSVs("D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/NearTables")
+neartables = Generic.LoadCSVs("E:/mercedtool/MASTER_DATA/ValueTables/NearTables")
 near_df = Generic.MergeMultiDF('pointid', neartables)
 
 
-##carb01 = pd.read_csv()
-##carb14 = pd.read_csv()
-##carb30 = pd.read_csv()
+carb01 = pd.read_csv(os.path.join(Generic.Root_Mid_Path, 'CarbonTables/Carb01.csv'))
+carb14 = pd.read_csv(os.path.join(Generic.RDP, Generic.MP, 'CarbonTables/Carb14.csv'))
+carb30 = pd.read_csv(os.path.join(Generic.RDP, Generic.MP, 'CarbonTables/Carb30.csv'))
 
 

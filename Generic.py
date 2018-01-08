@@ -27,12 +27,12 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
 
     global LANDFIRE2001
 ##    LANDFIRE2001 = os.path.join(root_data_path, midpath, 'Rasters.gdb/LF2001_Combined')
-    LANDFIRE2001 ='D:/TGS/projects/64 - Merced Carbon/Python\MercedTool/Deliverables/MASTER_DATA/Landcover_Rasters/Landcover_2001.tif'
+    LANDFIRE2001 ='D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Landcover_Rasters/Landcover_2001.tif'
     all_layers.append(LANDFIRE2001)
 
     global LANDFIRE2014
 ##    LANDFIRE2014 = os.path.join(root_data_path, midpath, 'Rasters.gdb/LF2014_Combined')
-    LANDFIRE2014 ='D:/TGS/projects/64 - Merced Carbon/Python\MercedTool/Deliverables/MASTER_DATA/Landcover_Rasters/Landcover_2014.tif'
+    LANDFIRE2014 ='D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Landcover_Rasters/Landcover_2014.tif'
     all_layers.append(LANDFIRE2014)
 
     global SPATIAL_REFERENCE_TEXT
@@ -1190,9 +1190,28 @@ def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol 
     #open_req_list = tuple(list(open_reqs['REQ_NUM']))
 
 
-
-
-
+def loadcsvs_all():
+    import arcpy
+    from arcpy import env
+    import Generic
+    global pts
+    import os
+    Generic.set_paths_and_workspaces()
+    arcpy.env.overwriteOutput = True
+    arcpy.env.extent = Generic.MASK
+    
+    
+    pts = Generic.create_processing_table(Generic.Points,Generic.MASK)
+    import gc
+    gc.collect()
+    
+    
+    jointables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'JoinTables'))
+    value_df = Generic.MergeMultiDF('pointid', jointables)
+    
+    
+    neartables = Generic.LoadCSVs("E:/mercedtool/MASTER_DATA/ValueTables/NearTables")
+    near_df = Generic.MergeMultiDF('pointid', neartables)
 
 
 
