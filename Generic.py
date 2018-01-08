@@ -1047,7 +1047,8 @@ def Clean_Table (csv,idfield,length,keepfields = [], renamefields = [],valuefiel
             df[valuefield].fillna('None')
         else:
             df[valuefield].fillna(-9999)
-    df[keepfields]
+    if keepfields:
+        df[keepfields]
     if not renamefields:
         print ("No fields to rename.")
     else:
@@ -1160,7 +1161,7 @@ def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol 
     #if the column needs to be changed for the join to work rename it
     if origcol != 'none':
         df1 = df1.rename(columns={origcol : newcol})
-    result = pd.merge(df1, df2, on=mergefield)
+    result = pd.merge(df2, df1, on=mergefield)
     result.to_csv(outputcsv)
 
 

@@ -33,14 +33,16 @@ Generic.set_paths_and_workspaces()
 
 ##
 ##
-##Join Near Tables to Spatial Data
+##Join Near Tables to Spatial Data Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol = 'none')
+
+
+
 ##Write Vectors to Tables
 ##Generic.FCtoCSV_Single('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/CPAD_2017a/CPAD_2017a/CPAD_2017a_Holdings_Merced.shp','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/vector_tables/cpad.csv')
 ##Generic.FCtoCSV_Single('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/CV_Riparian/ds1000.gdb/Riparian_Clean_Merced','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/vector_tables/riparian.csv')
 ##Generic.FCtoCSV_Single('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/CV_Riparian/ds1000.gdb/WoodyRiparian','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/vector_tables/woodyriparian.csv')
 ##Generic.FCtoCSV_Single('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/NFHL/NFHL_20171004.gdb/Merced_Clean','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/vector_tables/fema.csv')
 ##Generic.FCtoCSV_Single('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Wetlands/NWI.gdb/NWI_Merced','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/vector_tables/wetlands.csv')
-
 
 
 ##
@@ -50,7 +52,7 @@ Generic.set_paths_and_workspaces()
 ##Generic.Merge2csvs('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/vector_tables/riparian.csv','OBJECTID','NEAR_FID','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/NearTables/env_near_riparian.csv','NEAR_FID','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/NearTables/env_near_riparian_full.csv')
 ##Generic.Merge2csvs('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/vector_tables/woodyriparian.csv','OBJECTID','NEAR_FID','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/NearTables/env_near_woodyrip.csv','NEAR_FID','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/NearTables/env_near_wooodyrip_full.csv')
 ##Generic.Merge2csvs('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/vector_tables/wetlands.csv','OBJECTID','NEAR_FID','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/NearTables/env_near_wetlands.csv','NEAR_FID','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/NearTables/env_near_wetlands_full.csv')
-##
+Generic.Merge2csvs('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/vector_tables/fema.csv','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/env_near_fema.csv','NEAR_FID','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/env_near_fema_merged.csv','OBJECTID','NEAR_FID')
 ##
 ##Clean Near Tables Clean_Table (csv,idfield,valuefield = 'TEST',keepfields = [], renamefields = [],length)
 ##Generic.Clean_Table(Generic.Neartabs + 'NearTable_Wet.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
@@ -62,7 +64,7 @@ Generic.set_paths_and_workspaces()
 ##Generic.Clean_Table(Generic.Neartabs + 'NearTable_WoodyCrop.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
 ##Generic.Clean_Table(Generic.Neartabs + 'NearTable_CPAD.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
 ##Generic.Clean_Table(Generic.Neartabs + 'NearTable_FEMA.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
-Generic.Clean_Table("E:/mercedtool/MASTER_DATA/ValueTables/NearTables/env_near_parks.csv",'IN_FID',20000,keepfields = ['IN_FID','NEAR_DIST'],renamefields = [('IN_FID','pointid'),('NEAR_DIST','near_parks')])
+##Generic.Clean_Table("E:/mercedtool/MASTER_DATA/ValueTables/NearTables/env_near_parks.csv",'IN_FID',20000,keepfields = ['IN_FID','NEAR_DIST'],renamefields = [('IN_FID','pointid'),('NEAR_DIST','near_parks')])
 ##
 ##
 ##Create Spatial Join Lookups
