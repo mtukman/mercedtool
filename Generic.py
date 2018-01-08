@@ -1124,7 +1124,7 @@ def LoadCSVs(infolder):
     dflist = []
     print (list1)
     for i in list1:
-        dflist.append(pd.read_csv(os.path.join(ws, i)))
+        dflist.append(pd.read_csv(os.path.join(ws, i), encoding = 'latin-1'))
 
     newlist = []
     for i in dflist:
