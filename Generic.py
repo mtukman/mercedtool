@@ -153,9 +153,9 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     near_nwi = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_nwi.csv')
     all_layers.append(near_nwi)
 
-    global near_fema
-    near_fema = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_fema.csv')
-    all_layers.append(near_fema)
+#    global near_fema
+#    near_fema = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_fema.csv')
+#    all_layers.append(near_fema)
 
     global near_roads
     near_roads = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_roads.csv')
@@ -1028,7 +1028,10 @@ def Clean_Table (csv,idfield,length=5689373,keepfields = [], renamefields = [],v
     import os
     import sys
     print ('reading csv ' + valuefield)
-    df = pd.read_csv(csv, usecols = keepfields)
+    if keepfields:
+        df = pd.read_csv(csv, usecols = keepfields)
+    else:
+        df = pd.read_csv(csv)
     print (len(df))
     print ('Finished Loading DF, finding MAX')
     max = df[idfield].max()
@@ -1050,8 +1053,6 @@ def Clean_Table (csv,idfield,length=5689373,keepfields = [], renamefields = [],v
             df[valuefield].fillna('None')
         else:
             df[valuefield].fillna(-9999)
-    if keepfields:
-        df[keepfields]
     if not renamefields:
         print ("No fields to rename.")
     else:
@@ -1059,6 +1060,7 @@ def Clean_Table (csv,idfield,length=5689373,keepfields = [], renamefields = [],v
             df = df.rename(columns={i[0]: i[1]})
     df.sort_values(idfield,inplace = True)
     os.rename (csv, os.path.join(os.path.dirname(csv), (os.path.basename(csv).split('.'))[0] + '_orig.csv'))
+    df = df.loc[:, ~df.columns.str.contains('^Unnamed')]    
     df.to_csv(csv)
 
 def MergeMultiDF(JoinField, dflist):
@@ -1120,6 +1122,7 @@ def LoadCSVs(infolder):
     arcpy.env.overwriteOutput = 1
     list1 = arcpy.ListTables()
     dflist = []
+    print (list1)
     for i in list1:
         dflist.append(pd.read_csv(os.path.join(ws, i)))
 
