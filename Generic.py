@@ -61,10 +61,10 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     tempgdb = os.path.join(root_data_path,midpath,'temppts.gdb')
 
     global MBTABS
-    MBTABS = os.path.join(root_data_path,midpath,'ValueTables/MBATables')
+    MBTABS = os.path.join(root_data_path,midpath,'Tables/MBATables')
 
     global neartabs
-    neartabs = os.path.join(root_data_path,midpath,'ValueTables/NearTables')
+    neartabs = os.path.join(root_data_path,midpath,'Tables/NearTables')
 
     global vects
     vects = os.path.join(root_data_path,midpath,'Vectors.gdb')
@@ -73,7 +73,7 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     lutables = os.path.join(root_data_path,midpath,'LUTables')
 
     global valuetables
-    valuetables = os.path.join(root_data_path,midpath,'ValueTables')
+    valuetables = os.path.join(root_data_path,midpath,'Tables')
 
     global WS
     WS = workspace
@@ -87,111 +87,111 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
 
     #Tables
     global Points_Table
-    Points_Table = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'pointsmerged.csv')
+    Points_Table = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'pointsmerged.csv')
     all_layers.append(Points_Table)
 
     global Carbon2001
-    Carbon2001 = os.path.join(root_data_path, midpath, 'CarbonTables/Carb01.csv')
+    Carbon2001 = os.path.join(root_data_path, midpath, 'Tables/CarbonTables/Carb01.csv')
     all_layers.append(Carbon2001)
 
     global Carbon2014
-    Carbon2014 = os.path.join(root_data_path, midpath, 'CarbonTables/Carb14.csv')
+    Carbon2014 = os.path.join(root_data_path, midpath, 'Tables/CarbonTables/Carb14.csv')
     all_layers.append(Carbon2014)
 
     global Carbon2030
-    Carbon2030 = os.path.join(root_data_path, midpath, 'CarbonTables/Carb30.csv')
+    Carbon2030 = os.path.join(root_data_path, midpath, 'Tables/CarbonTables/Carb30.csv')
     all_layers.append(Carbon2030)
 
     global calenviro
-    calenviro = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'env_calenviro.csv')
+    calenviro = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_calenviro.csv')
     all_layers.append(calenviro)
 
     global fmmp
-    fmmp = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'env_fmmp.csv')
+    fmmp = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_fmmp.csv')
     all_layers.append(fmmp)
 
     global genplan
-    genplan = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'env_genplan.csv')
+    genplan = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_genplan.csv')
     all_layers.append(genplan)
 
     global hydrovuln
-    hydrovuln = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'env_hydrovuln.csv')
+    hydrovuln = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_hydrovuln.csv')
     all_layers.append(hydrovuln)
 
     global slope
-    slope = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'env_slope.csv')
+    slope = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_slope.csv')
     all_layers.append(slope)
 
     global scenic
-    scenic = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'env_scenic.csv')
+    scenic = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_scenic.csv')
     all_layers.append(scenic)
 
 
     global lc
-    lc = os.path.join(root_data_path,midpath,'ValueTables/JoinTables', 'env_landcovers.csv')
+    lc = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_landcovers.csv')
     all_layers.append(lc)
 
 
     #Near Tables
     global near_river
-    near_river = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_rivers.csv')
+    near_river = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_rivers.csv')
     all_layers.append(near_river)
 
     global near_rip
-    near_rip = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_riparian.csv')
+    near_rip = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_riparian.csv')
     all_layers.append(near_rip)
 
     global near_streams
-    near_streams = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_streams.csv')
+    near_streams = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_streams.csv')
     all_layers.append(near_streams)
 
     global near_cpad
-    near_cpad = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_cpad.csv')
+    near_cpad = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_cpad.csv')
     all_layers.append(near_cpad)
 
     global near_nwi
-    near_nwi = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_nwi.csv')
+    near_nwi = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_nwi.csv')
     all_layers.append(near_nwi)
 
 #    global near_fema
-#    near_fema = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_fema.csv')
+#    near_fema = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_fema.csv')
 #    all_layers.append(near_fema)
 
     global near_roads
-    near_roads = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_roads.csv')
+    near_roads = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_roads.csv')
     all_layers.append(near_roads)
 
     global near_woodyrip
-    near_woodyrip = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_woodyrip.csv')
+    near_woodyrip = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_woodyrip.csv')
     all_layers.append(near_woodyrip)
 
     global near_woodycrop
-    near_woodycrop = os.path.join(root_data_path, midpath, 'ValueTables/NearTables/env_near_woodycrop.csv')
+    near_woodycrop = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_woodycrop.csv')
     all_layers.append(near_woodycrop)
 
     #Lookup Tables
     global NitrateLU
-    NitrateLU = os.path.join(root_data_path, midpath, 'LUTables/lut_nitrates.csv')
+    NitrateLU = os.path.join(root_data_path, midpath, 'Tables/LUTables/lut_nitrates.csv')
     all_layers.append(NitrateLU)
 
     global WaterUse
-    WaterUse = os.path.join(root_data_path, midpath, 'LUTables/lut_wateruse.csv')
+    WaterUse = os.path.join(root_data_path, midpath, 'Tables/LUTables/lut_wateruse.csv')
     all_layers.append(WaterUse)
 
     global Resistance
-    Resistance = os.path.join(root_data_path, midpath, 'LUTables/lut_resistance.csv')
+    Resistance = os.path.join(root_data_path, midpath, 'Tables/LUTables/lut_resistance.csv')
     all_layers.append(Resistance)
 
     global Crop_Value_LUT
-    Crop_Value_LUT = os.path.join(root_data_path, midpath, 'LUTables/lut_crop_value.csv')
+    Crop_Value_LUT = os.path.join(root_data_path, midpath, 'Tables/LUTables/lut_crop_value.csv')
     all_layers.append(Crop_Value_LUT)
 
     global Air_Pollution
-    Air_Pollution = os.path.join(root_data_path, midpath, 'LUTables/lut_air_pollution.csv')
+    Air_Pollution = os.path.join(root_data_path, midpath, 'Tables/LUTables/lut_air_pollution.csv')
     all_layers.append(Air_Pollution)
 
     global Activity_LUT
-    Activity_LUT = os.path.join(root_data_path, midpath, 'trt/trt_reductions.csv')
+    Activity_LUT = os.path.join(root_data_path, midpath, 'Tables/trt/trt_reductions.csv')
     all_layers.append(Activity_LUT)
 
 
@@ -1132,19 +1132,6 @@ def LoadCSVs(infolder):
     print (newlist)
     return newlist
 
-def LoadCSV(incsv):
-    """
-    This function takes a folder, and reads every csv in it into a dataframe
-    and appends those dataframes to a list (dflist).
-    """
-    import arcpy
-    import Generic
-    import os
-    from arcpy import env
-    #Set the Variables
-    dftemp = pd.read_csv(incsv)
-    return dftemp
-
 
 def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol = 'none'):
     """
@@ -1189,29 +1176,6 @@ def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol 
 
     #open_req_list = tuple(list(open_reqs['REQ_NUM']))
 
-
-def loadcsvs_all():
-    import arcpy
-    from arcpy import env
-    import Generic
-    global pts
-    import os
-    Generic.set_paths_and_workspaces()
-    arcpy.env.overwriteOutput = True
-    arcpy.env.extent = Generic.MASK
-    
-    
-    pts = Generic.create_processing_table(Generic.Points,Generic.MASK)
-    import gc
-    gc.collect()
-    
-    
-    jointables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'JoinTables'))
-    value_df = Generic.MergeMultiDF('pointid', jointables)
-    
-    
-    neartables = Generic.LoadCSVs("E:/mercedtool/MASTER_DATA/ValueTables/NearTables")
-    near_df = Generic.MergeMultiDF('pointid', neartables)
 
 
 
