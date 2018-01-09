@@ -132,9 +132,8 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     all_layers.append(lc)
 
     #Global Variables
-    global value_df
+    global tabs_all_df
 
-    global near_df
     
     global carb01
     global carb14
@@ -1186,12 +1185,92 @@ def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol 
     #open_req_list = tuple(list(open_reqs['REQ_NUM']))
 
 
+def ChangeFlag():
+    import pandas as pd
+    query = Generic.tabs_all_df['LC2030'] != Generic.tabs_all_df['LC2014'] 
+    testquery = (Generic.tabs_all_df['LC2001'] != Generic.tabs_all_df['LC2014']) | (Generic.tabs_all_df['near_rivers'] < 150 | Generic.tabs_all_df['near_streams'] < 150)
+    Generic.tabs_all_df['lcchange'] = 1
+    Generic.tabs_all_df.loc[(query), 'oak_flag'] = 0
 
 
 
 
+def oakrip_Suitability_Flags(oak = 0, rip = 0):
 
-
+    import arcpy
+    import pandas as pd
+    
+    oakdict = {'query' : (Generic.tabs_all_df['near_parks'] == 0) & (Generic.tabs_all_df['near_rip'] < 20000),'desc':'Conversion of Landcover to Oak Woodland in 2030'}
+    ripdict = {'query' : (Generic.tabs_all_df['near_parks'] == 0) & (Generic.tabs_all_df['near_rip'] < 20000),'desc':'Conversion of landcover to Oak Woodland in 2030'}
+    
+    
+    glb_dict_activity = {'oak': oakdict, 'rip': ripdict}
+    
+    if oak == 1:
+        Generic.tabs_all_df['oak_conversion_flag'] = 0
+        Generic.tabs_all_df.loc[glb_dic_activity['oak']['query'], 'oak_flag'] = 1
+        
+    if rip == 1:
+        Generic.tabs_all_df['oak_conversion_flag'] = 0
+        Generic.tabs_all_df.loc[glb_dic_activity['oak']['query'], 'oak_flag'] = 1
+        
+        
+        
+        
+        
+        
+        
+        
+def Ag_Act_Suit_Flags():
+    oakdict = {'query': (Generic.tabs_all_df['near_parks'] == 0) & (Generic.tabs_all_df['near_rip'] < 20000),'desc':'Conversion of landcover to Oak Woodland in 2030'}
+    oakdict = {'query': ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
+    oakdict = {'query': ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
+    oakdict = {'query': ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
+    oakdict = {'query': ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
+    oakdict = {'query': ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
+    oakdict = {'query': ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
+    oakdict = {'query': ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
+    glb_dict_activity = {'oak': oakdict, 'rip': ripdict}
+        
+    if oak == 1:
+        Generic.tabs_all_df['oak_conversion_flag'] = 0
+        Generic.tabs_all_df.loc[glb_dic_activity['oak']['query'], 'oak_flag'] = 1
+        
+    if rip == 1:
+        Generic.tabs_all_df['oak_conversion_flag'] = 0
+        Generic.tabs_all_df.loc[glb_dic_activity['oak']['query'], 'oak_flag'] = 1
+        
+    if oak == 1:
+        Generic.tabs_all_df['oak_conversion_flag'] = 0
+        Generic.tabs_all_df.loc[glb_dic_activity['oak']['query'], 'oak_flag'] = 1
+        
+    if rip == 1:
+        Generic.tabs_all_df['oak_conversion_flag'] = 0
+        Generic.tabs_all_df.loc[glb_dic_activity['oak']['query'], 'oak_flag'] = 1
+        
+    if oak == 1:
+        Generic.tabs_all_df['oak_conversion_flag'] = 0
+        Generic.tabs_all_df.loc[glb_dic_activity['oak']['query'], 'oak_flag'] = 1
+        
+    if rip == 1:
+        Generic.tabs_all_df['oak_conversion_flag'] = 0
+        Generic.tabs_all_df.loc[glb_dic_activity['oak']['query'], 'oak_flag'] = 1
+        
+    if oak == 1:
+        Generic.tabs_all_df['oak_conversion_flag'] = 0
+        Generic.tabs_all_df.loc[glb_dic_activity['oak']['query'], 'oak_flag'] = 1
+        
+    if rip == 1:
+        Generic.tabs_all_df['oak_conversion_flag'] = 0
+        Generic.tabs_all_df.loc[glb_dic_activity['oak']['query'], 'oak_flag'] = 1
+        
+    if oak == 1:
+        Generic.tabs_all_df['oak_conversion_flag'] = 0
+        Generic.tabs_all_df.loc[glb_dic_activity['oak']['query'], 'oak_flag'] = 1
+        
+    if rip == 1:
+        Generic.tabs_all_df['oak_conversion_flag'] = 0
+        Generic.tabs_all_df.loc[glb_dic_activity['oak']['query'], 'oak_flag'] = 1
 
 
 
