@@ -65,7 +65,7 @@ Generic.Merge2csvs('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/vecto
 ##Generic.Clean_Table(Generic.Neartabs + 'NearTable_CPAD.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
 ##Generic.Clean_Table(Generic.Neartabs + 'NearTable_FEMA.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
 ##Generic.Clean_Table("E:/mercedtool/MASTER_DATA/ValueTables/NearTables/env_near_parks.csv",'IN_FID',20000,keepfields = ['IN_FID','NEAR_DIST'],renamefields = [('IN_FID','pointid'),('NEAR_DIST','near_parks')])
-##
+#Generic.Clean_Table(Generic.Neartabs + 'NearTable_FEMA.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
 ##
 ##Create Spatial Join Lookups
 ##Spatial Join
