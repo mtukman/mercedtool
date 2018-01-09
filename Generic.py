@@ -1188,9 +1188,9 @@ def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol 
 def ChangeFlag():
     import pandas as pd
     query = Generic.tabs_all_df['LC2030'] != Generic.tabs_all_df['LC2014'] 
-    testquery = (Generic.tabs_all_df['LC2001'] != Generic.tabs_all_df['LC2014']) | (Generic.tabs_all_df['near_rivers'] < 150 | Generic.tabs_all_df['near_streams'] < 150)
+    testquery = (Generic.tabs_all_df['LC2001'] != Generic.tabs_all_df['LC2014'])
     Generic.tabs_all_df['lcchange'] = 1
-    Generic.tabs_all_df.loc[(query), 'oak_flag'] = 0
+    Generic.tabs_all_df.loc[(testquery), 'lcchange'] = 0
 
 def list_csvs_in_folder(path_to_folder, filetype, option = 'basename_only'):
     
@@ -1206,9 +1206,16 @@ def oakrip_Suitability_Flags(oak = 0, rip = 0):
 
     import arcpy
     import pandas as pd
-    
+    ripquery = (Generic.tabs_all_df.LC2014.isin('Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland')) & (Generic.tabs_all_df['near_woodyrip'] < 650 | Generic.tabs_all_df['near_woodyrip'] < 100)
+    oakquery = ''
     oakdict = {'query' : (Generic.tabs_all_df['near_parks'] == 0) & (Generic.tabs_all_df['near_rip'] < 20000),'desc':'Conversion of Landcover to Oak Woodland in 2030'}
-    ripdict = {'query' : (Generic.tabs_all_df['near_parks'] == 0) & (Generic.tabs_all_df['near_rip'] < 20000),'desc':'Conversion of landcover to Oak Woodland in 2030'}
+    ripdict = {'query' :'' ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
+    
+    
+    
+    
+    
+    
     
     
     glb_dict_activity = {'oak': oakdict, 'rip': ripdict}
@@ -1230,13 +1237,13 @@ def oakrip_Suitability_Flags(oak = 0, rip = 0):
         
 def Ag_Act_Suit_Flags():
     oakdict = {'query': (Generic.tabs_all_df['near_parks'] == 0) & (Generic.tabs_all_df['near_rip'] < 20000),'desc':'Conversion of landcover to Oak Woodland in 2030'}
-    oakdict = {'query': ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
-    oakdict = {'query': ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
-    oakdict = {'query': ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
-    oakdict = {'query': ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
-    oakdict = {'query': ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
-    oakdict = {'query': ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
-    oakdict = {'query': ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
+    oakdict = {'query': '','desc':'Conversion of landcover to Oak Woodland in 2030'}
+    oakdict = {'query': '','desc':'Conversion of landcover to Oak Woodland in 2030'}
+    oakdict = {'query': '','desc':'Conversion of landcover to Oak Woodland in 2030'}
+    oakdict = {'query': '','desc':'Conversion of landcover to Oak Woodland in 2030'}
+    oakdict = {'query':'' ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
+    oakdict = {'query': '','desc':'Conversion of landcover to Oak Woodland in 2030'}
+    oakdict = {'query':'' ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
     glb_dict_activity = {'oak': oakdict, 'rip': ripdict}
         
     if oak == 1:
