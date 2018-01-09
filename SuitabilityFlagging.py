@@ -13,8 +13,11 @@ tabs_all_df = pd.merge(value_df, near_df, how = 'inner', on='pointid')
 del value_df, near_df
 
 
-#Calculate Oak and Riparian Suitability Flags
+#Calculate the land cover change flag
+Generic.ChangeFlag()
 
+#Calculate Oak and Riparian Suitability Flags
+#Generic.oakrip_Suitability_Flags(1,1)
 
 #Create Oak and Riparian Eligibility
 

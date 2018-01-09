@@ -1206,27 +1206,22 @@ def oakrip_Suitability_Flags(oak = 0, rip = 0):
 
     import arcpy
     import pandas as pd
-    ripquery = (Generic.tabs_all_df.LC2014.isin('Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland')) & (Generic.tabs_all_df['near_woodyrip'] < 650 | Generic.tabs_all_df['near_woodyrip'] < 100)
+    ripquery = np.where(Generic.tabs_all_df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & ((Generic.tabs_all_df['near_rivers'] < 650) | (Generic.tabs_all_df['near_streams'] < 100) & (Generic.tabs_all_df['lcchange'] == 1) & (Generic.tabs_all_df['near_woody'] != 0)),1,0)
+
     oakquery = ''
     oakdict = {'query' : (Generic.tabs_all_df['near_parks'] == 0) & (Generic.tabs_all_df['near_rip'] < 20000),'desc':'Conversion of Landcover to Oak Woodland in 2030'}
-    ripdict = {'query' :'' ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
-    
-    
-    
-    
-    
-    
+    ripdict = {'query' :ripquery ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
     
     
     glb_dict_activity = {'oak': oakdict, 'rip': ripdict}
     
     if oak == 1:
         Generic.tabs_all_df['oak_conversion_flag'] = 0
-        Generic.tabs_all_df.loc[glb_dic_activity['oak']['query'], 'oak_flag'] = 1
+        Generic.tabs_all_df['rip_conv_flag'] = [glb_dic_activity['oak']['query']
         
     if rip == 1:
-        Generic.tabs_all_df['oak_conversion_flag'] = 0
-        Generic.tabs_all_df.loc[glb_dic_activity['oak']['query'], 'oak_flag'] = 1
+        Generic.tabs_all_df['rip_conversion_flag'] = 0
+        Generic.tabs_all_df.loc[glb_dic_activity['rip']['query'], 'rip_flag'] = 1
         
         
         
@@ -1285,12 +1280,6 @@ def Ag_Act_Suit_Flags():
     if rip == 1:
         Generic.tabs_all_df['oak_conversion_flag'] = 0
         Generic.tabs_all_df.loc[glb_dic_activity['oak']['query'], 'oak_flag'] = 1
-
-
-
-
-
-
 
 
 

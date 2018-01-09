@@ -31,10 +31,8 @@ near_df = Generic.MergeMultiDF('pointid', neartables)
 #neartables = Generic.LoadCSVs("E:/mercedtool/MASTER_DATA/Tables/NearTables")
 #near_df = Generic.MergeMultiDF('pointid', neartables)
 
-Generic.tabs_all_df = pd.merge(value_df,near_df, on = 'pointid',axis = 1)
+Generic.tabs_all_df = pd.merge(value_df,near_df, on = 'pointid')
 
 Generic.carb01 = pd.read_csv(Generic.Carbon2001)
 Generic.carb14 = pd.read_csv(Generic.Carbon2014)
 Generic.carb30 = pd.read_csv(Generic.Carbon2030)
-
-
