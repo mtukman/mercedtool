@@ -7,7 +7,6 @@ import pandas as pd
 
 Generic.set_paths_and_workspaces()
 #merge value_df and near_df
-tabs_all_df = pd.merge(value_df, near_df, how = 'inner', on='pointid')
 
 #delete original dfs from memory
 del value_df, near_df
