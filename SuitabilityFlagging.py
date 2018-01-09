@@ -1,7 +1,8 @@
 #Import System Modules
 import arcpy
 from arcpy import env
-import Generic
+
+#import Generic
 import functools
 import pandas as pd
 
@@ -9,14 +10,38 @@ Generic.set_paths_and_workspaces()
 #merge value_df and near_df
 
 #delete original dfs from memory
-del value_df, near_df
-
-
 #Calculate the land cover change flag
-Generic.ChangeFlag()
+#Generic.ChangeFlag()
 
 #Calculate Oak and Riparian Suitability Flags
-#Generic.oakrip_Suitability_Flags(1,1)
+ripquery = (Generic.tabs_all_df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & (Generic.tabs_all_df['lcchange'] == 1) & ((Generic.tabs_all_df['near_rivers'] < 650) | (Generic.tabs_all_df['near_streams'] < 100)) & (Generic.tabs_all_df['near_woody'] != 0))
+
+#
+oakquery =(Generic.tabs_all_df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']))
+
+#Activity Dictionaries
+oakdict = {'query' : oakquery ,'desc':'Conversion of Landcover to Oak Woodland in 2030','initflag':'oak_conv_flag'}
+ripdict = {'query' : ripquery ,'desc':'Conversion of landcover to Woody Riparian Forest in 2030','initflag':'rip_conv_flag'}
+
+
+global dict_activity
+dict_activity = {'oak':oakdict, 'rip': ripdict}
+
+
+
+def Suitability_Flags(dictentry):
+
+    print (dictentry['desc'])
+    Generic.tabs_all_df[dictentry['initflag']] = 0
+    Generic.tabs_all_df.loc[dictentry['query'],dictentry['initflag']] = 1
+
+
+#if parameter3 == 1:
+Suitability_Flags(dict_activity['rip'])
+
+
+
+
 
 #Create Oak and Riparian Eligibility
 

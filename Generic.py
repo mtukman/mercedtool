@@ -1,32 +1,4 @@
 from __future__ import unicode_literals #Can Delete This
-
-
-global tabs_all_df
-
-
-global carb01
-global carb14
-global carb30
-
-
-# Activity Queries
-#ripquery = Generic.tabs_all_df.loc[(Generic.tabs_all_df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) | ((Generic.tabs_all_df['LC2014'] == 'Urban') & (Generic.tabs_all_df['LC2014'].isin([]))) & (Generic.tabs_all_df['lcchange'] == 1) & ((Generic.tabs_all_df['near_rivers'] < 650) | (Generic.tabs_all_df['near_streams'] < 100)) & (Generic.tabs_all_df['near_woody'] != 0), 'rip_conv_flag'] = 1
-#
-#oakquery = Generic.tabs_all_df.loc[(Generic.tabs_all_df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (Generic.tabs_all_df['lcchange'] == 1) & ((Generic.tabs_all_df['near_rivers'] < 650) | (Generic.tabs_all_df['near_streams'] < 100)) & (Generic.tabs_all_df['near_woody'] != 0), 'rip_conv_flag'] = 1
-
-
-
-
-
-
-#Activity Dictionaries
-oakdict = {'query' : oakquery ,'desc':'Conversion of Landcover to Oak Woodland in 2030'}
-ripdict = {'query' :ripquery ,'desc':'Conversion of landcover to Oak Woodland in 2030'}
-
-
-global dict_activity = {'oak':oakdict, 'rip' = ripdict}
-
-
 def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedtool', mask_fc = 'D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Vectors.gdb/Test_Mask', CVA_List_L = '', midpath = 'MASTER_DATA', output_file_loc = 'P:/Temp', run_name = 'Test', conservation_fc = ''):
     """Workspace must be a file .gdb and is the place where all temp files and outputs will be placed.
     root_data_path -->  This path the top level folder for the data files (e.g., D:/CLOUD/Shared/Open Space/)
@@ -300,7 +272,21 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
 # Slope_threshold Function
 # Creates percent slope and binary raster based on a specified threshold
 # A value of 1 represents a pixel that exceeds the threshold
+######################################################################################################################
+#Global Dataframe Variables
+global tabs_all_df
 
+
+global carb01
+global carb14
+global carb30
+
+
+# Activity Queries
+
+
+
+#######################################################################################################################
 #Join data
 #Create new layer
 def join_layers(inLayer,LayerName, LayerJoinField, JoinTableName, TableJoinField,Output):
@@ -1151,7 +1137,7 @@ def LoadCSVs(infolder):
     ws = infolder
     arcpy.env.workspace = ws
     arcpy.env.overwriteOutput = 1
-    list1 = arcpy.ListTables()
+    list1 = arcpy.ListFiles("*.csv")
     dflist = []
     print (list1)
     for i in list1:
@@ -1210,10 +1196,10 @@ def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol 
 
 def ChangeFlag():
     import pandas as pd
-    query = Generic.tabs_all_df['LC2030'] != Generic.tabs_all_df['LC2014'] 
-    testquery = (Generic.tabs_all_df['LC2001'] != Generic.tabs_all_df['LC2014'])
-    Generic.tabs_all_df['lcchange'] = 1
-    Generic.tabs_all_df.loc[(testquery), 'lcchange'] = 0
+    query = '''tabs_all_df['LC2030'] != tabs_all_df['LC2014']''' 
+    testquery = (tabs_all_df['LC2001'] != tabs_all_df['LC2014'])
+    tabs_all_df['lcchange'] = 1
+    tabs_all_df.loc[testquery, 'lcchange'] = 0
 
 def list_csvs_in_folder(path_to_folder, filetype, option = 'basename_only'):
     
@@ -1228,28 +1214,13 @@ def list_csvs_in_folder(path_to_folder, filetype, option = 'basename_only'):
 
 
 
-#def oakrip_Suitability_Flags(oak = 0, rip = 0):
-#
-#    import arcpy
-#    import pandas as pd
-#
-#
-#    
-#    if oak:
-#        Generic.tabs_all_df['oak_conversion_flag'] = 0
-#        Generic.tabs_all_df['rip_conv_flag'] = [glb_dic_activity['oak']['query']
-#        
-#    if rip:
-#        Generic.tabs_all_df['rip_conversion_flag'] = 0
-#        Generic.tabs_all_df.loc[glb_dic_activity['rip']['query'], 'rip_flag'] = 1
+def Suitability_Flags(dictentry):
+
+    print (dictentry['desc'])
+    Generic.tabs_all_df[dictentry['initflag']] = 0
+    Generic.tabs_all_df.loc[dictentry['query'],dictentry['initflag']] = 1
         
-        
-        
-        
-        
-        
-        
-        
+       
 #def Ag_Act_Suit_Flags():
 #    oakdict = {'query': (Generic.tabs_all_df['near_parks'] == 0) & (Generic.tabs_all_df['near_rip'] < 20000),'desc':'Conversion of landcover to Oak Woodland in 2030'}
 #    oakdict = {'query': '','desc':'Conversion of landcover to Oak Woodland in 2030'}
