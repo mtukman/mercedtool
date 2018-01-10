@@ -11,6 +11,8 @@ non land cover changing ones
 '''
 
 import pandas as pd
+import Helpers
+dict_eligibility = {}
 #Generic.tabs_all_df = pd.merge(value_df,near_df, on = 'pointid')
 
 def Suitability_Flags(activity):
@@ -21,6 +23,7 @@ def Suitability_Flags(activity):
     initflag = activity + '_conv_flag'
     Generic.tabs_all_df[initflag] = 0
     Generic.tabs_all_df.loc[Generic.dict_activity[activity]['query'], initflag] = 1
+    
     
 #first create change flag
 Generic.ChangeFlag()
@@ -35,10 +38,10 @@ Generic.dict_activity['rre']['query']= rrequery
 
 #if parameter3 == 1:
 Suitability_Flags('rre')
+Suitability_Flags('oak')
 
-
-
-
+Helpers.Eligibility(Generic.tabs_all_df, 'rre', dict_activity,dict_eligibility)
+Helpers.Eligibility(Generic.tabs_all_df, 'oak', dict_activity,dict_eligibility)
 
 #Create Oak and Riparian Eligibility
 
