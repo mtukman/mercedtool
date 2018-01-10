@@ -5,7 +5,7 @@ Created on Wed Jan 10 10:23:24 2018
 @author: mtukman
 """
 
-def Eligibility(df, activity, dict_activity, dict_eligibility):
+def CreateEligDict(df, activity, dict_activity, dict_eligibility):
     import Generic
     import sys
     initflag = activity + '_conv_flag'

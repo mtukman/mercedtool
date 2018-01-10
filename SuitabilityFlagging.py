@@ -15,7 +15,7 @@ import Helpers
 dict_eligibility = {}
 #Generic.tabs_all_df = pd.merge(value_df,near_df, on = 'pointid')
 
-def Suitability_Flags(activity):
+def CreateSuitFlags(activity):
     '''Tales an activity name (a key from dict_activity) and uses
     that to calculate a 1/0 suitability flag for the activity 
     in the tabs_all_df dataframe'''
@@ -37,11 +37,11 @@ Generic.dict_activity['oak']['query']= oakquery
 Generic.dict_activity['rre']['query']= rrequery
 
 #if parameter3 == 1:
-Suitability_Flags('rre')
-Suitability_Flags('oak')
+CreateSuiteFlags('rre')
+CreateSuitFlags('oak')
 
-Helpers.Eligibility(Generic.tabs_all_df, 'rre', dict_activity,dict_eligibility)
-Helpers.Eligibility(Generic.tabs_all_df, 'oak', dict_activity,dict_eligibility)
+Helpers.CreateEligDict(Generic.tabs_all_df, 'rre', dict_activity,dict_eligibility)
+Helpers.CreateEligDict(Generic.tabs_all_df, 'oak', dict_activity,dict_eligibility)
 
 #Create Oak and Riparian Eligibility
 
