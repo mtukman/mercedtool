@@ -1,10 +1,26 @@
 #Import System Modules
+''' This will be a funtion 
+that takes the activity abbreviations and
+the change flag (regular or mod)
+
+It will assign new fields to tabs_all_df dataframe
+
+it will be run from main_program.py first for the 
+land cover changing activities and then for the 
+non land cover changing ones
+'''
 import arcpy
 from arcpy import env
 
 #import Generic
 import functools
 import pandas as pd
+
+def Suitability_Flags(dictentry):
+
+    print (dictentry['desc'])
+    Generic.tabs_all_df[dictentry['initflag']] = 0
+    Generic.tabs_all_df.loc[dictentry['query'],dictentry['initflag']] = 1
 
 Generic.set_paths_and_workspaces()
 #merge value_df and near_df
@@ -26,14 +42,6 @@ ripdict = {'query' : ripquery ,'desc':'Conversion of landcover to Woody Riparian
 
 global dict_activity
 dict_activity = {'oak':oakdict, 'rip': ripdict}
-
-
-
-def Suitability_Flags(dictentry):
-
-    print (dictentry['desc'])
-    Generic.tabs_all_df[dictentry['initflag']] = 0
-    Generic.tabs_all_df.loc[dictentry['query'],dictentry['initflag']] = 1
 
 
 #if parameter3 == 1:

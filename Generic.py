@@ -1213,12 +1213,6 @@ def list_csvs_in_folder(path_to_folder, filetype, option = 'basename_only'):
 
 
 
-
-def Suitability_Flags(dictentry):
-
-    print (dictentry['desc'])
-    Generic.tabs_all_df[dictentry['initflag']] = 0
-    Generic.tabs_all_df.loc[dictentry['query'],dictentry['initflag']] = 1
         
        
 #def Ag_Act_Suit_Flags():
