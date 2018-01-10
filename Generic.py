@@ -298,16 +298,16 @@ urb - URBAN FORESTRY
 '''
 global dict_activity
 
-oakdict = {'name':'Oak Woodland Restoration','query' : 'holder'}
-rredict = {'name':'Riparian Restoration','query' : 'holder'}
-muldict =  {'name':'Mulching','query' : 'holder'}
-mmadict =  {'name':'Replacing Sythetic Fertilizer with Soil Amendments','query' : 'holder'}
-nfmdict = {'name':'Nirtrogen Fertilizer Management','query' : 'holder'}
-ccrdict = {'name':'Cover Crops', 'query':'holder'}
-acadict = {'name':'Avoided Conversion to Agriculture', 'query':'holder'}
-acudict = {'name':'Avoided Conversion to Urban', 'query':'holder'}
-hpldict = {'name':'Hedgerow Planting', 'query':'holder'}
-urbdict = {'name':'Urban Forestry', 'query':'holder'}
+oakdict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1}
+rredict = {'name':'Riparian Restoration','query' : 'holder', 'ag_modifer':1}
+muldict =  {'name':'Mulching','query' : 'holder', 'ag_modifier':.20}
+mmadict =  {'name':'Replacing Sythetic Fertilizer with Soil Amendments','query' : 'holder', 'ag_modifier':.35}
+nfmdict = {'name':'Nirtrogen Fertilizer Management','query' : 'holder', 'ag_modifier':.25}
+ccrdict = {'name':'Cover Crops', 'query':'holder', 'ag_modifier':.20}
+acadict = {'name':'Avoided Conversion to Agriculture', 'query':'holder', 'ag_modifier':1}
+acudict = {'name':'Avoided Conversion to Urban', 'query':'holder', 'ag_modifier':1}
+hpldict = {'name':'Hedgerow Planting', 'query':'holder', 'ag_modifier':.35}
+urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1}
 
 
 dict_activity = {'oak':oakdict, 'rre': rredict, 'mul':muldict, 'mma':mmadict, 'nfm':nfmdict, 'ccr':ccrdict,'aca':acadict,'acu':acudict,'hpl':hpldict, 'urb':urbdict}

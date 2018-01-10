@@ -19,6 +19,7 @@ value_df = Generic.MergeMultiDF('pointid', jointables)
 #
 neartables = Generic.LoadCSVs(neartabs)
 near_df = Generic.MergeMultiDF('pointid', neartables)
+
 #Sample set
 #jointables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'ValueTables'))
 #value_df = Generic.MergeMultiDF('pointid', jointables)
