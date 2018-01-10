@@ -1213,11 +1213,11 @@ def list_csvs_in_folder(path_to_folder, filetype, option = 'basename_only'):
 
 
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> b8b139d641c299e39f9b50b97ca0aec024d74744
+#<<<<<<< HEAD
+#
+#
+#=======
+#>>>>>>> b8b139d641c299e39f9b50b97ca0aec024d74744
         
        
 #def Ag_Act_Suit_Flags():
