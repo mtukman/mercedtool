@@ -9,47 +9,39 @@ it will be run from main_program.py first for the
 land cover changing activities and then for the 
 non land cover changing ones
 '''
-import arcpy
-from arcpy import env
 
-#import Generic
-import functools
 import pandas as pd
+import Helpers
+dict_eligibility = {}
+#Generic.tabs_all_df = pd.merge(value_df,near_df, on = 'pointid')
 
-def Suitability_Flags(dictentry):
-
-    print (dictentry['desc'])
-    Generic.tabs_all_df[dictentry['initflag']] = 0
-    Generic.tabs_all_df.loc[dictentry['query'],dictentry['initflag']] = 1
-
-Generic.set_paths_and_workspaces()
-#merge value_df and near_df
-
-#delete original dfs from memory
-#Calculate the land cover change flag
-#Generic.ChangeFlag()
+def Suitability_Flags(activity):
+    '''Tales an activity name (a key from dict_activity) and uses
+    that to calculate a 1/0 suitability flag for the activity 
+    in the tabs_all_df dataframe'''
+    
+    initflag = activity + '_conv_flag'
+    Generic.tabs_all_df[initflag] = 0
+    Generic.tabs_all_df.loc[Generic.dict_activity[activity]['query'], initflag] = 1
+    
+    
+#first create change flag
+Generic.ChangeFlag()
 
 #Calculate Oak and Riparian Suitability Flags
-ripquery = (Generic.tabs_all_df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & (Generic.tabs_all_df['lcchange'] == 1) & ((Generic.tabs_all_df['near_rivers'] < 650) | (Generic.tabs_all_df['near_streams'] < 100)) & (Generic.tabs_all_df['near_woody'] != 0))
-
-#
+rrequery = (Generic.tabs_all_df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & (Generic.tabs_all_df['lcchange'] == 1) & ((Generic.tabs_all_df['near_rivers'] < 650) | (Generic.tabs_all_df['near_streams'] < 100)) & (Generic.tabs_all_df['near_woody'] != 0))
 oakquery =(Generic.tabs_all_df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']))
 
 #Activity Dictionaries
-oakdict = {'query' : oakquery ,'desc':'Conversion of Landcover to Oak Woodland in 2030','initflag':'oak_conv_flag'}
-ripdict = {'query' : ripquery ,'desc':'Conversion of landcover to Woody Riparian Forest in 2030','initflag':'rip_conv_flag'}
-
-
-global dict_activity
-dict_activity = {'oak':oakdict, 'rip': ripdict}
-
+Generic.dict_activity['oak']['query']= oakquery
+Generic.dict_activity['rre']['query']= rrequery
 
 #if parameter3 == 1:
-Suitability_Flags(dict_activity['rip'])
+Suitability_Flags('rre')
+Suitability_Flags('oak')
 
-
-
-
+Helpers.Eligibility(Generic.tabs_all_df, 'rre', dict_activity,dict_eligibility)
+Helpers.Eligibility(Generic.tabs_all_df, 'oak', dict_activity,dict_eligibility)
 
 #Create Oak and Riparian Eligibility
 
@@ -61,13 +53,6 @@ Suitability_Flags(dict_activity['rip'])
 
 
 #Update Change Flag List
-
-
-
-
-
-
-
 
 
 

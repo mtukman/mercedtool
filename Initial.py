@@ -1,13 +1,8 @@
 #Import System Modules
-import arcpy
-from arcpy import env
 import Generic
 global pts
-import os
 import pandas as pd
 Generic.set_paths_and_workspaces()
-arcpy.env.overwriteOutput = True
-arcpy.env.extent = Generic.MASK
 
 
 pts = Generic.create_processing_table(Generic.Points,Generic.MASK)
@@ -22,8 +17,9 @@ neartabs  = "E:/Temp/Tables/NearTables"
 jointables = Generic.LoadCSVs(jointabs)
 value_df = Generic.MergeMultiDF('pointid', jointables)
 #
-#neartables = Generic.LoadCSVs(neartabs)
-#near_df = Generic.MergeMultiDF('pointid', neartables)
+neartables = Generic.LoadCSVs(neartabs)
+near_df = Generic.MergeMultiDF('pointid', neartables)
+
 #Sample set
 #jointables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'ValueTables'))
 #value_df = Generic.MergeMultiDF('pointid', jointables)

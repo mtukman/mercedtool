@@ -269,9 +269,7 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     logfile = os.path.join((output_file_loc), "logfile.txt")
 
 
-# Slope_threshold Function
-# Creates percent slope and binary raster based on a specified threshold
-# A value of 1 represents a pixel that exceeds the threshold
+
 ######################################################################################################################
 #Global Dataframe Variables
 global tabs_all_df
@@ -282,10 +280,37 @@ global carb14
 global carb30
 
 
-# Activity Queries
+# Global Dictionaries
+
+''' Activey abbreviations are 
+oak - OAK WOODLAND RESTORATION
+rre - RIPARIAN RESTORATION
+mul - MULCHING
+mma - REPLACING SYNTHETIC FERTILIZER WITH SOIL AMENDMENTS
+nfm - NITROGEN FERTILIZER MANAGEMENT
+ccr - COVER CROPS
+aca - AVOIDED CONVERSION TO AG
+acu - AVOIDED CONVERSION TO URBAN
+hpl - HEDGEROW PLANTING
+urb - URBAN FORESTRY
 
 
+'''
+global dict_activity
 
+oakdict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1}
+rredict = {'name':'Riparian Restoration','query' : 'holder', 'ag_modifer':1}
+muldict =  {'name':'Mulching','query' : 'holder', 'ag_modifier':.20}
+mmadict =  {'name':'Replacing Sythetic Fertilizer with Soil Amendments','query' : 'holder', 'ag_modifier':.35}
+nfmdict = {'name':'Nirtrogen Fertilizer Management','query' : 'holder', 'ag_modifier':.25}
+ccrdict = {'name':'Cover Crops', 'query':'holder', 'ag_modifier':.20}
+acadict = {'name':'Avoided Conversion to Agriculture', 'query':'holder', 'ag_modifier':1}
+acudict = {'name':'Avoided Conversion to Urban', 'query':'holder', 'ag_modifier':1}
+hpldict = {'name':'Hedgerow Planting', 'query':'holder', 'ag_modifier':.35}
+urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1}
+
+
+dict_activity = {'oak':oakdict, 'rre': rredict, 'mul':muldict, 'mma':mmadict, 'nfm':nfmdict, 'ccr':ccrdict,'aca':acadict,'acu':acudict,'hpl':hpldict, 'urb':urbdict}
 #######################################################################################################################
 #Join data
 #Create new layer
@@ -1214,8 +1239,11 @@ def list_csvs_in_folder(path_to_folder, filetype, option = 'basename_only'):
 
 
 #<<<<<<< HEAD
+<<<<<<< HEAD
 #
 #
+=======
+>>>>>>> b092b0df5497f9eb24b77b20e838457a8080c110
 #=======
 #>>>>>>> b8b139d641c299e39f9b50b97ca0aec024d74744
         
