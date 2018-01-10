@@ -269,9 +269,7 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     logfile = os.path.join((output_file_loc), "logfile.txt")
 
 
-# Slope_threshold Function
-# Creates percent slope and binary raster based on a specified threshold
-# A value of 1 represents a pixel that exceeds the threshold
+
 ######################################################################################################################
 #Global Dataframe Variables
 global tabs_all_df
@@ -282,10 +280,37 @@ global carb14
 global carb30
 
 
-# Activity Queries
+# Global Dictionaries
+
+''' Activey abbreviations are 
+oak - OAK WOODLAND RESTORATION
+rre - RIPARIAN RESTORATION
+mul - MULCHING
+mma - REPLACING SYNTHETIC FERTILIZER WITH SOIL AMENDMENTS
+nfm - NITROGEN FERTILIZER MANAGEMENT
+ccr - COVER CROPS
+aca - AVOIDED CONVERSION TO AG
+acu - AVOIDED CONVERSION TO URBAN
+hpl - HEDGEROW PLANTING
+urb - URBAN FORESTRY
 
 
+'''
+global dict_activity
 
+oakdict = {'name':'Oak Woodland Restoration','query' : 'holder'}
+rredict = {'name':'Riparian Restoration','query' : 'holder'}
+muldict =  {'name':'Mulching','query' : 'holder'}
+mmadict =  {'name':'Replacing Sythetic Fertilizer with Soil Amendments','query' : 'holder'}
+nfmdict = {'name':'Nirtrogen Fertilizer Management','query' : 'holder'}
+ccrdict = {'name':'Cover Crops', 'query':'holder'}
+acadict = {'name':'Avoided Conversion to Agriculture', 'query':'holder'}
+acudict = {'name':'Avoided Conversion to Urban', 'query':'holder'}
+hpldict = {'name':'Hedgerow Planting', 'query':'holder'}
+urbdict = {'name':'Urban Forestry', 'query':'holder'}
+
+
+dict_activity = {'oak':oakdict, 'rre': rredict, 'mul':muldict, 'mma':mmadict, 'nfm':nfmdict, 'ccr':ccrdict,'aca':acadict,'acu':acudict,'hpl':hpldict, 'urb':urbdict}
 #######################################################################################################################
 #Join data
 #Create new layer
