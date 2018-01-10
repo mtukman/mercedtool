@@ -1239,6 +1239,11 @@ def list_csvs_in_folder(path_to_folder, filetype, option = 'basename_only'):
 
 
 #<<<<<<< HEAD
+<<<<<<< HEAD
+#
+#
+=======
+>>>>>>> b092b0df5497f9eb24b77b20e838457a8080c110
 #=======
 #>>>>>>> b8b139d641c299e39f9b50b97ca0aec024d74744
         

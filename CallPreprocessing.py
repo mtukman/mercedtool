@@ -82,17 +82,19 @@ Generic.set_paths_and_workspaces()
 ##Generic.FCstoCSVs(Generic.tempgdb,Generic.Root_Mid_Path + 'ValueTables/JoinTables/)
 
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/HUC12','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/JoinTables/huc12.csv')
-
+#Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/smallgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/smallgroup.csv')
+#Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/mediumgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/mediumgroup.csv')
 
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/temppts.gdb/terhab','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/JoinTables/terhab.csv')
 #Generic.RastersToPoints('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Raster/nlcd_2011_landcover_2011_edition_2014_10_10/NLCD_MERCED.tif','Value','nlcd')
 
-Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/New File Geodatabase.gdb/nlcd','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/JoinTables/env_nlcd.csv')
+#Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/New File Geodatabase.gdb/nlcd','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/JoinTables/env_nlcd.csv')
 ##
 ##Clean Tables
 ##Generic.Clean_Table(Generic.Root_Mid_Path + 'ValueTables/JoinTables/' + '','pointid','Value',['pointid','Value'],[('Value','crop_value')])
 ##
-##
+Generic.Clean_Table('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/mediumgroup.csv','pointid',keepfields = ['pointid','PageNumber'],renamefields = [('PageNumber','medgroup_val')])
+Generic.Clean_Table('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/smallgroup.csv','pointid',keepfields = ['pointid','PageNumber'],renamefields = [('Value','smallgroup_val')])
 ##
 ##
 ##
