@@ -15,15 +15,10 @@ import Helpers
 global dict_eligibility
 dict_eligibility = {}
 
+smallgroup = 20000
+mediumgroup = 16000
 
-def CreateSuitFlags(activity):
-    '''Takes an activity name (a key from dict_activity) and uses
-    that to calculate a 1/0 suitability flag for the activity 
-    in the tabs_all_df dataframe'''
-    
-    initflag = activity + '_conv_flag'
-    Generic.tabs_all_df[initflag] = 0
-    Generic.tabs_all_df.loc[Generic.dict_activity[activity]['query'], initflag] = 1
+
     
     
 #first create change flag
@@ -33,6 +28,9 @@ Generic.ChangeFlag()
 rrequery = (Generic.tabs_all_df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & (Generic.tabs_all_df['lcchange'] == 1) & ((Generic.tabs_all_df['near_rivers'] < 650) | (Generic.tabs_all_df['near_streams'] < 100)) & (Generic.tabs_all_df['near_woody'] != 0))
 oakquery =(Generic.tabs_all_df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']))
 
+
+
+
 #Activity Dictionaries
 Generic.dict_activity['oak']['query']= oakquery
 Generic.dict_activity['rre']['query']= rrequery
@@ -41,8 +39,9 @@ Generic.dict_activity['rre']['query']= rrequery
 CreateSuiteFlags('rre')
 CreateSuitFlags('oak')
 
-Helpers.CreateEligDict(Generic.tabs_all_df, 'rre', dict_activity,dict_eligibility)
-Helpers.CreateEligDict(Generic.tabs_all_df, 'oak', dict_activity,dict_eligibility)
+Helpers.CreateEligDict(Generic.tabs_all_df, 'rre', Generic.dict_activity,dict_eligibility)
+Helpers.CreateEligDict(Generic.tabs_all_df, 'oak', Generic.dict_activity,dict_eligibility)
+
 
 #Create Oak and Riparian Eligibility
 

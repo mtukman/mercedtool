@@ -2,10 +2,11 @@
 import Generic
 global pts
 import pandas as pd
-Generic.set_paths_and_workspaces()
+import Helpers
+Helpers.set_paths_and_workspaces()
 
 
-pts = Generic.create_processing_table(Generic.Points,Generic.MASK)
+pts = Helpers.create_processing_table(Generic.Points,Generic.MASK)
 import gc
 gc.collect()
 
@@ -14,11 +15,11 @@ jointabs  = "E:/Temp/Tables/ValueTables"
 neartabs  = "E:/Temp/Tables/NearTables"
 
 
-jointables = Generic.LoadCSVs(jointabs)
-value_df = Generic.MergeMultiDF('pointid', jointables)
+jointables = Helpers.LoadCSVs(jointabs)
+value_df = Helpers.MergeMultiDF('pointid', jointables)
 #
-neartables = Generic.LoadCSVs(neartabs)
-near_df = Generic.MergeMultiDF('pointid', neartables)
+neartables = Helpers.LoadCSVs(neartabs)
+near_df = Helpers.MergeMultiDF('pointid', neartables)
 
 #Sample set
 #jointables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'ValueTables'))
