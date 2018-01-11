@@ -4,52 +4,69 @@ Created on Wed Jan 10 10:23:24 2018
 This script holds the functions used in other modules of the tool.
 @author: mtukman
 """
-import ActivityApplication
-import generic
+import Generic
 
 
 
 def CreateEligDict(df, activity, dict_activity, dict_eligibility):
     import sys
-    initflag = dict_activity[activity]['suitflag']
+    import Generic
+    initflag = activity + 'suitflag'
+    print ()
     if activity in dict_eligibility.keys():
         print('The activity is already in the dict_eligibility dictionary')
         sys.exit('***The activity is already in the dict_eligibility dictionary***')
     eli = df.groupby('LC2014').sum()[initflag]
-    eli.loc['Annual Cropland'] = eli.loc['Annual Cropland'] * dict_activity[activity]['ag_modifier']
+    eli.loc['Annual Cropland'] = eli.loc['Annual Cropland'] * Generic.dict_activity[activity]['ag_modifier']
     #Need to add modifier for adoption accross the board from user input
     
     eli_dict_element = eli.to_dict()
     dict_eligibility[activity] = eli_dict_element
     
 
-def selectionfunc (dict_eligibility,dict_activity):
+def selectionfunc (dict_eligibility,df, activity):
+    import random
+    import Generic
+    goal = 0
+    tempdict = dict_eligibility[activity]
+    klist = list(tempdict.keys())
+    for i in klist:
+        goal = goal + tempdict[i]
     count = 0
-    curgoal = goal    
+    print ('Goal is : ' + str (goal))
     usednums = []
-    Generic.tabs_all_df[selfield] = 0
+    initflag =  activity + 'suitflag'
+    selflag = activity + 'selected'
+    df[selflag] = 0
+    print (selflag)
     while count < goal:
         for x in range(500000):
-            c = random.randint(1,groupnumber)
-            if c in usednum:
+            c = random.randint(1,Generic.dict_activity[activity]['grpsize'])
+            print (str(c))
+            if c in usednums:
                 pass
             else:
                 usednums.append(c)
-                Generic.tabs_all_df.loc[(Generic.tabs_all_df[flagfield] == 1) & (Generic.tabs_all_df[flagfield] == c),selfield] = 1
-                x =  len(Generic.tabs_all_df.loc[(Generic.tabs_all_df[flagfield] == 1) & (Generic.tabs_all_df[flagfield] == c)])
-                count = count + x
+                if df.loc[(df[initflag] == 1) & (df['medgroup_val'] == c)].empty:
+                    print ('No pixels in selection')
+                else:
+                    df.loc[(df[initflag] == 1) & (df['medgroup_val'] == c),df[selflag]] = 1
+                    x =  len((df[initflag] == 1) & (df['medgroup_val'] == c) & (df[selflag] == 1))
+                    count = count + x
+                print ('This is the count: ' + str(count))
+    return df
                 
                 
-def CreateSuitFlags(activity):
+def CreateSuitFlags(activity,df):
     '''Takes an activity name (a key from dict_activity) and uses
     that to calculate a 1/0 suitability flag for the activity 
     in the tabs_all_df dataframe'''
-    import pandas as pd
     import Generic
 
-    initflag = [Generic.dict_activity[activity]['suitflag']
-    Generic.tabs_all_df[initflag] = 0
-    Generic.tabs_all_df.loc[Generic.dict_activity[activity]['query'], initflag] = 1
+    initflag = activity + 'suitflag'
+    print (initflag)
+    df[initflag] = 0
+    df.loc[Generic.dict_activity[activity]['query'], initflag] = 1
     
     
     
@@ -142,7 +159,6 @@ def Make_Flags (Flags,Fieldname):
 
     """
     import pandas as pd
-    import Generic
     FLG = pd.read_csv(Flags)
     Generic.pts[Fieldname] = 0
     Generic.pts.loc[Generic.pts['pointid'].isin (FLG['pointid']), Fieldname] = 1
@@ -213,7 +229,6 @@ def MakeMBARaster(LUT,OutputPath,JoinKey,TargetKey,Lfield):
     JoinKey =
     """
     import arcpy
-    import Generic
     from arcpy import env
     arcpy.CheckOutExtension("Spatial")
     #Set the Variables
@@ -243,7 +258,6 @@ def LoadCSVs(infolder):
     and appends those dataframes to a list (dflist).
     """
     import arcpy
-    import Generic
     import os
     from arcpy import env
     import pandas as pd
@@ -290,12 +304,12 @@ def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol 
     result.to_csv(outputcsv)
 
 
-def ChangeFlag():
+def ChangeFlag(df):
     import pandas as pd
     query = '''tabs_all_df['LC2030'] != tabs_all_df['LC2014']''' 
-    testquery = (tabs_all_df['LC2001'] != tabs_all_df['LC2014'])
-    tabs_all_df['lcchange'] = 1
-    tabs_all_df.loc[testquery, 'lcchange'] = 0
+    testquery = (df['LC2001'] != df['LC2014'])
+    df['lcchange'] = 1
+    df.loc[testquery, 'lcchange'] = 0
 
 def list_csvs_in_folder(path_to_folder, filetype, option = 'basename_only'):
     

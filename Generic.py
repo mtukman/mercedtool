@@ -272,16 +272,10 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
 
 ######################################################################################################################
 #Global Dataframe Variables
-global tabs_all_df
-
 global small
 global medium
-small = 200000
+small = 15000
 medium = 15000
-
-global carb01
-global carb14
-global carb30
 
 
 # Global Dictionaries
@@ -302,16 +296,16 @@ urb - URBAN FORESTRY
 '''
 global dict_activity
 
-oakdict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1, 'selfield': 'oakselect', 'grpsize':small, 'suitflag':'oaksuitflag'}
-rredict = {'name':'Riparian Restoration','query' : 'holder', 'ag_modifer':1, 'selfield': 'rreselect', 'grpsize':small}
-muldict =  {'name':'Mulching','query' : 'holder', 'ag_modifier':.20, 'selfield': 'mulselect', 'grpsize':small}
-mmadict =  {'name':'Replacing Sythetic Fertilizer with Soil Amendments','query' : 'holder', 'ag_modifier':.35, 'selfield': 'mmaselect', 'grpsize':small}
-nfmdict = {'name':'Nirtrogen Fertilizer Management','query' : 'holder', 'ag_modifier':.25, 'selfield': 'nfmselect', 'grpsize':small}
-ccrdict = {'name':'Cover Crops', 'query':'holder', 'ag_modifier':.20, 'selfield': 'ccrselect', 'grpsize':small}
-acadict = {'name':'Avoided Conversion to Agriculture', 'query':'holder', 'ag_modifier':1, 'selfield': 'acaselect', 'grpsize':small}
-acudict = {'name':'Avoided Conversion to Urban', 'query':'holder', 'ag_modifier':1, 'selfield': 'acuselect', 'grpsize':small}
-hpldict = {'name':'Hedgerow Planting', 'query':'holder', 'ag_modifier':.35, 'selfield': 'hplselect', 'grpsize':small}
-urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'selfield': 'urbselect', 'grpsize':small}
+oakdict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':small, 'suitflag':'oaksuitflag'}
+rredict = {'name':'Riparian Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':medium, 'suitflag':'ripsuitflag'}
+muldict =  {'name':'Mulching','query' : 'holder', 'ag_modifier':.20, 'grpsize':small, 'suitflag':'mulsuitflag'}
+mmadict =  {'name':'Replacing Sythetic Fertilizer with Soil Amendments','query' : 'holder', 'ag_modifier':.35, 'selfield': 'mmaselect', 'grpsize':small, 'suitflag':'mmasuitflag'}
+nfmdict = {'name':'Nirtrogen Fertilizer Management','query' : 'holder', 'ag_modifier':.25,  'grpsize':small, 'suitflag':'nfmsuitflag'}
+ccrdict = {'name':'Cover Crops', 'query':'holder', 'ag_modifier':.20,  'grpsize':small, 'suitflag':'ccrsuitflag'}
+acadict = {'name':'Avoided Conversion to Agriculture', 'query':'holder', 'ag_modifier':1, 'grpsize':small, 'suitflag':'acasuitflag'}
+acudict = {'name':'Avoided Conversion to Urban', 'query':'holder', 'ag_modifier':1,  'grpsize':small, 'suitflag':'acusuitflag'}
+hpldict = {'name':'Hedgerow Planting', 'query':'holder', 'ag_modifier':.35,  'grpsize':small, 'suitflag':'hplsuitflag'}
+urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'grpsize':small, 'suitflag':'urbsuitflag'}
 
 
 dict_activity = {'oak':oakdict, 'rre': rredict, 'mul':muldict, 'mma':mmadict, 'nfm':nfmdict, 'ccr':ccrdict,'aca':acadict,'acu':acudict,'hpl':hpldict, 'urb':urbdict}

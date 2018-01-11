@@ -11,38 +11,42 @@ non land cover changing ones
 '''
 
 import pandas as pd
+import Generic
 import Helpers
 global dict_eligibility
-dict_eligibility = {}
 
-smallgroup = 20000
-mediumgroup = 16000
-
-
+def DoActivities(df):
+    dict_eligibility = {}
+    
+    smallgroup = 20000
+    mediumgroup = 16000
     
     
-#first create change flag
-Generic.ChangeFlag()
-
-#Calculate Oak and Riparian Suitability Flags
-rrequery = (Generic.tabs_all_df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & (Generic.tabs_all_df['lcchange'] == 1) & ((Generic.tabs_all_df['near_rivers'] < 650) | (Generic.tabs_all_df['near_streams'] < 100)) & (Generic.tabs_all_df['near_woody'] != 0))
-oakquery =(Generic.tabs_all_df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']))
-
-
-
-
-#Activity Dictionaries
-Generic.dict_activity['oak']['query']= oakquery
-Generic.dict_activity['rre']['query']= rrequery
-
-#if parameter3 == 1:
-CreateSuiteFlags('rre')
-CreateSuitFlags('oak')
-
-Helpers.CreateEligDict(Generic.tabs_all_df, 'rre', Generic.dict_activity,dict_eligibility)
-Helpers.CreateEligDict(Generic.tabs_all_df, 'oak', Generic.dict_activity,dict_eligibility)
-
-
+        
+        
+    #first create change flag
+    Helpers.ChangeFlag(df)
+    
+    #Calculate Oak and Riparian Suitability Flags
+    rrequery = (df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & (df['lcchange'] == 1) & ((df['near_rivers'] < 650) | (df['near_streams'] < 100)) & (df['near_woody'] != 0))
+    oakquery =(df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']))
+    
+    
+    
+    
+    #Activity Dictionaries
+    Generic.dict_activity['oak']['query']= oakquery
+    Generic.dict_activity['rre']['query']= rrequery
+    
+    #if parameter3 == 1:
+    Helpers.CreateSuitFlags('rre',df)
+    Helpers.CreateSuitFlags('oak',df)
+    
+    Helpers.CreateEligDict(df, 'rre', Generic.dict_activity,dict_eligibility)
+    Helpers.CreateEligDict(df, 'oak', Generic.dict_activity,dict_eligibility)
+    print (dict_eligibility)
+    #selectionfunc (dict_eligibility,df, activity)
+    Helpers.selectionfunc (dict_eligibility,df, 'rre')
 #Create Oak and Riparian Eligibility
 
 
@@ -67,7 +71,7 @@ Helpers.CreateEligDict(Generic.tabs_all_df, 'oak', Generic.dict_activity,dict_el
 
 #Update Activity GHG values in Carbon Table
 
-
+    return df
 
 
 
