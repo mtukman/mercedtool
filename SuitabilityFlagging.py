@@ -16,7 +16,7 @@ dict_eligibility = {}
 #Generic.tabs_all_df = pd.merge(value_df,near_df, on = 'pointid')
 
 def CreateSuitFlags(activity):
-    '''Tales an activity name (a key from dict_activity) and uses
+    '''Takes an activity name (a key from dict_activity) and uses
     that to calculate a 1/0 suitability flag for the activity 
     in the tabs_all_df dataframe'''
     

@@ -15,6 +15,24 @@ import Helpers
 import random 
 dict_eligibility = {}
 
+def CreateSelFlags(randnum,suitfield,flagfield):
+    '''Takes an activity name (a key from dict_activity) and uses
+    that to calculate a 1/0 suitability flag for the activity 
+    in the tabs_all_df dataframe'''
+    
+    initflag = activity + '_conv_flag'
+    Generic.tabs_all_df[initflag] = 0
+    Generic.tabs_all_df.loc[Generic.dict_activity[activity]['query'], initflag] = 1
 
-for x in range(10):
-  print random.randint(1,101)
+def selectionfunc (goal,flagfield, groupnumber):
+    count = 0
+    curgoal = goal    
+    usednum = []
+    while count < goal:
+        for x in range(20000):
+            c = random.randint(1,groupnumber)
+            if c in usednum:
+                pass
+            else:
+                tabs_all_df.loc
+            
