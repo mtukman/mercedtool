@@ -321,3 +321,53 @@ def list_csvs_in_folder(path_to_folder, filetype, option = 'basename_only'):
         return [i.split('.')[0] for i in arcpy.ListFiles('*.' + filetype)]
     else:
         return arcpy.ListFiles('*.' + filetype)
+        
+        
+def CreateSpeciesTable(spcsv = "E:\\temp\\speciesranges.csv", 
+luts = "D:\\TGS\\projects\\64 - Merced Carbon\\MBA\Deliverables from TNC\\Urban Footprint\\data\\lookup_tables", 
+rids_only = "D:\\TGS\\projects\\64 - Merced Carbon\\MBA\\ToolData\\Vector\\speciesranges\\rids_in_county.csv" ):
+    
+    ''' Create species tables from CWHR tables.  Output is a dataframe
+    that provides # of amphibians, birds, mammals, reptiles, and 
+    threatened/endangered species by range ID.  Ranges are roughly 90
+    acre square polygons
+    INPUTS - Various CSVS
+    OUTPUT - Dataframe
+    NOTE THAT THE SPECIES RANGE CSV IS ALSO AT:
+    "D:\\TGS\\projects\\64 - Merced Carbon\\MBA\\ToolData\\Vector\\speciesranges\\speciesranges.csv"
+    '''
+    
+    spcsv = spcsv
+    import os
+    import pandas as pd
+        
+    climate_birds_csv = os.path.join(luts, 'list_climate_change_birds.csv')
+    climate_except_birds_csv = os.path.join(luts, 'list_climate_change_except_birds.csv')
+    threatened_endangered_csv = os.path.join(luts, 'list_threatened_endangered.csv')
+    outdict = {}
+    
+
+    rids = pd.read_csv(spcsv)
+    climate_birds = pd.read_csv(climate_birds_csv)
+    climate_except_birds = pd.read_csv(climate_except_birds_csv)
+    threated_endangered = pd.read_csv(threatened_endangered_csv)
+    constrain = pd.read_csv(rids_only)
+    rids = rids[rids['rid'].isin(constrain['rid'])][['rid', 'species_ranges']]
+    
+    #let t = a long string of species  -->  t = rids.loc[0,'species_ranges' ]
+    def add_to_dict (row):
+        q = row['species_ranges'][1:-1]
+        outdict[row['rid']]={}
+        outdict[row['rid']]['birds'] = len([i for i in q.split(',') if i.startswith('b')])
+        outdict[row['rid']]['mammals'] = len([i for i in q.split(',') if i.startswith('m')])
+        outdict[row['rid']]['amphibians'] = len([i for i in q.split(',') if i.startswith('a')])
+        outdict[row['rid']]['reptiles'] = len([i for i in q.split(',') if i.startswith('r')])
+        a = [i for i in q.split(',')]
+        outdict[row['rid']]['climate_birds'] = len(climate_birds[climate_birds['species'].isin(a)])
+        outdict[row['rid']]['climate_except_birds'] = len(climate_except_birds[climate_except_birds['species'].isin(a)])
+        outdict[row['rid']]['threatened_endangered'] = len(threated_endangered[threated_endangered['species'].isin(a)])
+    
+    rids.apply(add_to_dict, axis = 1)
+    
+    out_df = pd.DataFrame.from_dict(outdict, 'index')
+    return out_df
