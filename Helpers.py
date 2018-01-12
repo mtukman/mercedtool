@@ -25,35 +25,36 @@ def CreateEligDict(df, activity, dict_activity, dict_eligibility):
     
 
 def selectionfunc (dict_eligibility,df, activity):
-    import random
     import Generic
+    import pandas as pd
     goal = 0
     tempdict = dict_eligibility[activity]
     klist = list(tempdict.keys())
     for i in klist:
         goal = goal + tempdict[i]
+    goal = goal*.1
     count = 0
     print ('Goal is : ' + str (goal))
-    usednums = []
     initflag =  activity + 'suitflag'
     selflag = activity + 'selected'
     df[selflag] = 0
     print (selflag)
-    while count < goal:
-        for x in range(500000):
-            c = random.randint(1,Generic.dict_activity[activity]['grpsize'])
-            print (str(c))
-            if c in usednums:
-                pass
-            else:
-                usednums.append(c)
-                if df.loc[(df[initflag] == 1) & (df['medgroup_val'] == c)].empty:
-                    print ('No pixels in selection')
-                else:
-                    df.loc[(df[initflag] == 1) & (df['medgroup_val'] == c),df[selflag]] = 1
-                    x =  len((df[initflag] == 1) & (df['medgroup_val'] == c) & (df[selflag] == 1))
-                    count = count + x
-                print ('This is the count: ' + str(count))
+    print ('group size is :' + str(Generic.dict_activity[activity]['grpsize']))
+    tempdf = df.groupby('medgroup_val').sum()[['pointid',initflag]]
+    tempdf.loc[0:,'grptemp'] = tempdf.index
+    vlen = len(tempdf['grptemp'])
+    s = tempdf['grptemp'].sample(n = vlen)
+    glist = []
+    for i in s:
+        if count<goal:
+            count = count + tempdf.at[i,initflag]
+            glist.append(i)
+            
+        else:
+            pass
+    print (len (glist))
+    print (str(count))
+    df.loc[df['medgroup_val'].isin(glist), selflag] = 1
     return df
                 
                 
