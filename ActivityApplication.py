@@ -42,20 +42,19 @@ def DoActivities(df):
     Helpers.CreateSuitFlags('rre',df)
     Helpers.CreateSuitFlags('oak',df)
     
-    Helpers.CreateEligDict(df, 'rre', Generic.dict_activity,dict_eligibility)
-    Helpers.CreateEligDict(df, 'oak', Generic.dict_activity,dict_eligibility)
+
     print (dict_eligibility)
     #selectionfunc (dict_eligibility,df, activity)
     Helpers.selectionfunc (dict_eligibility,df, 'rre')
 #Create Oak and Riparian Eligibility
-
-
+    Helpers.CreateEligDict(df, 'rre', Generic.dict_activity,dict_eligibility)
+    Helpers.CreateEligDict(df, 'oak', Generic.dict_activity,dict_eligibility)
+    print (dict_eligibility)
 #Create Oak and Riparian Selection
 
+    Helpers.selectionfunc (dict_eligibility,df, 'rre')
 
-#Change Landcover Labels from Selection
-
-
+    
 #Update Change Flag List
 
 

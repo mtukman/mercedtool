@@ -55,6 +55,12 @@ def selectionfunc (dict_eligibility,df, activity):
     print (len (glist))
     print (str(count))
     df.loc[df['medgroup_val'].isin(glist), selflag] = 1
+    if activity == 'rre':
+        df.loc[df['medgroup_val'].isin(glist), LC2014] = 'Riparian Restoration' #CHANGE FIELD BEFORE FINAL
+        df.loc[df['medgroup_val'].isin(glist), 'gridcode14'] = 9999 
+    if activity == 'oak':
+        df.loc[df['medgroup_val'].isin(glist), LC2014] = 'Oak Conversion' #CHANGE FIELD BEFORE FINAL
+        df.loc[df['medgroup_val'].isin(glist), 'gridcode14'] = 11111
     return df
                 
                 
