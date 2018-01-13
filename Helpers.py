@@ -8,6 +8,10 @@ import Generic
 
 
 
+
+
+    
+    
 def CreateEligDict(df, activity, dict_activity, dict_eligibility):
     import sys
     import Generic
@@ -25,6 +29,9 @@ def CreateEligDict(df, activity, dict_activity, dict_eligibility):
     
 
 def selectionfunc (dict_eligibility,df, activity):
+    """
+    
+    """
     import Generic
     import pandas as pd
     goal = 0
@@ -56,10 +63,11 @@ def selectionfunc (dict_eligibility,df, activity):
     print (str(count))
     df.loc[df['medgroup_val'].isin(glist), selflag] = 1
     if activity == 'rre':
-        df.loc[df['medgroup_val'].isin(glist), LC2014] = 'Riparian Restoration' #CHANGE FIELD BEFORE FINAL
+        df.loc[df['medgroup_val'].isin(glist), 'LC2014'] = 'Riparian Restoration' #CHANGE FIELD BEFORE FINAL
         df.loc[df['medgroup_val'].isin(glist), 'gridcode14'] = 9999 
+        df.loc[df['medgroup_val'].isin(glist), 'lcchange'] = 0 
     if activity == 'oak':
-        df.loc[df['medgroup_val'].isin(glist), LC2014] = 'Oak Conversion' #CHANGE FIELD BEFORE FINAL
+        df.loc[df['medgroup_val'].isin(glist), 'LC2014'] = 'Oak Conversion' #CHANGE FIELD BEFORE FINAL
         df.loc[df['medgroup_val'].isin(glist), 'gridcode14'] = 11111
     return df
                 
@@ -311,10 +319,10 @@ def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol 
     result.to_csv(outputcsv)
 
 
-def ChangeFlag(df):
+def ChangeFlag(df,scenario):
     import pandas as pd
     query = '''tabs_all_df['LC2030'] != tabs_all_df['LC2014']''' 
-    testquery = (df['LC2001'] != df['LC2014'])
+    testquery = (df['LC2001'] != df[scenario])
     df['lcchange'] = 1
     df.loc[testquery, 'lcchange'] = 0
 
@@ -377,3 +385,11 @@ rids_only = "D:\\TGS\\projects\\64 - Merced Carbon\\MBA\\ToolData\\Vector\\speci
     
     out_df = pd.DataFrame.from_dict(outdict, 'index')
     return out_df
+    
+def ghgupdate(activity,df,carb30,carb30mod):
+
+    import pandas as pd
+    import Generic
+    trt_temp = trt.loc[trt['Activity'] == 'rre']
+    MergeMultiDF('LC2030MOD',[df,trt_temp])
+    

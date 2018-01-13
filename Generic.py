@@ -101,7 +101,11 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     global Carbon2030
     Carbon2030 = os.path.join(root_data_path, midpath, 'Tables/CarbonTables/Carb30.csv')
     all_layers.append(Carbon2030)
-
+    
+    global Carbon2030mod
+    Carbon2030mod = os.path.join(root_data_path, midpath, 'Tables/CarbonTables/Carb30mod.csv')
+    all_layers.append(Carbon2030mod)
+    
     global calenviro
     calenviro = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_calenviro.csv')
     all_layers.append(calenviro)
@@ -130,6 +134,10 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     global lc
     lc = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_landcovers.csv')
     all_layers.append(lc)
+    
+    global trt
+    trt = os.path.join(root_data_path,midpath,'Tables/SingleTables', 'trt_reductions.csv')
+    all_layers.append(trt)
 
     #Global Variables
 
