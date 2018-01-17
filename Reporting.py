@@ -1,3 +1,13 @@
+"""
+Plots/Figures needed:
+Land cover change by natural,crop and urban - max, bau and min (net gain/loss for each)
+Land cover change 
+
+
+
+"""
+
+
 import plotly.graph_objs as go
 import plotly.plotly as py
 
