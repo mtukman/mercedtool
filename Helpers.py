@@ -36,6 +36,7 @@ def selectionfunc (dict_eligibility,df, activity):
     """
     import Generic
     import pandas as pd
+    import arcpy
     goal = 0
     #Create a temporary dictionary of the activity's dictionary from the eligibility dict
     tempdict = dict_eligibility[activity]
@@ -43,15 +44,16 @@ def selectionfunc (dict_eligibility,df, activity):
     klist = list(tempdict.keys())
     for i in klist:
         goal = goal + tempdict[i]
-    goal = goal*.1 #update to link to user defined % for final tool
+    goal = goal* Generic.dict_activity[activity]['adoption'] #update to link to user defined % for final tool
     count = 0
-    print ('Goal is : ' + str (goal))
+    arcpy.AddMessage(str(count))
+    arcpy.AddMessage ('Goal is : ' + str (goal))
     initflag =  activity + 'suitflag'
     selflag = activity + 'selected'
     df[selflag] = 0
-    print (selflag)
-    print (initflag)
-    print ('group size is :' + str(Generic.dict_activity[activity]['grpsize']))
+    arcpy.AddMessage (selflag)
+    arcpy.AddMessage (initflag)
+    arcpy.AddMessage ('group size is :' + str(Generic.dict_activity[activity]['grpsize']))
     
     #Group pixels by their medium group value (medium grid)
     tempdf = df.groupby('medgroup_val').sum()[['pointid',initflag]]
@@ -64,6 +66,9 @@ def selectionfunc (dict_eligibility,df, activity):
     s = tempdf['grptemp'].sample(n = vlen)
     glist = [] #Any empty list to hold selected group values
     #Now the function loops through the list of group values and adds the pixels in each group to the count until the goal is reached
+    
+
+    arcpy.AddMessage(goal)
     for i in s:
         if count<goal:
             count = count + tempdf.at[i,initflag]

@@ -27,19 +27,17 @@ import Generic
 import Helpers
 global dict_eligibility
 
-def DoActivities(df):
+def DoActivities(df,activitylist):
     tempdf = df
     dict_eligibility = {}
-    
-    smallgroup = 20000
-    mediumgroup = 16000
+
     tempdf['LC2030MOD'] = tempdf['LC2014']
         
         
     Helpers.ChangeFlag(tempdf,'LC2014','LC2030MOD')
     
     #Calculate Riparian Suitability and Selection
-    if blahblah == 'rre':
+    if 'rre' in activitylist:
         Generic.dict_activity['rre']['query'] = (tempdf['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & (tempdf['lcchange'] == 1) & ((tempdf['near_rivers'] < 650) | (tempdf['near_streams'] < 100)) & (tempdf['near_woody'] != 0))
         Helpers.CreateSuitFlags('rre',tempdf)
         Helpers.CreateEligDict(tempdf, 'rre', Generic.dict_activity,dict_eligibility)    
@@ -47,7 +45,7 @@ def DoActivities(df):
   
   
     #Create Oak Suitability and Selection
-    if blahblah == 'oak':
+    if 'oak' in activitylist:
         Generic.dict_activity['oak']['query'] =(tempdf['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']))    
         Helpers.CreateSuitFlags('oak',tempdf)
         Helpers.CreateEligDict(tempdf, 'oak', Generic.dict_activity,dict_eligibility)
@@ -66,25 +64,25 @@ def DoActivities(df):
     Generic.dict_activity['urb']['query'] = (df['LC2030MOD'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
 
     #Create green house gas function to run suitability, eligibility and selection functions from Helpers
-    def ghg_selection (activity,adoption = .02):
+    def ghg_selection (tempdf,activity,dict_eligibility):
         Helpers.CreateSuitFlags(activity,tempdf)    
         Helpers.CreateEligDict(tempdf, activity, Generic.dict_activity,dict_eligibility)  
         Helpers.selectionfunc (dict_eligibility,tempdf,activity)
         
     #GHG Suitability Flag and Selection for CCR
-    if blahblah == 'ccr':
-        ghg_selection ('ccr', ccradoption)
-    if blahblah == 'mul':
+    if 'ccr' in activitylist:
+        ghg_selection (tempdf,'ccr',dict_eligibility)
+    if 'mul' in activitylist:
         ghg_selection ('mul')
-    if blahblah == 'nfm':
+    if 'nfm' in activitylist:
         ghg_selection ('nfm')
-    if blahblah == 'aca':
+    if 'aca' in activitylist:
         ghg_selection ('aca')
-    if blahblah == 'acu':
+    if 'acu' in activitylist:
         ghg_selection ('acu')
-    if blahblah == 'hpl':
+    if 'hpl' in activitylist:
         ghg_selection ('hpl')
-    if blahblah == 'urb':
+    if 'urb' in activitylist:
         ghg_selection ('urb')
 
     return tempdf

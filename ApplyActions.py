@@ -40,8 +40,8 @@ def ApplyGHG(df,carb30,carb14,carb30mod):
         for index, row in temptrt.iterrows():
             if row['Reductions_N2O'] != 0:
                 tempdf.loc[(tempdf['LC2030MOD'] == row['LC2030MOD_y']) & (tempdf[activity + 'selected'] == 1), 'N2O_emissions'] = tempdf['N2O_emissions'] * row['Reductions_N2O']
-            if row['Reductions_CH4'] != 0:
-                tempdf.loc[(tempdf['LC2030MOD'] == row['LC2030MOD_y']) & (tempdf[activity + 'selected'] == 1), 'ch4_em_mod'] = tempdf['n20_em_mod'] * row['Reductions_CH4']
+#            if row['Reductions_CH4'] != 0:
+#                tempdf.loc[(tempdf['LC2030MOD'] == row['LC2030MOD_y']) & (tempdf[activity + 'selected'] == 1), 'ch4_em_mod'] = tempdf['n20_em_mod'] * row['Reductions_CH4']
 
     UpdateValues(tempdf,'ccr')
     return tempdf
