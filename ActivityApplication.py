@@ -3,7 +3,7 @@
 that takes the activity abbreviations and
 the change flag (regular or mod)
 
-It will assign new fields to tabs_all_df dataframe
+It will assign new fields to tabs_all_tempdf dataframe
 
 it will be run from main_program.py first for the 
 land cover changing activities and then for the 
@@ -13,7 +13,6 @@ non land cover changing ones
 oak - OAK WOODLAND RESTORATION
 rre - RIPARIAN RESTORATION
 mul - MULCHING
-mma - REPLACING SYNTHETIC FERTILIZER WITH SOIL AMENDMENTS
 nfm - NITROGEN FERTILIZER MANAGEMENT
 ccr - COVER CROPS
 aca - AVOIDED CONVERSION TO AG
@@ -29,64 +28,66 @@ import Helpers
 global dict_eligibility
 
 def DoActivities(df):
+    tempdf = df
     dict_eligibility = {}
     
     smallgroup = 20000
     mediumgroup = 16000
-    
-    
+    tempdf['LC2030MOD'] = tempdf['LC2014']
         
         
-    #first create change flag
-    Helpers.ChangeFlag(df,'LC2014')
+    Helpers.ChangeFlag(tempdf,'LC2014','LC2030MOD')
     
-    #Calculate Oak and Riparian Suitability Flags
-    rrequery = (df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & (df['lcchange'] == 1) & ((df['near_rivers'] < 650) | (df['near_streams'] < 100)) & (df['near_woody'] != 0))
-    oakquery =(df['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']))
-    ccrquery =(df['LC2014'].isin(['Orchard', 'Annual Cropland']))
-    
-    
-    
-    #Activity Dictionaries
-    Generic.dict_activity['oak']['query']= oakquery
-    Generic.dict_activity['rre']['query']= rrequery
-    Generic.dict_activity['ccr']['query']= ccrquery    
-    #if parameter3 == 1:
-    Helpers.CreateSuitFlags('rre',df)
-    Helpers.CreateSuitFlags('oak',df)
+    #Calculate Riparian Suitability and Selection
+    if blahblah == 'rre':
+        Generic.dict_activity['rre']['query'] = (tempdf['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & (tempdf['lcchange'] == 1) & ((tempdf['near_rivers'] < 650) | (tempdf['near_streams'] < 100)) & (tempdf['near_woody'] != 0))
+        Helpers.CreateSuitFlags('rre',tempdf)
+        Helpers.CreateEligDict(tempdf, 'rre', Generic.dict_activity,dict_eligibility)    
+        Helpers.selectionfunc (dict_eligibility,tempdf, 'rre')
   
+  
+    #Create Oak Suitability and Selection
+    if blahblah == 'oak':
+        Generic.dict_activity['oak']['query'] =(tempdf['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']))    
+        Helpers.CreateSuitFlags('oak',tempdf)
+        Helpers.CreateEligDict(tempdf, 'oak', Generic.dict_activity,dict_eligibility)
+        Helpers.selectionfunc (dict_eligibility,tempdf, 'oak')
 
-    print (dict_eligibility)
-    #selectionfunc (dict_eligibility,df, activity)
-#    Helpers.selectionfunc (dict_eligibility,df, 'rre')
-#Create Oak and Riparian Eligibility
-    Helpers.CreateEligDict(df, 'rre', Generic.dict_activity,dict_eligibility)
-    Helpers.CreateEligDict(df, 'oak', Generic.dict_activity,dict_eligibility)
-
-
-    print (dict_eligibility)
-#Create Oak and Riparian Selection
-    df['LC2030MOD'] = df['LC2014']
-    Helpers.selectionfunc (dict_eligibility,df, 'rre')
-
+    #Calculate 2030MOD values
+    tempdf['LC2030MOD'] = tempdf['LC2014']
     
-#Update Change Flag List
-    Helpers.ChangeFlag(df,'LC2014')
+    #Set GHG dictionary entries for suitability
+    Generic.dict_activity['ccr']['query'] = (df['LC2030MOD'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+    Generic.dict_activity['mul']['query'] = (df['LC2030MOD'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+    Generic.dict_activity['nfm']['query'] = (df['LC2030MOD'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+    Generic.dict_activity['aca']['query'] = (df['LC2030MOD'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+    Generic.dict_activity['acu']['query'] = (df['LC2030MOD'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+    Generic.dict_activity['hpl']['query'] = (df['LC2030MOD'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+    Generic.dict_activity['urb']['query'] = (df['LC2030MOD'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
 
+    #Create green house gas function to run suitability, eligibility and selection functions from Helpers
+    def ghg_selection (activity,adoption = .02):
+        Helpers.CreateSuitFlags(activity,tempdf)    
+        Helpers.CreateEligDict(tempdf, activity, Generic.dict_activity,dict_eligibility)  
+        Helpers.selectionfunc (dict_eligibility,tempdf,activity)
+        
+    #GHG Suitability Flag and Selection for CCR
+    if blahblah == 'ccr':
+        ghg_selection ('ccr', ccradoption)
+    if blahblah == 'mul':
+        ghg_selection ('mul')
+    if blahblah == 'nfm':
+        ghg_selection ('nfm')
+    if blahblah == 'aca':
+        ghg_selection ('aca')
+    if blahblah == 'acu':
+        ghg_selection ('acu')
+    if blahblah == 'hpl':
+        ghg_selection ('hpl')
+    if blahblah == 'urb':
+        ghg_selection ('urb')
 
-#Calculate Agricultural Activity Suitability Flags
-    Helpers.CreateSuitFlags('ccr',df)  
-    
-
-#Create Agricultural Activity Eligibility
-    Helpers.CreateEligDict(df, 'ccr', Generic.dict_activity,dict_eligibility)
-
-#Create Agricultural Activity Selection
-    Helpers.selectionfunc (dict_eligibility,df, 'ccr')
-
-#Update Activity GHG values in Carbon Table
-
-    return df
+    return tempdf
 
 
 

@@ -13,8 +13,8 @@ def DoInitial():
     gc.collect()
     
     #full set
-    jointabs  = "E:/Temp/Tables/ValueTables"
-    neartabs  = "E:/Temp/Tables/NearTables"
+    jointabs  = "E:/mercedtool/MASTER_DATA/Tables/ValueTables"
+    neartabs  = "E:/mercedtool/MASTER_DATA/Tables/NearTables"
     
     
     jointables = Helpers.LoadCSVs(jointabs)

@@ -30,28 +30,40 @@ def CreateEligDict(df, activity, dict_activity, dict_eligibility):
 
 def selectionfunc (dict_eligibility,df, activity):
     """
+    This function takes a dictionary, a dataframe and an activity.
+    It takes a user input to determine how many pixels to select for the activity.
     
     """
     import Generic
     import pandas as pd
     goal = 0
+    #Create a temporary dictionary of the activity's dictionary from the eligibility dict
     tempdict = dict_eligibility[activity]
+    print (tempdict)
     klist = list(tempdict.keys())
     for i in klist:
         goal = goal + tempdict[i]
-    goal = goal*.1
+    goal = goal*.1 #update to link to user defined % for final tool
     count = 0
     print ('Goal is : ' + str (goal))
     initflag =  activity + 'suitflag'
     selflag = activity + 'selected'
     df[selflag] = 0
     print (selflag)
+    print (initflag)
     print ('group size is :' + str(Generic.dict_activity[activity]['grpsize']))
+    
+    #Group pixels by their medium group value (medium grid)
     tempdf = df.groupby('medgroup_val').sum()[['pointid',initflag]]
+    
     tempdf.loc[0:,'grptemp'] = tempdf.index
-    vlen = len(tempdf['grptemp'])
+    tempdf.loc[tempdf[initflag] == 1]
+    vlen = len(tempdf['grptemp']) #Get the length of the number of groups
+    
+    # s will be a randomly sampled list of all group values
     s = tempdf['grptemp'].sample(n = vlen)
-    glist = []
+    glist = [] #Any empty list to hold selected group values
+    #Now the function loops through the list of group values and adds the pixels in each group to the count until the goal is reached
     for i in s:
         if count<goal:
             count = count + tempdf.at[i,initflag]
@@ -61,15 +73,21 @@ def selectionfunc (dict_eligibility,df, activity):
             pass
     print (len (glist))
     print (str(count))
-    df.loc[df['medgroup_val'].isin(glist), selflag] = 1
+    print (glist)
+    
+    
+    query = (df['medgroup_val'].isin(glist)) & (df[activity + 'suitflag'] == 1)
+
+    df.loc[query,selflag] = 1       
     if activity == 'rre':
-        df.loc[df['medgroup_val'].isin(glist), 'LC2014'] = 'Riparian Restoration' #CHANGE FIELD BEFORE FINAL
-        df.loc[df['medgroup_val'].isin(glist), 'gridcode14'] = 9999 
-        df.loc[df['medgroup_val'].isin(glist), 'lcchange'] = 0 
+        df.loc[query, 'LC2014'] = 'Riparian Restoration' #CHANGE FIELD BEFORE FINAL
+        df.loc[query, 'gridcode14'] = 9999 
+        df.loc[query, 'lcchange'] = 0 
     if activity == 'oak':
-        df.loc[df['medgroup_val'].isin(glist), 'LC2014'] = 'Oak Conversion' #CHANGE FIELD BEFORE FINAL
-        df.loc[df['medgroup_val'].isin(glist), 'gridcode14'] = 11111
+        df.loc[query, 'LC2014'] = 'Oak Conversion' #CHANGE FIELD BEFORE FINAL
+        df.loc[query, 'gridcode14'] = 11111
     return df
+
                 
                 
 def CreateSuitFlags(activity,df):
@@ -319,10 +337,10 @@ def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol 
     result.to_csv(outputcsv)
 
 
-def ChangeFlag(df,scenario):
+def ChangeFlag(df,scenario1,scenario2):
     import pandas as pd
     query = '''tabs_all_df['LC2030'] != tabs_all_df['LC2014']''' 
-    testquery = (df['LC2001'] != df[scenario])
+    testquery = (df[scenario1] != df[scenario2])
     df['lcchange'] = 1
     df.loc[testquery, 'lcchange'] = 0
 

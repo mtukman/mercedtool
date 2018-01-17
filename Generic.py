@@ -1,5 +1,5 @@
 from __future__ import unicode_literals #Can Delete This
-def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedtool', mask_fc = 'D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Vectors.gdb/Test_Mask', CVA_List_L = '', midpath = 'MASTER_DATA', output_file_loc = 'P:/Temp', run_name = 'Test', conservation_fc = ''):
+def set_paths_and_workspaces(workspace = 'E:/mercedtool', root_data_path = 'E:/mercedtool', mask_fc = 'D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Vectors.gdb/Test_Mask', CVA_List_L = '', midpath = 'MASTER_DATA', output_file_loc = 'P:/Temp', run_name = 'Test', conservation_fc = ''):
     """Workspace must be a file .gdb and is the place where all temp files and outputs will be placed.
     root_data_path -->  This path the top level folder for the data files (e.g., D:/CLOUD/Shared/Open Space/)
     midpath -->  This path is the path to the data files from roopath down the tree (e.g., Carbon Framework/GIS Data/SAMPLE_DATA/)
@@ -89,7 +89,8 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     global Points_Table
     Points_Table = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'pointsmerged.csv')
     all_layers.append(Points_Table)
-
+    
+    
     global Carbon2001
     Carbon2001 = os.path.join(root_data_path, midpath, 'Tables/CarbonTables/Carb01.csv')
     all_layers.append(Carbon2001)
@@ -122,9 +123,9 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     hydrovuln = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_hydrovuln.csv')
     all_layers.append(hydrovuln)
 
-    global slope
-    slope = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_slope.csv')
-    all_layers.append(slope)
+#    global slope
+#    slope = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_slope.csv')
+#    all_layers.append(slope)
 
     global scenic
     scenic = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_scenic.csv')
@@ -136,7 +137,7 @@ def set_paths_and_workspaces(workspace = 'P:/Temp', root_data_path = 'E:/mercedt
     all_layers.append(lc)
     
     global trt
-    trt = os.path.join(root_data_path,midpath,'Tables/SingleTables', 'trt_reductions.csv')
+    trt = os.path.join(root_data_path,midpath,'Tables/trt', 'trt_reductions.csv')
     all_layers.append(trt)
 
     #Global Variables
@@ -292,7 +293,6 @@ medium = 15000
 oak - OAK WOODLAND RESTORATION
 rre - RIPARIAN RESTORATION
 mul - MULCHING
-mma - REPLACING SYNTHETIC FERTILIZER WITH SOIL AMENDMENTS
 nfm - NITROGEN FERTILIZER MANAGEMENT
 ccr - COVER CROPS
 aca - AVOIDED CONVERSION TO AG
@@ -304,16 +304,15 @@ urb - URBAN FORESTRY
 '''
 global dict_activity
 
-oakdict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':small, 'suitflag':'oaksuitflag'}
-rredict = {'name':'Riparian Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':medium, 'suitflag':'ripsuitflag'}
-muldict =  {'name':'Mulching','query' : 'holder', 'ag_modifier':.20, 'grpsize':small, 'suitflag':'mulsuitflag'}
-mmadict =  {'name':'Replacing Sythetic Fertilizer with Soil Amendments','query' : 'holder', 'ag_modifier':.35, 'selfield': 'mmaselect', 'grpsize':small, 'suitflag':'mmasuitflag'}
-nfmdict = {'name':'Nirtrogen Fertilizer Management','query' : 'holder', 'ag_modifier':.25,  'grpsize':small, 'suitflag':'nfmsuitflag'}
-ccrdict = {'name':'Cover Crops', 'query':'holder', 'ag_modifier':.20,  'grpsize':small, 'suitflag':'ccrsuitflag'}
-acadict = {'name':'Avoided Conversion to Agriculture', 'query':'holder', 'ag_modifier':1, 'grpsize':small, 'suitflag':'acasuitflag'}
-acudict = {'name':'Avoided Conversion to Urban', 'query':'holder', 'ag_modifier':1,  'grpsize':small, 'suitflag':'acusuitflag'}
-hpldict = {'name':'Hedgerow Planting', 'query':'holder', 'ag_modifier':.35,  'grpsize':small, 'suitflag':'hplsuitflag'}
-urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'grpsize':small, 'suitflag':'urbsuitflag'}
+oakdict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':small, 'suitflag':'oaksuitflag','selquery':'holder'}
+rredict = {'name':'Riparian Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':medium, 'suitflag':'ripsuitflag','selquery':'holder'}
+muldict =  {'name':'Mulching','query' : 'holder', 'ag_modifier':.20, 'grpsize':small, 'suitflag':'mulsuitflag','selquery':'holder'}
+nfmdict = {'name':'Nirtrogen Fertilizer Management','query' : 'holder', 'ag_modifier':.25,  'grpsize':small, 'suitflag':'nfmsuitflag','selquery':'holder'}
+ccrdict = {'name':'Cover Crops', 'query':'holder', 'ag_modifier':.20,  'grpsize':small, 'suitflag':'ccrsuitflag','selquery':'holder'}
+acadict = {'name':'Avoided Conversion to Agriculture', 'query':'holder', 'ag_modifier':1, 'grpsize':small, 'suitflag':'acasuitflag','selquery':'holder'}
+acudict = {'name':'Avoided Conversion to Urban', 'query':'holder', 'ag_modifier':1,  'grpsize':small, 'suitflag':'acusuitflag','selquery':'holder'}
+hpldict = {'name':'Hedgerow Planting', 'query':'holder', 'ag_modifier':.35,  'grpsize':small, 'suitflag':'hplsuitflag','selquery':'holder'}
+urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'grpsize':small, 'suitflag':'urbsuitflag','selquery':'holder'}
 
 
 dict_activity = {'oak':oakdict, 'rre': rredict, 'mul':muldict, 'mma':mmadict, 'nfm':nfmdict, 'ccr':ccrdict,'aca':acadict,'acu':acudict,'hpl':hpldict, 'urb':urbdict}
