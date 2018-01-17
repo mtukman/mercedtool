@@ -73,17 +73,17 @@ def DoActivities(df,activitylist):
     if 'ccr' in activitylist:
         ghg_selection (tempdf,'ccr',dict_eligibility)
     if 'mul' in activitylist:
-        ghg_selection ('mul')
+        ghg_selection (tempdf,'mul',dict_eligibility)
     if 'nfm' in activitylist:
-        ghg_selection ('nfm')
+        ghg_selection (tempdf,'nfm',dict_eligibility)
     if 'aca' in activitylist:
-        ghg_selection ('aca')
+        ghg_selection (tempdf,'aca',dict_eligibility)
     if 'acu' in activitylist:
-        ghg_selection ('acu')
+        ghg_selection (tempdf,'acu',dict_eligibility)
     if 'hpl' in activitylist:
-        ghg_selection ('hpl')
+        ghg_selection (tempdf,'hpl',dict_eligibility)
     if 'urb' in activitylist:
-        ghg_selection ('urb')
+        ghg_selection (tempdf,'urb',dict_eligibility)
 
     return tempdf
 

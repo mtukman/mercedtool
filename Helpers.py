@@ -5,20 +5,23 @@ This script holds the functions used in other modules of the tool.
 @author: mtukman
 """
 import Generic
+import arcpy
 
 
 
-
-
-    
+def pmes(message):
+    """
+    Takes a string and prints it as an arcpy msg and as a python print statement
+    """
+    arcpy.AddMessage(message)
+    print (message)
     
 def CreateEligDict(df, activity, dict_activity, dict_eligibility):
     import sys
     import Generic
     initflag = activity + 'suitflag'
-    print ()
     if activity in dict_eligibility.keys():
-        print('The activity is already in the dict_eligibility dictionary')
+        pmes('The activity is already in the dict_eligibility dictionary')
         sys.exit('***The activity is already in the dict_eligibility dictionary***')
     eli = df.groupby('LC2014').sum()[initflag]
     eli.loc['Annual Cropland'] = eli.loc['Annual Cropland'] * Generic.dict_activity[activity]['ag_modifier']
@@ -40,20 +43,17 @@ def selectionfunc (dict_eligibility,df, activity):
     goal = 0
     #Create a temporary dictionary of the activity's dictionary from the eligibility dict
     tempdict = dict_eligibility[activity]
-    print (tempdict)
     klist = list(tempdict.keys())
     for i in klist:
         goal = goal + tempdict[i]
     goal = goal* Generic.dict_activity[activity]['adoption'] #update to link to user defined % for final tool
     count = 0
-    arcpy.AddMessage(str(count))
-    arcpy.AddMessage ('Goal is : ' + str (goal))
+    
+    pmes ('Goal is : ' + str (goal))
     initflag =  activity + 'suitflag'
     selflag = activity + 'selected'
     df[selflag] = 0
-    arcpy.AddMessage (selflag)
-    arcpy.AddMessage (initflag)
-    arcpy.AddMessage ('group size is :' + str(Generic.dict_activity[activity]['grpsize']))
+    pmes ('group size is :' + str(Generic.dict_activity[activity]['grpsize']))
     
     #Group pixels by their medium group value (medium grid)
     tempdf = df.groupby('medgroup_val').sum()[['pointid',initflag]]
@@ -76,9 +76,9 @@ def selectionfunc (dict_eligibility,df, activity):
             
         else:
             pass
-    print (len (glist))
-    print (str(count))
-    print (glist)
+
+    pmes (str(count))
+
     
     
     query = (df['medgroup_val'].isin(glist)) & (df[activity + 'suitflag'] == 1)
@@ -102,7 +102,7 @@ def CreateSuitFlags(activity,df):
     import Generic
 
     initflag = activity + 'suitflag'
-    print (initflag)
+    pmes (initflag)
     df[initflag] = 0
     df.loc[Generic.dict_activity[activity]['query'], initflag] = 1
     
@@ -156,8 +156,8 @@ def FCstoCSVs (inputgdb,Outpath):
     #--first lets make a list of all of the fields in the table
         fields = arcpy.ListFields(table)
         field_names = [field.name for field in fields]
-        print (fields)
-        print (field_names)
+        pmes (fields)
+        pmes (field_names)
         # Now we create the output file and write the table to it
         with open(outfile,'w') as f:
             dw = csv.DictWriter(f,field_names, lineterminator = '\n')
@@ -180,8 +180,8 @@ def FCtoCSV (inputfc,Outpath):
     #--first lets make a list of all of the fields in the table
     fields = arcpy.ListFields(inputfc)
     field_names = [field.name for field in fields]
-    print (fields)
-    print (field_names)
+    pmes (fields)
+    pmes (field_names)
     # Now we create the output file and write the table to it
     with open(Outpath,'w') as f:
         dw = csv.DictWriter(f,field_names, lineterminator = '\n')
@@ -212,26 +212,26 @@ def Clean_Table (csv,idfield,length=5689373,keepfields = [], renamefields = [],v
     import pandas as pd
     import os
     import sys
-    print ('reading csv ' + valuefield)
+    pmes ('reading csv ' + valuefield)
     if keepfields:
         df = pd.read_csv(csv, usecols = keepfields)
     else:
         df = pd.read_csv(csv)
-    print (len(df))
-    print ('Finished Loading DF, finding MAX')
+    pmes (len(df))
+    pmes ('Finished Loading DF, finding MAX')
     max = df[idfield].max()
     if (max != length) or (len(df) != length):
         print ("LENGTH IS WRONG")
         sys.exit()
     else:
         pass
-    print ('Checking Uniqueness')
+    pmes ('Checking Uniqueness')
     unique = df[idfield].is_unique
-    print (unique)
+    pmes (unique)
     if unique is True:
         pass
     else:
-        print ("ID FIELD IS NOT UNIQUE")
+        pmes ("ID FIELD IS NOT UNIQUE")
         exit
     if valuefield in df:
         if df[valuefield].dtype == 'O':
@@ -239,7 +239,7 @@ def Clean_Table (csv,idfield,length=5689373,keepfields = [], renamefields = [],v
         else:
             df[valuefield].fillna(-9999)
     if not renamefields:
-        print ("No fields to rename.")
+        pmes ("No fields to rename.")
     else:
         for i in renamefields:
             df = df.rename(columns={i[0]: i[1]})
@@ -273,12 +273,12 @@ def MakeMBARaster(LUT,OutputPath,JoinKey,TargetKey,Lfield):
     ws = 'E:/Temp'
     arcpy.env.workspace = ws
     arcpy.env.overwriteOutput = 1
-    print ('Making Raster Layer')
+    pmes ('Making Raster Layer')
     arcpy.MakeRasterLayer_management(raster,'temp')
     arcpy.AddJoin_management('temp',JoinKey,LUT,TargetKey)
     arcpy.CopyRaster_management('temp','temp2.tif')
     tempo = arcpy.sa.Lookup('temp2.tif',Lfield)
-    print ('Saving Raster')
+    pmes ('Saving Raster')
     tempo.save(OutputPath)
 
 def RastersToPoints(Raster,ValueField,OutputName):
@@ -287,7 +287,7 @@ def RastersToPoints(Raster,ValueField,OutputName):
     from the raster in the temp vector gdb in the Master Data Folder.
     """
     import arcpy
-    print ('Doing: ' + Raster)
+    pmes ('Converting to points: ' + Raster)
     arcpy.RasterToPoint_conversion(Raster,tempgdb+OutputName,ValueField)
 
 def LoadCSVs(infolder):
@@ -305,14 +305,14 @@ def LoadCSVs(infolder):
     arcpy.env.overwriteOutput = 1
     list1 = arcpy.ListFiles("*.csv")
     dflist = []
-    print (list1)
+    pmes (list1)
     for i in list1:
         dflist.append(pd.read_csv(os.path.join(ws, i), encoding = 'latin-1'))
 
     newlist = []
     for i in dflist:
         newlist.append(i.loc[:, ~i.columns.str.contains('^Unnamed')])
-    print (newlist)
+    pmes (newlist)
     return newlist
 
 
