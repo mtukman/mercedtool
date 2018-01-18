@@ -39,14 +39,16 @@ def DoActivities(df,activitylist, scenario,customdev):
         
     Helpers.ChangeFlag(tempdf,'LC2014','LC2030MOD')
     
-
-    if 'custom' == scenario:
-        arcpy.MakeFeatureLayer_management(Generic.points,'temppts)
+    Helpers.pmes (scenario)
+    Helpers.pmes (customdev)
+    if 'Custom' == scenario:
+        Helpers.pmes ('Doing custom dev')
+        arcpy.MakeFeatureLayer_management(Generic.tpoints,'temppts')
         arcpy.SelectLayerByLocation_management('temppts','INTERSECT',customdev)
         arcpy.Frequency_analysis('temppts', Generic.scratch + '/custompts.csv')
         custpts = pd.read_csv(Generic.scratch + '/custompts.csv',usecols = ['pointid'])
         plist = custpts['pointid'].tolist()
-        df.loc[tmpdf['pointid'].isin(plist), 'LC2014'] = 'Urban'
+        df.loc[tempdf['pointid'].isin(plist), 'LC2014'] = 'Urban'
         
     #Calculate Riparian Suitability and Selection        
     if 'rre' in activitylist:
