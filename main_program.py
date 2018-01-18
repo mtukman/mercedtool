@@ -1,6 +1,7 @@
 #run entire program
 import arcpy
 import sys
+import Helpers
 #variables passed in from ArcMap tool
 
 run_name = arcpy.GetParameterAsText(0)       #this will be prepended to raster output file name, no spaces
@@ -16,7 +17,7 @@ if arcpy.GetParameterAsText(4):
     arcpy.AddMessage('added rre to activity list')
 if arcpy.GetParameterAsText(6):
     activitylist.append('ccr')
-    
+scenario = arcpy.GetParameterAsText(10)
 
 
 if not arcpy.GetParameterAsText(8):
@@ -26,7 +27,7 @@ else:
 
 #Processing Area
 mask = arcpy.GetParameterAsText(9)  #This is the user chosen mask
-
+customdev = arcpy.GetParameterAsText(11)
 if not mask:
     mask="None"
 
@@ -61,11 +62,12 @@ import Initial
 import ActivityApplication
 import ApplyActions
 import pandas as pd
-
+Helpers.pmes (scenario)
+Helpers.pmes (customdev)
 run_name = run_name.replace(" ", "_")
 
 initout = Initial.DoInitial()
-outdf = ActivityApplication.DoActivities(initout[0],activitylist)
+outdf = ActivityApplication.DoActivities(initout[0],activitylist, scenario, customdev)
 outdf = ApplyActions.ApplyGHG(outdf,initout[2],initout[3],initout[4])
 
 outdf.to_csv("E:/Temp/test.csv")

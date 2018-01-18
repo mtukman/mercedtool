@@ -88,6 +88,10 @@ def set_paths_and_workspaces(workspace = 'E:/mercedtool', root_data_path = 'E:/m
     Points = os.path.join('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Vectors.gdb/LFC_Points_Merged')
     all_layers.append(Points)
 
+    global tpoints
+    tpoints = os.path.join('E:/TGS/projects/Merced Carbon/New File Geodatabase.gdb/points')
+    all_layers.append(tpoints)
+    
     #Tables
     global Points_Table
     Points_Table = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'pointsmerged.csv')
