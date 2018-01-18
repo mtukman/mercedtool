@@ -360,7 +360,7 @@ def list_csvs_in_folder(path_to_folder, filetype, option = 'basename_only'):
         return arcpy.ListFiles('*.' + filetype)
         
         
-def CreateSpeciesTable(spcsv = "E:\\temp\\speciesranges.csv", 
+def CreateSpeciesTable(spcsv = "E:/Temp/Tables/ValueTables/env_specrange.csv", 
 luts = "D:\\TGS\\projects\\64 - Merced Carbon\\MBA\Deliverables from TNC\\Urban Footprint\\data\\lookup_tables", 
 rids_only = "D:\\TGS\\projects\\64 - Merced Carbon\\MBA\\ToolData\\Vector\\speciesranges\\rids_in_county.csv" ):
     

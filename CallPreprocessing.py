@@ -7,6 +7,7 @@
 import Generic
 import arcpy
 ##
+import Helpers
 ##Rasters to Raster Lookups - MakeMBARaster(Raster,LUT,OutputPath,JoinKey,TargetKey,Lfield)
 Generic.set_paths_and_workspaces()
 ##
@@ -81,7 +82,7 @@ Generic.set_paths_and_workspaces()
 ##FCs to CSVs
 ##Generic.FCstoCSVs(Generic.tempgdb,Generic.Root_Mid_Path + 'ValueTables/JoinTables/)
 
-#Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/HUC12','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/JoinTables/huc12.csv')
+Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/BCM','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/bcm.csv')
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/smallgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/smallgroup.csv')
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/mediumgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/mediumgroup.csv')
 
@@ -93,11 +94,12 @@ Generic.set_paths_and_workspaces()
 ##Clean Tables
 ##Generic.Clean_Table(Generic.Root_Mid_Path + 'ValueTables/JoinTables/' + '','pointid','Value',['pointid','Value'],[('Value','crop_value')])
 ##
-Generic.Clean_Table('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/mediumgroup.csv','pointid',keepfields = ['pointid','PageNumber'],renamefields = [('PageNumber','medgroup_val')])
-Generic.Clean_Table('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/smallgroup.csv','pointid',keepfields = ['pointid','PageNumber'],renamefields = [('Value','smallgroup_val')])
+#Generic.Clean_Table('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/mediumgroup.csv','pointid',keepfields = ['pointid','PageNumber'],renamefields = [('PageNumber','medgroup_val')])
+#Generic.Clean_Table('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/smallgroup.csv','pointid',keepfields = ['pointid','PageNumber'],renamefields = [('Value','smallgroup_val')])
 ##
 ##
 ##
+Helpers.Clean_Table ('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/bcm.csv','pointid',length=5689373,keepfields = ['pointid','grid_code'], renamefields = [('grid_code','bcm_val')],valuefield = 'TEST')
 ##
 ##
 ##
@@ -118,12 +120,14 @@ Generic.Clean_Table('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Delive
 ##
 ##
 ##Landcover Rasters to points, to csv, then combined into a single CSV with pointid, LC2001 and LC2014
-##def RastersToPoints(Raster,ValueField,OutputName):
-##    import arcpy
-##    arcpy.env.overwriteOutput = True
-##    arcpy.RasterToPoint_conversion(Raster,OutputName,ValueField)
+#def RastersToPoints(Raster,ValueField,OutputName):
+#    import arcpy
+#    arcpy.env.overwriteOutput = True
+#    arcpy.RasterToPoint_conversion(Raster,OutputName,ValueField)
 ##
 ##RastersToPoints('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Landcover_Rasters/Landcover_2001.tif','EVT_Nick_1','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/RasterEctractions.gdb/LF2001_LUT')
+1
+
 ##RastersToPoints('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Landcover_Rasters/Landcover_2014.tif','EVT_Nick_2','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/RasterEctractions.gdb/LF2014_LUT')
 ##
 ##import Generic
