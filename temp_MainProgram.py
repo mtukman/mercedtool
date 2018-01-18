@@ -20,7 +20,7 @@ import sys
 #
 #rootpath = arcpy.GetParameterAsText(3) #Rootpath of data location
 activitylist = ['rre','ccr']
-
+#activitylist = ['rre']
 #if arcpy.GetParameterAsText(4):
 #    activitylist.append('rre')
 #    arcpy.AddMessage('added rre to activity list')
@@ -58,7 +58,7 @@ import Generic
 
 #Generic.set_paths_and_workspaces(scratch_gdb, rootpath, acreage_cap_vineyard, acreage_cap_urban, 'Carbon Framework/GIS Data/MASTER_DATA/')
 #Generic.set_paths_and_workspaces(scratch_folder, rootpath, mask, 'MASTER_DATA/', output_file_location, run_name)
-
+Generic.set_paths_and_workspaces()
 if 'rre' in activitylist:
     Generic.dict_activity['rre']['adoption'] = .2
     arcpy.AddMessage(Generic.dict_activity['rre']['adoption'])
