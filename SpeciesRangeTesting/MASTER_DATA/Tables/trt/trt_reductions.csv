@@ -1,0 +1,32 @@
+AlphaID,NumericID,LandCoverType,LandCoverCode,Reductions_CO2,Reductions_CH4,Reductions_N2O,Reductions_Total,DefaultLeakageDiscount,Reductions_Net,Landcover,Activity,Modifier
+ARC-CAM-CN20-I,606,Annual Row Crop,600,0.382,0,-0.015,0.367,0,0.367,Annual Cropland,CAM,CN20-I
+ARC-CCR-LN,611,Annual Row Crop,600,0.376,0,-0.182,0.194,0,0.194,Annual Cropland,CCR,LN
+ARC-MMA-CLA-I,618,Annual Row Crop,600,0.167,0,-0.0353,0.1317,0,0.1317,Annual Cropland,MMA,CLA-I
+ARC-MUL,623,Annual Row Crop,600,0.206,0,0,0.206,0,0.206,Annual Cropland,MUL,NA
+ARC-NFM-RED-N,627,Annual Row Crop,600,0.00023,0,0.0087,0.00893,0,0.00893,Annual Cropland,NFM,RED-N
+ARC-RRE,630,Annual Row Crop,600,0.996,0,0,0.996,0,0.996,Annual Cropland,RRE,NA
+FOR-RRE,104,Forest,100,0.996,0,0,0.996,0,0.996,Forest,RRE,NA
+GRA-CAM-CN25-N,406,Grassland,400,0.0922,0,0.0133,0.1055,0,0.1055,Grassland,CAM,CN25-N
+GRA-MMA-SWI-N,410,Grassland,400,0.0805,0,0.0112,0.0917,0,0.0917,Grassland,MMA,SWI-N
+GRA-OAK,411,Grassland,400,18.89,0,0,18.89,0,18.89,Grassland,OAK,NA
+GRA-RRE,412,Grassland,400,0.996,0,0,0.996,0,0.996,Grassland,RRE,NA
+GRA-SES,413,Grassland,400,0.656,0,0,0.656,0,0.656,Grassland,SES,NA
+IPA-MUL,503,Irrigated Pasture,500,0.206,0,0,0.206,0,0.206,Irrigated Pasture,MUL,NA
+IPA-OAK,504,Irrigated Pasture,500,18.89,0,0,18.89,0,18.89,Irrigated Pasture,OAK,NA
+IPA-RRE,505,Irrigated Pasture,500,0.996,0,0,0.996,0,0.996,Irrigated Pasture,RRE,NA
+IPA-SES,506,Irrigated Pasture,500,0.656,0,0,0.656,0,0.656,Irrigated Pasture,SES,NA
+ORC-CCR-NN,806,Orchard,800,0.218,0,-0.0429,0.1751,0,0.1751,Orchard,CCR,NN
+ORC-HPL,807,Orchard,800,8.181,0,0.0524,8.2334,0,8.2334,Orchard,HPL,NA
+ORC-NFM-SRF-N,813,Orchard,800,0,0,0.012,0.012,0,0.012,Orchard,NFM,SRF-N
+ORC-RRE,814,Orchard,800,0.996,0,0,0.996,0,0.996,Orchard,RRE,NA
+RIC-MUL,903,Rice,900,0.206,0,0,0.206,0,0.206,Rice,MUL,NA
+RIC-NFM-SRF-I,906,Rice,900,0,0,0.0168,0.0168,0,0.0168,Rice,NFM,SRF-I
+RIC-RRE,907,Rice,900,0.996,0,0,0.996,0,0.996,Rice,RIC,NA
+SHR-RRE,304,Shrubland,300,0.996,0,0,0.996,0,0.996,Shrubland,SHR,NA
+SHR-SES,305,Shrubland,300,0.656,0,0,0.656,0,0.656,Shrubland,SHR,NA
+UFO-RRE,202,Urban Forest,200,0.996,0,0,0.996,0,0.996,Urban Forest,UFO,NA
+VIN-CAM-CN25-I,706,Vineyard,700,0.474,0,-0.0083,0.4657,0,0.4657,Vineyard,VIN,CN25-I
+VIN-HPL,707,Vineyard,700,8.181,0,0.0524,8.2334,0,8.2334,Vineyard,VIN,NA
+VIN-MMA-BSO-I,708,Vineyard,700,0.239,0,-0.0269,0.2121,0,0.2121,Vineyard,VIN,BSO-I
+VIN-NFM-SRF-I,715,Vineyard,700,0,0,0.0168,0.0168,0,0.0168,Vineyard,VIN,SRF-I
+VIN-RRE,716,Vineyard,700,0.996,0,0,0.996,0,0.996,Vineyard,VIN,NA

@@ -26,8 +26,11 @@ import pandas as pd
 import Generic
 import Helpers
 global dict_eligibility
+import arcpy
+import numpy as np
 
-def DoActivities(df,activitylist):
+def DoActivities(df,activitylist, scenario,customdev):
+    Generic.set_paths_and_workspaces()
     tempdf = df
     dict_eligibility = {}
 
@@ -36,7 +39,16 @@ def DoActivities(df,activitylist):
         
     Helpers.ChangeFlag(tempdf,'LC2014','LC2030MOD')
     
-    #Calculate Riparian Suitability and Selection
+
+    if 'custom' == scenario:
+        arcpy.MakeFeatureLayer_management(Generic.points,'temppts)
+        arcpy.SelectLayerByLocation_management('temppts','INTERSECT',customdev)
+        arcpy.Frequency_analysis('temppts', Generic.scratch + '/custompts.csv')
+        custpts = pd.read_csv(Generic.scratch + '/custompts.csv',usecols = ['pointid'])
+        plist = custpts['pointid'].tolist()
+        df.loc[tmpdf['pointid'].isin(plist), 'LC2014'] = 'Urban'
+        
+    #Calculate Riparian Suitability and Selection        
     if 'rre' in activitylist:
         Generic.dict_activity['rre']['query'] = (tempdf['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & (tempdf['lcchange'] == 1) & ((tempdf['near_rivers'] < 650) | (tempdf['near_streams'] < 100)) & (tempdf['near_woody'] != 0))
         Helpers.CreateSuitFlags('rre',tempdf)
