@@ -33,3 +33,10 @@ ccbirds = pd.read_csv(path + '/list_climate_change_birds.csv')
 ccnobird = pd.read_csv(path + '/list_climate_change_except_birds.csv')
 reptiles = pd.read_csv(path + '/list_reptiles.csv')
 tespp = pd.read_csv(path + '/list_threatened_endangered.csv')
+
+def get_suitability(suitcsv, landcover, year):
+    
+    #return a count of pixels
+##
+    
+dict spp = {}

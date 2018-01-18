@@ -61,6 +61,7 @@ def set_paths_and_workspaces(workspace = 'E:/mercedtool', root_data_path = 'E:/m
     scratch = os.path.join(root_data_path,midpath,'Scratch')
 
     global tempgdb
+    tempgdb = os.path.join(root_data_path,midpath,'Scratch','Scratch.gdb')
 
     global MBTABS
     MBTABS = os.path.join(root_data_path,midpath,'Tables/MBATables')
