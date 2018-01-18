@@ -1,7 +1,12 @@
 """
 Plots/Figures needed:
 Land cover change by natural,crop and urban - max, bau and min (net gain/loss for each)
-Land cover change 
+Land cover change showing cropland change by dev scenario, same for natural lands and urban lands with loss and gain values for each combination
+Change in above groun carbon stocks under each dev scenario
+Change in below ground carbon stocks for each dev scenario
+Naturalness in watershed
+Naturalness in county 
+
 
 
 
