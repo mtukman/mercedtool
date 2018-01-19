@@ -26,7 +26,7 @@ activitylist = ['rre','ccr']
 #    arcpy.AddMessage('added rre to activity list')
 #if arcpy.GetParameterAsText(6):
 #    activitylist.append('ccr')
-#    
+#
 
 
 #if not arcpy.GetParameterAsText(8):
@@ -74,5 +74,5 @@ import pandas as pd
 
 
 initout = Initial.DoInitial()
-outdf = ActivityApplication.DoActivities(initout[0],activitylist)
-outdf = ApplyActions.ApplyGHG(outdf,initout[2],initout[3],initout[4])
+##outdf = ActivityApplication.DoActivities(initout[0],activitylist)
+##outdf = ApplyActions.ApplyGHG(outdf,initout[2],initout[3],initout[4])

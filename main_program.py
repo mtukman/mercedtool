@@ -2,6 +2,7 @@
 import arcpy
 import sys
 import Helpers
+import os
 #variables passed in from ArcMap tool
 
 run_name = arcpy.GetParameterAsText(0)       #this will be prepended to raster output file name, no spaces
@@ -27,7 +28,7 @@ else:
 
 #Processing Area
 mask = arcpy.GetParameterAsText(9)  #This is the user chosen mask
-customdev = arcpy.GetParameterAsText(11)
+customdev = os.path.normpath(arcpy.GetParameterAsText(11))
 if not mask:
     mask="None"
 
