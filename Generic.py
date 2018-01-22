@@ -228,6 +228,8 @@ def set_paths_and_workspaces(workspace = 'E:/mercedtool', root_data_path = 'E:/m
     CarbonStatsDetail = os.path.join(output_file_loc, run_name + "_CARBON_STATS_DETAIL")
     global CarbonStatsUrban
     CarbonStatsUrban = os.path.join(output_file_loc, run_name + "_CARBON_STATS_URBAN")
+    global OutCsvFolder
+    OutCsvFolder = os.path.join(output_file_loc, run_name + "_OUT_CSVS")
 
     #other vars
     vineyard_count =0

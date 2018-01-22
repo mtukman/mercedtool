@@ -13,7 +13,6 @@ import Helpers
 import arcpy
 
 
-
 path = "E:\mercedtool\MASTER_DATA\Tables\LUTables"
 #full set
 pointiddf  = 'E:/mercedtool/SpeciesRangeTesting/MASTER_DATA/Tables/SpecRangecsvs/merge'
@@ -73,6 +72,9 @@ def initialize_suit_lu(row):
         print(row['whr13_code'])
         #custcode = lut_uf.loc[lut_uf['ufcode']==row['whr13_code'], 'custcode'].values[0]
         suit_dict[row['cwhr_id']][row['whr13_code']] = row['habitat_suitability']
+
+def initialize_uf_lu(row):
+    uf_dict[row['custcode']] =  row['ufcode']
             
 def tally(row):
     species_string = rids.loc[rids['rid']==row['rid'], 'species_ranges'].values[0]
@@ -80,12 +82,12 @@ def tally(row):
     
     for i in [i for i in species_string.split(',')]:
         if i.upper() in suit_dict.keys():
-            if not lut_uf.loc[lut_uf['custcode']==row['customcode14']].empty:
-                lc14 = lut_uf.loc[lut_uf['custcode']==row['customcode14'], 'ufcode'].values[0]
+            if row['customcode14'] in uf_dict.keys():
+                lc14 = uf_dict[row['customcode14']]
             else:
                 lc14 = -9999
-            if not lut_uf.loc[lut_uf['custcode']==row['customcode30mod']].empty:
-                lc30 = lut_uf.loc[lut_uf['custcode']==row['customcode30mod'], 'ufcode'].values[0]
+            if row['customcode30mod'] in uf_dict.keys():
+                lc30 = uf_dict[row['customcode30mod']]
             else:
                 lc30 = -9999
                 
@@ -105,30 +107,37 @@ def tally(row):
             if cust30suit < cust14suit:
                 dev_dict[i]['degraded'] = dev_dict[i]['degraded'] + row['pointid']
                 print('degraded')
-            print('cc ' + str(row['customcode14']))
-            print ('lc14 ' + str(lc14))
-            print(i)
-            print('14 ' + str(cust14suit))
-            print('30 ' + str(cust30suit))
+
         else:
             print (i.upper() + 'is missing')
-
+            
+def summarize(first_letter, guild):
+    if guild=='tes':
+        new_dict = {x: v for x,v in dev_dict.items() if x in list(tespp['species']) }
+    else:
+        new_dict = {x: v for x,v in dev_dict.items() if x.startswith(first_letter) }
+    deg= pd.DataFrame.from_dict(new_dict, orient = 'index')['degraded'].sum()*900*0.000247105
+    imp = pd.DataFrame.from_dict(new_dict, orient = 'index')['improved'].sum()*900*0.000247105
+    summary_dict[guild + '_avg_deg_acres']=deg
+    summary_dict[guild + '_avg_imp_acres']=imp
+    
 a = df2.groupby(['rid','customcode14', 'customcode30mod']).count()
 
 a.reset_index(inplace=True)
 #a['customcode30mod']= 723
 suit_dict = {}
 dev_dict = {}
+uf_dict = {}
+summary_dict = {}
+lut_uf.apply(initialize_uf_lu, axis=1)
 habsuit.apply(initialize_suit_lu, axis=1)
-a=a[0:1]
+
 a.apply(initialize_dict, axis=1)
 
+
 a.apply(tally, axis = 1)
+summarize('m', 'mammals')
+summarize('b', 'birds')
+summarize('a', 'amphibians')
+summarize('t', 'tes')
 
-
-
-#deg_dict = {}
-
-#build species dictionary
-    
-#dict spp = {}
