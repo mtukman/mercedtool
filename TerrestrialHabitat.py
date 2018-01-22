@@ -4,14 +4,16 @@ Created on Thu Jan 18 10:39:04 2018
 
 @author: Dylan
 """
-#
+#!!!!!!----------------**************
 #MAKE INTO A FUNCTION THAT TAKES A DF WITH RID, customcode2014, customcode2030mod
 import Generic
 global pts
 import pandas as pd
 import Helpers
 import arcpy
+import os
 
+Generic.set_paths_and_workspaces()
 
 path = "E:\mercedtool\MASTER_DATA\Tables\LUTables"
 #full set
@@ -38,6 +40,7 @@ tespp = pd.read_csv(path + '/list_threatened_endangered.csv')
 rids_only = "E:\\mercedtool\\MASTER_DATA\\Tables\\ValueTables\\env_rids.csv"
 rids= pd.read_csv(rids_only)
 
+#!!!!!!----------------**************
 #need to change update later on
 df2 = df[df['LC2014'] != df['LC2030MOD']]
 df2['customcode30mod'] = list(lut_uf['custcode'].sample(len(df2), replace=True))
@@ -58,7 +61,6 @@ def get_suitability(custcode, sppcode, suitdf = habsuit, lut=lut_uf):
 def initialize_dict(row):
     species_string = rids.loc[rids['rid']==row['rid'], 'species_ranges'].values[0]
     species_string = species_string[1:-1]
-    #add entries to dict
     for i in [i for i in species_string.split(',')]:
         if not i in dev_dict.keys():
             dev_dict[i]={}
@@ -69,8 +71,6 @@ def initialize_suit_lu(row):
     if row['cwhr_id'] not in suit_dict.keys():
         suit_dict[row['cwhr_id']] = {}
     else:
-        print(row['whr13_code'])
-        #custcode = lut_uf.loc[lut_uf['ufcode']==row['whr13_code'], 'custcode'].values[0]
         suit_dict[row['cwhr_id']][row['whr13_code']] = row['habitat_suitability']
 
 def initialize_uf_lu(row):
@@ -95,18 +95,17 @@ def tally(row):
                 cust14suit = suit_dict[i.upper()][lc14]
             else:
                 cust14suit = 0
+                
             if lc30 in suit_dict[i.upper()].keys():
                 cust30suit = suit_dict[i.upper()][lc30]
             else:
                 cust30suit = 0
-
                 
             if cust14suit < cust30suit:
                 dev_dict[i]['improved'] = dev_dict[i]['improved'] + row['pointid']
-                print('improved')
+
             if cust30suit < cust14suit:
                 dev_dict[i]['degraded'] = dev_dict[i]['degraded'] + row['pointid']
-                print('degraded')
 
         else:
             print (i.upper() + 'is missing')
@@ -124,20 +123,21 @@ def summarize(first_letter, guild):
 a = df2.groupby(['rid','customcode14', 'customcode30mod']).count()
 
 a.reset_index(inplace=True)
-#a['customcode30mod']= 723
 suit_dict = {}
 dev_dict = {}
 uf_dict = {}
 summary_dict = {}
 lut_uf.apply(initialize_uf_lu, axis=1)
 habsuit.apply(initialize_suit_lu, axis=1)
-
 a.apply(initialize_dict, axis=1)
-
-
 a.apply(tally, axis = 1)
 summarize('m', 'mammals')
 summarize('b', 'birds')
 summarize('a', 'amphibians')
 summarize('t', 'tes')
-
+a =pd.DataFrame.from_dict(summary_dict, orient='index')
+a.reset_index(inplace=True)
+a.columns=['guild', 'acres']
+a.to_csv(os.path.join(Generic.OutCsvFolder, 'TerrHab.csv'))
+# ADD A RETURN A
+#!!!!!!----------------**************
