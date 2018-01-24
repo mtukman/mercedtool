@@ -82,7 +82,10 @@ Generic.set_paths_and_workspaces()
 ##FCs to CSVs
 ##Generic.FCstoCSVs(Generic.tempgdb,Generic.Root_Mid_Path + 'ValueTables/JoinTables/)
 
-Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/BCM','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/bcm.csv')
+#Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/BCM','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/bcm.csv')
+Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/CV_Riparian/streams.gdb/large_Streams_riparian','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/ripariastreams.csv')
+#Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/PCA','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/PCA.csv')
+#Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/ECA','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/ECA.csv')
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/smallgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/smallgroup.csv')
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/mediumgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/mediumgroup.csv')
 
@@ -99,7 +102,10 @@ Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extracti
 ##
 ##
 ##
-Helpers.Clean_Table ('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/bcm.csv','pointid',length=5689373,keepfields = ['pointid','grid_code'], renamefields = [('grid_code','bcm_val')],valuefield = 'TEST')
+#Helpers.Clean_Table ('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/bcm.csv','pointid',length=5689373,keepfields = ['pointid','grid_code'], renamefields = [('grid_code','bcm_val')],valuefield = 'TEST')
+#Helpers.Clean_Table ('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/PCA.csv','pointid',length=5689373,keepfields = ['pointid','grid_code'], renamefields = [('grid_code','pca_val')],valuefield = 'TEST')
+#Helpers.Clean_Table ('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/ECA.csv','pointid',length=5689373,keepfields = ['pointid','grid_code'], renamefields = [('grid_code','eca_val')],valuefield = 'TEST')
+
 ##
 ##
 ##
