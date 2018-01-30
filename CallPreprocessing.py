@@ -11,6 +11,7 @@ import Helpers
 ##Rasters to Raster Lookups - MakeMBARaster(Raster,LUT,OutputPath,JoinKey,TargetKey,Lfield)
 Generic.set_paths_and_workspaces()
 ##
+
 ##Generic.MakeMBARaster('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/LookUpTables/Air_Pollution.csv','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Raster/ClippedRasters/New/O3.tif','EVT_Nick_2','Landcover','O3')
 ##
 ##Rasters to Look Up CSVs
@@ -31,7 +32,7 @@ Generic.set_paths_and_workspaces()
 ##arcpy.GenerateNearTable_analysis(Generic.Points,Generic.vects + 'Roads', Generic.neartabs + 'env_near_roads.csv')
 ##arcpy.GenerateNearTable_analysis(Generic.Points,Generic.vects + 'FEMA', Generic.neartabs + 'env_near_fema.csv')
 ##arcpy.GenerateNearTable_analysis(Generic.Points,Generic.vects + 'CPAD', Generic.neartabs + 'env_near_cpad.csv')
-
+##arcpy.GenerateNearTable_analysis('D:\TGS\projects\64 - Merced Carbon\MBA\ToolData\Vector\CCED2016\New File Geodatabase.gdb\CCED2016_upd1', Generic.neartabs + 'env_near_cced.csv')
 ##
 ##
 ##Join Near Tables to Spatial Data Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol = 'none')
@@ -56,15 +57,7 @@ Generic.set_paths_and_workspaces()
 #Generic.Merge2csvs('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/vector_tables/fema.csv','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/env_near_fema.csv','NEAR_FID','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/env_near_fema_merged.csv','OBJECTID','NEAR_FID')
 ##
 ##Clean Near Tables Clean_Table (csv,idfield,valuefield = 'TEST',keepfields = [], renamefields = [],length)
-##Generic.Clean_Table(Generic.Neartabs + 'NearTable_Wet.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
-##Generic.Clean_Table(Generic.Neartabs + 'NearTable_Rivers.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
-##Generic.Clean_Table(Generic.Neartabs + 'NearTable_Rip.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
-##Generic.Clean_Table(Generic.Neartabs + 'NearTable_Creeks.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
-##Generic.Clean_Table(Generic.Neartabs + 'NearTable_Roads.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
-##Generic.Clean_Table(Generic.Neartabs + 'NearTable_WoodyRip.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
-##Generic.Clean_Table(Generic.Neartabs + 'NearTable_WoodyCrop.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
-##Generic.Clean_Table(Generic.Neartabs + 'NearTable_CPAD.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
-##Generic.Clean_Table(Generic.Neartabs + 'NearTable_FEMA.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
+
 ##Generic.Clean_Table("E:/mercedtool/MASTER_DATA/ValueTables/NearTables/env_near_parks.csv",'IN_FID',20000,keepfields = ['IN_FID','NEAR_DIST'],renamefields = [('IN_FID','pointid'),('NEAR_DIST','near_parks')])
 #Generic.Clean_Table(Generic.Neartabs + 'NearTable_FEMA.csv','pointid','Value',['pointid','Value'],[('Value','crop_value')])
 ##
@@ -83,7 +76,7 @@ Generic.set_paths_and_workspaces()
 ##Generic.FCstoCSVs(Generic.tempgdb,Generic.Root_Mid_Path + 'ValueTables/JoinTables/)
 
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/BCM','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/bcm.csv')
-Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/CV_Riparian/streams.gdb/large_Streams_riparian','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/ripariastreams.csv')
+#Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/CV_Riparian/streams.gdb/large_Streams_riparian','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/ripariastreams.csv')
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/PCA','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/PCA.csv')
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/ECA','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/ECA.csv')
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/smallgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/smallgroup.csv')
