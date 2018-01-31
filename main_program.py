@@ -13,11 +13,24 @@ scratch_folder = arcpy.GetParameterAsText(2) #this is the scratch folder, automa
 
 rootpath = arcpy.GetParameterAsText(3) #Rootpath of data location
 activitylist = []
-if arcpy.GetParameterAsText(4):
+if arcpy.GetParameterAsText(8):
     activitylist.append('rre')
     arcpy.AddMessage('added rre to activity list')
-if arcpy.GetParameterAsText(6):
+if arcpy.GetParameterAsText(10):
+    activitylist.append('oak')
+if arcpy.GetParameterAsText(12):
     activitylist.append('ccr')
+if arcpy.GetParameterAsText(14):
+    activitylist.append('mul')
+if arcpy.GetParameterAsText(16):
+    activitylist.append('nfm')
+if arcpy.GetParameterAsText(18):
+    activitylist.append('hpl')
+if arcpy.GetParameterAsText(20):
+    activitylist.append('urb')
+  
+    
+    
 scenario = arcpy.GetParameterAsText(10)
 
 
