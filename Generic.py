@@ -167,7 +167,7 @@ def set_paths_and_workspaces(workspace = 'E:/mercedtool', root_data_path = 'E:/m
     global near_cpad
     near_cpad = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_cpad.csv')
     all_layers.append(near_cpad)
-
+    
     global near_nwi
     near_nwi = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_nwi.csv')
     all_layers.append(near_nwi)
