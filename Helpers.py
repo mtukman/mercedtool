@@ -86,11 +86,11 @@ def selectionfunc (dict_eligibility,df, activity):
     df.loc[query,selflag] = 1       
     if activity == 'rre':
         df.loc[query, 'LC2014'] = 'Riparian Restoration' #CHANGE FIELD BEFORE FINAL
-        df.loc[query, 'gridcode14'] = 9999 
+        df.loc[query, 'gridcode30'] = 16 
         df.loc[query, 'lcchange'] = 0 
     if activity == 'oak':
         df.loc[query, 'LC2014'] = 'Oak Conversion' #CHANGE FIELD BEFORE FINAL
-        df.loc[query, 'gridcode14'] = 11111
+        df.loc[query, 'gridcode30'] = 17
     return df
 
                 

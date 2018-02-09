@@ -41,6 +41,8 @@ def DoActivities(df,activitylist, scenario,customdev):
 
     Helpers.pmes (scenario)
     Helpers.pmes (customdev)
+    
+    #If the scenario is custom, 
     if 'Custom' == scenario:
         Helpers.pmes ('Doing custom dev')
         arcpy.MakeFeatureLayer_management(Generic.tpoints,'temppts')

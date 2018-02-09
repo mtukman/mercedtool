@@ -86,6 +86,8 @@ Generic.set_paths_and_workspaces()
 #Generic.RastersToPoints('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Raster/nlcd_2011_landcover_2011_edition_2014_10_10/NLCD_MERCED.tif','Value','nlcd')
 
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/New File Geodatabase.gdb/nlcd','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/JoinTables/env_nlcd.csv')
+
+Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/RasterEctractions.gdb/LC2030','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/LC2030.csv')
 ##
 ##Clean Tables
 ##Generic.Clean_Table(Generic.Root_Mid_Path + 'ValueTables/JoinTables/' + '','pointid','Value',['pointid','Value'],[('Value','crop_value')])

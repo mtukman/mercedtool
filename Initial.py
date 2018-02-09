@@ -23,13 +23,6 @@ def DoInitial():
     neartables = Helpers.LoadCSVs(neartabs)
     near_df = Helpers.MergeMultiDF('pointid', neartables)
     
-    #Sample set
-    #jointables = Generic.LoadCSVs(os.path.join(Generic.valuetables,'ValueTables'))
-    #value_df = Generic.MergeMultiDF('pointid', jointables)
-    #
-    #neartables = Generic.LoadCSVs("E:/mercedtool/MASTER_DATA/Tables/NearTables")
-    #near_df = Generic.MergeMultiDF('pointid', neartables)
-    
     tabs_all_df = pd.merge(value_df,near_df, on = 'pointid')
     
     carb01 = pd.read_csv(Generic.Carbon2001)
