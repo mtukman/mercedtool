@@ -415,4 +415,48 @@ def ghgupdate(activity,df,carb30,carb30mod):
     import Generic
     trt_temp = trt.loc[trt['Activity'] == 'rre']
     MergeMultiDF('LC2030MOD',[df,trt_temp])
+
+
+def Carbon2030calc():
+    import pandas as pd
+    import numpy as np
+    lf2014lu = pd.read_csv('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/LC2014_Full.csv')
+    lf2014full = pd.read_csv('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/2014_CarbonWithOID_SUM.csv')
+    lf2030lu = pd.read_csv('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/LF2030_Combined.csv')
     
+    lf2014lu = lf2014lu.rename(columns={'grid_code': '2014gridcode'})
+    lf2014lu = lf2014lu[['pointid','2014gridcode']]
+    lf2030lu = lf2030lu.rename(columns={'grid_code': '2030gridcode'})
+    lf2030lu = lf2030lu[['pointid','2030gridcode']]
+    lf2014full = lf2014full.rename(columns = {'OID':'2030gridcode'})
+    lf2030lu.loc[lf2030lu['2030gridcode'] == 3,'2030gridcode'] = 14
+    lf2030lu.loc[lf2030lu['2030gridcode'] == 5,'2030gridcode'] = 15
+    lf2014lu['2014gridcode'] = lf2014lu['2014gridcode'].apply(lambda x:x+100)
+    lf2014full['SumCO2_ha'] = lf2014full['SumCO2_ha'].apply(lambda x:x/11.111111111111)
+    
+    result = pd.merge(lf2014lu, lf2030lu, on='pointid')
+    lf2014full.loc[(lf2014full['Landcover_Class'] == 'Developed Roads') |(lf2014full['Landcover_Class'] == 'Developed') ,'Landcover_Class'] = 'Urban'
+    lclist = lf2014full.Landcover_Class.unique()
+    temp = lclist.tolist()
+    result3 = result.merge(lf2014full,on = '2030gridcode', how = 'left')
+    test4 = result3.groupby(['2030gridcode']).count()
+    test4 = test4['pointid']
+    test4 = test4.to_frame()
+    test4['2030gridcode'] = test4.index
+    test4 = test4.rename(columns={'pointid': 'pcount'})
+    
+    
+    result4 = test4.merge(lf2014full,on = '2030gridcode', how = 'left')
+    result4['Sumco'] = result4['SumCO2_ha']*result4['pcount']
+    df1 = pd.DataFrame(np.nan, index=[], columns=[])
+    
+    for i in temp:
+        
+        total = result3.loc[result3['Landcover_Class'] == i]
+        pixels = len(total.index)
+        temp1 = result4.loc[result4['Landcover_Class'] == i]
+        carbsum = temp1['Sumco'].sum()
+        temp1['share'] = 0
+        temp1['share'] = (temp1['SumCO2_ha']*temp1['pcount'])/carbsum
+        temp1['new_rate'] = (temp1['share']*temp1['Totco'])/temp1['pcount']
+        df1 = pd.concat([df1,temp1])
