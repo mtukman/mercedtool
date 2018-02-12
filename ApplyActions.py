@@ -43,4 +43,5 @@ def ApplyGHG(df,carb01,carb14,carb30mod):
 #                tempdf.loc[(tempdf['LC2030MOD'] == row['LC2030MOD_y']) & (tempdf[activity + 'selected'] == 1), 'ch4_em_mod'] = tempdf['n20_em_mod'] * row['Reductions_CH4']
 
     UpdateValues(tempdf,'ccr')
+    
     return tempdf
