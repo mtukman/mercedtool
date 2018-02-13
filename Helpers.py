@@ -460,3 +460,38 @@ def Carbon2030calc():
         temp1['share'] = (temp1['SumCO2_ha']*temp1['pcount'])/carbsum
         temp1['new_rate'] = (temp1['share']*temp1['Totco'])/temp1['pcount']
         df1 = pd.concat([df1,temp1])
+        
+def samples(workspace,outputfolder,samplesize):
+    #This function takes a workspace of CSVs, takes the first # of rows and writes them to a new directory with the same csv names.
+    import pandas as pd
+    import arcpy
+    arcpy.env.workspace = workspace
+    arcpy.env.overwriteOutput = True
+    path1 = outputfolder
+    path = workspace
+    templist = arcpy.ListFiles("*.csv")
+    print (templist)
+    for i in templist:
+        print (i)
+        df = pd.read_csv(path + i,encoding='latin-1')
+        df = df.head(samplesize)
+        df.to_csv(path1 + i)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

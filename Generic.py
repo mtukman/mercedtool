@@ -110,10 +110,7 @@ def set_paths_and_workspaces(workspace = 'E:/mercedtool', root_data_path = 'E:/m
     Carbon2030 = os.path.join(root_data_path, midpath, 'Tables/CarbonTables/Carb30.csv')
     all_layers.append(Carbon2030)
     
-    global Carbon2030mod
-    Carbon2030mod = os.path.join(root_data_path, midpath, 'Tables/CarbonTables/Carb30mod.csv')
-    all_layers.append(Carbon2030mod)
-    
+   
     global calenviro
     calenviro = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_calenviro.csv')
     all_layers.append(calenviro)

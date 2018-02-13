@@ -1,40 +1,40 @@
-﻿Status,AlphaID,Lifeform,Activity,LandCoverType,NumericID,ActivityName,ActivitySubType,RedRateBasis,RedRateDuration,Red_1-10_CO2,Red_1-10_CH4,Red_1-10_N2O,Red_1-10_Total,Red_1-10_Net,Red_11-20_CO2,Red_11-20_CH4,Red_11-20_N2O,Red_11-20_Total,Red_11-20_Net,Red-1-10_ce/pix,Red-11-20_ce/pix,Red-11-20_ce/pix
-,ARC-CAM-CN20-I,CAM,ACR,Annual row crop,606,Replacing synthetic nitrogen fertilizer with soil amendments,Compost amendments (CN ratio 20),COMET,10,0.94,0,-0.04,0.91,0.91,0,0,0,0,0,,,
-,ARC-CCR-LN,CCR,ACR,Annual row crop,611,Cover crops,,COMET,10,0.93,0,-0.45,0.48,0.48,0,0,0,0,0,,,
-,ARC-MMA-CLA-I,MMA,ACR,Annual row crop,618,Replacing synthetic nitrogen fertilizer with soil amendments,Manure management (chicken layer manure),COMET,10,0.41,0,-0.09,0.33,0.33,0,0,0,0,0,,,
-,ARC-MUL,MUL,ACR,Annual row crop,623,Mulching,,COMET,10,0.51,0,0,0.51,0.51,0,0,0,0,0,,,
-,ARC-NFM-RED-N,NFM,ACR,Annual row crop,627,Improved nitrogen fertilizer management,Reduce fertilizer application rate,COMET,10,0,0,0.02,0.02,0.02,0,0,0,0,0,,,
-,ARC-RRE,RRE,ACR,Annual row crop,630,Riparian restoration,,COMET,10,2.46,0,0,2.46,2.46,0,0,0,0,0,,,
-,FOR-ACO-ARC,ACO,FOR,Forest,101,Avoided conversion,To annual row crops,[existing tree CO2 for EVT/EVC/EVH]*0.09+[avoided N2O rates from annual cropland GHG inventory],10,0,0,2.57,0,0,0,0,0,0,0,,,
-,FOR-ACO-URB,ACO,FOR,Forest,102,Avoided conversion,To urban,[existing tree CO2 for EVT/EVC/EVH]*0.095,10,0,0,0,0,0,0,0,0,0,0,,,
-,FOR-FRE,FRE,FOR,Forest,105,Fuel reduction,,[forthcoming rates from modeling],20,0,0,0,0,0,0,0,0,0,0,,,
-,FOR-RRE,RRE,FOR,Forest,104,Riparian restoration,,COMET,10,2.46,0,0,2.46,2.46,0,0,0,0,0,,,
-,GRA-ACO-ARC,ACO,GRA,Grassland,401,Avoided conversion,To annual row crops,([grassland SOC]-[annual row crop SOC])*0.1+[avoided N2O rates from similar COMET practices],10,0,0,2.57,0,0,0,0,0,0,0,,,
-,GRA-CAM-CN25-N,CAM,GRA,Grassland,406,Replacing synthetic nitrogen fertilizer with soil amendments,Compost amendments (CN ratio 25),COMET,10,0.23,0,0.03,0.26,0.26,0,0,0,0,0,,,
-,GRA-MMA-SWI-N,MMA,GRA,Grassland,410,Replacing synthetic nitrogen fertilizer with soil amendments,Manure management (swine manure),COMET,10,0.2,0,0.03,0.23,0.23,0,0,0,0,0,,,
-,GRA-OAK,OAK,GRA,Grassland,411,Oak woodland restoration,,"Annualized rate based on current predominant woodland stocking in Merced Co, with assumed age of trees",20,3.58,0,0,5.36,5.36,5.36,0,0,5.36,5.36,,,
-,GRA-RRE,RRE,GRA,Grassland,412,Riparian restoration,,COMET,10,2.46,0,0,2.46,2.46,0,0,0,0,0,,,
-,IPA-ACO-ARC,ACO,IPA,Irrigated pasture,501,Avoided conversion,To annual row crops,([irrigated pasture SOC]-[annual row crop SOC])*0.1+[avoided N2O rates from similar COMET practices],10,0,0,2.57,0,0,0,0,0,0,0,,,
-,IPA-MUL,MUL,IPA,Irrigated pasture,503,Mulching,,COMET,10,0.51,0,0,0.51,0.51,0,0,0,0,0,,,
-,IPA-OAK,OAK,IPA,Irrigated pasture,504,Oak woodland restoration,,"Annualized rate based on current predominant woodland stocking in Merced Co, with assumed age of trees",20,3.58,0,0,5.36,5.36,5.36,0,0,5.36,5.36,,,
-,IPA-RRE,RRE,IPA,Irrigated pasture,505,Riparian restoration,,COMET,10,2.46,0,0,2.46,2.46,0,0,0,0,0,,,
-,ORC-ACO-ARC,ACO,ORC,Orchard,801,Avoided conversion,To annual row crops,[existing tree CO2 for orchards]*0.09+[avoided N2O rates from annual cropland GHG inventory],10,0,0,2.57,0,0,0,0,0,0,0,,,
-,ORC-ACO-URB,ACO,ORC,Orchard,802,Avoided conversion,To urban,[existing tree CO2 for orchards]*0.095,10,0,0,0,0,0,0,0,0,0,0,,,
-,ORC-CCR-NN,CCR,ORC,Orchard,806,Cover crops,,COMET,10,0.54,0,-0.11,0.43,0.43,0,0,0,0,0,,,
-,ORC-HPL,HPL,ORC,Orchard,807,Hedgerow planting,,COMET,10,20.22,0,0.13,20.35,20.35,0,0,0,0,0,,,
-,ORC-NFM-SRF-N,NFM,ORC,Orchard,813,Improved nitrogen fertilizer management,Slow release fertilizer,COMET,10,0,0,0.03,0.03,0.03,0,0,0,0,0,,,
-,ORC-RRE,RRE,ORC,Orchard,814,Riparian restoration,,COMET,10,2.46,0,0,2.46,2.46,0,0,0,0,0,,,
-,RIC-MUL,MUL,RIC,Rice,903,Mulching,,COMET,10,0.51,0,0,0.51,0.51,0,0,0,0,0,,,
-,RIC-NFM-SRF-I,NFM,RIC,Rice,906,Improved nitrogen fertilizer management,Slow release fertilizer,COMET,10,0,0,0.04,0.04,0.04,0,0,0,0,0,,,
-,RIC-RRE,RRE,RIC,Rice,907,Riparian restoration,,COMET,10,2.46,0,0,2.46,2.46,0,0,0,0,0,,,
-,SHR-ACO-ARC,ACO,SHR,Shrubland,301,Avoided conversion,To annual row crops,[existing shrub CO2 for EVT/EVC/EVH]*0.09+[avoided N2O rates from annual cropland GHG inventory],10,0,0,2.57,0,0,0,0,0,0,0,,,
-,SHR-ACO-URB,ACO,SHR,Shrubland,302,Avoided conversion,To urban,[existing shrub CO2 for EVT/EVC/EVH]*0.095,10,0,0,0,0,0,0,0,0,0,0,,,
-,SHR-RRE,RRE,SHR,Shrubland,304,Riparian restoration,,COMET,10,2.46,0,0,2.46,2.46,0,0,0,0,0,,,
-,UFO-RRE,RRE,UFO,Urban forest,202,Riparian restoration,,COMET,10,2.46,0,0,2.46,2.46,0,0,0,0,0,,,
-,UFO-UFO,UFO,UFO,Urban forest,201,Urban forestry,,(([scenario urban area 2030] - [scenario urban area 2014]) - ([baseline urban area 2030] - [baseline urban area 2014])) * [328.98 t CO2/ha],20,0,0,0,0,0,0,0,0,0,0,,,
-,VIN-ACO-ARC,ACO,VIN,Vineyard,701,Avoided conversion,To annual row crops,[existing shrub CO2 for vineyards]*0.09+[avoided N2O rates from annual cropland GHG inventory],10,0,0,2.57,0,0,0,0,0,0,0,,,
-,VIN-CAM-CN25-I,CAM,VIN,Vineyard,706,Replacing synthetic nitrogen fertilizer with soil amendments,Compost amendments (CN ratio 25),COMET,10,1.17,0,-0.02,1.15,1.15,0,0,0,0,0,,,
-,VIN-HPL,HPL,VIN,Vineyard,707,Hedgerow planting,,COMET,10,20.22,0,0.13,20.35,20.35,0,0,0,0,0,,,
-,VIN-MMA-BSO-I,MMA,VIN,Vineyard,708,Replacing synthetic nitrogen fertilizer with soil amendments,"Manure management (beef feedlot, sheep, other manure)",COMET,10,0.59,0,-0.07,0.52,0.52,0,0,0,0,0,,,
-,VIN-NFM-SRF-I,NFM,VIN,Vineyard,715,Improved nitrogen fertilizer management,Slow release fertilizer,COMET,10,0,0,0.04,0.04,0.04,0,0,0,0,0,,,
-,VIN-RRE,RRE,VIN,Vineyard,716,Riparian restoration,,COMET,10,2.46,0,0,2.46,2.46,0,0,0,0,0,,,
+﻿Status,AlphaID,Activity,Landcover,LandCoverType,NumericID,ActivityName,ActivitySubType,RedRateBasis,RedRateDuration,Reductions_1-10_CO2,Reductions_1-10_CH4,Reductions_1-10_N2O,Reductions_1-10_Total,Reductions_1-10_Net,Reductions_11-20_CO2,Reductions_11-20_CH4,Reductions_11-20_N2O,Reductions_11-20_Total,Reductions_11-20_Net,red_10,red_20
+,ARC-CAM-CN20-I,CAM,ARC,Annual row crop,606,Replacing synthetic nitrogen fertilizer with soil amendments,Compost amendments (CN ratio 20),COMET,10,0.943938781,0,-0.037065659,0.906873122,0.906873122,0,0,0,0,0,0.906873122,0
+,ARC-CCR-LN,CCR,ARC,Annual row crop,611,Cover crops,,COMET,10,0.929112518,0,-0.449729995,0.479382523,0.479382523,0,0,0,0,0,0.479382523,0
+,ARC-MMA-CLA-I,MMA,ARC,Annual row crop,618,Replacing synthetic nitrogen fertilizer with soil amendments,Manure management (chicken layer manure),COMET,10,0.412664336,0,-0.087227851,0.325436486,0.325436486,0,0,0,0,0,0.325436486,0
+,ARC-MUL,MUL,ARC,Annual row crop,623,Mulching,,COMET,10,0.50903505,0,0,0.50903505,0.50903505,0,0,0,0,0,0.50903505,0
+,ARC-NFM-RED-N,NFM,ARC,Annual row crop,627,Improved nitrogen fertilizer management,Reduce fertilizer application rate,COMET,10,0.00056834,0,0.021498082,0.022066422,0.022066422,0,0,0,0,0,0.022066422,0
+,ARC-RRE,RRE,ARC,Annual row crop,630,Riparian restoration,,COMET,10,2.461159755,0,0,2.461159755,2.461159755,0,0,0,0,0,2.461159755,0
+,FOR-ACO-ARC,ACO,FOR,Forest,101,Avoided conversion,To annual row crops,[existing tree CO2 for EVT/EVC/EVH]*0.09+[avoided N2O rates from annual cropland GHG inventory],10,0,0,2.57,0,0,0,0,0,0,0,0,0
+,FOR-ACO-URB,ACO,FOR,Forest,102,Avoided conversion,To urban,[existing tree CO2 for EVT/EVC/EVH]*0.095,10,0,0,0,0,0,0,0,0,0,0,0,0
+,FOR-FRE,FRE,FOR,Forest,105,Fuel reduction,,[forthcoming rates from modeling],20,0,0,0,0,0,0,0,0,0,0,0,0
+,FOR-RRE,RRE,FOR,Forest,104,Riparian restoration,,COMET,10,2.461159755,0,0,2.461159755,2.461159755,0,0,0,0,0,2.461159755,0
+,GRA-ACO-ARC,ACO,GRA,Grassland,401,Avoided conversion,To annual row crops,([grassland SOC]-[annual row crop SOC])*0.1+[avoided N2O rates from similar COMET practices],10,0,0,2.57,0,0,0,0,0,0,0,0,0
+,GRA-CAM-CN25-N,CAM,GRA,Grassland,406,Replacing synthetic nitrogen fertilizer with soil amendments,Compost amendments (CN ratio 25),COMET,10,0.22783025,0,0.032864884,0.260695135,0.260695135,0,0,0,0,0,0.260695135,0
+,GRA-MMA-SWI-N,MMA,GRA,Grassland,410,Replacing synthetic nitrogen fertilizer with soil amendments,Manure management (swine manure),COMET,10,0.198919036,0,0.027675692,0.226594728,0.226594728,0,0,0,0,0,0.226594728,0
+,GRA-OAK,OAK,GRA,Grassland,411,Oak woodland restoration,,"Annualized rate based on current predominant woodland stocking in Merced Co, with assumed age of trees",20,3.583013699,0,0,3.583013699,3.583013699,3.583013699,0,0,3.583013699,3.583013699,3.583013699,3.583013699
+,GRA-RRE,RRE,GRA,Grassland,412,Riparian restoration,,COMET,10,2.461159755,0,0,2.461159755,2.461159755,0,0,0,0,0,2.461159755,0
+,IPA-ACO-ARC,ACO,IPA,Irrigated pasture,501,Avoided conversion,To annual row crops,([irrigated pasture SOC]-[annual row crop SOC])*0.1+[avoided N2O rates from similar COMET practices],10,0,0,2.57,0,0,0,0,0,0,0,0,0
+,IPA-MUL,MUL,IPA,Irrigated pasture,503,Mulching,,COMET,10,0.50903505,0,0,0.50903505,0.50903505,0,0,0,0,0,0.50903505,0
+,IPA-OAK,OAK,IPA,Irrigated pasture,504,Oak woodland restoration,,"Annualized rate based on current predominant woodland stocking in Merced Co, with assumed age of trees",20,3.583013699,0,0,3.583013699,3.583013699,3.583013699,0,0,3.583013699,3.583013699,3.583013699,3.583013699
+,IPA-RRE,RRE,IPA,Irrigated pasture,505,Riparian restoration,,COMET,10,2.461159755,0,0,2.461159755,2.461159755,0,0,0,0,0,2.461159755,0
+,ORC-ACO-ARC,ACO,ORC,Orchard,801,Avoided conversion,To annual row crops,[existing tree CO2 for orchards]*0.09+[avoided N2O rates from annual cropland GHG inventory],10,0,0,2.57,0,0,0,0,0,0,0,0,0
+,ORC-ACO-URB,ACO,ORC,Orchard,802,Avoided conversion,To urban,[existing tree CO2 for orchards]*0.095,10,0,0,0,0,0,0,0,0,0,0,0,0
+,ORC-CCR-NN,CCR,ORC,Orchard,806,Cover crops,,COMET,10,0.538687577,0,-0.106007785,0.432679792,0.432679792,0,0,0,0,0,0.432679792,0
+,ORC-HPL,HP,ORC,Orchard,807,Hedgerow planting,,COMET,10,20.2156104,0,0.129482702,20.3450931,20.3450931,0,0,0,0,0,20.3450931,0
+,ORC-NFM-SRF-N,NFM,ORC,Orchard,813,Improved nitrogen fertilizer management,Slow release fertilizer,COMET,10,0,0,0.029652527,0.029652527,0.029652527,0,0,0,0,0,0.029652527,0
+,ORC-RRE,RRE,ORC,Orchard,814,Riparian restoration,,COMET,10,2.461159755,0,0,2.461159755,2.461159755,0,0,0,0,0,2.461159755,0
+,RIC-MUL,MUL,RIC,Rice,903,Mulching,,COMET,10,0.50903505,0,0,0.50903505,0.50903505,0,0,0,0,0,0.50903505,0
+,RIC-NFM-SRF-I,NFM,RIC,Rice,906,Improved nitrogen fertilizer management,Slow release fertilizer,COMET,10,0,0,0.041513538,0.041513538,0.041513538,0,0,0,0,0,0.041513538,0
+,RIC-RRE,RRE,RIC,Rice,907,Riparian restoration,,COMET,10,2.461159755,0,0,2.461159755,2.461159755,0,0,0,0,0,2.461159755,0
+,SHR-ACO-ARC,ACO,SHR,Shrubland,301,Avoided conversion,To annual row crops,[existing shrub CO2 for EVT/EVC/EVH]*0.09+[avoided N2O rates from annual cropland GHG inventory],10,0,0,2.57,0,0,0,0,0,0,0,0,0
+,SHR-ACO-URB,ACO,SHR,Shrubland,302,Avoided conversion,To urban,[existing shrub CO2 for EVT/EVC/EVH]*0.095,10,0,0,0,0,0,0,0,0,0,0,0,0
+,SHR-RRE,RRE,SHR,Shrubland,304,Riparian restoration,,COMET,10,2.461159755,0,0,2.461159755,2.461159755,0,0,0,0,0,2.461159755,0
+,UFO-RRE,RRE,UFO,Urban forest,202,Riparian restoration,,COMET,10,2.461159755,0,0,2.461159755,2.461159755,0,0,0,0,0,2.461159755,0
+,UFO-UFO,UFO,UFO,Urban forest,201,Urban forestry,,(([scenario urban area 2030] - [scenario urban area 2014]) - ([baseline urban area 2030] - [baseline urban area 2014])) * [328.98 t CO2/ha],20,0,0,0,0,0,0,0,0,0,0,0,0
+,VIN-ACO-ARC,ACO,VIN,Vineyard,701,Avoided conversion,To annual row crops,[existing shrub CO2 for vineyards]*0.09+[avoided N2O rates from annual cropland GHG inventory],10,0,0,2.57,0,0,0,0,0,0,0,0,0
+,VIN-CAM-CN25-I,CAM,VIN,Vineyard,706,Replacing synthetic nitrogen fertilizer with soil amendments,Compost amendments (CN ratio 25),COMET,10,1.171274823,0,-0.020509665,1.150765158,1.150765158,0,0,0,0,0,1.150765158,0
+,VIN-HPL,HPL,VIN,Vineyard,707,Hedgerow planting,,COMET,10,20.2156104,0,0.129482702,20.3450931,20.3450931,0,0,0,0,0,20.3450931,0
+,VIN-MMA-BSO-I,MMA,VIN,Vineyard,708,Replacing synthetic nitrogen fertilizer with soil amendments,"Manure management (beef feedlot, sheep, other manure)",COMET,10,0.590579499,0,-0.066471082,0.524108418,0.524108418,0,0,0,0,0,0.524108418,0
+,VIN-NFM-SRF-I,NFM,VIN,Vineyard,715,Improved nitrogen fertilizer management,Slow release fertilizer,COMET,10,0,0,0.041513538,0.041513538,0.041513538,0,0,0,0,0,0.041513538,0
+,VIN-RRE,RRE,VIN,Vineyard,716,Riparian restoration,,COMET,10,2.461159755,0,0,2.461159755,2.461159755,0,0,0,0,0,2.461159755,0
