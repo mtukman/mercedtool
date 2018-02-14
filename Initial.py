@@ -5,7 +5,7 @@ import pandas as pd
 import Helpers
     
 def DoInitial():
-    Generic.set_paths_and_workspaces()
+#    Generic.set_paths_and_workspaces()
     
     
     pts = Helpers.create_processing_table(Generic.Points,Generic.MASK)
@@ -28,6 +28,5 @@ def DoInitial():
     carb01 = pd.read_csv(Generic.Carbon2001)
     carb14 = pd.read_csv(Generic.Carbon2014)
     carb30 = pd.read_csv(Generic.Carbon2030)
-    carb30mod = pd.read_csv(Generic.Carbon2030mod)    
-    listofdfs = (tabs_all_df,carb01,carb14,carb30,carb30mod)
+    listofdfs = (tabs_all_df,carb01,carb14,carb30)
     return listofdfs

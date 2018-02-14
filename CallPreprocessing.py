@@ -32,7 +32,7 @@ Generic.set_paths_and_workspaces()
 ##arcpy.GenerateNearTable_analysis(Generic.Points,Generic.vects + 'Roads', Generic.neartabs + 'env_near_roads.csv')
 ##arcpy.GenerateNearTable_analysis(Generic.Points,Generic.vects + 'FEMA', Generic.neartabs + 'env_near_fema.csv')
 ##arcpy.GenerateNearTable_analysis(Generic.Points,Generic.vects + 'CPAD', Generic.neartabs + 'env_near_cpad.csv')
-##arcpy.GenerateNearTable_analysis('D:\TGS\projects\64 - Merced Carbon\MBA\ToolData\Vector\CCED2016\New File Geodatabase.gdb\CCED2016_upd1', Generic.neartabs + 'env_near_cced.csv')
+##arcpy.GenerateNearTable_analysis('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/CCED2016/New File Geodatabase.gdb/CCED2016_upd1', Generic.neartabs + 'env_near_cced.csv')
 ##
 ##
 ##Join Near Tables to Spatial Data Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol = 'none')
@@ -92,7 +92,8 @@ Generic.set_paths_and_workspaces()
 #Helpers.FCtoCSV("D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/LF2030_Combined",'D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/LF2030_Combined.csv')
 #Helpers.FCtoCSV("D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/LF2030_Combined",'D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/LF2030_Combined.csv')
 #Helpers.FCtoCSV("D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/LF2014_Combined",'D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/LF2014_Combined.csv')
-Helpers.FCtoCSV("D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/LF2001_Combined",'D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/LF2001_Combined.csv')
+#Helpers.FCtoCSV("D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/LF2001_Combined",'D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/LF2001_Combined.csv')
+#Helpers.FCtoCSV("D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/Aquatic",'D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/env_aquatic.csv')
 ##
 ##Clean Tables
 ##Generic.Clean_Table(Generic.Root_Mid_Path + 'ValueTables/JoinTables/' + '','pointid','Value',['pointid','Value'],[('Value','crop_value')])
@@ -132,7 +133,7 @@ Helpers.FCtoCSV("D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extracti
 #    arcpy.RasterToPoint_conversion(Raster,OutputName,ValueField)
 ##
 ##RastersToPoints('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Landcover_Rasters/Landcover_2001.tif','EVT_Nick_1','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/RasterEctractions.gdb/LF2001_LUT')
-1
+
 
 ##RastersToPoints('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Landcover_Rasters/Landcover_2014.tif','EVT_Nick_2','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/RasterEctractions.gdb/LF2014_LUT')
 ##
@@ -152,3 +153,20 @@ Helpers.FCtoCSV("D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extracti
 ##OutputDF.to_csv('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/LookUpTables/Landcovers.csv')
 ##
 ##
+#Helpers.samples('E:/TGS/projects/Merced Carbon/Tables/NearTables/','E:/mercedtool/MASTER_DATA/Tables/NearTables/',30000)
+Helpers.samples('E:/TGS/projects/Merced Carbon/Tables/ValueTables/','E:/mercedtool/MASTER_DATA/Tables/ValueTables/',30000)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

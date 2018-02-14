@@ -85,11 +85,11 @@ def selectionfunc (dict_eligibility,df, activity):
 
     df.loc[query,selflag] = 1       
     if activity == 'rre':
-        df.loc[query, 'LC2014'] = 'Riparian Restoration' #CHANGE FIELD BEFORE FINAL
+        df.loc[query, 'LC2030'] = 'Riparian Restoration' #CHANGE FIELD BEFORE FINAL
         df.loc[query, 'gridcode30'] = 16 
         df.loc[query, 'lcchange'] = 0 
     if activity == 'oak':
-        df.loc[query, 'LC2014'] = 'Oak Conversion' #CHANGE FIELD BEFORE FINAL
+        df.loc[query, 'LC2030'] = 'Oak Conversion' #CHANGE FIELD BEFORE FINAL
         df.loc[query, 'gridcode30'] = 17
     return df
 
@@ -474,6 +474,7 @@ def samples(workspace,outputfolder,samplesize):
     for i in templist:
         print (i)
         df = pd.read_csv(path + i,encoding='latin-1')
+        df.sort_values('pointid',inplace = True)
         df = df.head(samplesize)
         df.to_csv(path1 + i)
         

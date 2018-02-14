@@ -30,17 +30,12 @@ import arcpy
 import numpy as np
 
 def DoActivities(df,activitylist, scenario,customdev):
-    Generic.set_paths_and_workspaces()
     tempdf = df
     dict_eligibility = {}
 
-    tempdf['LC2030MOD'] = tempdf['LC2014']
+    Helpers.ChangeFlag(tempdf,'LC2014','LC2030')
 
-
-    Helpers.ChangeFlag(tempdf,'LC2014','LC2030MOD')
-
-    Helpers.pmes (scenario)
-    Helpers.pmes (customdev)
+    Helpers.pmes ('test5')
     
     #If the scenario is custom, 
     if 'Custom' == scenario:
@@ -53,7 +48,9 @@ def DoActivities(df,activitylist, scenario,customdev):
         df.loc[tempdf['pointid'].isin(plist), 'LC2014'] = 'Urban'
 
     #Calculate Riparian Suitability and Selection
+    Helpers.pmes (activitylist)
     if 'rre' in activitylist:
+        Helpers.pmes ('Applying Riparian Restoration')
         Generic.dict_activity['rre']['query'] = (tempdf['LC2014'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & (tempdf['lcchange'] == 1) & ((tempdf['near_rivers'] < 650) | (tempdf['near_streams'] < 100)) & (tempdf['near_woody'] != 0))
         Helpers.CreateSuitFlags('rre',tempdf)
         Helpers.CreateEligDict(tempdf, 'rre', Generic.dict_activity,dict_eligibility)
@@ -68,16 +65,14 @@ def DoActivities(df,activitylist, scenario,customdev):
         Helpers.selectionfunc (dict_eligibility,tempdf, 'oak')
 
     #Calculate 2030MOD values
-    tempdf['LC2030MOD'] = tempdf['LC2014']
-
     #Set GHG dictionary entries for suitability
-    Generic.dict_activity['ccr']['query'] = (df['LC2030MOD'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
-    Generic.dict_activity['mul']['query'] = (df['LC2030MOD'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
-    Generic.dict_activity['nfm']['query'] = (df['LC2030MOD'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
-    Generic.dict_activity['aca']['query'] = (df['LC2030MOD'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
-    Generic.dict_activity['acu']['query'] = (df['LC2030MOD'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
-    Generic.dict_activity['hpl']['query'] = (df['LC2030MOD'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
-    Generic.dict_activity['urb']['query'] = (df['LC2030MOD'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+    Generic.dict_activity['ccr']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+    Generic.dict_activity['mul']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+    Generic.dict_activity['nfm']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+    Generic.dict_activity['aca']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+    Generic.dict_activity['acu']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+    Generic.dict_activity['hpl']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+    Generic.dict_activity['urb']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
 
     #Create green house gas function to run suitability, eligibility and selection functions from Helpers
     def ghg_selection (tempdf,activity,dict_eligibility):
