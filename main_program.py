@@ -11,6 +11,8 @@ scratch_folder = arcpy.GetParameterAsText(2) #this is the scratch folder, automa
 
 rootpath = arcpy.GetParameterAsText(3) #Rootpath of data location
 activitylist = []
+
+#Uncomment for final
 #if not arcpy.GetParameterAsText(8):
 #    activitylist.append('rre')
 #    arcpy.AddMessage('added rre to activity list')
@@ -34,6 +36,7 @@ activitylist = []
 #    arcpy.AddMessage('added rre to activity list')
 #  
 
+
 if not activitylist:
     activitylist.append('rre')
     
@@ -46,13 +49,16 @@ else:
 #Processing Area
 mask = arcpy.GetParameterAsText(5)  #This is the user chosen mask
 customdev = os.path.normpath(arcpy.GetParameterAsText(7))
-mask = 'None'
-if not mask:
+if mask == '':
     mask="None"
 print (mask)
 import Generic
 run_nme = 'test'
 
+if arcpy.GetParameterAsText(8):
+    customprocess = 1
+else:
+    customprocess = 0
 
 #First check for spatial analyst, arcinfo pfodcut level, and version --> kill tool if not active
 #if Generic.check_extensions('Spatial') ==0:
@@ -72,8 +78,8 @@ Helpers.pmes (mask)
 Generic.set_paths_and_workspaces(scratch_folder, rootpath, mask, 'MASTER_DATA/', output_file_location, run_name)
 
 if 'rre' in activitylist:
-#    Generic.dict_activity['rre']['adoption'] = float(arcpy.GetParameterAsText(9))
-    Generic.dict_activity['rre']['adoption'] = 20.00
+#    Generic.dict_activity['rre']['adoption'] = float(arcpy.GetParameterAsText(9)) #Uncomment for final
+    Generic.dict_activity['rre']['adoption'] = 20.00 #Only For Testing
     arcpy.AddMessage(Generic.dict_activity['rre']['adoption'])
     arcpy.AddMessage('added rre adoption to dictionary')
 if 'ccr' in activitylist:
@@ -126,8 +132,8 @@ Helpers.pmes (scenario)
 Helpers.pmes (customdev)
 run_name = run_name.replace(" ", "_")
 
-initout = Initial.DoInitial()
+initout = Initial.DoInitial(mask, customprocess)
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, scenario, customdev)
-#outdf = ApplyActions.ApplyGHG(outdf,initout[2],initout[3],activitylist)
+templist = ApplyActions.ApplyGHG(outdf,initout[2],initout[3],activitylist)
 
 outdf.to_csv("E:/Temp/test.csv")

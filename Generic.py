@@ -215,7 +215,6 @@ def set_paths_and_workspaces(workspace = 'E:/mercedtool', root_data_path = 'E:/m
 
     #MISC
     global run_
-    run = run_name
     #Outputs
     global CarbonRaster
     CarbonRaster = os.path.join(output_file_loc, run_name + "_CARBON_ALL")
@@ -229,9 +228,6 @@ def set_paths_and_workspaces(workspace = 'E:/mercedtool', root_data_path = 'E:/m
     OutCsvFolder = os.path.join(output_file_loc, run_name + "_OUT_CSVS")
 
     #other vars
-    vineyard_count =0
-    global rr_count
-    rr_count =0
 
     global treatments_with_overlap
     treatments_with_overlap =[]

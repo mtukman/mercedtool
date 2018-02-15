@@ -4,11 +4,11 @@ global pts
 import pandas as pd
 import Helpers
     
-def DoInitial():
+def DoInitial(procmask, cs):
 #    Generic.set_paths_and_workspaces()
     
     
-    pts = Helpers.create_processing_table(Generic.Points,Generic.MASK)
+    pts = Helpers.create_processing_table(Generic.Points,procmask, cs)
     import gc
     gc.collect()
     
@@ -20,6 +20,13 @@ def DoInitial():
     jointables = Helpers.LoadCSVs(jointabs)
     value_df = Helpers.MergeMultiDF('pointid', jointables)
     #
+    if cs == 1:
+        
+    else:
+        
+    
+    
+    
     neartables = Helpers.LoadCSVs(neartabs)
     near_df = Helpers.MergeMultiDF('pointid', neartables)
     
