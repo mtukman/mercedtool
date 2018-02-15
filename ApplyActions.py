@@ -18,22 +18,19 @@ import pandas as pd
 import Helpers
 global _eligibility
 
-adoptrre = 5
-yearrre = 2020
-
 def ApplyGHG(df,carb14,carb30,activitylist):
 #    tempdf = Helpers.MergeMultiDF('gridcode30',[df,carb30])
     tempdf = df.sort_values(['pointid'])
     carb = {}
     carb2 = {}
     trt = pd.read_csv("E:/mercedtool/MASTER_DATA/Tables/trt/trt_reductions.csv")    
-    def UpdateValues (tempdf,activity):
+    def UpdateValues (tempdf,activity,carb,carb2):
         Helpers.pmes('Updating Carbon For: ' + activity)
         upact = activity.upper()
         
         #Create a dataframe from trt_reductions for the activity
         temptrt = trt.loc[trt['Activity'] == upact]
-        actcount = tempdf.groupby('LC2014').sum()[activity+'selected']
+        actcount = tempdf.groupby('LC2030').sum()[activity+'selected']
         actcount2 = actcount.to_frame()
         #Convert Landcover and reduction rates to their own lists
         dfList = temptrt['Landcover'].tolist()
@@ -61,11 +58,20 @@ def ApplyGHG(df,carb14,carb30,activitylist):
             
                         counter2 = counter2 + 1
                     fullcount = 0
-                    while counter2<maxyrs and fullcount < fulladoptyrs:
-                        carb1 = carb1 + (pixels*redrate)
-            
-                        counter2 = counter2 + 1
-                        fullcount = fullcount + 1
+                    
+                    if activity == 'rre' or activity == 'oak':
+                        while counter2<maxyrs:
+                            carb1 = carb1 + (pixels*redrate)
+                
+                            counter2 = counter2 + 1
+                            fullcount = fullcount + 1
+                        
+                    else:
+                        while counter2<maxyrs and fullcount < fulladoptyrs:
+                            carb1 = carb1 + (pixels*redrate)
+                
+                            counter2 = counter2 + 1
+                            fullcount = fullcount + 1
                     endcount = adoptrre
                     while counter2<maxyrs and endcount>0:
                         carb1 = carb1 + (((endcount)*anngrowth)*redrate)

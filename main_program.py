@@ -1,65 +1,52 @@
 #run entire program
 import arcpy
-import sys
 import Helpers
 import os
+import Generic
 #variables passed in from ArcMap tool
 
 run_name = arcpy.GetParameterAsText(0)       #this will be prepended to raster output file name, no spaces
-output_file_location = arcpy.GetParameterAsText(1)  #must be a gdb
-scratch_folder = arcpy.GetParameterAsText(2) #this is the scratch folder, automatically set to the parent folder the output file gdb
-
+output_file_location = arcpy.GetParameterAsText(1)  #must be a folder
 rootpath = arcpy.GetParameterAsText(3) #Rootpath of data location
 activitylist = []
 
-#Uncomment for final
-#if not arcpy.GetParameterAsText(8):
-#    activitylist.append('rre')
-#    arcpy.AddMessage('added rre to activity list')
-#if not arcpy.GetParameterAsText(10):
-#    activitylist.append('oak')
-#    arcpy.AddMessage('added oak to activity list')
-#if not arcpy.GetParameterAsText(12):
-#    activitylist.append('ccr')
-#    arcpy.AddMessage('added ccr to activity list')
-#if not arcpy.GetParameterAsText(14):
-#    activitylist.append('mul')
-#    arcpy.AddMessage('added mul to activity list')
-#if not arcpy.GetParameterAsText(16):
-#    activitylist.append('nfm')
-#    arcpy.AddMessage('added nfm to activity list')
-#if not arcpy.GetParameterAsText(18):
-#    activitylist.append('hpl')
-#    arcpy.AddMessage('added hpl to activity list')
-#if not arcpy.GetParameterAsText(20):
-#    activitylist.append('urb')
-#    arcpy.AddMessage('added rre to activity list')
-#  
-
+#Add activity marker to list
+if arcpy.GetParameterAsText(7):
+    activitylist.append('rre')
+    arcpy.AddMessage('added rre to activity list')
+if arcpy.GetParameterAsText(11):
+    activitylist.append('oak')
+    arcpy.AddMessage('added oak to activity list')
+if arcpy.GetParameterAsText(15):
+    activitylist.append('ccr')
+    arcpy.AddMessage('added ccr to activity list')
+if arcpy.GetParameterAsText(19):
+    activitylist.append('mul')
+    arcpy.AddMessage('added mul to activity list')
+if arcpy.GetParameterAsText(23):
+    activitylist.append('nfm')
+    arcpy.AddMessage('added nfm to activity list')
+if arcpy.GetParameterAsText(27):
+    activitylist.append('hpl')
+    arcpy.AddMessage('added hpl to activity list')
 
 if not activitylist:
     activitylist.append('rre')
     
 scenario = arcpy.GetParameterAsText(6)
 
-if not arcpy.GetParameterAsText(4):
+if not arcpy.GetParameterAsText(3):
     user_treatment_area = "None"
 else:
-    user_treatment_area = arcpy.GetParameterAsText(4)
-#Processing Area
-mask = arcpy.GetParameterAsText(5)  #This is the user chosen mask
-customdev = os.path.normpath(arcpy.GetParameterAsText(7))
-if mask == '':
+    user_treatment_area = arcpy.GetParameterAsText(3)
+    
+customdev = os.path.normpath(arcpy.GetParameterAsText(6))
+if not arcpy.GetParameterAsText(4):
     mask="None"
-print (mask)
-import Generic
-run_nme = 'test'
 
-if arcpy.GetParameterAsText(8):
-    customprocess = 1
-else:
-    customprocess = 0
-
+if customdev:
+    cdev = 1
+    
 #First check for spatial analyst, arcinfo pfodcut level, and version --> kill tool if not active
 #if Generic.check_extensions('Spatial') ==0:
 #    arcpy.AddMessage("********************The Spatial Analyst Extension is required to run this tool but is not available at this time.*************")
@@ -72,67 +59,44 @@ else:
 #if (arcpy.GetInstallInfo()['Version'] not in ('10.2.2', '10.3', '10.3.1', '10.3.2')):
 #    arcpy.AddMessage("********************The Carbon Tool requires an version 10.2.2 or later of ArcGIS.*************")
 #    sys.exit()
-
-#Generic.set_paths_and_workspaces(scratch_gdb, rootpath, acreage_cap_vineyard, acreage_cap_urban, 'Carbon Framework/GIS Data/MASTER_DATA/')
-Helpers.pmes (mask)
-Generic.set_paths_and_workspaces(scratch_folder, rootpath, mask, 'MASTER_DATA/', output_file_location, run_name)
+    
+Helpers.pmes ('Mask is :' + mask)
+Generic.set_paths_and_workspaces(rootpath, mask, 'MASTER_DATA/', output_file_location, run_name)
+adoptdict = {}
 
 if 'rre' in activitylist:
-#    Generic.dict_activity['rre']['adoption'] = float(arcpy.GetParameterAsText(9)) #Uncomment for final
-    Generic.dict_activity['rre']['adoption'] = 20.00 #Only For Testing
-    arcpy.AddMessage(Generic.dict_activity['rre']['adoption'])
-    arcpy.AddMessage('added rre adoption to dictionary')
+    Generic.dict_activity['rre']['adoption'] = float(arcpy.GetParameterAsText(8)) #Uncomment for final
+    Generic.dict_activity['rre']['years'] = float(arcpy.GetParameterAsText(10)) #Uncomment for final   
+    Generic.dict_activity['rre']['adoptyear'] = float(arcpy.GetParameterAsText(9)) #Uncomment for final 
+if 'oak' in activitylist:
+    Generic.dict_activity['oak']['adoption'] = float(arcpy.GetParameterAsText(12)) #Uncomment for final
+    Generic.dict_activity['oak']['years'] = float(arcpy.GetParameterAsText(14)) #Uncomment for final   
+    Generic.dict_activity['oak']['adoptyear'] = float(arcpy.GetParameterAsText(13)) #Uncomment for final  
 if 'ccr' in activitylist:
-    arcpy.AddMessage(Generic.dict_activity['ccr']['adoption'])
-    Generic.dict_activity['ccr']['adoption'] = float(arcpy.GetParameterAsText(11))
-    
-#if 'rre' in activitylist:
-#    Generic.dict_activity['rre']['adoption'] = float(arcpy.GetParameterAsText(9))
-#    arcpy.AddMessage(Generic.dict_activity['rre']['adoption'])
-#    arcpy.AddMessage('added rre adoption to dictionary')
-#if 'ccr' in activitylist:
-#    arcpy.AddMessage(Generic.dict_activity['ccr']['adoption'])
-#    Generic.dict_activity['ccr']['adoption'] = float(arcpy.GetParameterAsText(11))    
-#    
-#if 'rre' in activitylist:
-#    Generic.dict_activity['rre']['adoption'] = float(arcpy.GetParameterAsText(9))
-#    arcpy.AddMessage(Generic.dict_activity['rre']['adoption'])
-#    arcpy.AddMessage('added rre adoption to dictionary')
-#if 'ccr' in activitylist:
-#    arcpy.AddMessage(Generic.dict_activity['ccr']['adoption'])
-#    Generic.dict_activity['ccr']['adoption'] = float(arcpy.GetParameterAsText(11))    
-#    
-#if 'rre' in activitylist:
-#    Generic.dict_activity['rre']['adoption'] = float(arcpy.GetParameterAsText(9))
-#    arcpy.AddMessage(Generic.dict_activity['rre']['adoption'])
-#    arcpy.AddMessage('added rre adoption to dictionary')
-#if 'ccr' in activitylist:
-#    arcpy.AddMessage(Generic.dict_activity['ccr']['adoption'])
-#    Generic.dict_activity['ccr']['adoption'] = float(arcpy.GetParameterAsText(11))    
-#    
-#if 'rre' in activitylist:
-#    Generic.dict_activity['rre']['adoption'] = float(arcpy.GetParameterAsText(9))
-#    arcpy.AddMessage(Generic.dict_activity['rre']['adoption'])
-#    arcpy.AddMessage('added rre adoption to dictionary')
-#if 'ccr' in activitylist:
-#    arcpy.AddMessage(Generic.dict_activity['ccr']['adoption'])
-#    Generic.dict_activity['ccr']['adoption'] = float(arcpy.GetParameterAsText(11))    
-    
-    
-    
-    
-    
-    
+    Generic.dict_activity['ccr']['adoption'] = float(arcpy.GetParameterAsText(16)) #Uncomment for final
+    Generic.dict_activity['ccr']['years'] = float(arcpy.GetParameterAsText(18)) #Uncomment for final   
+    Generic.dict_activity['ccr']['adoptyear'] = float(arcpy.GetParameterAsText(17)) #Uncomment for final 
+if 'mul' in activitylist:
+    Generic.dict_activity['mul']['adoption'] = float(arcpy.GetParameterAsText(20)) #Uncomment for final
+    Generic.dict_activity['mul']['years'] = float(arcpy.GetParameterAsText(22)) #Uncomment for final       
+    Generic.dict_activity['mul']['adoptyear'] = float(arcpy.GetParameterAsText(21)) #Uncomment for final 
+if 'nfm' in activitylist:
+    Generic.dict_activity['nfm']['adoption'] = float(arcpy.GetParameterAsText(24)) #Uncomment for final
+    Generic.dict_activity['nfm']['years'] = float(arcpy.GetParameterAsText(26)) #Uncomment for final       
+    Generic.dict_activity['nfm']['adoptyear'] = float(arcpy.GetParameterAsText(25)) #Uncomment for final
+if 'hpl' in activitylist:
+    Generic.dict_activity['hpl']['adoption'] = float(arcpy.GetParameterAsText(28)) #Uncomment for final
+    Generic.dict_activity['hpl']['years'] = float(arcpy.GetParameterAsText(30)) #Uncomment for final       
+    Generic.dict_activity['hpl']['adoptyear'] = float(arcpy.GetParameterAsText(29)) #Uncomment for final  
 
 import Initial
 import ActivityApplication
 import ApplyActions
-import pandas as pd
-Helpers.pmes (scenario)
-Helpers.pmes (customdev)
+
+Helpers.pmes ('Scenario Chosen: ' + scenario)
 run_name = run_name.replace(" ", "_")
 
-initout = Initial.DoInitial(mask, customprocess)
+initout = Initial.DoInitial(mask, customprocess, cdev)
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, scenario, customdev)
 templist = ApplyActions.ApplyGHG(outdf,initout[2],initout[3],activitylist)
 

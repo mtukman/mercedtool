@@ -23,7 +23,7 @@ def CreateEligDict(df, activity, dict_activity, dict_eligibility):
     if activity in dict_eligibility.keys():
         pmes('The activity is already in the dict_eligibility dictionary')
         sys.exit('***The activity is already in the dict_eligibility dictionary***')
-    eli = df.groupby('LC2014').sum()[initflag]
+    eli = df.groupby('LC2030').sum()[initflag]
     eli.loc['Annual Cropland'] = eli.loc['Annual Cropland'] * Generic.dict_activity[activity]['ag_modifier']
     
     #Need to add modifier for adoption accross the board from user input
@@ -39,16 +39,14 @@ def selectionfunc (dict_eligibility,df, activity):
     
     """
     import Generic
-    import pandas as pd
     import arcpy
-    goal = 0
     #Create a temporary dictionary of the activity's dictionary from the eligibility dict
+    goal = 0
     tempdict = dict_eligibility[activity]
     klist = list(tempdict.keys())
     for i in klist:
         goal = goal + tempdict[i]
-#    goal = goal* Generic.dict_activity[activity]['adoption'] #update to link to user defined % for final tool
-    goal = goal* .2 #update to link to user defined % for final tool
+    goal = goal* Generic.dict_activity[activity]['adoption'] #update to link to user defined % for final tool
     count = 0
     
     pmes ('Goal is : ' + str (goal))
@@ -457,7 +455,7 @@ def samples(workspace,outputfolder,samplesize):
         
         
         
-def create_processing_table(InPoints,inmask, custom):
+def create_processing_table(InPoints,inmask):
     """
     This function takes a point feature class (InPoints) and the user-defined processing area (inmask), selects by location
     abd exports a CSV file and reads the file into a global variable as a Pandas DF.
@@ -467,20 +465,14 @@ def create_processing_table(InPoints,inmask, custom):
     import pandas as pd
     import Generic
 
-    if custom == 0:
-        pts = pd.read_csv(Generic.Points_Table)
-        return pts
-    else:
-        arcpy.MakeFeatureLayer_management(InPoints,'temp')
-        arcpy.SelectLayerByLocation_management('temp','INTERSECT',inmask)
-        #copy featureclass
-        arcpy.CopyFeatures_management('temp',os.path.join(Generic.tempgdb,'temppts' ))
-        #fctocsv
-        FCtoCSV(os.path.join(Generic.tempgdb,'temppts' ),)
-        pts = pd.read_csv(os.path.join(Generic.RDP, Generic.MP,'Temp/temp.csv'))
-        return pts
-        
-        
+    arcpy.MakeFeatureLayer_management(InPoints,'temp')
+    arcpy.SelectLayerByLocation_management('temp','INTERSECT',inmask)
+    #copy featureclass
+    arcpy.CopyFeatures_management('temp',os.path.join(Generic.tempgdb,'temppts' ))
+    #fctocsv
+    FCtoCSV(os.path.join(Generic.tempgdb,'temppts' ),os.path.join(Generic.RDP, Generic.MP,'Temp/temp.csv'))
+    temppts = pd.read_csv(os.path.join(Generic.RDP, Generic.MP,'Temp/temp.csv'))
+    return temppts
         
         
         
