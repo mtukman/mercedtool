@@ -39,13 +39,17 @@ if not arcpy.GetParameterAsText(3):
     user_treatment_area = "None"
 else:
     user_treatment_area = arcpy.GetParameterAsText(3)
-    
-customdev = os.path.normpath(arcpy.GetParameterAsText(6))
+
 if not arcpy.GetParameterAsText(4):
     mask="None"
-
-if customdev:
+if arcpy.GetParameterAsText(2):
+    cproc = 1
+else:
+    cproc = 0
+if os.path.normpath(arcpy.GetParameterAsText(6)):
     cdev = 1
+else:
+    cdev = 0
     
 #First check for spatial analyst, arcinfo pfodcut level, and version --> kill tool if not active
 #if Generic.check_extensions('Spatial') ==0:
@@ -95,9 +99,8 @@ import ApplyActions
 
 Helpers.pmes ('Scenario Chosen: ' + scenario)
 run_name = run_name.replace(" ", "_")
-
-initout = Initial.DoInitial(mask, customprocess, cdev)
-outdf = ActivityApplication.DoActivities(initout[0],activitylist, scenario, customdev)
-templist = ApplyActions.ApplyGHG(outdf,initout[2],initout[3],activitylist)
+initout = Initial.DoInitial(mask, cproc, cdev, arcpy.GetParamterAsText(6), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points)
+outdf = ActivityApplication.DoActivities(initout[0],activitylist, scenario, cdev, Generic.dict_activity)
+templist = ApplyActions.ApplyGHG(outdf,initout[2],initout[3],activitylist, Generic.dict_activity)
 
 outdf.to_csv("E:/Temp/test.csv")

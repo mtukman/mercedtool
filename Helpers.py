@@ -4,11 +4,7 @@ Created on Wed Jan 10 10:23:24 2018
 This script holds the functions used in other modules of the tool.
 @author: mtukman
 """
-import Generic
 import arcpy
-
-
-
 def pmes(message):
     """
     Takes a string and prints it as an arcpy msg and as a python print statement
@@ -16,15 +12,14 @@ def pmes(message):
     arcpy.AddMessage(message)
     print (message)
     
-def CreateEligDict(df, activity, dict_activity, dict_eligibility):
+def CreateEligDict(df, activity, dictact, dict_eligibility):
     import sys
-    import Generic
     initflag = activity + 'suitflag'
     if activity in dict_eligibility.keys():
         pmes('The activity is already in the dict_eligibility dictionary')
         sys.exit('***The activity is already in the dict_eligibility dictionary***')
     eli = df.groupby('LC2030').sum()[initflag]
-    eli.loc['Annual Cropland'] = eli.loc['Annual Cropland'] * Generic.dict_activity[activity]['ag_modifier']
+    eli.loc['Annual Cropland'] = eli.loc['Annual Cropland'] * dictact[activity]['ag_modifier']
     
     #Need to add modifier for adoption accross the board from user input
     
@@ -32,13 +27,12 @@ def CreateEligDict(df, activity, dict_activity, dict_eligibility):
     dict_eligibility[activity] = eli_dict_element
     
 
-def selectionfunc (dict_eligibility,df, activity):
+def selectionfunc (dict_eligibility,df, activity,dictact):
     """
     This function takes a dictionary, a dataframe and an activity.
     It takes a user input to determine how many pixels to select for the activity.
     
     """
-    import Generic
     import arcpy
     #Create a temporary dictionary of the activity's dictionary from the eligibility dict
     goal = 0
@@ -46,14 +40,14 @@ def selectionfunc (dict_eligibility,df, activity):
     klist = list(tempdict.keys())
     for i in klist:
         goal = goal + tempdict[i]
-    goal = goal* Generic.dict_activity[activity]['adoption'] #update to link to user defined % for final tool
+    goal = goal* dictact[activity]['adoption'] #update to link to user defined % for final tool
     count = 0
     
     pmes ('Goal is : ' + str (goal))
     initflag =  activity + 'suitflag'
     selflag = activity + 'selected'
     df[selflag] = 0
-    pmes ('group size is :' + str(Generic.dict_activity[activity]['grpsize']))
+    pmes ('group size is :' + str(dictact[activity]['grpsize']))
     
     #Group pixels by their medium group value (medium grid)
     tempdf = df.groupby('medgroup_val').sum()[['pointid',initflag]]
@@ -89,16 +83,14 @@ def selectionfunc (dict_eligibility,df, activity):
 
                 
                 
-def CreateSuitFlags(activity,df):
+def CreateSuitFlags(activity,df,dictact):
     '''Takes an activity name (a key from dict_activity) and uses
     that to calculate a 1/0 suitability flag for the activity 
     in the tabs_all_df dataframe'''
-    import Generic
-
     initflag = activity + 'suitflag'
     pmes (initflag)
     df[initflag] = 0
-    df.loc[Generic.dict_activity[activity]['query'], initflag] = 1
+    df.loc[dictact[activity]['query'], initflag] = 1
     
     
     
@@ -166,15 +158,6 @@ def FCtoCSV (inputfc,Outpath):
         with arcpy.da.SearchCursor(inputfc,field_names) as cursor:
             for row in cursor:
                 dw.writerow(dict(zip(field_names,row)))
-def Make_Flags (Flags,Fieldname):
-    """
-
-    """
-    import pandas as pd
-    FLG = pd.read_csv(Flags)
-    Generic.pts[Fieldname] = 0
-    Generic.pts.loc[Generic.pts['pointid'].isin (FLG['pointid']), Fieldname] = 1
-
 
 def Clean_Table (csv,idfield,length=5689373,keepfields = [], renamefields = [],valuefield = 'TEST'):
     """
@@ -232,38 +215,6 @@ def MergeMultiDF(JoinField, dflist):
     return OutputDF
 
 
-#Make MBA Raster
-def MakeMBARaster(LUT,OutputPath,JoinKey,TargetKey,Lfield):
-    """
-    This function uses a lookup table and a raster to create a lookup raster.
-    LUT = look up table CSV
-    OutputPath = output raster
-    JoinKey =
-    """
-    import arcpy
-    from arcpy import env
-    arcpy.CheckOutExtension("Spatial")
-    #Set the Variables
-    ws = 'E:/Temp'
-    arcpy.env.workspace = ws
-    arcpy.env.overwriteOutput = 1
-    pmes ('Making Raster Layer')
-    arcpy.MakeRasterLayer_management(raster,'temp')
-    arcpy.AddJoin_management('temp',JoinKey,LUT,TargetKey)
-    arcpy.CopyRaster_management('temp','temp2.tif')
-    tempo = arcpy.sa.Lookup('temp2.tif',Lfield)
-    pmes ('Saving Raster')
-    tempo.save(OutputPath)
-
-def RastersToPoints(Raster,ValueField,OutputName):
-    """
-    This function takes a raster, a value field and an output FC name, creates a point featureclass
-    from the raster in the temp vector gdb in the Master Data Folder.
-    """
-    import arcpy
-    pmes ('Converting to points: ' + Raster)
-    arcpy.RasterToPoint_conversion(Raster,tempgdb+OutputName,ValueField)
-
 def LoadCSVs(infolder):
     """
     This function takes a folder, and reads every csv in it into a dataframe
@@ -271,7 +222,6 @@ def LoadCSVs(infolder):
     """
     import arcpy
     import os
-    from arcpy import env
     import pandas as pd
     #Set the Variables
     ws = infolder
@@ -299,13 +249,10 @@ def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol 
     """
 
     import arcpy
-    import functools
     import pandas as pd
     ws = "D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/MBTABLES"
     arcpy.env.workspace = ws
     arcpy.env.overwriteOutput = 1
-    templist = [inputcsv1,inputcsv2]
-    temp = []
     df1 = pd.read_csv(inputcsv1)
     df2 = pd.read_csv(inputcsv2)
 
@@ -317,8 +264,6 @@ def Merge2csvs(inputcsv1,inputcsv2,mergefield,outputcsv,origcol = 'none',newcol 
 
 
 def ChangeFlag(df,scenario1,scenario2):
-    import pandas as pd
-    query = '''tabs_all_df['LC2030'] != tabs_all_df['LC2014']''' 
     testquery = (df[scenario1] != df[scenario2])
     df['lcchange'] = 1
     df.loc[testquery, 'lcchange'] = 0
@@ -383,14 +328,6 @@ rids_only = "D:\\TGS\\projects\\64 - Merced Carbon\\MBA\\ToolData\\Vector\\speci
     out_df = pd.DataFrame.from_dict(outdict, 'index')
     return out_df
     
-def ghgupdate(activity,df,carb30,carb30mod):
-
-    import pandas as pd
-    import Generic
-    trt_temp = trt.loc[trt['Activity'] == 'rre']
-    MergeMultiDF('LC2030MOD',[df,trt_temp])
-
-
 def Carbon2030calc():
     import pandas as pd
     import numpy as np

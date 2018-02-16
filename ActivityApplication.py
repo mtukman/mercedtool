@@ -23,12 +23,11 @@ urb - URBAN FORESTRY
 
 '''
 
-import Generic
 import Helpers
 global dict_eligibility
 
 
-def DoActivities(df,activitylist, scenario,customdev):
+def DoActivities(df,activitylist, scenario,customdev, dictact):
     tempdf = df
     dict_eligibility = {}
 
@@ -41,72 +40,72 @@ def DoActivities(df,activitylist, scenario,customdev):
     Helpers.pmes (activitylist)
     if 'rre' in activitylist:
         Helpers.pmes ('Applying Riparian Restoration')
-        Generic.dict_activity['rre']['query'] = (tempdf['LC2030'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & (tempdf['lcchange'] == 1) & ((tempdf['near_rivers'] < 650) | (tempdf['near_streams'] < 100)) & (tempdf['near_woody'] != 0))
-        Helpers.CreateSuitFlags('rre',tempdf)
-        Helpers.CreateEligDict(tempdf, 'rre', Generic.dict_activity,dict_eligibility)
-        Helpers.selectionfunc (dict_eligibility,tempdf, 'rre')
+        dictact['rre']['query'] = (tempdf['LC2030'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & (tempdf['lcchange'] == 1) & ((tempdf['near_rivers'] < 650) | (tempdf['near_streams'] < 100)) & (tempdf['near_woody'] != 0))
+        Helpers.CreateSuitFlags('rre',tempdf,dictact)
+        Helpers.CreateEligDict(tempdf, 'rre', dictact,dict_eligibility)
+        Helpers.selectionfunc (dict_eligibility,tempdf, 'rre',dictact)
         vlist.append('rre')
 
     #Create Oak Suitability and Selection
     if 'oak' in activitylist:
-        Generic.dict_activity['oak']['query'] =(tempdf['LC2030'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & tempdf['rreselected'] != 1)
-        Helpers.CreateSuitFlags('oak',tempdf)
-        Helpers.CreateEligDict(tempdf, 'oak', Generic.dict_activity,dict_eligibility)
-        Helpers.selectionfunc (dict_eligibility,tempdf, 'oak')
+        dictact['oak']['query'] =(tempdf['LC2030'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & tempdf['rreselected'] != 1)
+        Helpers.CreateSuitFlags('oak',tempdf,dictact)
+        Helpers.CreateEligDict(tempdf, 'oak', dictact,dict_eligibility)
+        Helpers.selectionfunc (dict_eligibility,tempdf, 'oak',dictact)
         vlist.append('oak')
     #Calculate 2030MOD values
     #Set GHG dictionary entries for suitability
     if 'rre' in activitylist and 'oak' in activitylist:
-        Generic.dict_activity['ccr']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0) & (df['oakselected'] == 0)
-        Generic.dict_activity['mul']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0) & (df['oakselected'] == 0)
-        Generic.dict_activity['nfm']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0) & (df['oakselected'] == 0)
-        Generic.dict_activity['aca']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0) & (df['oakselected'] == 0)
-        Generic.dict_activity['acu']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0) & (df['oakselected'] == 0)
-        Generic.dict_activity['hpl']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0) & (df['oakselected'] == 0)
-        Generic.dict_activity['urb']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0) & (df['oakselected'] == 0)
+        dictact['ccr']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0) & (df['oakselected'] == 0)
+        dictact['mul']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0) & (df['oakselected'] == 0)
+        dictact['nfm']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0) & (df['oakselected'] == 0)
+        dictact['aca']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0) & (df['oakselected'] == 0)
+        dictact['acu']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0) & (df['oakselected'] == 0)
+        dictact['hpl']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0) & (df['oakselected'] == 0)
+        dictact['urb']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0) & (df['oakselected'] == 0)
     
     if 'rre' in activitylist and 'oak' not in activitylist:
-        Generic.dict_activity['ccr']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0)
-        Generic.dict_activity['mul']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0)
-        Generic.dict_activity['nfm']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0)
-        Generic.dict_activity['aca']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0)
-        Generic.dict_activity['acu']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0)
-        Generic.dict_activity['hpl']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0)
-        Generic.dict_activity['urb']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0)
+        dictact['ccr']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0)
+        dictact['mul']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0)
+        dictact['nfm']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0)
+        dictact['aca']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0)
+        dictact['acu']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0)
+        dictact['hpl']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0)
+        dictact['urb']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['rreselected'] == 0)
         
     if 'rre' not in activitylist and 'oak' in activitylist:
-        Generic.dict_activity['ccr']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['oakselected'] == 0)
-        Generic.dict_activity['mul']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['oakselected'] == 0)
-        Generic.dict_activity['nfm']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['oakselected'] == 0)
-        Generic.dict_activity['aca']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['oakselected'] == 0)
-        Generic.dict_activity['acu']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['oakselected'] == 0)
-        Generic.dict_activity['hpl']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['oakselected'] == 0)
-        Generic.dict_activity['urb']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['oakselected'] == 0)
+        dictact['ccr']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['oakselected'] == 0)
+        dictact['mul']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['oakselected'] == 0)
+        dictact['nfm']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['oakselected'] == 0)
+        dictact['aca']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['oakselected'] == 0)
+        dictact['acu']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['oakselected'] == 0)
+        dictact['hpl']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['oakselected'] == 0)
+        dictact['urb']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & (df['oakselected'] == 0)
         
     if 'rre' not in activitylist and 'oak' not in activitylist:
-        Generic.dict_activity['ccr']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
-        Generic.dict_activity['mul']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
-        Generic.dict_activity['nfm']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
-        Generic.dict_activity['aca']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
-        Generic.dict_activity['acu']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
-        Generic.dict_activity['hpl']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
-        Generic.dict_activity['urb']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+        dictact['ccr']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+        dictact['mul']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+        dictact['nfm']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+        dictact['aca']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+        dictact['acu']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+        dictact['hpl']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
+        dictact['urb']['query'] = (df['LC2030'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)
         
     #Create green house gas function to run suitability, eligibility and selection functions from Helpers
     def ghg_selection (tempdf,activity,dict_eligibility):
-        Helpers.CreateSuitFlags(activity,tempdf)
-        Helpers.CreateEligDict(tempdf, activity, Generic.dict_activity,dict_eligibility)
-        Helpers.selectionfunc (dict_eligibility,tempdf,activity)
+        Helpers.CreateSuitFlags(activity,tempdf,dictact)
+        Helpers.CreateEligDict(tempdf, activity, dictact,dict_eligibility)
+        Helpers.selectionfunc (dict_eligibility,tempdf,activity,dictact)
 
     #GHG Suitability Flag and Selection for CCR
     if 'ccr' in activitylist:
-        ghg_selection (tempdf,'ccr',dict_eligibility)
+        ghg_selection (tempdf,'ccr',dict_eligibility,dictact)
     if 'mul' in activitylist:
-        ghg_selection (tempdf,'mul',dict_eligibility)
+        ghg_selection (tempdf,'mul',dict_eligibility,dictact)
     if 'nfm' in activitylist:
-        ghg_selection (tempdf,'nfm',dict_eligibility)
+        ghg_selection (tempdf,'nfm',dict_eligibility,dictact)
     if 'hpl' in activitylist:
-        ghg_selection (tempdf,'hpl',dict_eligibility)
+        ghg_selection (tempdf,'hpl',dict_eligibility,dictact)
 
 
     return tempdf

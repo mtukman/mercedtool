@@ -80,7 +80,7 @@ def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None',
 
     #Vectors
     global Points
-    Points = os.path.join('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Vectors.gdb/LFC_Points_Merged')
+    Points = os.path.join(root_data_path,midpath,'Tables/pointtable.gdb/points')
     all_layers.append(Points)
 
     global tpoints
