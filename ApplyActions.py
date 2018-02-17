@@ -44,12 +44,13 @@ def ApplyGHG(df,carb14,carb30,activitylist, dictact):
         for i in dfList:
         
             if i in actcount:
+                carb1 = 0
                 tempix = 0
                 Helpers.pmes('Landcover is: ' + i +', AND Pixels: ' + str(actcount2.at[i,activity+'selected']))
                 pixels = actcount2.at[i,activity+'selected']
                 if pixels > 0:
                     anngrowth = pixels/dictact[activity]['years']
-                    carb1 = 0
+                    
                     redrate = dfList2[counter1]
                     counter2 = 0
                     while counter2 < dictact[activity]['years'] and counter2<maxyrs:
@@ -83,13 +84,14 @@ def ApplyGHG(df,carb14,carb30,activitylist, dictact):
                     tempix = tempix + pixels
                     
                     carb2[activity +i+ '_sel'] = tempix
-                    tempdf[activity +i + '_carbred'] = tempdf[activity+'selected']*(carb1/tempix)
+            if tempix > 0:
+                tempdf[activity +'_carbred'] = tempdf[activity+'selected']*(carb1/pixels)
                     
                     
     for i in activitylist:
 
         
-        UpdateValues(tempdf,i)
+        UpdateValues(tempdf,i, carb, carb2, dictact)
         
 
     return (tempdf,carb,carb2)

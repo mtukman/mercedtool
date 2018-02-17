@@ -19,8 +19,13 @@ def CreateEligDict(df, activity, dictact, dict_eligibility):
         pmes('The activity is already in the dict_eligibility dictionary')
         sys.exit('***The activity is already in the dict_eligibility dictionary***')
     eli = df.groupby('LC2030').sum()[initflag]
-    eli.loc['Annual Cropland'] = eli.loc['Annual Cropland'] * dictact[activity]['ag_modifier']
-    
+    import pandas as pd
+    tempd = eli.add_suffix('_sum').reset_index()
+    tempd.to_csv('P:/Temp/tempd.csv')
+    if 'Annual Cropland' in tempd['LC2030'].values:
+#        pmes (eli[initflag])
+        tempd.loc[tempd['LC2030' == 'Annual Cropland', initflag]] = tempd[initflag] * dictact[activity]['ag_modifier']
+
     #Need to add modifier for adoption accross the board from user input
     
     eli_dict_element = eli.to_dict()
@@ -31,16 +36,21 @@ def selectionfunc (dict_eligibility,df, activity,dictact):
     """
     This function takes a dictionary, a dataframe and an activity.
     It takes a user input to determine how many pixels to select for the activity.
-    
     """
+    pmes('Selecting points for: ' + activity)
     import arcpy
     #Create a temporary dictionary of the activity's dictionary from the eligibility dict
     goal = 0
     tempdict = dict_eligibility[activity]
     klist = list(tempdict.keys())
+    print (klist)
     for i in klist:
+        pmes (i)
+        pmes (goal)
+        pmes (tempdict[i])
         goal = goal + tempdict[i]
-    goal = goal* dictact[activity]['adoption'] #update to link to user defined % for final tool
+    pmes ('Suitable pixels: ' + str(goal))
+    goal = goal* (dictact[activity]['adoption']/100) #update to link to user defined % for final tool
     count = 0
     
     pmes ('Goal is : ' + str (goal))
@@ -60,8 +70,6 @@ def selectionfunc (dict_eligibility,df, activity,dictact):
     s = tempdf['grptemp'].sample(n = vlen)
     glist = [] #Any empty list to hold selected group values
     #Now the function loops through the list of group values and adds the pixels in each group to the count until the goal is reached
-    
-
     arcpy.AddMessage(goal)
     for i in s:
         if count<goal:
@@ -72,9 +80,6 @@ def selectionfunc (dict_eligibility,df, activity,dictact):
             pass
 
     pmes (str(count))
-
-    
-    
     query = (df['medgroup_val'].isin(glist)) & (df[activity + 'suitflag'] == 1)
 
     df.loc[query,selflag] = 1       
@@ -230,13 +235,14 @@ def LoadCSVs(infolder):
     list1 = arcpy.ListFiles("*.csv")
     dflist = []
     pmes (list1)
-    for i in list1:
-        dflist.append(pd.read_csv(os.path.join(ws, i), encoding = 'latin-1'))
+    for z in list1:
+        pmes (str(os.path.join(ws, z)))
+        dflist.append(pd.read_csv(os.path.join(ws, z))) # , encoding = 'latin-1'
 
     newlist = []
-    for i in dflist:
-        newlist.append(i.loc[:, ~i.columns.str.contains('^Unnamed')])
-    pmes (newlist)
+    for v in dflist:
+        newlist.append(v.loc[:, ~v.columns.str.contains('^Unnamed')])
+    pmes ('Done Loading: ' + infolder)
     return newlist
 
 
@@ -392,7 +398,7 @@ def samples(workspace,outputfolder,samplesize):
         
         
         
-def create_processing_table(InPoints,inmask):
+def create_processing_table(InPoints,inmask, tempgdb, scratch):
     """
     This function takes a point feature class (InPoints) and the user-defined processing area (inmask), selects by location
     abd exports a CSV file and reads the file into a global variable as a Pandas DF.
@@ -400,15 +406,14 @@ def create_processing_table(InPoints,inmask):
     import arcpy
     import os
     import pandas as pd
-    import Generic
 
     arcpy.MakeFeatureLayer_management(InPoints,'temp')
     arcpy.SelectLayerByLocation_management('temp','INTERSECT',inmask)
     #copy featureclass
-    arcpy.CopyFeatures_management('temp',os.path.join(Generic.tempgdb,'temppts' ))
+    arcpy.CopyFeatures_management('temp',os.path.join(tempgdb,'temppts' ))
     #fctocsv
-    FCtoCSV(os.path.join(Generic.tempgdb,'temppts' ),os.path.join(Generic.RDP, Generic.MP,'Temp/temp.csv'))
-    temppts = pd.read_csv(os.path.join(Generic.RDP, Generic.MP,'Temp/temp.csv'))
+    FCtoCSV(os.path.join(tempgdb,'temppts' ),os.path.join(scratch, 'temp.csv'))
+    temppts = pd.read_csv(os.path.join(scratch, 'temp.csv'))
     return temppts
         
         

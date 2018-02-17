@@ -8,7 +8,6 @@ def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None',
     import arcpy
     import os
     import sys
-    import pandas as pd
     arcpy.env.overwriteOutput = True
 
 
@@ -25,20 +24,8 @@ def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None',
 
     all_layers = []
 
-    global LANDFIRE2001
-##    LANDFIRE2001 = os.path.join(root_data_path, midpath, 'Rasters.gdb/LF2001_Combined')
-    LANDFIRE2001 ='D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Landcover_Rasters/Landcover_2001.tif'
-    all_layers.append(LANDFIRE2001)
-
-    global LANDFIRE2014
-##    LANDFIRE2014 = os.path.join(root_data_path, midpath, 'Rasters.gdb/LF2014_Combined')
-    LANDFIRE2014 ='D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Landcover_Rasters/Landcover_2014.tif'
-    all_layers.append(LANDFIRE2014)
-
     global SPATIAL_REFERENCE_TEXT
     SPATIAL_REFERENCE_TEXT = "PROJCS['NAD_1983_California_Teale_Albers',GEOGCS['GCS_North_American_1983',DATUM['D_North_American_1983',SPHEROID['GRS_1980',6378137.0,298.257222101]],PRIMEM['Greenwich',0.0],UNIT['Degree',0.0174532925199433]],PROJECTION['Albers'],PARAMETER['False_Easting',0.0],PARAMETER['False_Northing',-4000000.0],PARAMETER['Central_Meridian',-120.0],PARAMETER['Standard_Parallel_1',34.0],PARAMETER['Standard_Parallel_2',40.5],PARAMETER['Latitude_Of_Origin',0.0],UNIT['Meter',1.0]]"
-    arcpy.env.cellSize = LANDFIRE2014
-    arcpy.env.snapRaster = LANDFIRE2014
 
     global pts
     #Set Local Variables
@@ -59,6 +46,8 @@ def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None',
 
     global tempgdb
     tempgdb = os.path.join(root_data_path,midpath,'Scratch','Scratch.gdb')
+    
+    
 
     global MBTABS
     MBTABS = os.path.join(root_data_path,midpath,'Tables/MBATables')
@@ -80,16 +69,14 @@ def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None',
 
     #Vectors
     global Points
-    Points = os.path.join(root_data_path,midpath,'Tables/pointtable.gdb/points')
+    Points = os.path.join('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Vectors.gdb/Just_PointID')
     all_layers.append(Points)
 
-    global tpoints
-    tpoints = os.path.join('E:/TGS/projects/Merced Carbon/New File Geodatabase.gdb/points')
-    all_layers.append(tpoints)
+
     
     #Tables
     global Points_Table
-    Points_Table = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'pointsmerged.csv')
+    Points_Table = os.path.join(root_data_path,midpath,'Tables/ValueTables/pointsmerged.csv')
     all_layers.append(Points_Table)
     
     
@@ -239,34 +226,33 @@ def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None',
             sys.exit()
 
     #set mask
-    global MASK
-    global VECTOR_MASK
-    print ('test')
-    print (mask_fc)
-    if mask_fc == "None":
-        arcpy.AddMessage("Using county boundary as processing area...")
-        MASK = os.path.join(root_data_path, midpath, 'Vectors.gdb/Mask_Dissolved')
-        VECTOR_MASK = os.path.join(root_data_path, midpath, 'Vectors.gdb/Mask_Dissolved')
-    else:
-        VECTOR_MASK = mask_fc
-        arcpy.AddMessage("TEST Using user-defined data area as processing area...")
-        #first check coordinate system and project if necessary
-        desc= arcpy.Describe(mask_fc)
-        desc2 = arcpy.Describe(LANDFIRE2014)
-        sr_mask = desc.spatialReference
-        sr_landfire =  desc2.spatialReference
-
-        if sr_mask.Name != sr_landfire.Name:
-            arcpy.AddMessage ("Projecting user-defined processing area...")
-            arcpy.Project_management(mask_fc, os.path.join(arcpy.env.workspace,"MASK"), SPATIAL_REFERENCE_TEXT)
-            MASK = os.path.join(arcpy.env.workspace,"MASK")
-            all_layers.append(MASK)
-
-        else:
-            MASK = mask_fc
-
-    all_layers.append(MASK)
-    all_layers.append(VECTOR_MASK)
+#    global MASK
+#    global VECTOR_MASK
+#    print ('test')
+#    print (mask_fc)
+#    if mask_fc == "None":
+#        arcpy.AddMessage("Using county boundary as processing area...")
+#        MASK = os.path.join(root_data_path, midpath, 'Vectors.gdb/Mask_Dissolved')
+#        VECTOR_MASK = os.path.join(root_data_path, midpath, 'Vectors.gdb/Mask_Dissolved')
+#    else:
+#        VECTOR_MASK = mask_fc
+#        arcpy.AddMessage("TEST Using user-defined data area as processing area...")
+#        #first check coordinate system and project if necessary
+#        desc= arcpy.Describe(mask_fc)
+#        sr_mask = desc.spatialReference
+#        sr_landfire =  desc2.spatialReference
+#
+#        if sr_mask.Name != sr_landfire.Name:
+#            arcpy.AddMessage ("Projecting user-defined processing area...")
+#            arcpy.Project_management(mask_fc, os.path.join(arcpy.env.workspace,"MASK"), SPATIAL_REFERENCE_TEXT)
+#            MASK = os.path.join(arcpy.env.workspace,"MASK")
+#            all_layers.append(MASK)
+#
+#        else:
+#            MASK = mask_fc
+#
+#    all_layers.append(MASK)
+#    all_layers.append(VECTOR_MASK)
 
 
 
