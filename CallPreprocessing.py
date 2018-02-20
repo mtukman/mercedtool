@@ -79,6 +79,8 @@ Generic.set_paths_and_workspaces()
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/CV_Riparian/streams.gdb/large_Streams_riparian','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/ripariastreams.csv')
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/PCA','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/PCA.csv')
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/ECA','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/ECA.csv')
+Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/oakrange','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/oakrange.csv')
+
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/smallgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/smallgroup.csv')
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/mediumgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/mediumgroup.csv')
 
@@ -139,6 +141,9 @@ Generic.set_paths_and_workspaces()
 ##
 ##import Generic
 ##Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/RasterEctractions.gdb/','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/LookUpTables/')
+
+
+
 ##
 ##import pandas as pd
 ##import functools
@@ -154,7 +159,7 @@ Generic.set_paths_and_workspaces()
 ##
 ##
 #Helpers.samples('E:/TGS/projects/Merced Carbon/Tables/NearTables/','E:/mercedtool/MASTER_DATA/Tables/NearTables/',30000)
-Helpers.samples('E:/TGS/projects/Merced Carbon/Tables/ValueTables/','E:/mercedtool/MASTER_DATA/Tables/ValueTables/',30000)
+#Helpers.samples('E:/TGS/projects/Merced Carbon/Tables/ValueTables/','E:/mercedtool/MASTER_DATA/Tables/ValueTables/',30000)
 
 
 

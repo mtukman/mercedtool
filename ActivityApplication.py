@@ -47,7 +47,7 @@ def DoActivities(df,activitylist, scenario,customdev, dictact):
 
     #Create Oak Suitability and Selection
     if 'oak' in activitylist:
-        dictact['oak']['query'] =(tempdf['LC2030'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & tempdf['rreselected'] != 1 & (tempdf['lcchange'] == 1))
+        dictact['oak']['query'] =(tempdf['LC2030'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & tempdf['rreselected'] != 1 & (tempdf['lcchange'] == 1) & (tempdf['oakrange_flg'] == 1))
         Helpers.CreateSuitFlags('oak',tempdf,dictact)
         Helpers.CreateEligDict(tempdf, 'oak', dictact,dict_eligibility)
         Helpers.selectionfunc (dict_eligibility,tempdf, 'oak',dictact)

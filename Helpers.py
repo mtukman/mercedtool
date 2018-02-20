@@ -259,7 +259,7 @@ def LoadCSVs(infolder):
     pmes (list1)
     for z in list1:
         pmes (str(os.path.join(ws, z)))
-        dflist.append(pd.read_csv(os.path.join(ws, z))) # , encoding = 'latin-1'
+        dflist.append(pd.read_csv(os.path.join(ws, z), encoding = 'latin-1')) # , encoding = 'latin-1'
 
     newlist = []
     for v in dflist:

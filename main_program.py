@@ -42,7 +42,9 @@ scenario = arcpy.GetParameterAsText(5)
 if not arcpy.GetParameterAsText(3):
     user_treatment_area = "None"
 else:
+    cm = 1
     user_treatment_area = arcpy.GetParameterAsText(3)
+
 
 if not arcpy.GetParameterAsText(4):
     mask="None"
@@ -111,7 +113,7 @@ import ApplyActions
 
 Helpers.pmes ('Scenario Chosen: ' + scenario)
 run_name = run_name.replace(" ", "_")
-initout = Initial.DoInitial(mask, cproc, cdev, arcpy.GetParameterAsText(6), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch)
+initout = Initial.DoInitial(mask, cproc, cdev, arcpy.GetParameterAsText(6), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, user_treatment_area)
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, scenario, cdev, Generic.dict_activity)
 templist = ApplyActions.ApplyGHG(outdf,initout[2],initout[3],activitylist, Generic.dict_activity)
 
