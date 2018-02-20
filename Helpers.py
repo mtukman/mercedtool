@@ -19,7 +19,6 @@ def CreateEligDict(df, activity, dictact, dict_eligibility):
         pmes('The activity is already in the dict_eligibility dictionary')
         sys.exit('***The activity is already in the dict_eligibility dictionary***')
     eli = df.groupby('LC2030').sum()[initflag]
-    import pandas as pd
     tempd = eli.add_suffix('_sum').reset_index()
     tempd.to_csv('P:/Temp/tempd.csv')
     if 'Annual Cropland' in tempd['LC2030'].values:
@@ -58,32 +57,55 @@ def selectionfunc (dict_eligibility,df, activity,dictact):
     selflag = activity + 'selected'
     df[selflag] = 0
     pmes ('group size is :' + str(dictact[activity]['grpsize']))
+    if dictact[activity]['grpsize'] == 'medium':
+        #Group pixels by their medium group value (medium grid)
+        tempdf = df.groupby('medgroup_val').sum()[['pointid',initflag]]
+        
+        tempdf.loc[0:,'grptemp'] = tempdf.index
+        tempdf.loc[tempdf[initflag] == 1]
+        vlen = len(tempdf['grptemp']) #Get the length of the number of groups
+        
+        # s will be a randomly sampled list of all group values
+        s = tempdf['grptemp'].sample(n = vlen)
+        glist = [] #Any empty list to hold selected group values
+        #Now the function loops through the list of group values and adds the pixels in each group to the count until the goal is reached
+        arcpy.AddMessage(goal)
+        for i in s:
+            if count<goal:
+                count = count + tempdf.at[i,initflag]
+                glist.append(i)
+                
+            else:
+                pass
     
-    #Group pixels by their medium group value (medium grid)
-    tempdf = df.groupby('medgroup_val').sum()[['pointid',initflag]]
+        pmes (str(count))
+        query = (df['medgroup_val'].isin(glist)) & (df[activity + 'suitflag'] == 1)
     
-    tempdf.loc[0:,'grptemp'] = tempdf.index
-    tempdf.loc[tempdf[initflag] == 1]
-    vlen = len(tempdf['grptemp']) #Get the length of the number of groups
+        df.loc[query,selflag] = 1       
+    else:
+        tempdf = df.groupby('smallgroup_val').sum()[['pointid',initflag]]
+        
+        tempdf.loc[0:,'grptemp'] = tempdf.index
+        tempdf.loc[tempdf[initflag] == 1]
+        vlen = len(tempdf['grptemp']) #Get the length of the number of groups
+        
+        # s will be a randomly sampled list of all group values
+        s = tempdf['grptemp'].sample(n = vlen)
+        glist = [] #Any empty list to hold selected group values
+        #Now the function loops through the list of group values and adds the pixels in each group to the count until the goal is reached
+        arcpy.AddMessage(goal)
+        for i in s:
+            if count<goal:
+                count = count + tempdf.at[i,initflag]
+                glist.append(i)
+                
+            else:
+                pass
     
-    # s will be a randomly sampled list of all group values
-    s = tempdf['grptemp'].sample(n = vlen)
-    glist = [] #Any empty list to hold selected group values
-    #Now the function loops through the list of group values and adds the pixels in each group to the count until the goal is reached
-    arcpy.AddMessage(goal)
-    for i in s:
-        if count<goal:
-            count = count + tempdf.at[i,initflag]
-            glist.append(i)
-            
-        else:
-            pass
-
-    pmes (str(count))
-    query = (df['medgroup_val'].isin(glist)) & (df[activity + 'suitflag'] == 1)
-
-    df.loc[query,selflag] = 1       
-
+        pmes (str(count))
+        query = (df['smallgroup_val'].isin(glist)) & (df[activity + 'suitflag'] == 1)
+    
+        df.loc[query,selflag] = 1           
     return df
 
                 

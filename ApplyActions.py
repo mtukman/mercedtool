@@ -36,9 +36,8 @@ def ApplyGHG(df,carb14,carb30,activitylist, dictact):
         dfList = temptrt['Landcover'].tolist()
         dfList2 = temptrt['red_10'].tolist()
         counter1 = 0
-        maxyrs = 2030 - dictact[activity]['adoptyear']
-        maxadopt = dictact[activity]['years'] + 10
-        fulladoptyrs = maxadopt - 2*dictact[activity]['years']
+        maxyrs = 2031 - dictact[activity]['adoptyear'] #Max number of years an activity can run between 2014 and 2030 (counting the year 2030)
+        fulladoptyrs = (11-dictact[activity]['years']) #How many years an ag activity can run at full capativity between growth and decay
         # Loop through landcovers for the activity and calculate and sum up carbon
         tempix = 0
         for i in dfList:
@@ -47,12 +46,16 @@ def ApplyGHG(df,carb14,carb30,activitylist, dictact):
                 carb1 = 0
                 tempix = 0
                 Helpers.pmes('Landcover is: ' + i +', AND Pixels: ' + str(actcount2.at[i,activity+'selected']))
-                pixels = actcount2.at[i,activity+'selected']
+                pixels = actcount2.at[i,activity+'selected'] #Get the number of selected pixers for the activity/landcover combination
+                
+                #If there are selected pixels, do the carbon reduction loop
                 if pixels > 0:
                     anngrowth = pixels/dictact[activity]['years']
                     
-                    redrate = dfList2[counter1]
+                    redrate = dfList2[counter1] #Get the carbon reduction rate that corresponds to the activity/landcover
                     counter2 = 0
+                    
+                    #Do the first years of activity growth 
                     while counter2 < dictact[activity]['years'] and counter2<maxyrs:
                         
                         carb1 = carb1 + (((counter1 + 1)*anngrowth)*redrate)
@@ -60,20 +63,22 @@ def ApplyGHG(df,carb14,carb30,activitylist, dictact):
                         counter2 = counter2 + 1
                     fullcount = 0
                     
+                    #For oak and Riparian, carry through 2030 at full capacity
                     if activity == 'rre' or activity == 'oak':
                         while counter2<maxyrs:
                             carb1 = carb1 + (pixels*redrate)
                 
                             counter2 = counter2 + 1
-                            fullcount = fullcount + 1
-                        
-                    else:
+                                                    
+                    else: #If not oak or riparian, do the middle years are full adoption
                         while counter2<maxyrs and fullcount < fulladoptyrs:
                             carb1 = carb1 + (pixels*redrate)
                 
                             counter2 = counter2 + 1
                             fullcount = fullcount + 1
                     endcount = dictact[activity]['years']
+                    
+                    #Count down the tail end of the adoption period until it its 2030
                     while counter2<maxyrs and endcount>0:
                         carb1 = carb1 + (((endcount)*anngrowth)*redrate)
             
@@ -84,13 +89,13 @@ def ApplyGHG(df,carb14,carb30,activitylist, dictact):
                     tempix = tempix + pixels
                     
                     carb2[activity +i+ '_sel'] = tempix
+            counter1 = counter1 + 1
+            
             if tempix > 0:
                 tempdf[activity +'_carbred'] = tempdf[activity+'selected']*(carb1/pixels)
                     
                     
     for i in activitylist:
-
-        
         UpdateValues(tempdf,i, carb, carb2, dictact)
         
 

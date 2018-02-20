@@ -266,12 +266,6 @@ def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None',
 
 ######################################################################################################################
 #Global Dataframe Variables
-global small
-global medium
-small = 15000
-medium = 15000
-
-
 # Global Dictionaries
 
 ''' Activey abbreviations are 
@@ -289,15 +283,15 @@ urb - URBAN FORESTRY
 '''
 global dict_activity
 
-oakdict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':small, 'suitflag':'oaksuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-rredict = {'name':'Riparian Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':medium, 'suitflag':'ripsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-muldict =  {'name':'Mulching','query' : 'holder', 'ag_modifier':.20, 'grpsize':small, 'suitflag':'mulsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-nfmdict = {'name':'Nirtrogen Fertilizer Management','query' : 'holder', 'ag_modifier':.25,  'grpsize':small, 'suitflag':'nfmsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-ccrdict = {'name':'Cover Crops', 'query':'holder', 'ag_modifier':.20,  'grpsize':small, 'suitflag':'ccrsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-acadict = {'name':'Avoided Conversion to Agriculture', 'query':'holder', 'ag_modifier':1, 'grpsize':small, 'suitflag':'acasuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-acudict = {'name':'Avoided Conversion to Urban', 'query':'holder', 'ag_modifier':1,  'grpsize':small, 'suitflag':'acusuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-hpldict = {'name':'Hedgerow Planting', 'query':'holder', 'ag_modifier':.35,  'grpsize':small, 'suitflag':'hplsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'grpsize':small, 'suitflag':'urbsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
+oakdict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':'medium', 'suitflag':'oaksuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
+rredict = {'name':'Riparian Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':'medium', 'suitflag':'ripsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
+muldict =  {'name':'Mulching','query' : 'holder', 'ag_modifier':.20, 'grpsize':'small', 'suitflag':'mulsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
+nfmdict = {'name':'Nirtrogen Fertilizer Management','query' : 'holder', 'ag_modifier':.25,  'grpsize':'small', 'suitflag':'nfmsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
+ccrdict = {'name':'Cover Crops', 'query':'holder', 'ag_modifier':.20,  'grpsize':'small', 'suitflag':'ccrsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
+acadict = {'name':'Avoided Conversion to Agriculture', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'acasuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
+acudict = {'name':'Avoided Conversion to Urban', 'query':'holder', 'ag_modifier':1,  'grpsize':'small', 'suitflag':'acusuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
+hpldict = {'name':'Hedgerow Planting', 'query':'holder', 'ag_modifier':.35,  'grpsize':'small', 'suitflag':'hplsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
+urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'urbsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
 
 
 dict_activity = {'oak':oakdict, 'rre': rredict, 'mul':muldict, 'nfm':nfmdict, 'ccr':ccrdict,'aca':acadict,'acu':acudict,'hpl':hpldict, 'urb':urbdict}
