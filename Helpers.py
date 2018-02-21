@@ -440,7 +440,13 @@ def create_processing_table(InPoints,inmask, tempgdb, scratch):
         
         
         
-        
+def add_to_logfile(logfile,string_to_add):
+    import arcpy
+    lf = open(logfile, "a")
+    lf.write(string_to_add + "\n")
+    lf.close()
+    arcpy.AddMessage(string_to_add)
+    print (string_to_add)
         
         
         

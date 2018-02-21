@@ -28,6 +28,7 @@ global dict_eligibility
 def DoActivities(df,activitylist, scenario,customdev, dictact):
     tempdf = df
     dict_eligibility = {}
+    
     Helpers.ChangeFlag(tempdf,'LC2014','LC2030') #Create a change flag where the landcover is the same between 2014 and 2030
     Helpers.pmes ('Entering the Activity Application Module')
 

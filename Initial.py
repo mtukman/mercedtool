@@ -39,9 +39,10 @@ def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb,
     else:
         pass
     
-    tabs_all_df.to_csv("P:/Temp/process.csv")        
+#    tabs_all_df.to_csv("P:/Temp/process.csv")        
     carb01 = pd.read_csv(c1)
     carb14 = pd.read_csv(c14)
     carb30 = pd.read_csv(c30)
+    Helpers.pmes('Tables Loaded')
     listofdfs = (tabs_all_df,carb01,carb14,carb30)
     return listofdfs

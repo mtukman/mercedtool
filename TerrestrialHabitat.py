@@ -10,13 +10,11 @@ import Generic
 global pts
 import pandas as pd
 import Helpers
-import arcpy
-import os
 
 Generic.set_paths_and_workspaces()
 
 path = "E:\mercedtool\MASTER_DATA\Tables\LUTables"
-#full set
+#full set - Change to final whatever
 pointiddf  = 'E:/mercedtool/SpeciesRangeTesting/MASTER_DATA/Tables/SpecRangecsvs/merge'
 
 tdf = Helpers.LoadCSVs(pointiddf)
@@ -37,7 +35,7 @@ reptiles = pd.read_csv(path + '/list_reptiles.csv')
 tespp = pd.read_csv(path + '/list_threatened_endangered.csv')
 
 
-rids_only = "E:\\mercedtool\\MASTER_DATA\\Tables\\ValueTables\\env_rids.csv"
+rids_only = "E:/mercedtool/MASTER_DATA/Tables/LUTables/env_rids.csv"
 rids= pd.read_csv(rids_only)
 
 #!!!!!!----------------**************
@@ -138,6 +136,6 @@ summarize('t', 'tes')
 a =pd.DataFrame.from_dict(summary_dict, orient='index')
 a.reset_index(inplace=True)
 a.columns=['guild', 'acres']
-a.to_csv(os.path.join(Generic.OutCsvFolder, 'TerrHab.csv'))
+a.to_csv('P:/Temp/TerrHab.csv')
 # ADD A RETURN A
 #!!!!!!----------------**************

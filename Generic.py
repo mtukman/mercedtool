@@ -1,5 +1,5 @@
 from __future__ import unicode_literals #Can Delete This
-def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None', midpath = 'MASTER_DATA', output_file_loc = 'P:/Temp', run_name = 'Test'):
+def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None', midpath = 'MASTER_DATA', output_file_loc = 'P:/Temp'):
     """Workspace must be a file .gdb and is the place where all temp files and outputs will be placed.
     root_data_path -->  This path the top level folder for the data files (e.g., D:/CLOUD/Shared/Open Space/)
     midpath -->  This path is the path to the data files from roopath down the tree (e.g., Carbon Framework/GIS Data/SAMPLE_DATA/)
@@ -73,13 +73,8 @@ def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None',
     all_layers.append(Points)
 
 
-    
-    #Tables
-    global Points_Table
-    Points_Table = os.path.join(root_data_path,midpath,'Tables/ValueTables/pointsmerged.csv')
-    all_layers.append(Points_Table)
-    
-    
+#    
+#    
     global Carbon2001
     Carbon2001 = os.path.join(root_data_path, midpath, 'Tables/CarbonTables/Carb01.csv')
     all_layers.append(Carbon2001)
@@ -91,123 +86,12 @@ def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None',
     global Carbon2030
     Carbon2030 = os.path.join(root_data_path, midpath, 'Tables/CarbonTables/Carb30.csv')
     all_layers.append(Carbon2030)
-    
-   
-    global calenviro
-    calenviro = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_calenviro.csv')
-    all_layers.append(calenviro)
+#    
 
-    global fmmp
-    fmmp = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_fmmp.csv')
-    all_layers.append(fmmp)
-
-    global genplan
-    genplan = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_genplan.csv')
-    all_layers.append(genplan)
-
-    global hydrovuln
-    hydrovuln = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_hydrovuln.csv')
-    all_layers.append(hydrovuln)
-
-#    global slope
-#    slope = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_slope.csv')
-#    all_layers.append(slope)
-
-    global scenic
-    scenic = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_scenic.csv')
-    all_layers.append(scenic)
-
-
-    global lc
-    lc = os.path.join(root_data_path,midpath,'Tables/ValueTables', 'env_landcovers.csv')
-    all_layers.append(lc)
-    
     global trt
     trt = os.path.join(root_data_path,midpath,'Tables/trt', 'trt_reductions.csv')
     all_layers.append(trt)
 
-    #Global Variables
-
-
-    
-    #Near Tables
-    global near_river
-    near_river = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_rivers.csv')
-    all_layers.append(near_river)
-
-    global near_rip
-    near_rip = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_riparian.csv')
-    all_layers.append(near_rip)
-
-    global near_streams
-    near_streams = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_streams.csv')
-    all_layers.append(near_streams)
-
-    global near_cpad
-    near_cpad = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_cpad.csv')
-    all_layers.append(near_cpad)
-    
-    global near_nwi
-    near_nwi = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_nwi.csv')
-    all_layers.append(near_nwi)
-
-#    global near_fema
-#    near_fema = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_fema.csv')
-#    all_layers.append(near_fema)
-
-    global near_roads
-    near_roads = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_roads.csv')
-    all_layers.append(near_roads)
-
-    global near_woodyrip
-    near_woodyrip = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_woodyrip.csv')
-    all_layers.append(near_woodyrip)
-
-    global near_woodycrop
-    near_woodycrop = os.path.join(root_data_path, midpath, 'Tables/NearTables/env_near_woodycrop.csv')
-    all_layers.append(near_woodycrop)
-
-    #Lookup Tables
-    global NitrateLU
-    NitrateLU = os.path.join(root_data_path, midpath, 'Tables/LUTables/lut_nitrates.csv')
-    all_layers.append(NitrateLU)
-
-    global WaterUse
-    WaterUse = os.path.join(root_data_path, midpath, 'Tables/LUTables/lut_wateruse.csv')
-    all_layers.append(WaterUse)
-
-    global Resistance
-    Resistance = os.path.join(root_data_path, midpath, 'Tables/LUTables/lut_resistance.csv')
-    all_layers.append(Resistance)
-
-    global Crop_Value_LUT
-    Crop_Value_LUT = os.path.join(root_data_path, midpath, 'Tables/LUTables/lut_crop_value.csv')
-    all_layers.append(Crop_Value_LUT)
-
-    global Air_Pollution
-    Air_Pollution = os.path.join(root_data_path, midpath, 'Tables/LUTables/lut_air_pollution.csv')
-    all_layers.append(Air_Pollution)
-
-    global Activity_LUT
-    Activity_LUT = os.path.join(root_data_path, midpath, 'Tables/trt/trt_reductions.csv')
-    all_layers.append(Activity_LUT)
-
-
-
-
-    #MISC
-    global run_
-    #Outputs
-    global CarbonRaster
-    CarbonRaster = os.path.join(output_file_loc, run_name + "_CARBON_ALL")
-    global CarbonStats
-    CarbonStats = os.path.join(output_file_loc, run_name + "_CARBON_STATS")
-    global CarbonStatsDetail
-    CarbonStatsDetail = os.path.join(output_file_loc, run_name + "_CARBON_STATS_DETAIL")
-    global CarbonStatsUrban
-    CarbonStatsUrban = os.path.join(output_file_loc, run_name + "_CARBON_STATS_URBAN")
-    global OutCsvFolder
-    OutCsvFolder = os.path.join(output_file_loc, run_name + "_OUT_CSVS")
 
     #other vars
 
@@ -224,43 +108,6 @@ def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None',
             print("Layer or dataset: " + layer + " doesn't exist")
             arcpy.AddMessage("Layer or dataset: " + layer + " doesn't exist")
             sys.exit()
-
-    #set mask
-#    global MASK
-#    global VECTOR_MASK
-#    print ('test')
-#    print (mask_fc)
-#    if mask_fc == "None":
-#        arcpy.AddMessage("Using county boundary as processing area...")
-#        MASK = os.path.join(root_data_path, midpath, 'Vectors.gdb/Mask_Dissolved')
-#        VECTOR_MASK = os.path.join(root_data_path, midpath, 'Vectors.gdb/Mask_Dissolved')
-#    else:
-#        VECTOR_MASK = mask_fc
-#        arcpy.AddMessage("TEST Using user-defined data area as processing area...")
-#        #first check coordinate system and project if necessary
-#        desc= arcpy.Describe(mask_fc)
-#        sr_mask = desc.spatialReference
-#        sr_landfire =  desc2.spatialReference
-#
-#        if sr_mask.Name != sr_landfire.Name:
-#            arcpy.AddMessage ("Projecting user-defined processing area...")
-#            arcpy.Project_management(mask_fc, os.path.join(arcpy.env.workspace,"MASK"), SPATIAL_REFERENCE_TEXT)
-#            MASK = os.path.join(arcpy.env.workspace,"MASK")
-#            all_layers.append(MASK)
-#
-#        else:
-#            MASK = mask_fc
-#
-#    all_layers.append(MASK)
-#    all_layers.append(VECTOR_MASK)
-
-
-
-    #create logfile
-    global logfile
-    logfile = open(os.path.join(output_file_loc, "logfile.txt"), "w")
-    logfile.close()
-    logfile = os.path.join((output_file_loc), "logfile.txt")
 
 
 
