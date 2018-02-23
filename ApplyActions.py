@@ -18,8 +18,8 @@ import pandas as pd
 import Helpers
 global _eligibility
 
-def ApplyGHG(df,carb14,carb30,activitylist, dictact):
-#    tempdf = Helpers.MergeMultiDF('gridcode30',[df,carb30])
+def ApplyGHG(df,activitylist, dictact):
+
     tempdf = df.sort_values(['pointid'])
     carb = {}
     carb2 = {}

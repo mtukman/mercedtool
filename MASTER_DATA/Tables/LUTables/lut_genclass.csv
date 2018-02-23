@@ -1,0 +1,15 @@
+landcover,gen_class
+Annual Cropland,Agriculture
+Barren,Natural
+Developed,Developed
+Developed Roads,Developed
+Forest,Natural
+Grassland,Natural
+Irrigated Pasture,Agriculture
+Orchard,Agriculture
+Rice,Agriculture
+Shrubland,Natural
+Urban,Developed
+Vineyard,Agriculture
+Water,Natural
+Wetland,Natural
