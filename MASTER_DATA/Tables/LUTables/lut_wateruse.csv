@@ -1,15 +1,17 @@
-landcover,water_val
-Annual Cropland,7
-Barren,1
-Developed,20
-Developed Roads,20
-Forest,1
-Grassland,1
-Irrigated Pasture,4
-Orchard,1
-Rice,7
-Shrubland,1
-Urban,20
-Vineyard,7
-Water,3
-Wetland,1
+landcover,wat_val
+Annual Cropland,0.551316852
+Barren,0
+Developed,0.396988165
+Developed Roads,0
+Forest,0
+Grassland,0
+Irrigated Pasture,1.01702756
+Orchard,0.728886882
+Rice,1.227862841
+Shrubland,0
+Urban,0.396988165
+Vineyard,0.512244
+Water,0
+Wetland,0
+Young Shrubland,0
+Young Forest,0

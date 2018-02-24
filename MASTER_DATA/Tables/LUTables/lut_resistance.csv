@@ -1,15 +1,17 @@
-landcover,resistance
-Annual Cropland,7
-Barren,1
-Developed,20
-Developed Roads,20
-Forest,1
-Grassland,1
-Irrigated Pasture,4
-Orchard,1
-Rice,7
-Shrubland,1
-Urban,20
-Vineyard,7
-Water,3
-Wetland,1
+landcover,resistance,res_val
+Annual Cropland,7,medium
+Barren,1,high
+Developed,20,low
+Developed Roads,20,low
+Forest,1,high
+Grassland,1,high
+Irrigated Pasture,4,high
+Orchard,7,medium
+Rice,7,medium
+Shrubland,1,high
+Urban,20,low
+Vineyard,7,medium
+Water,3,high
+Wetland,1,high
+Young Shrubland,1,high
+Young Forest,1,high

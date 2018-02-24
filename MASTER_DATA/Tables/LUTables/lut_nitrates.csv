@@ -1,15 +1,17 @@
-landcover,Value
-Annual Cropland,2.479
-Barren,0.0
-Developed,1.78506
-Developed Roads,0.0
-Forest,0.0
-Grassland,0.0
-Irrigated Pasture,4.573071388
-Orchard,3.277444855
-Rice,5.52109367
-Shrubland,0.0
-Urban,1.78506
-Vineyard,2.303308654
-Water,0.0
-Wetland,0.0
+landcover,runoff,leach,atmos,Notes
+Annual Cropland,1.918952938,20.78999501,4.014545895,All in kg/900m2
+Barren,0,0,0,
+Developed,0.2043,0.09,0,
+Developed Roads,0.2043,0.09,0,
+Forest,0,0,0,
+Grassland,0,0,0,
+Irrigated Pasture,0,0,0,
+Orchard,0.610740586,6.616782244,1.27769997,
+Rice,0.38718,4.19472,0.81,
+Shrubland,0,0,0,
+Urban,0.2043,0.09,0,
+Vineyard,0.19359,2.09736,0.405,
+Water,0,0,0,
+Wetland,0,0,0,
+Young Shrubland,0,0,0,
+Young Forest,0,0,0,
