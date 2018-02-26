@@ -80,9 +80,9 @@ Generic.set_paths_and_workspaces()
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/PCA','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/PCA.csv')
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/ECA','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/ECA.csv')
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/oakrange','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/oakrange.csv')
-Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/scenario2','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/scenario2.csv')
-Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/scenario3','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/scenario3.csv')
-
+#Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/scenario2','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/scenario2.csv')
+#Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/scenario3','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/scenario3.csv')
+#Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/RasterEctractions.gdb/nfhl','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/nfhl.csv')
 
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/smallgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/smallgroup.csv')
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/mediumgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/mediumgroup.csv')
