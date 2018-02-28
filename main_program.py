@@ -28,7 +28,7 @@ Helpers.add_to_logfile(logfile,'Custom Processing Area' + ': ' + arcpy.GetParame
 Helpers.add_to_logfile(logfile,'Development Scenario' + ': ' + arcpy.GetParameterAsText(4))
 Helpers.add_to_logfile(logfile,'Custom Development Mask' + ': ' + arcpy.GetParameterAsText(5))
 
-
+outpath = newdir +  '/'
 #Add activity marker to list
 if arcpy.GetParameterAsText(6) == 'Yes':
     activitylist.append('rre')
@@ -164,10 +164,13 @@ Helpers.add_to_logfile(logfile,'Urban Forestry Years to Full Adoption' + ': ' + 
 import Initial
 import ActivityApplication
 import ApplyActions
+import ReportingTemp
 
 Helpers.pmes ('Scenario Chosen: ' + scenario)
 initout = Initial.DoInitial(mask, cproc, cdev, arcpy.GetParameterAsText(6), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, user_treatment_area)
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, scenario, cdev, Generic.dict_activity)
-templist = ApplyActions.ApplyGHG(outdf,initout[2],initout[3],activitylist, Generic.dict_activity)
+templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity)
+ReportingTemp.report(templist[0],outpath)
+
 
 templist[0].to_csv("E:/Temp/test.csv")

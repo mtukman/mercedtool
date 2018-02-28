@@ -83,7 +83,7 @@ Generic.set_paths_and_workspaces()
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/scenario2','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/scenario2.csv')
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/scenario3','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/scenario3.csv')
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/RasterEctractions.gdb/nfhl','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/nfhl.csv')
-
+Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/LC2030','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/LC2030.csv')
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/smallgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/smallgroup.csv')
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/mediumgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/mediumgroup.csv')
 
