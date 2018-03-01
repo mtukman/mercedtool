@@ -18,12 +18,11 @@ def CreateEligDict(df, activity, dictact, dict_eligibility):
     if activity in dict_eligibility.keys():
         pmes('The activity is already in the dict_eligibility dictionary')
         sys.exit('***The activity is already in the dict_eligibility dictionary***')
-    eli = df.groupby('LC2030').sum()[initflag]
+    eli = df.groupby('LC2030_trt').sum()[initflag]
     tempd = eli.add_suffix('_sum').reset_index()
-    tempd.to_csv('P:/Temp/tempd.csv')
-    if 'Annual Cropland' in tempd['LC2030'].values:
+    if 'Annual Cropland' in tempd['LC2030_trt'].values:
 #        pmes (eli[initflag])
-        tempd.loc[tempd['LC2030' == 'Annual Cropland', initflag]] = tempd[initflag] * dictact[activity]['ag_modifier']
+        tempd.loc[tempd['LC2030_trt' == 'Annual Cropland', initflag]] = tempd[initflag] * dictact[activity]['ag_modifier']
 
     #Need to add modifier for adoption accross the board from user input
     
@@ -237,7 +236,7 @@ def MergeMultiDF(JoinField, dflist):
     #mba = pd.concat(temp, axis = 1)
     import pandas as pd
     import functools
-    mba = functools.reduce(lambda left,right: pd.merge(left, right,on=JoinField), dflist)
+    mba = functools.reduce(lambda left,right: pd.merge(left, right,on=JoinField, how = 'left'), dflist)
     OutputDF = mba.loc[:, ~mba.columns.str.contains('^Unnamed')]
     return OutputDF
 
@@ -392,7 +391,6 @@ def Carbon2030calc():
     for i in temp:
         
         total = result3.loc[result3['Landcover_Class'] == i]
-        pixels = len(total.index)
         temp1 = result4.loc[result4['Landcover_Class'] == i]
         carbsum = temp1['Sumco'].sum()
         temp1['share'] = 0
@@ -452,6 +450,126 @@ def add_to_logfile(logfile,string_to_add):
         
         
         
+def lc_mod(flagfield, label, labelfield, dataframe):
+    dataframe.loc[(dataframe[flagfield] == 1), labelfield] = label
         
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        def fmmp(df, outpath, dflist):
+        aglist = ['Orchard','Annual Cropland','Vineyard', 'Rice', 'Irrigated Pasture']
+        developed = ['Developed','Urban','Developed Roads']
+        devlist = ['bau','medinfill','maxinfill']
+        flist = ['P','U','L', 'S']
+        fmmpdict = {}
+        def ffunct (name, field, dev = ['bau']):
+            td = df[[field,'LC2014','dcode_medinfill','dcode_maxinfill','pointid', 'fmmp_class']]
+            td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
+            td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
+            td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
+            td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
+            if dev == 'medinfill':
+                td.loc[((td[field] != td['LC2014']) & (td[field] == 'Urban')), field] = td['LC2014']
+                td.loc[td['dcode_medinfill'] != 0, field] = 'Urban'
+            if dev == 'maxinfill':
+                td.loc[((td[field] != td['LC2014']) & (td[field] == 'Urban')), field] = td['LC2014']
+                td.loc[td['dcode_maxinfill'] != 0, field] = 'Urban'
+                
+            Helpers.pmes('Doing 2014 FMMP')
+            tempdf = td.loc[(td['LC2014'].isin(aglist)) & (td[field].isin(developed)) & (td['fmmp_class'].isin(flist))]
+    #        # do 2014
+    
+            group = tempdf.groupby('fmmp_class', as_index = False).count()
+            group = group[['fmmp_class','pointid']]
+            group['pointid'] = (group['pointid']*900)/10000
+            group = group.rename(columns = {'pointid':'hectares_of_loss_' + name + '_' + dev})
+            fmmpdict[name + dev] = group
+        for x in keylist:
+            if x in ['base', 'cdev','cons', 'trt']:
+                if x == 'base':
+                    for i in devlist:
+                        ffunct(x, 'LC2030', i)
+                else:
+                    for i in devlist:
+                        ffunct(x, 'LC2030_trt', i)
+            else:
+                ffunct(x, 'LC2030_trt')
+        tlist = list(fmmpdict.values())
+        temp = Helpers.MergeMultiDF('fmmp_class',tlist )
+                
+        temp.to_csv(outpath + 'fmmp.csv')
         
+            
+
+    
+    def fema(df, outpath):
+        devlist = ['bau','medinfill','maxinfill']
+        
+        femadict = {}
+        flist = [100,500]
+        gclass = pd.read_csv("E:/mercedtool/MASTER_DATA/Tables/LUTables/lut_genclass.csv")
+        def femafunct(name, field, dev = ['bau']):
+
+            td = df[[field,'LC2014','dcode_medinfill','dcode_maxinfill','pointid','fema_class', 'near_fema']]
+            td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
+            td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
+            td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
+            td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
+            
+#            td.to_csv(outpath +x+'_flood' + str(i) + '14.csv')
+            if x == 'medinfill':
+                td.loc[((td[field] != td['LC2014']) & (td[field] == 'Urban')), field] = td['LC2014']
+                td.loc[td['dcode_medinfill'] != 0, field] = 'Urban'
+                
+                
+            if x == 'maxinfill':
+                td.loc[((td[field] != td['LC2014']) & (td[field] == 'Urban')), field] = td['LC2014']
+                td.loc[td['dcode_maxinfill'] != 0, field] = 'Urban'
+                
+            
+            # do 2014
+            tempdf14 = td.loc[(td['fema_class'].isin(query)) & (td['near_fema'] == 0)]
+
+            tempdf14 = pd.merge(tempdf14,gclass, how = 'left', left_on = 'LC2014', right_on = 'landcover')
+            
+            group14 = tempdf14.groupby(['gen_class'], as_index = False).count()
+            
+            group14 = group14[['pointid','gen_class']]
+            group14 = group14.rename(columns={'pointid':'count14'})
+ 
+            # do 2030
+            tempdf30 = td.loc[(td['fema_class'].isin(query)) & (td['near_fema'] == 0)]
+#            tempdf30.to_csv(outpath +x+'_flood' + str(i) + '30.csv')
+            tempdf30 = pd.merge(tempdf30,gclass, how = 'left', left_on = field, right_on = 'landcover')
+            
+            group30 = tempdf30.groupby(['gen_class'], as_index = False).count()
+            
+            group30 = group30[['pointid','gen_class']]
+            group30 = group30.rename(columns={'pointid':'count30'})
+
+            if len(group30.index) == 0 | len(group14.index) == 0:
+                Helpers.pmes('Empty rows in ' + i)
+            else:
+                tempmerge = pd.merge(group14,group30, on = 'gen_class', how = 'left')
+                tempmerge['change'] = tempmerge['count30']-tempmerge['count14']
+                tempmerge['change'] = (tempmerge['change']*900)/10000
+                tempmerge = tempmerge.rename(columns = {'change':'hectares_of_change'})
+        for i in flist:
+            if i == 100:
+                query = [100]
+            if i == 500:
+                query = [100,500]
+
+    for x in devlist:            
+            
         
