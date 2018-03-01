@@ -81,6 +81,8 @@ else:
     cdev = 1
     Helpers.pmes('User has added custom development polygons')
 
+
+
     
 #First check for spatial analyst, arcinfo pfodcut level, and version --> kill tool if not active
 #if Generic.check_extensions('Spatial') ==0:
@@ -100,6 +102,7 @@ Generic.set_paths_and_workspaces(rootpath, mask, 'MASTER_DATA/', output_file_loc
 adoptdict = {}
 Helpers.add_to_logfile(logfile,'Riparian Restoration' + ': ' + arcpy.GetParameterAsText(6))
 if 'rre' in activitylist:
+    rre = 1
     Generic.dict_activity['rre']['adoption'] = float(arcpy.GetParameterAsText(7)) #Uncomment for final
     Generic.dict_activity['rre']['years'] = float(arcpy.GetParameterAsText(9)) #Uncomment for final   
     Generic.dict_activity['rre']['adoptyear'] = float(arcpy.GetParameterAsText(8)) #Uncomment for final 
@@ -109,6 +112,7 @@ if 'rre' in activitylist:
     
 Helpers.add_to_logfile(logfile,'Oak Woodland Conversion' + ': ' + arcpy.GetParameterAsText(10))
 if 'oak' in activitylist:
+    oak = 1
     Generic.dict_activity['oak']['adoption'] = float(arcpy.GetParameterAsText(11)) #Uncomment for final
     Generic.dict_activity['oak']['years'] = float(arcpy.GetParameterAsText(13)) #Uncomment for final   
     Generic.dict_activity['oak']['adoptyear'] = float(arcpy.GetParameterAsText(12)) #Uncomment for final 
@@ -159,8 +163,10 @@ Helpers.add_to_logfile(logfile,'Urban Forestry Adoption %' + ': ' + arcpy.GetPar
 Helpers.add_to_logfile(logfile,'Urban Forestry Beginning Year' + ': ' + arcpy.GetParameterAsText(32))
 Helpers.add_to_logfile(logfile,'Urban Forestry Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(33))
 
-
-
+if arcpy.GetParameterAsText(34):
+    acu = 1
+if arcpy.GetParameterAsText(35):
+    aca = 1
 
 import Initial
 import ActivityApplication
@@ -171,6 +177,6 @@ Helpers.pmes ('Scenario Chosen: ' + scenario)
 initout = Initial.DoInitial(mask, cproc, cdev, arcpy.GetParameterAsText(6), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, user_treatment_area)
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, scenario, cdev, Generic.dict_activity)
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity)
-ReportingTemp.report(templist[0],outpath)
-
 templist[0].to_csv('P:/Temp/testerino.csv')
+ReportingTemp.report(templist[0],outpath,aca ,acu ,oak ,rre , cdev,cm)
+

@@ -7,45 +7,45 @@ Created on Thu Feb 22 08:58:23 2018
 
 
 #def report(outpath, df):
-def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
+def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
     import pandas as pd
     import Helpers
-    
-    
+    from functools import reduce
+    df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
     dfdict = {}
-    dfdict['base'] = df1
-    dfdict['trt'] = df1
+    dfdict['base'] = df
+    dfdict['trt'] = df
     
     if rre == 1:
-        df2 = df.loc[df['rreselected'] == '1']
+        df2 = df.loc[(df['rreselected'] == 1)]
         dfdict['rre'] = df2
         
     if oak == 1:
-        df3 = df.loc[df['oakselected'] == '1']
+        df3 = df.loc[df['oakselected'] == 1]
         dfdict['oak'] = df3  
     if cd == 1:
-        df4 = df.loc[df['dev_flag'] == '1']
+        df4 = df.loc[df['dev_flag'] == 1]
         dfdict['cdev'] = df4      
     if cm == 1:
-        df5 = df.loc[df['con_flag'] == '1']
+        df5 = df.loc[df['con_flag'] == 1]
         dfdict['cons'] = df5          
     if aca == 1:
-        df6 = df.loc[df['aca_flag'] == '1']
+        df6 = df.loc[df['aca_flag'] == 1]
         dfdict['aca'] = df6      
     if acu == 1:
-        df7 = df.loc[df['acu_flag'] == '1']
+        df7 = df.loc[df['acu_flag'] == 1]
         dfdict['acu'] = df7         
     
     
     keylist = [*dfdict]
     
     
-    def fmmp(keylist, outpath, dflist):
+    def fmmp(df, outpath):
         aglist = ['Orchard','Annual Cropland','Vineyard', 'Rice', 'Irrigated Pasture']
         developed = ['Developed','Urban','Developed Roads']
         devlist = ['bau','medinfill','maxinfill']
         flist = ['P','U','L', 'S']
-        def ffunct (name, field, dev = 'bau', df):
+        def ffunct (name, field, dev, df):
             td = df[[field,'LC2014','dcode_medinfill','dcode_maxinfill','pointid', 'fmmp_class']]
             td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
             td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
@@ -58,7 +58,7 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
                 td.loc[((td[field] != td['LC2014']) & (td[field] == 'Urban')), field] = td['LC2014']
                 td.loc[td['dcode_maxinfill'] != 0, field] = 'Urban'
                 
-            Helpers.pmes('Doing 2014 FMMP')
+            Helpers.pmes('Doing 2014 FMMP, ' + name + ', ' + dev)
             tempdf = td.loc[(td['LC2014'].isin(aglist)) & (td[field].isin(developed)) & (td['fmmp_class'].isin(flist))]
     #        # do 2014
     
@@ -67,19 +67,31 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
             group['pointid'] = (group['pointid']*900)/10000
             group = group.rename(columns = {'pointid':'ha_loss_' + name + '_' + dev})
             fmmpdict[name + dev] = group
+            group.to_csv(outpath +name+dev +'fmmp.csv')
         fmmpdict = {}
         for x in keylist:
+            Helpers.pmes('Doing : ' + x)
+            
             if x in ['base', 'cdev','cons', 'trt']:
                 if x == 'base':
                     for i in devlist:
-                        ffunct(x, 'LC2030', i, fmmpdict[x])
+                        ffunct(x, 'LC2030', i, dfdict[x])
                 else:
                     for i in devlist:
-                        ffunct(x, 'LC2030_trt', i, fmmpdict[x])
+                        ffunct(x, 'LC2030_trt', i, dfdict[x])
+            elif x in ['acu', 'aca']:
+                ffunct(x, 'LC2030_ac', 'bau',dfdict[x])
             else:
-                ffunct(x, 'LC2030_trt', 'bau',fmmpdict[x])
+                ffunct(x, 'LC2030_trt', 'bau',dfdict[x])
+                
         tlist = list(fmmpdict.values())
-        temp = Helpers.MergeMultiDF('fmmp_class',tlist )
+        l = len(tlist)
+        count = 1
+        temp = tlist[0]
+        while count < l:
+            temp = pd.merge(temp,tlist[count],on = 'fmmp_class', how = 'left' )
+            count = count + 1
+#        temp = Helpers.MergeMultiDF('fmmp_class',tlist )
                 
         temp.to_csv(outpath + 'fmmp.csv')
         
@@ -92,7 +104,7 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
         
         flist = [100,500]
         gclass = pd.read_csv("E:/mercedtool/MASTER_DATA/Tables/LUTables/lut_genclass.csv")
-        def femafunct(name, field,query, dev = 'bau', df):
+        def femafunct(name, field,query, dev, df):
 
             td = df[[field,'LC2014','dcode_medinfill','dcode_maxinfill','pointid','fema_class', 'near_fema']]
             td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
@@ -123,13 +135,14 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
             group30 = group30.rename(columns={'pointid':'count30'})
 
             if len(group30.index) == 0 | len(group14.index) == 0:
-                Helpers.pmes('Empty rows in ' + i)
+                Helpers.pmes('Empty rows in ' + dev)
             else:
                 tempmerge = pd.merge(group14,group30, on = 'gen_class', how = 'left')
                 tempmerge['change'] = tempmerge['count30']-tempmerge['count14']
                 tempmerge['change'] = (tempmerge['change']*900)/10000
                 tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name+ '_'+dev})
                 femadict[name + dev] = tempmerge
+                group.to_csv(outpath +name+dev +'fema.csv')
                 
         for z in flist:
             femadict = {}
@@ -139,17 +152,22 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
                 query = [100,500]
 
             for x in keylist:
+                Helpers.pmes('Doing : ' + x)
                 if x in ['base', 'cdev','cons', 'trt']:
                     if x == 'base':
                         for i in devlist:
-                            femafunct(x, 'LC2030', i, query, femadict[x])
+                            femafunct(x, 'LC2030', query, i, dfdict[x])
                     else:
                         for i in devlist:
-                            femafunct(x, 'LC2030_trt', i, query, femadict[x])
+                            femafunct(x, 'LC2030_trt', query, i, dfdict[x])
+                elif x in ['acu', 'aca']:
+                    femafunct(x, 'LC2030_ac',query, 'bau',dfdict[x])
                 else:
-                    femafunct(x, 'LC2030_trt', query, 'bau', femadict[x])
-            tlist = list(femapdict.values())
-            temp = Helpers.MergeMultiDF('fema_class',tlist )
+                    femafunct(x, 'LC2030_trt', query, 'bau', dfdict[x])
+            tlist = list(femadict.values())
+            
+            df = reduce(lambda df1,df2: pd.merge(df1,df2,on='fema_class'), tlist)
+#            temp = Helpers.MergeMultiDF('fema_class',tlist )
             temp.to_csv(outpath + 'fema' + str(i) + '.csv')
                     
     
@@ -159,7 +177,7 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
         
         
         gclass = pd.read_csv("E:/mercedtool/MASTER_DATA/Tables/LUTables/lut_genclass.csv")
-        def scenicfunct(name, field, dev = 'bau', df):        
+        def scenicfunct(name, field, dev , df):        
             td = df[[field,'LC2014','dcode_medinfill','dcode_maxinfill','pointid','scenic_val']]
             td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
             td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
@@ -203,12 +221,14 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
             if x in ['base', 'cdev','cons', 'trt']:
                 if x == 'base':
                     for i in devlist:
-                        scenicfunct(x, 'LC2030', i, scendict[x])
+                        scenicfunct(x, 'LC2030', i, dfdict[x])
                 else:
                     for i in devlist:
-                        scenicfunct(x, 'LC2030_trt', i, scendict[x])
+                        scenicfunct(x, 'LC2030_trt', i, dfdict[x])
+            elif x in ['acu', 'aca']:
+                    scenicfunct(x, 'LC2030_ac', 'bau',dfdict[x])
             else:
-                scenicfunct(x, 'LC2030_trt', 'bau', scendict[x])
+                scenicfunct(x, 'LC2030_trt', 'bau', dfdict[x])
         tlist = list(scendict.values())
         temp = Helpers.MergeMultiDF('fema_class',tlist )
         temp.to_csv(outpath + 'scenic' + '.csv')
@@ -221,7 +241,7 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
         
         
         wclass = pd.read_csv("E:/mercedtool/MASTER_DATA/Tables/LUTables/lut_wateruse.csv")
-        def watfunct(name, field, dev = 'bau', df):       
+        def watfunct(name, field, dev , df):       
             td = df[[field,'LC2014','dcode_medinfill','dcode_maxinfill','pointid']]
             td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
             td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
@@ -260,12 +280,14 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
             if x in ['base', 'cdev','cons', 'trt']:
                 if x == 'base':
                     for i in devlist:
-                        watfunct(x, 'LC2030', i, watdict[x])
+                        watfunct(x, 'LC2030', i, dfdict[x])
                 else:
                     for i in devlist:
-                        watfunct(x, 'LC2030_trt', i, watdict[x])
+                        watfunct(x, 'LC2030_trt', i, dfdict[x])
+            elif x in ['acu', 'aca']:
+                    watfunct(x, 'LC2030_ac', 'bau',dfdict[x])                        
             else:
-                watfunct(x, 'LC2030_trt', 'bau', watdict[x])
+                watfunct(x, 'LC2030_trt', 'bau', dfdict[x])
         tlist = list(watdict.values())
         temp = Helpers.MergeMultiDF('landcover',tlist )
         
@@ -273,7 +295,7 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
     
     def lcchange(df, outpath):
         devlist = ['bau','medinfill','maxinfill']
-        def lcfunct(name, field, dev = 'bau', df): 
+        def lcfunct(name, field, dev, df): 
             td = df[[field,'LC2014','dcode_medinfill','dcode_maxinfill','pointid']]
             td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
             td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
@@ -306,12 +328,14 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
             if x in ['base', 'cdev','cons', 'trt']:
                 if x == 'base':
                     for i in devlist:
-                        lcfunct(x, 'LC2030', i, lcdict[x])
+                        lcfunct(x, 'LC2030', i, dfdict[x])
                 else:
                     for i in devlist:
-                        lcfunct(x, 'LC2030_trt', i, lcdict[x])
+                        lcfunct(x, 'LC2030_trt', i, dfdict[x])
+            elif x in ['acu', 'aca']:
+                    lcfunct(x, 'LC2030_ac', 'bau',dfdict[x])                           
             else:
-                lcfunct(x, 'LC2030_trt', 'bau', lcdict[x])
+                lcfunct(x, 'LC2030_trt', 'bau', dfdict[x])
         tlist = list(lcdict.values())
         temp = Helpers.MergeMultiDF('landcover',tlist )
         
@@ -319,7 +343,7 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
     
     def pcalcchange(df, outpath):
         devlist = ['bau','medinfill','maxinfill']
-        def pcafunct(name, field, dev = 'bau', df): 
+        def pcafunct(name, field, dev, df): 
 
             td = df[[field,'LC2014','dcode_medinfill','dcode_maxinfill','pointid', 'pca_val']]
             td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
@@ -361,12 +385,14 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
             if x in ['base', 'cdev','cons', 'trt']:
                 if x == 'base':
                     for i in devlist:
-                        pcafunct(x, 'LC2030', i, pcadict[x])
+                        pcafunct(x, 'LC2030', i, dfdict[x])
                 else:
                     for i in devlist:
-                        pcafunct(x, 'LC2030_trt', i, pcadict[x])
+                        pcafunct(x, 'LC2030_trt', i, dfdict[x])
+            elif x in ['acu', 'aca']:
+                    pcafunct(x, 'LC2030_ac', 'bau',dfdict[x])                              
             else:
-                lcfunct(x, 'LC2030_trt', 'bau', pcadict[x])
+                pcafunct(x, 'LC2030_trt', 'bau', dfdict[x])
         tlist = list(pcadict.values())
         temp = Helpers.MergeMultiDF('landcover',tlist )
         
@@ -377,7 +403,7 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
         
         rclass = pd.read_csv("E:/mercedtool/MASTER_DATA/Tables/LUTables/lut_resistance.csv")
         arealist = ['county','eca']
-        def movefunct(name, field, dev = 'bau', df, area): 
+        def movefunct(name, field, dev, df, area): 
             td = df[[field,'LC2014','dcode_medinfill','dcode_maxinfill','pointid','eca_val']]
             td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
             td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
@@ -423,16 +449,18 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
                 if x in ['base', 'cdev','cons', 'trt']:
                     if x == 'base':
                         for i in devlist:
-                            movefunct(x, 'LC2030', i, movedict[x], y)
+                            movefunct(x, 'LC2030', i, dfdict[x], y)
                     else:
                         for i in devlist:
-                            movefunct(x, 'LC2030_trt', i, movedict[x], y)
+                            movefunct(x, 'LC2030_trt', i, dfdict[x], y)
+                elif x in ['acu', 'aca']:
+                    movefunct(x, 'LC2030_ac', 'bau',dfdict[x],y)                              
                 else:
-                    movefunct(x, 'LC2030_trt', 'bau', movedict[x], y)
+                    movefunct(x, 'LC2030_trt', 'bau', dfdict[x], y)
             tlist = list(movedict.values())
             temp = Helpers.MergeMultiDF('movement_potential',tlist )
         
-            temp.to_csv(outpath+x+'_movement.csv')   
+            temp.to_csv(outpath+y+'_movement.csv')   
     
     
     def cropvalue(df, outpath):
@@ -441,7 +469,7 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
     
         
         wclass = pd.read_csv("E:/mercedtool/MASTER_DATA/Tables/LUTables/lut_crop_value.csv")
-        def cropfunct(name, field, dev = 'bau', df): 
+        def cropfunct(name, field, dev, df): 
             td = df[[field,'LC2014','dcode_medinfill','dcode_maxinfill','pointid']]
             if i == 'medinfill':
                 td.loc[((td[field] != td['LC2014']) & (td[field] == 'Urban')), field] = td['LC2014']           
@@ -469,7 +497,7 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
             
             tempmerge = pd.merge(group14,group30, on = 'index1', how = 'left')
             tempmerge['change'] = tempmerge['crop30']-tempmerge['crop14']
-            tempmerge = tempmerge.rename(columns = {'index1':'landcover','change':'Change in Value'})
+            tempmerge = tempmerge.rename(columns = {'index1':'landcover','change':'Change in Value' + name +'_'+ dev})
             cropdict[name + dev] = tempmerge
             
         cropdict = {}
@@ -477,23 +505,24 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
             if x in ['base', 'cdev','cons', 'trt']:
                 if x == 'base':
                     for i in devlist:
-                        cropfunct(x, 'LC2030', i, cropdict[x])
+                        cropfunct(x, 'LC2030', i, dfdict[x])
                 else:
                     for i in devlist:
-                        cropfunct(x, 'LC2030_trt', i, cropdict[x])
+                        cropfunct(x, 'LC2030_trt', i, dfdict[x])
+            elif x in ['acu', 'aca']:
+                cropfunct(x, 'LC2030_ac', 'bau',dfdict[x])  
             else:
-                cropfunct(x, 'LC2030_trt', 'bau', cropdict[x])
-        tlist = list(movedict.values())
-        temp = Helpers.MergeMultiDF('movement_potential',tlist )
+                cropfunct(x, 'LC2030_trt', 'bau', dfdict[x])
+        tlist = list(cropdict.values())
+        temp = Helpers.MergeMultiDF('landcover',tlist )
     
-        temp.to_csv(outpath+x+'_cropvalue.csv')              
+        temp.to_csv(outpath+'_cropvalue.csv')              
             
     
     def groundwater(df, outpath):
         #6-56
         devlist = ['bau','medinfill','maxinfill']
-    
-        for i in devlist:
+        def gwfunct(name, field, dev, df): 
             td = df[[field,'LC2014','dcode_medinfill','dcode_maxinfill','pointid', 'bcm_val']]
             td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
             td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
@@ -515,12 +544,30 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
             group30 = td2.groupby(field).sum()
             group30['index1'] = group30.index
             group30 = group30.rename(columns={'index1':'landcover'})
-            
+            group30 = group30.rename(columns = {'bcm_val':'ac_ft_rec_lst' + name +'_'+ dev})
+            gwdictdict[name + dev] = tempmerge
+
+        gwdict = {}
+        for x in keylist:
+            if x in ['base', 'cdev','cons', 'trt']:
+                if x == 'base':
+                    for i in devlist:
+                        gwfunct(x, 'LC2030', i, dfdict[x])
+                else:
+                    for i in devlist:
+                        gwfunct(x, 'LC2030_trt', i, dfdict[x])
+            elif x in ['acu', 'aca']:
+                gwfunct(x, 'LC2030_ac', 'bau',dfdict[x])  
+            else:
+                gwfunct(x, 'LC2030_trt', 'bau', dfdict[x])
+        tlist = list(gwdict.values())
+        temp = Helpers.MergeMultiDF('landcover',tlist )
     
-            group30 = group30.rename(columns = {'bcm_val':'ac_ft_rec_lst'})
-            group30.to_csv(outpath +i+'_groundwater.csv')
-    
-    
+        temp.to_csv(outpath+'_groundwater.csv')       
+
+
+
+         
     def nitrates(df, outpath):
         #6-56
         devlist = ['bau','medinfill','maxinfill']
@@ -528,18 +575,18 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
         
         wclass = pd.read_csv("E:/mercedtool/MASTER_DATA/Tables/LUTables/lut_nitrates.csv")
         xlist = ['runoff','leach']
-        for x in xlist:
-            for i in devlist:
+        
+        def nitfunct(name, field, dev, df, y): 
                 td = df[[field,'LC2014','dcode_medinfill','dcode_maxinfill','pointid']]
                 td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
                 td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
                 td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
-                if i == 'medinfill':
+                if dev == 'medinfill':
                     td.loc[((td[field] != td['LC2014']) & (td[field] == 'Urban')), field] = td['LC2014']          
                     td.loc[td['dcode_medinfill'] != 0, field] = 'Urban'
     
-                if i == 'maxinfill':
+                if dev == 'maxinfill':
                     td.loc[((td[field] != td['LC2014']) & (td[field] == 'Urban')), field] = td['LC2014']         
                     td.loc[td['dcode_maxinfill'] != 0, field] = 'Urban'
 
@@ -562,14 +609,32 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
                 tempmerge = pd.merge(group14,group30, on = 'index1', how = 'left')
                 tempmerge['change'] = tempmerge[x+'30']-tempmerge[x+'14']
                 tempmerge = tempmerge.rename(columns = {'index1':'landcover','change':'kgs_nitrate'})
-                tempmerge.to_csv(outpath +i+'_' + x + '_nitrates.csv') #will be in kilograms
-                
+                nitdict[name + dev] = tempmerge
+
+        for y in xlist:
+            nitdict = {}
+            for x in keylist:
+                if x in ['base', 'cdev','cons', 'trt']:
+                    if x == 'base':
+                        for i in devlist:
+                            nitfunct(x, 'LC2030', i, dfdict[x],y)
+                    else:
+                        for i in devlist:
+                            nitfunct(x, 'LC2030_trt', i, dfdict[x],y)
+                elif x in ['acu', 'aca']:
+                    nitfunct(x, 'LC2030_ac', 'bau',dfdict[x])  
+                else:
+                    nitfunct(x, 'LC2030_trt', 'bau', dfdict[x],y)
+            tlist = list(nitdict.values())
+            temp = Helpers.MergeMultiDF('landcover',tlist )
+        
+            temp.to_csv(outpath+y+'_nitrates.csv')                       
     
     def watershedintegrity(df, outpath):
         #6-56
         devlist = ['bau','medinfill','maxinfill']
-    
-        for x in devlist:
+        
+        def intfunct(name, field, dev, df, y): 
             td = df[[field,'LC2014','dcode_medinfill','dcode_maxinfill','pointid', 'HUC_12', 'near_rivers','near_streams']]
             td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
             td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
@@ -577,11 +642,11 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
             td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
             tdf = pd.DataFrame()
                 
-            if x == 'medinfill':
+            if dev == 'medinfill':
                 td.loc[((td[field] != td['LC2014']) & (td[field] == 'Urban')), field] = td['LC2014']           
                 td.loc[(td['dcode_medinfill'] != 0), field] = 'Urban'
     
-            if x == 'maxinfill':
+            if dev == 'maxinfill':
                 td.loc[((td[field] != td['LC2014']) & (td[field] == 'Urban')), field] = td['LC2014']          
                 td.loc[(td['dcode_maxinfill'] != 0), field] = 'Urban'
             
@@ -741,9 +806,24 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
             tempmerge['change'] = tempmerge['count30']-tempmerge['count14']
             Helpers.pmes(tempmerge)
             tempmerge['change'] = (tempmerge['change']*900)/10000
-            tempmerge = tempmerge.rename(columns = {'watint14':'Integrity Class','change':'hectares_of_change'})
-            tempmerge.to_csv(outpath + x+'_watershed_integrity.csv') #will be in kilograms
+            tempmerge = tempmerge.rename(columns = {'watint14':'Integrity_Class','change':'ha_change_' + name +'_'+ dev})
+            cropdict[name + dev] = tempmerge
+
+
+        intdict = {}
+        for x in keylist:
+            if x in ['base', 'trt']:
+                if x == 'base':
+                    for i in devlist:
+                        intfunct(x, 'LC2030', i, dfdict[x])
+                else:
+                    for i in devlist:
+                        intfunct(x, 'LC2030_trt', i, dfdict[x])
+        tlist = list(intdict.values())
+        temp = Helpers.MergeMultiDF('Integrity_Class',tlist )
     
+        temp.to_csv(outpath+y+'_nitrates.csv')      
+        
     fmmp(df,outpath)
     fema(df,outpath)
     scenic(df,outpath)
@@ -755,6 +835,71 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd, cm):
     groundwater(df,outpath)
     nitrates(df,outpath)
     watershedintegrity(df,outpath)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
