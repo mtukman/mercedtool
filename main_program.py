@@ -165,8 +165,12 @@ Helpers.add_to_logfile(logfile,'Urban Forestry Years to Full Adoption' + ': ' + 
 
 if arcpy.GetParameterAsText(34):
     acu = 1
+else:
+    acu = 0
 if arcpy.GetParameterAsText(35):
     aca = 1
+else:
+    aca = 0
 
 import Initial
 import ActivityApplication
@@ -177,6 +181,10 @@ Helpers.pmes ('Scenario Chosen: ' + scenario)
 initout = Initial.DoInitial(mask, cproc, cdev, arcpy.GetParameterAsText(6), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, user_treatment_area)
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, scenario, cdev, Generic.dict_activity)
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity)
+
+
 templist[0].to_csv('P:/Temp/testerino.csv')
+
+
 ReportingTemp.report(templist[0],outpath,aca ,acu ,oak ,rre , cdev,cm)
 

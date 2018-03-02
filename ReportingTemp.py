@@ -142,7 +142,7 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
                 tempmerge['change'] = (tempmerge['change']*900)/10000
                 tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name+ '_'+dev})
                 femadict[name + dev] = tempmerge
-                group.to_csv(outpath +name+dev +'fema.csv')
+                tempmerge.to_csv(outpath +name+dev +'fema.csv')
                 
         for z in flist:
             femadict = {}
@@ -165,9 +165,12 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
                 else:
                     femafunct(x, 'LC2030_trt', query, 'bau', dfdict[x])
             tlist = list(femadict.values())
-            
-            df = reduce(lambda df1,df2: pd.merge(df1,df2,on='fema_class'), tlist)
-#            temp = Helpers.MergeMultiDF('fema_class',tlist )
+            l = len(tlist)
+            count = 1
+            temp = tlist[0]
+            while count < l:
+                temp = pd.merge(temp,tlist[count],on = 'gen_class', how = 'left' )
+                count = count + 1
             temp.to_csv(outpath + 'fema' + str(i) + '.csv')
                     
     
@@ -230,7 +233,12 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
             else:
                 scenicfunct(x, 'LC2030_trt', 'bau', dfdict[x])
         tlist = list(scendict.values())
-        temp = Helpers.MergeMultiDF('fema_class',tlist )
+        l = len(tlist)
+        count = 1
+        temp = tlist[0]
+        while count < l:
+                temp = pd.merge(temp,tlist[count],on = 'gen_class', how = 'left' )
+                count = count + 1
         temp.to_csv(outpath + 'scenic' + '.csv')
 
     
@@ -289,7 +297,12 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
             else:
                 watfunct(x, 'LC2030_trt', 'bau', dfdict[x])
         tlist = list(watdict.values())
-        temp = Helpers.MergeMultiDF('landcover',tlist )
+        l = len(tlist)
+        count = 1
+        temp = tlist[0]
+        while count < l:
+                temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'left' )
+                count = count + 1
         
         temp.to_csv(outpath+'_waterdemand.csv')
     
@@ -337,7 +350,12 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
             else:
                 lcfunct(x, 'LC2030_trt', 'bau', dfdict[x])
         tlist = list(lcdict.values())
-        temp = Helpers.MergeMultiDF('landcover',tlist )
+        l = len(tlist)
+        count = 1
+        temp = tlist[0]
+        while count < l:
+                temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'left' )
+                count = count + 1
         
         temp.to_csv(outpath+'_cover_change.csv')    
     
@@ -378,7 +396,7 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
             tempmerge = pd.merge(group14,group30, on = 'index1', how = 'left')
             tempmerge['change'] = tempmerge['count30']-tempmerge['count14']
             tempmerge['change'] = (tempmerge['change']*900)/10000
-            tempmerge = tempmerge.rename(columns = {'index1':'lancover','change':'ha_change_' + name +'_'+ dev})
+            tempmerge = tempmerge.rename(columns = {'index1':'landcover','change':'ha_change_' + name +'_'+ dev})
             pcadict[name + dev] = tempmerge
         pcadict = {}
         for x in keylist:
@@ -394,7 +412,12 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
             else:
                 pcafunct(x, 'LC2030_trt', 'bau', dfdict[x])
         tlist = list(pcadict.values())
-        temp = Helpers.MergeMultiDF('landcover',tlist )
+        l = len(tlist)
+        count = 1
+        temp = tlist[0]
+        while count < l:
+                temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'left' )
+                count = count + 1
         
         temp.to_csv(outpath+'pca_cover_change.csv')       
     
@@ -458,7 +481,12 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
                 else:
                     movefunct(x, 'LC2030_trt', 'bau', dfdict[x], y)
             tlist = list(movedict.values())
-            temp = Helpers.MergeMultiDF('movement_potential',tlist )
+            l = len(tlist)
+            count = 1
+            temp = tlist[0]
+            while count < l:
+                temp = pd.merge(temp,tlist[count],on = 'movement_potential', how = 'left' )
+                count = count + 1
         
             temp.to_csv(outpath+y+'_movement.csv')   
     
@@ -514,7 +542,12 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
             else:
                 cropfunct(x, 'LC2030_trt', 'bau', dfdict[x])
         tlist = list(cropdict.values())
-        temp = Helpers.MergeMultiDF('landcover',tlist )
+        l = len(tlist)
+        count = 1
+        temp = tlist[0]
+        while count < l:
+                temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'left' )
+                count = count + 1
     
         temp.to_csv(outpath+'_cropvalue.csv')              
             
@@ -561,7 +594,12 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
             else:
                 gwfunct(x, 'LC2030_trt', 'bau', dfdict[x])
         tlist = list(gwdict.values())
-        temp = Helpers.MergeMultiDF('landcover',tlist )
+        l = len(tlist)
+        count = 1
+        temp = tlist[0]
+        while count < l:
+                temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'left' )
+                count = count + 1
     
         temp.to_csv(outpath+'_groundwater.csv')       
 
@@ -626,7 +664,12 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
                 else:
                     nitfunct(x, 'LC2030_trt', 'bau', dfdict[x],y)
             tlist = list(nitdict.values())
-            temp = Helpers.MergeMultiDF('landcover',tlist )
+            l = len(tlist)
+            count = 1
+            temp = tlist[0]
+            while count < l:
+                temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'left' )
+                count = count + 1
         
             temp.to_csv(outpath+y+'_nitrates.csv')                       
     
@@ -820,7 +863,12 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
                     for i in devlist:
                         intfunct(x, 'LC2030_trt', i, dfdict[x])
         tlist = list(intdict.values())
-        temp = Helpers.MergeMultiDF('Integrity_Class',tlist )
+        l = len(tlist)
+        count = 1
+        temp = tlist[0]
+        while count < l:
+                temp = pd.merge(temp,tlist[count],on = 'Integrity_Class', how = 'left' )
+                count = count + 1
     
         temp.to_csv(outpath+y+'_nitrates.csv')      
         
@@ -838,21 +886,38 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
     
     
     
+def carbreport(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
+    import pandas as pd
+    import Helpers
+    df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+    dfdict = {}
+    dfdict['base'] = df
+    dfdict['trt'] = df
+    
+    if rre == 1:
+        df2 = df.loc[(df['rreselected'] == 1)]
+        dfdict['rre'] = df2
+        
+    if oak == 1:
+        df3 = df.loc[df['oakselected'] == 1]
+        dfdict['oak'] = df3  
+    if cd == 1:
+        df4 = df.loc[df['dev_flag'] == 1]
+        dfdict['cdev'] = df4      
+    if cm == 1:
+        df5 = df.loc[df['con_flag'] == 1]
+        dfdict['cons'] = df5      
+        
+        
+#    if aca == 1:
+#        df6 = df.loc[df['aca_flag'] == 1]
+#        dfdict['aca'] = df6      
+#    if acu == 1:
+#        df7 = df.loc[df['acu_flag'] == 1]
+#        dfdict['acu'] = df7         
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    keylist = [*dfdict]
     
     
     

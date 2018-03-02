@@ -25,7 +25,7 @@ import Helpers
 global dict_eligibility
 import pandas as pd
 
-def DoActivities(df,activitylist, scenario,customdev, dictact):
+def DoActivities(df,activitylist, scenario,customdev, dictact, aca = 0, acu= 0):
     tempdf = df
     dict_eligibility = {}
     
@@ -104,12 +104,17 @@ def DoActivities(df,activitylist, scenario,customdev, dictact):
     if 'hpl' in activitylist:
         ghg_selection (tempdf,'hpl',dict_eligibility,dictact)
 
-    Helpers.lc_mod('acu_flag','Urban', 'LC2030_ac', tempdf)
-    Helpers.lc_mod('aca_flag','Annual Cropland', 'LC2030_ac', tempdf)
-    
+    if acu == 1:
+        Helpers.lc_mod('acu_flag','Urban', 'LC2030_ac', tempdf)
+    if aca == 1:
+        Helpers.lc_mod('aca_flag','Annual Cropland', 'LC2030_ac', tempdf)
+    tempdf.to_csv('P:/Temp/applic.csv')
 
     
     return tempdf
+
+
+
 
 
 
