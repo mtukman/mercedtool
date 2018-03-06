@@ -19,13 +19,15 @@ def CreateEligDict(df, activity, dictact, dict_eligibility):
         pmes('The activity is already in the dict_eligibility dictionary')
         sys.exit('***The activity is already in the dict_eligibility dictionary***')
     eli = df.groupby('LC2030_trt').sum()[initflag]
-    tempd = eli.add_suffix('_sum').reset_index()
-    if 'Annual Cropland' in tempd['LC2030_trt'].values:
+#    tempd = eli.add_suffix('_sum').reset_index()
+#    if 'Annual Cropland' in tempd['LC2030_trt'].values:
 #        pmes (eli[initflag])
-        tempd.loc[tempd['LC2030_trt' == 'Annual Cropland', initflag]] = tempd[initflag] * dictact[activity]['ag_modifier']
-
-    #Need to add modifier for adoption accross the board from user input
+#        tempd.loc[tempd['LC2030_trt' == 'Annual Cropland', initflag]] = tempd[initflag] * dictact[activity]['ag_modifier']
+#    tempd[initflag] = tempd[initflag] * dictact[activity]['adoptcap']
+#    pmes(dictact[activity]['adoption'])
+#    tempd[initflag] = tempd[initflag] * (dictact[activity]['adoption']/100)
     
+
     eli_dict_element = eli.to_dict()
     dict_eligibility[activity] = eli_dict_element
     
@@ -48,7 +50,15 @@ def selectionfunc (dict_eligibility,df, activity,dictact):
         pmes (tempdict[i])
         goal = goal + tempdict[i]
     pmes ('Suitable pixels: ' + str(goal))
-    goal = goal* (dictact[activity]['adoption']/100) #update to link to user defined % for final tool
+    
+    goal = goal * (dictact[activity]['adoption']/100) #update to link to user defined % for final tool
+    goal = goal * dictact[activity]['adoptcap']
+    if 'Annual Cropland' == activity:
+#        pmes (eli[initflag])
+        goal = goal * dictact[activity]['ag_modifier']
+    
+    
+    
     count = 0
     
     pmes ('Goal is : ' + str (goal))
@@ -458,5 +468,47 @@ def lc_mod(flagfield, label, labelfield, dataframe):
 
     
 
-            
+def devscen (td):
+    
+    td['gridcode30_med'] = td['gridcode30']
+    td['LC2030_med'] = td['LC2030']
+    td['LC2030_max'] = td['LC2030']
+    td['gridcode30_max'] = td['gridcode30']
+    td.loc[((td['LC2030_med'] != td['LC2014']) & (td['LC2030_med'].isin(['Developed','Urban','Developed Roads']))), 'gridcode30_med'] = td['gridcode14'] + 100
+    td.loc[((td['LC2030_max'] != td['LC2014']) & (td['LC2030_max'].isin(['Developed','Urban','Developed Roads']))), 'gridcode30_max'] = td['gridcode14'] + 100
+    td.loc[((td['LC2030_max'] != td['LC2014']) & (td['LC2030_max'].isin(['Developed','Urban','Developed Roads']))), 'LC2030_max'] = td['LC2014']
+    td.loc[((td['LC2030_med'] != td['LC2014']) & (td['LC2030_med'].isin(['Developed','Urban','Developed Roads']))), 'LC2030_med'] = td['LC2014']
+    td.loc[(td['dcode_medinfill'] ==  14),'dcode_medinfill'] = 13
+    td.loc[(td['dcode_maxinfill'] ==  14),'dcode_maxinfill'] = 13
+    td.loc[(td['dcode_maxinfill'] ==  7),'dcode_maxinfill'] = 6
+    td.loc[(td['dcode_medinfill'] ==  7),'dcode_medinfill'] = 6
+    td.loc[(td['dcode_maxinfill'] == 13), 'LC2030_max'] = 'Urban'
+    td.loc[(td['dcode_medinfill'] == 13), 'LC2030_med'] = 'Urban'
+    td.loc[(td['dcode_maxinfill'] == 6), 'LC2030_max'] = 'Developed'
+    td.loc[(td['dcode_medinfill'] == 6), 'LC2030_med'] = 'Developed'
+    td.loc[(td['dcode_maxinfill'] == 13), 'LC2030_max'] = 'Urban'
+    td.loc[(td['dcode_medinfill'] == 13), 'LC2030_med'] = 'Urban'
+    td.loc[(td['dcode_maxinfill'] == 6), 'LC2030_max'] = 'Developed'
+    td.loc[(td['dcode_medinfill'] == 6), 'LC2030_med'] = 'Developed'
+    return td
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
         

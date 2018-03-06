@@ -48,7 +48,7 @@ def DoActivities(df,activitylist, scenario,customdev, dictact, aca = 0, acu= 0):
 
     #Create Oak Suitability and Selection
     if 'oak' in activitylist:
-        dictact['oak']['query'] =(tempdf['LC2030_trt'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & tempdf['rreselected'] != 1 & (tempdf['lcchange'] == 1) & (tempdf['oakrange_flg'] == 1) & ((tempdf['dcode_medinfill'] == 0) & (tempdf['dcode_maxinfill'] == 0)))
+        dictact['oak']['query'] =(tempdf['LC2030_trt'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']) & (tempdf['rreselected'] != 1) & (tempdf['lcchange'] == 1) & (tempdf['oakrange_flg'] == 1) & ((tempdf['dcode_medinfill'] == 0) & (tempdf['dcode_maxinfill'] == 0)))
         Helpers.CreateSuitFlags('oak',tempdf,dictact)
         Helpers.CreateEligDict(tempdf, 'oak', dictact,dict_eligibility)
         Helpers.selectionfunc (dict_eligibility,tempdf, 'oak',dictact)
@@ -56,7 +56,8 @@ def DoActivities(df,activitylist, scenario,customdev, dictact, aca = 0, acu= 0):
         
     Helpers.lc_mod('rreselected','Woody Riparian', 'LC2030_trt', tempdf)
     Helpers.lc_mod('oakselected','Oak Conversion', 'LC2030_trt', tempdf)
-    
+    Helpers.lc_mod('rreselected',16, 'gridcode30_trt', tempdf)
+    Helpers.lc_mod('oakselected',17, 'gridcode30_trt', tempdf)    
     #Calculate 2030MOD values
     #Create GHG dictionary entries for suitability
     
@@ -108,7 +109,9 @@ def DoActivities(df,activitylist, scenario,customdev, dictact, aca = 0, acu= 0):
         Helpers.lc_mod('acu_flag','Urban', 'LC2030_ac', tempdf)
     if aca == 1:
         Helpers.lc_mod('aca_flag','Annual Cropland', 'LC2030_ac', tempdf)
-    tempdf.to_csv('P:/Temp/applic.csv')
+        
+        
+#    tempdf.to_csv('P:/Temp/applic.csv')
 
     
     return tempdf

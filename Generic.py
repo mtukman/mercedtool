@@ -130,18 +130,18 @@ urb - URBAN FORESTRY
 '''
 global dict_activity
 
-oakdict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':'medium', 'suitflag':'oaksuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-rredict = {'name':'Riparian Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':'medium', 'suitflag':'ripsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-muldict =  {'name':'Mulching','query' : 'holder', 'ag_modifier':.20, 'grpsize':'small', 'suitflag':'mulsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-nfmdict = {'name':'Nirtrogen Fertilizer Management','query' : 'holder', 'ag_modifier':.25,  'grpsize':'small', 'suitflag':'nfmsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-ccrdict = {'name':'Cover Crops', 'query':'holder', 'ag_modifier':.20,  'grpsize':'small', 'suitflag':'ccrsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-acadict = {'name':'Avoided Conversion to Agriculture', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'acasuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-acudict = {'name':'Avoided Conversion to Urban', 'query':'holder', 'ag_modifier':1,  'grpsize':'small', 'suitflag':'acusuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-hpldict = {'name':'Hedgerow Planting', 'query':'holder', 'ag_modifier':.35,  'grpsize':'small', 'suitflag':'hplsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
-urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'urbsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder'}
+oakdict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':'medium', 'suitflag':'oaksuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2}
+rredict = {'name':'Riparian Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':'medium', 'suitflag':'ripsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':1}
+muldict =  {'name':'Mulching','query' : 'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'mulsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2}
+nfmdict = {'name':'Nirtrogen Fertilizer Management','query' : 'holder', 'ag_modifier':.684,  'grpsize':'small', 'suitflag':'nfmsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.25}
+ccrdict = {'name':'Cover Crops', 'query':'holder', 'ag_modifier':.449,  'grpsize':'small', 'suitflag':'ccrsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2}
+#acadict = {'name':'Avoided Conversion to Agriculture', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'acasuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':1}
+#acudict = {'name':'Avoided Conversion to Urban', 'query':'holder', 'ag_modifier':1,  'grpsize':'small', 'suitflag':'acusuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':1}
+hpldict = {'name':'Hedgerow Planting', 'query':'holder', 'ag_modifier':1,  'grpsize':'small', 'suitflag':'hplsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.3}
+urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'urbsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.25}
 
 
-dict_activity = {'oak':oakdict, 'rre': rredict, 'mul':muldict, 'nfm':nfmdict, 'ccr':ccrdict,'aca':acadict,'acu':acudict,'hpl':hpldict, 'urb':urbdict}
+dict_activity = {'oak':oakdict, 'rre': rredict, 'mul':muldict, 'nfm':nfmdict, 'ccr':ccrdict,'hpl':hpldict, 'urb':urbdict} #'aca':acadict,'acu':acudict,
 
 
 #######################################################################################################################
