@@ -30,7 +30,7 @@ def ApplyGHG(df,activitylist, dictact):
         
         #Create a dataframe from trt_reductions for the activity
         temptrt = trt.loc[trt['Activity'] == upact]
-        actcount = tempdf.groupby('LC2030_trt').sum()[activity+'selected']
+        actcount = tempdf.groupby('LC2030_trt_bau').sum()[activity+'selected']
         actcount2 = actcount.to_frame()
         #Convert Landcover and reduction rates to their own lists
         dfList = temptrt['Landcover'].tolist()

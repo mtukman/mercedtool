@@ -18,7 +18,7 @@ def CreateEligDict(df, activity, dictact, dict_eligibility):
     if activity in dict_eligibility.keys():
         pmes('The activity is already in the dict_eligibility dictionary')
         sys.exit('***The activity is already in the dict_eligibility dictionary***')
-    eli = df.groupby('LC2030_trt').sum()[initflag]
+    eli = df.groupby('LC2030_trt_bau').sum()[initflag]
 #    tempd = eli.add_suffix('_sum').reset_index()
 #    if 'Annual Cropland' in tempd['LC2030_trt'].values:
 #        pmes (eli[initflag])
@@ -440,7 +440,18 @@ def create_processing_table(InPoints,inmask, tempgdb, scratch):
     arcpy.MakeFeatureLayer_management(InPoints,'temp')
     arcpy.SelectLayerByLocation_management('temp','INTERSECT',inmask)
     #copy featureclass
+
+    arcpy.env.workspace = tempgdb
+    if not arcpy.Exists(tempgdb):
+        arcpy.CreateFileGDB_management(scratch, tempgdb)
+
+    else:
+        if arcpy.Exists(tempgdb):
+            for fc in arcpy.ListFeatureClasses(tempgdb):
+                arcpy.Delete_management(fc)
+
     arcpy.CopyFeatures_management('temp',os.path.join(tempgdb,'temppts' ))
+    
     #fctocsv
     FCtoCSV(os.path.join(tempgdb,'temppts' ),os.path.join(scratch, 'temp.csv'))
     temppts = pd.read_csv(os.path.join(scratch, 'temp.csv'))

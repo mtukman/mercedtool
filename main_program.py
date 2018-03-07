@@ -29,6 +29,23 @@ Helpers.add_to_logfile(logfile,'Custom Processing Area' + ': ' + arcpy.GetParame
 Helpers.add_to_logfile(logfile,'Development Scenario' + ': ' + arcpy.GetParameterAsText(4))
 Helpers.add_to_logfile(logfile,'Custom Development Mask' + ': ' + arcpy.GetParameterAsText(5))
 
+devmask = arcpy.GetParameterAsText(5)
+
+
+if arcpy.GetParameterAsText(34):
+    dev = 1
+    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(34),newdir + '/UrbanAvoidanceMask.shp' )
+    
+else:
+    dev = 0
+
+if arcpy.GetParameterAsText(35):
+    dev = 1
+    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(34),newdir + '/AgAvoidanceMask.shp' )
+    
+else:
+    dev = 0
+
 outpath = newdir +  '/'
 #Add activity marker to list
 if arcpy.GetParameterAsText(6) == 'Yes':
@@ -49,11 +66,20 @@ if arcpy.GetParameterAsText(22) == 'Yes':
 if arcpy.GetParameterAsText(23) == 'Yes':
     activitylist.append('hpl')
     arcpy.AddMessage('added hpl to activity list')
-
-if not activitylist:
-    activitylist.append('rre')
     
 scenario = arcpy.GetParameterAsText(5)
+
+if arcpy.GetParameterAsText(4) == 'Custom (Replaces Business as Usual)':
+    dev = 1
+    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(34),newdir + '/DevMask.shp' )
+    
+elif arcpy.GetParameterAsText(4) == 'Custom (Adds on to Business as Usual)':
+    dev = 2
+    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(34),newdir + '/DevMask.shp' )
+    
+else:
+    dev = 0
+
 
 if not arcpy.GetParameterAsText(2):
     user_treatment_area = "None"
@@ -61,7 +87,7 @@ if not arcpy.GetParameterAsText(2):
 else:
     cm = 1
     user_treatment_area = arcpy.GetParameterAsText(2)
-
+    conmask = arcpy.GetParameterAsText(2)
 
 if not arcpy.GetParameterAsText(3):
     mask="None"
@@ -73,14 +99,6 @@ if arcpy.GetParameterAsText(3):
 else:
     cproc = 0
     Helpers.pmes ('No custom processing area')
-Helpers.pmes (arcpy.GetParameterAsText(5))
-if not arcpy.GetParameterAsText(5):
-    cdev = 0
-    Helpers.pmes('No custom development polygons')
-else:
-    cdev = 1
-    Helpers.pmes('User has added custom development polygons')
-
 
 
     
@@ -109,7 +127,8 @@ if 'rre' in activitylist:
     Helpers.add_to_logfile(logfile,'Riparian Restoration Adoption %' + ': ' + arcpy.GetParameterAsText(7))
     Helpers.add_to_logfile(logfile,'Riparian Restoration Beginning Year' + ': ' + arcpy.GetParameterAsText(8))
     Helpers.add_to_logfile(logfile,'Riparian Restoration Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(9))
-    
+else:
+    rre = 0
 Helpers.add_to_logfile(logfile,'Oak Woodland Conversion' + ': ' + arcpy.GetParameterAsText(10))
 if 'oak' in activitylist:
     oak = 1
@@ -119,7 +138,8 @@ if 'oak' in activitylist:
     Helpers.add_to_logfile(logfile,'Oak Woodland Conversion Adoption %' + ': ' + arcpy.GetParameterAsText(11))
     Helpers.add_to_logfile(logfile,'Oak Woodland Conversion Beginning Year' + ': ' + arcpy.GetParameterAsText(12))
     Helpers.add_to_logfile(logfile,'Oak Woodland Conversion Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(13))
-    
+else:
+    oak = 0
 Helpers.add_to_logfile(logfile,'Cover Cropping' + ': ' + arcpy.GetParameterAsText(14))    
 if 'ccr' in activitylist:
     Generic.dict_activity['ccr']['adoption'] = float(arcpy.GetParameterAsText(15)) #Uncomment for final
@@ -165,12 +185,19 @@ Helpers.add_to_logfile(logfile,'Urban Forestry Years to Full Adoption' + ': ' + 
 
 if arcpy.GetParameterAsText(34):
     acu = 1
+    acumask = arcpy.GetParameterAsText(34)
 else:
     acu = 0
 if arcpy.GetParameterAsText(35):
     aca = 1
+    acamask = arcpy.GetParameterAsText(35)
 else:
     aca = 0
+if arcpy.GetParameterAsText(36):
+    treatmask = arcpy.GetParameterAsText(35)
+else:
+    treatmask = 'None'
+
 
 import Initial
 import ActivityApplication
@@ -178,16 +205,14 @@ import ApplyActions
 import ReportingTemp
 
 Helpers.pmes ('Scenario Chosen: ' + scenario)
-initout = Initial.DoInitial(mask, cproc, cdev, arcpy.GetParameterAsText(6), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, user_treatment_area)
-outdf = ActivityApplication.DoActivities(initout[0],activitylist, scenario, cdev, Generic.dict_activity)
+initout = Initial.DoInitial(mask, cproc, devmask, arcpy.GetParameterAsText(6), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, acamask, acumask, aca, acu, treatmask)
+outdf = ActivityApplication.DoActivities(initout[0],activitylist, scenario, dev, Generic.dict_activity, treatmask)
 
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity)
 templist[0].to_csv('P:/Temp/testerino2.csv')
 
-#templist[0].to_csv('P:/Temp/testerino.csv')
 
-
-ReportingTemp.report(templist[0],outpath,aca ,acu ,oak ,rre , cdev,cm)
+ReportingTemp.report(templist[0],outpath,aca ,acu ,oak ,rre , dev,cm)
 
 #ReportingTemp.carbreport(df,outpath,activitylist,alist,Generic.Carbon2014, Generic.Carbon2030,aca ,acu ,oak ,rre , cdev,cm)
 
