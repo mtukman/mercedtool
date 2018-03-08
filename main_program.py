@@ -63,7 +63,7 @@ if arcpy.GetParameterAsText(18) == 'Yes':
 if arcpy.GetParameterAsText(22) == 'Yes':
     activitylist.append('nfm')
     arcpy.AddMessage('added nfm to activity list')
-if arcpy.GetParameterAsText(23) == 'Yes':
+if arcpy.GetParameterAsText(26) == 'Yes':
     activitylist.append('hpl')
     arcpy.AddMessage('added hpl to activity list')
     
@@ -209,7 +209,7 @@ initout = Initial.DoInitial(mask, cproc, devmask, arcpy.GetParameterAsText(6), G
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, scenario, dev, Generic.dict_activity, treatmask)
 
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity)
-templist[0].to_csv('P:/Temp/testerino2.csv')
+#templist[0].to_csv('P:/Temp/testerino2.csv')
 
 
 ReportingTemp.report(templist[0],outpath,aca ,acu ,oak ,rre , dev,cm)

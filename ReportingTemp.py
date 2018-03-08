@@ -352,7 +352,8 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
 #                        lcfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
                         pass
             elif x in ['acu', 'aca']:
-                    lcfunct(x, 'LC2030_ac', 'bau',dfdict[x])                           
+#                    lcfunct(x, 'LC2030_ac', 'bau',dfdict[x])   
+                    pass                        
             else:
                 lcfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
         tlist = list(lcdict.values())
@@ -492,7 +493,7 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
         while count < l:
                 temp = pd.merge(temp,tlist[count],on = 'gen_class', how = 'outer' )
                 count = count + 1
-        temp.to_csv(outpath + 'scenic' + '.csv')
+        temp.to_csv(outpath + 'aquatic.csv')
     def termovement(df, outpath):
         
         
@@ -958,6 +959,7 @@ def report(df, outpath,aca = 0, acu = 0, oak = 0, rre = 0, cd = 0 , cm = 0):
     
 def carbreport(df, outpath,activitylist,carb14, carb30,aca = 0, acu = 0, cd = 0 , cm = 0):
     import pandas as pd
+    import Helpers
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
     dfdict = {}
     dfdict['base'] = df
@@ -991,49 +993,58 @@ def carbreport(df, outpath,activitylist,carb14, carb30,aca = 0, acu = 0, cd = 0 
     keylist = [*dfdict]
 
     def carbrepfull(df, name, dev, gridcode, field):
-        if name in ['base', 'trt']:
-            td = df[['LC2030_bau', 'LC2030_trt_bau', 'LC2014', 'gridcode14', 'gridcode30_bau', 'gridcode30_trt_bau']]
-        if name not in ['base', 'trt']:
-            td = df[['LC2030_bau', 'LC2030_trt_bau', 'LC2014', 'gridcode14', 'gridcode30_bau', 'gridcode30_trt_bau', name + 'carbred']]
+        if dev in devlist:
+            if name == 'base':
+            
+                td = df[['LC2030_'+dev, 'LC2014', 'gridcode14', 'gridcode30_' + dev]]
+            elif name == 'trt':
+                td = df[['LC2030_trt_'+dev, 'LC2014', 'gridcode14', 'gridcode30_trt_' + dev]]
+            else:
+                td = df[['LC2030_bau', 'LC2030_trt_bau', 'LC2014', 'gridcode14', 'gridcode30_bau', 'gridcode30_trt_bau']]
+        if name in activitylist:
+            td = df[['LC2030_bau', 'LC2030_trt_bau', 'LC2014', 'gridcode14', 'gridcode30_bau', 'gridcode30_trt_bau', name + '_carbred']]
         
         
         c30 = pd.read_csv(carb30)
-
+        Helpers.pmes(td.dtypes)
         if name == 'base':
-            temp = pd.merge(td,c30, how = 'left', left_on = gridcode, right_on = 'gridcode30_'+ dev)
+            temp = pd.merge(td,c30, how = 'left', left_on = 'gridcode30_'+ dev, right_on = 'gridcode30')
             lct = temp.groupby(['LC2030_'+ dev], as_index = False).sum()
+
             lct = lct[['LC2030_'+ dev, 'carbrate_30']]
             lct = lct.rename(columns = {'LC2030_'+ dev:'landcover','carbrate_30':'carbon_' + name +'_'+ dev})
             
-        if name == 'trt':
-            temp = pd.merge(td,c30, how = 'left', left_on = gridcode, right_on = 'gridcode30_trt_'+ dev)
+        elif name == 'trt':
+            temp = pd.merge(td,c30, how = 'left', left_on = 'gridcode30_trt_'+ dev, right_on ='gridcode30' )
             lct = temp.groupby(['LC2030_trt_'+ dev], as_index = False).sum()
             lct = lct[['LC2030_trt_'+ dev, 'carbrate_30']]
             lct = lct.rename(columns = {'LC2030_trt_'+ dev:'landcover','carbrate_30':'carbon_' + name +'_'+ dev})
 
-        if name not in ['base', 'trt']:
-            if name in activitylist:
-                lct = td.groupby(['LC2030_trt_bau'], as_index = False).sum()
-                lct = lct[['LC2030_trt_bau', name + 'carbred']]
-                lct = lct.rename(columns = {'LC2030_trt_bau':'landcover',name + 'carbred':'carbon_' + name}) 
+
+        elif name in activitylist:
+            lct = td.groupby(['LC2030_trt_bau'], as_index = False).sum()
+            lct = lct[['LC2030_trt_bau', name + '_carbred']]
+            lct = lct.rename(columns = {'LC2030_trt_bau':'landcover',name + '_carbred':'carbon_' + name}) 
                 
-            elif name in ['aca', 'acu']:
+#            elif name in ['aca', 'acu']:
+#                
+#                lct = td.loc[td[name + '_flag'] == 1]
+        else:
+            lct = td[['LC2030_bau']]
+            lct = lct.rename(columns= {'LC2030_bau':'landcover'})
+#                        
+#                lct = lct[['LC2030_trt_bau', 'gridcode30_trt_bau', 'gridcode14']]
+#                temp = pd.merge(lct,c30, how = 'left', left_on = 'gridcode30_trt_bau', right_on = 'gridcode30_bau')
+#                temp['gridcode14'] = temp['gridcode14'] + 100
+#                temp = pd.merge(temp,c30, how = 'left', left_on = 'gridcode14', right_on = 'gridcode30_bau')
+#                temp = temp.groupby(['LC2030_trt_bau'], as_index = False).sum()
+#                temp[name + '_avoided'] = temp['carbrate_14'] - temp['carbrate_30']
+#                temp = temp[[name + '_avoided', 'LC2030_trt_bau']]
+#                lct = lct.rename(columns = {'LC2030_trt_bau':'landcover'}) 
                 
-                lct = td.loc[td[name + '_flag'] == 1]
                 
-                        
-                lct = lct[['LC2030_trt_bau', 'gridcode30_trt_bau', 'gridcode14']]
-                temp = pd.merge(lct,c30, how = 'left', left_on = 'gridcode30_trt_bau', right_on = 'gridcode30_bau')
-                temp['gridcode14'] = temp['gridcode14'] + 100
-                temp = pd.merge(temp,c30, how = 'left', left_on = 'gridcode14', right_on = 'gridcode30_bau')
-                temp = temp.groupby(['LC2030_trt_bau'], as_index = False).sum()
-                temp[name + '_avoided'] = temp['carbrate_14'] - temp['carbrate_30']
-                temp = temp[[name + '_avoided', 'LC2030_trt_bau']]
-                lct = lct.rename(columns = {'LC2030_trt_bau':'landcover'}) 
-                
-                
-            elif name in ['con', 'dev']:
-                pass
+#            elif name in ['con', 'dev']:
+
         intdict[name +'_'+ dev + '_' + gridcode] = lct
 #        lct.to_csv(outpath+name +'_'+ dev + '.csv')  
     
@@ -1050,13 +1061,16 @@ def carbreport(df, outpath,activitylist,carb14, carb30,aca = 0, acu = 0, cd = 0 
                     carbrepfull(dfdict[i],i, x, 'gridcode30_trt_' + x, 'LC2030_trt_' + x)
             
         else:
-            carbrepfull(dfdict[i],i, x, 'gridcode30_trt_bau', 'LC2030_trt_bau')
+            carbrepfull(dfdict[i],i, 'bau', 'gridcode30_trt_bau', 'LC2030_trt_bau')
             
     c14 = pd.read_csv(carb14)
-    temp = pd.merge(df,c14, how = 'left', on = 'gridcode14')
+    td = df[['LC2014', 'gridcode14']]
+    temp = pd.merge(td,c14, how = 'left', on = 'gridcode14')
+    temp.to_csv('E:/Temp/carbon14.csv')
     lct = temp.groupby(['LC2014'], as_index = False).sum()
-    lct.to_csv('E:/Temp/carbon14.csv')  
-    lct = lct[['LC2014', 'carbrate_14']]
+    
+      
+    lct = lct[['LC2014', 'carbrate14']]
     lct = lct.rename(columns = {'LC2014':'landcover','carbrate14':'carbon2014'})
     intdict['Carbon2014'] = lct
 
