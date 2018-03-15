@@ -98,7 +98,16 @@ def ApplyGHG(df,activitylist, dictact):
     for i in activitylist:
         UpdateValues(tempdf,i, carb, carb2, dictact)
         
-
+    gcdict = {'Wetland':0, 'Water':1, 'Grassland':2,'Barren':4, 'Orchard':7,'Vineyard':8,'Annual Cropland':9,'Rice':10,'Irrigated Pasture':11,'Young Forest':14, 'Young Shrubland':15}
+    
+    
+    devlist = ['bau','med','max']
+    keylist = [*gcdict]
+    
+    for i in devlist:
+        for x in keylist:
+            tempdf.loc[(tempdf['LC2030_trt_'+i] ==  x),'gridcode30_trt_' + i] = gcdict[x]
+            
     return (tempdf,carb,carb2)
 
 

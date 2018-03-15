@@ -1,41 +1,42 @@
-RedRateBasis,red_10,Activity,Landcover
-[existing tree CO2 for EVT/EVC/EVH]*0.09+[avoided N2O rates from annual cropland GHG inventory],0,ACO,Forest
-[existing tree CO2 for EVT/EVC/EVH]*0.095,0,ACO,Forest
-([grassland SOC]-[annual row crop SOC])*0.1+[avoided N2O rates from similar COMET practices],0,ACO,Grassland
-([irrigated pasture SOC]-[annual row crop SOC])*0.1+[avoided N2O rates from similar COMET practices],0,ACO,Irrigated pasture
-[existing tree CO2 for orchards]*0.09+[avoided N2O rates from annual cropland GHG inventory],0,ACO,Orchard
-[existing tree CO2 for orchards]*0.095,0,ACO,Orchard
-[existing shrub CO2 for EVT/EVC/EVH]*0.09+[avoided N2O rates from annual cropland GHG inventory],0,ACO,Shrubland
-[existing shrub CO2 for EVT/EVC/EVH]*0.095,0,ACO,Shrubland
-[existing shrub CO2 for vineyards]*0.09+[avoided N2O rates from annual cropland GHG inventory],0,ACO,Vineyard
-COMET,0.059846213,CAM,Annual Cropland
-COMET,0.020415765,CAM,Grassland
-COMET,0.059846213,CAM,Vineyard
-COMET,0.055042504,CCR,Annual Cropland
-COMET,0.055042504,CCR,Orchard
-COMET,1.831058379,HPL,Orchard
-COMET,1.831058379,HPL,Vineyard
-COMET,0.029289284,MMA,Annual Cropland
-COMET,0.020393526,MMA,Grassland
-COMET,0.047169758,MMA,Vineyard
-COMET,0.045813155,MUL,Annual Cropland
-COMET,0.045813155,MUL,Irrigated pasture
-COMET,0.045813155,MUL,Rice
-COMET,0.003736218,NFM,Annual Cropland
-COMET,0.001985978,NFM,Orchard
-COMET,0.003736218,NFM,Rice
-COMET,0.003091276,NFM,Vineyard
-"Annualized rate based on current predominant woodland stocking in Merced Co, with assumed age of trees",0.322471233,OAK,Grassland
-"Annualized rate based on current predominant woodland stocking in Merced Co, with assumed age of trees",0.322471233,OAK,Oak Conversion
-"Annualized rate based on current predominant woodland stocking in Merced Co, with assumed age of trees",0.322471233,OAK,Irrigated pasture
-COMET,0.221504378,RRE,Annual Cropland
-COMET,0.221504378,RRE,Forest
-COMET,0.221504378,RRE,Grassland
-COMET,0.221504378,RRE,Irrigated pasture
-COMET,0.221504378,RRE,Orchard
-COMET,0.221504378,RRE,Rice
-COMET,0.221504378,RRE,Shrubland
-COMET,0.221504378,RRE,Urban
-COMET,0.221504378,RRE,Woody Riparian
-COMET,0.221504378,RRE,Vineyard
-(([scenario urban area 2030] - [scenario urban area 2014]) - ([baseline urban area 2030] - [baseline urban area 2014])) * [328.98 t CO2/ha],0,UFO,Urban
+RedRateBasis,red_10,Activity,Landcover,Notes
+[existing tree CO2 for EVT/EVC/EVH]*0.09+[avoided N2O rates from annual cropland GHG inventory],0,ACO,Forest,
+[existing tree CO2 for EVT/EVC/EVH]*0.095,0,ACO,Forest,
+([grassland SOC]-[annual row crop SOC])*0.1+[avoided N2O rates from similar COMET practices],0,ACO,Grassland,
+([irrigated pasture SOC]-[annual row crop SOC])*0.1+[avoided N2O rates from similar COMET practices],0,ACO,Irrigated pasture,
+[existing tree CO2 for orchards]*0.09+[avoided N2O rates from annual cropland GHG inventory],0,ACO,Orchard,
+[existing tree CO2 for orchards]*0.095,0,ACO,Orchard,
+[existing shrub CO2 for EVT/EVC/EVH]*0.09+[avoided N2O rates from annual cropland GHG inventory],0,ACO,Shrubland,
+[existing shrub CO2 for EVT/EVC/EVH]*0.095,0,ACO,Shrubland,
+[existing shrub CO2 for vineyards]*0.09+[avoided N2O rates from annual cropland GHG inventory],0,ACO,Vineyard,
+COMET,0.059846213,CAM,Annual Cropland,
+COMET,0,CAM,Irrigated pasture,Ask for this
+COMET,0.018564335,CAM,Grassland,
+COMET,0.059846213,CAM,Vineyard,
+COMET,0.055042504,CCR,Annual Cropland,
+COMET,0.055042504,CCR,Orchard,
+COMET,1.831058379,HPL,Orchard,
+COMET,1.831058379,HPL,Vineyard,
+COMET,0.029289284,MMA,Annual Cropland,
+COMET,0.020393526,MMA,Grassland,
+COMET,0.047169758,MMA,Vineyard,
+COMET,0.045813155,MUL,Annual Cropland,
+COMET,0.045813155,MUL,Irrigated pasture,
+COMET,0.045813155,MUL,Rice,
+COMET,0.003736218,NFM,Annual Cropland,
+COMET,0.001985978,NFM,Orchard,
+COMET,0.003736218,NFM,Rice,
+COMET,0.003091276,NFM,Vineyard,
+"Annualized rate based on current predominant woodland stocking in Merced Co, with assumed age of trees",0.322471233,OAK,Grassland,
+"Annualized rate based on current predominant woodland stocking in Merced Co, with assumed age of trees",0.322471233,OAK,Oak Conversion,
+"Annualized rate based on current predominant woodland stocking in Merced Co, with assumed age of trees",0.322471233,OAK,Irrigated pasture,
+COMET,0.221504378,RRE,Annual Cropland,
+COMET,0.221504378,RRE,Forest,
+COMET,0.221504378,RRE,Grassland,
+COMET,0.221504378,RRE,Irrigated pasture,
+COMET,0.221504378,RRE,Orchard,
+COMET,0.221504378,RRE,Rice,
+COMET,0.221504378,RRE,Shrubland,
+COMET,0.221504378,RRE,Urban,
+COMET,0.221504378,RRE,Woody Riparian,
+COMET,0.221504378,RRE,Vineyard,
+(([scenario urban area 2030] - [scenario urban area 2014]) - ([baseline urban area 2030] - [baseline urban area 2014])) * [328.98 t CO2/ha],0,UFO,Urban,

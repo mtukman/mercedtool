@@ -139,9 +139,10 @@ ccrdict = {'name':'Cover Crops', 'query':'holder', 'ag_modifier':.449,  'grpsize
 #acudict = {'name':'Avoided Conversion to Urban', 'query':'holder', 'ag_modifier':1,  'grpsize':'small', 'suitflag':'acusuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':1}
 hpldict = {'name':'Hedgerow Planting', 'query':'holder', 'ag_modifier':1,  'grpsize':'small', 'suitflag':'hplsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.3}
 urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'urbsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.25}
+acodict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'urbsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':1}
 
 
-dict_activity = {'oak':oakdict, 'rre': rredict, 'mul':muldict, 'nfm':nfmdict, 'ccr':ccrdict,'hpl':hpldict, 'urb':urbdict} #'aca':acadict,'acu':acudict,
+dict_activity = {'oak':oakdict, 'rre': rredict, 'mul':muldict, 'nfm':nfmdict, 'ccr':ccrdict,'hpl':hpldict, 'urb':urbdict, 'aco':acodict}
 
 
 #######################################################################################################################

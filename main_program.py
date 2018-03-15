@@ -1,21 +1,27 @@
+"""
+This script runs each of the individual modules for the tool.
+
+This script takes the parameter inputs from the Python tool in ArcGIS and uses them as arguments to run the tool's modules.
+
+
+
+"""
 #run entire program
 import arcpy
 import Helpers
 import Generic
 import os
 import time
-import pandas as pd
 #variables passed in from ArcMap tool
-
-#this will be prepended to raster output file name, no spaces
 output_file_location = arcpy.GetParameterAsText(0)  #must be a folder
 rootpath = arcpy.GetParameterAsText(1) #Rootpath of data location
 activitylist = []
 timestr = time.strftime("%Y%m%d-%H%M%S")
-newdir = os.path.join(output_file_location, timestr)
+newdir = os.path.join(output_file_location, timestr) #This creates a directory for the tool's outputs. It will create a new folder with a timestamp in the directory specified in the parameters.
 if not os.path.exists(newdir):
     os.makedirs(newdir)
 
+#Create a logfile in the output directory and add information about the tool's input parameter's to it.
 global logfile
 logfile = open(os.path.join(newdir, "logfile.txt"), "w")
 logfile.close()
@@ -29,25 +35,34 @@ Helpers.add_to_logfile(logfile,'Custom Processing Area' + ': ' + arcpy.GetParame
 Helpers.add_to_logfile(logfile,'Development Scenario' + ': ' + arcpy.GetParameterAsText(4))
 Helpers.add_to_logfile(logfile,'Custom Development Mask' + ': ' + arcpy.GetParameterAsText(5))
 
+#Set the development mask variable, if a development mask is provided, this will point to the polygon feature class
 devmask = arcpy.GetParameterAsText(5)
 
-
-if arcpy.GetParameterAsText(34):
-    dev = 1
-    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(34),newdir + '/UrbanAvoidanceMask.shp' )
-    
-else:
-    dev = 0
-
-if arcpy.GetParameterAsText(35):
-    dev = 1
-    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(34),newdir + '/AgAvoidanceMask.shp' )
-    
-else:
-    dev = 0
+acdict = {}
+aclist2 = [35,37,39,41,43,45,47,49,51]
+for i in aclist2:
+    if arcpy.GetParameterAsText(i) == 'Forest to Annual Row Crop':
+        acdict['ac_for_urb'] = arcpy.GetParameterAsText(i + 1)
+    if arcpy.GetParameterAsText(i) == 'Forest to Urban':
+        acdict['ac_for_arc'] = arcpy.GetParameterAsText(i + 1)
+    if arcpy.GetParameterAsText(i) == 'Grassland to Annual Row Crop':
+        acdict['ac_gra_arc'] = arcpy.GetParameterAsText(i + 1)
+    if arcpy.GetParameterAsText(i) == 'Irrigated Pasture to Annual Row Crop':
+        acdict['ac_irr_arc'] = arcpy.GetParameterAsText(i + 1)
+    if arcpy.GetParameterAsText(i) == 'Orchard to Annual Row Crop':
+        acdict['ac_orc_arc'] = arcpy.GetParameterAsText(i + 1)
+    if arcpy.GetParameterAsText(i) == 'Shrubland to Annual Row Crop':
+        acdict['ac_shr_arc'] = arcpy.GetParameterAsText(i + 1)
+    if arcpy.GetParameterAsText(i) == 'Vineyard to Annual Row Crop':
+        acdict['ac_vin_arc'] = arcpy.GetParameterAsText(i + 1)
+    if arcpy.GetParameterAsText(i) == 'Shrubland to Urban':
+        acdict['ac_shr_urb'] = arcpy.GetParameterAsText(i + 1)
+    if arcpy.GetParameterAsText(i) == 'Orchard to Urban':
+        acdict['ac_orc_urb'] = arcpy.GetParameterAsText(i + 1)
+        
 
 outpath = newdir +  '/'
-#Add activity marker to list
+#Add activity markers to list
 if arcpy.GetParameterAsText(6) == 'Yes':
     activitylist.append('rre')
     arcpy.AddMessage('added rre to activity list')
@@ -66,9 +81,9 @@ if arcpy.GetParameterAsText(22) == 'Yes':
 if arcpy.GetParameterAsText(26) == 'Yes':
     activitylist.append('hpl')
     arcpy.AddMessage('added hpl to activity list')
-    
-scenario = arcpy.GetParameterAsText(5)
 
+
+#Set the custom development parameters
 if arcpy.GetParameterAsText(4) == 'Custom (Replaces Business as Usual)':
     dev = 1
     arcpy.CopyFeatures_management(arcpy.GetParameterAsText(34),newdir + '/DevMask.shp' )
@@ -82,11 +97,11 @@ else:
 
 
 if not arcpy.GetParameterAsText(2):
-    user_treatment_area = "None"
+    conservation = "None"
     cm = 0
 else:
     cm = 1
-    user_treatment_area = arcpy.GetParameterAsText(2)
+    conservation = arcpy.GetParameterAsText(2)
     conmask = arcpy.GetParameterAsText(2)
 
 if not arcpy.GetParameterAsText(3):
@@ -184,17 +199,7 @@ Helpers.add_to_logfile(logfile,'Urban Forestry Beginning Year' + ': ' + arcpy.Ge
 Helpers.add_to_logfile(logfile,'Urban Forestry Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(33))
 
 if arcpy.GetParameterAsText(34):
-    acu = 1
-    acumask = arcpy.GetParameterAsText(34)
-else:
-    acu = 0
-if arcpy.GetParameterAsText(35):
-    aca = 1
-    acamask = arcpy.GetParameterAsText(35)
-else:
-    aca = 0
-if arcpy.GetParameterAsText(36):
-    treatmask = arcpy.GetParameterAsText(35)
+    treatmask = arcpy.GetParameterAsText(34)
 else:
     treatmask = 'None'
 
@@ -204,16 +209,15 @@ import ActivityApplication
 import ApplyActions
 import ReportingTemp
 
-Helpers.pmes ('Scenario Chosen: ' + scenario)
-initout = Initial.DoInitial(mask, cproc, devmask, arcpy.GetParameterAsText(6), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, acamask, acumask, aca, acu, treatmask)
-outdf = ActivityApplication.DoActivities(initout[0],activitylist, scenario, dev, Generic.dict_activity, treatmask)
 
+initout = Initial.DoInitial(mask, cproc, devmask, arcpy.GetParameterAsText(6), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
+outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict, treatmask, dev)
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity)
-#templist[0].to_csv('P:/Temp/testerino2.csv')
+templist[0].to_csv('P:/Temp/Temperino.csv')
 
 
-ReportingTemp.report(templist[0],outpath,aca ,acu ,oak ,rre , dev,cm)
+ReportingTemp.report(templist[0],outpath, acdict,oak ,rre , dev,cm)
 
-#ReportingTemp.carbreport(df,outpath,activitylist,alist,Generic.Carbon2014, Generic.Carbon2030,aca ,acu ,oak ,rre , cdev,cm)
+ReportingTemp.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030, dev,cm)
 
 

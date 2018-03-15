@@ -2,30 +2,28 @@
 import pandas as pd
 import Helpers
     
-def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb, scratch, cm, conmask = 'None', acumask = 'None', acamask = 'None', acu = 0, aca = 0, treatmask = 'None'):
-    #full set
-#    temppath = "E:/mercedtool/MASTER_DATA/Tables/ValueTables"
+def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb, scratch, cm, conmask = 'None', treatmask = 'None'):
+    #Load Tables into Dataframes
     jointables = Helpers.LoadCSVs(joins)
     value_df = Helpers.MergeMultiDF('pointid', jointables)
-    #
+
     neartables = Helpers.LoadCSVs(nears)
     near_df = Helpers.MergeMultiDF('pointid', neartables)
-    aglist = ['Orchard','Annual Cropland','Vineyard', 'Rice', 'Irrigated Pasture']
+    
+    #Define the list of developed landcovers
     developed = ['Developed','Urban','Developed Roads']
-    natlist = ['Forest', 'Shrubland', 'Wetland', 'Grassland','Barren']
+    
+    
+    #Merge the near table and value table on pointid
     tabs_all_df = pd.merge(value_df,near_df, on = 'pointid')
+    
+    #Create landcover fields for the treatment scenarios and fill with baseline landcovers
     tabs_all_df['LC2030_trt_bau'] = tabs_all_df['LC2030_bau']
     tabs_all_df['LC2030_trt_med'] = tabs_all_df['LC2030_med']
     tabs_all_df['LC2030_trt_max'] = tabs_all_df['LC2030_max']
-    if aca ==1 :
-        tabs_all_df['LC2030_aca'] = tabs_all_df['LC2030_bau']
-    if acu == 1:
-        tabs_all_df['LC2030_acu'] = tabs_all_df['LC2030_bau']
 
-    tabs_all_df['gridcode30_aca'] = tabs_all_df['gridcode30_bau']
-    tabs_all_df['gridcode30_acu'] = tabs_all_df['gridcode30_bau']
 
-    
+    #Create gridcode fields for the treatment scenarios and fill with baseline gridcodes
     tabs_all_df['gridcode30_trt_bau'] = tabs_all_df['gridcode30_bau']
     tabs_all_df['gridcode30_trt_med'] = tabs_all_df['gridcode30_med']
     tabs_all_df['gridcode30_trt_max'] = tabs_all_df['gridcode30_max']
@@ -37,19 +35,23 @@ def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb,
     else:
         pass
     
+    
+    
     #Add User-defined additional urban areas using user-defined urban mask
-    if cd == 1:
+    if cd == 1: #If cd is one, the developed polygons replace the 2030 bau scenario. New development in 2030 bau is reverted to 2014 landcover, and all pixels within the development mask will be changed to urban landcover.
+        #Create a new landcover field for 2030 custom development scenario and make equal to the baseline landcover. Do the same for gridcode.
         tabs_all_df['LC2030_cust'] = tabs_all_df['LC2030_bau']
         tabs_all_df['gridcode30_cust'] = tabs_all_df['gridcode30_bau']
         
+        #Create a list of points within the development mask
         pts = Helpers.create_processing_table(points,devmask, tempgdb, scratch)
         plist = pts['pointid'].tolist()
         Helpers.pmes('Creating User Defined BAU')
+        
+        #Where the 2030 bau landcover is different from the 2014 landcover, and the 2030 bau landcover is a developed landcover, change the landcover to the 2014 landcover (revert) 
         tabs_all_df.loc[((tabs_all_df['LC2030_cust'] != tabs_all_df['LC2014']) & (tabs_all_df['LC2030_cust'].isin(developed))),'LC2030_cust'] = tabs_all_df['LC2014']
         tabs_all_df['LC2030_trt_cust'] = tabs_all_df['LC2030_cust']
         
-        
-        tabs_all_df.loc[((tabs_all_df['LC2030_cust'] != tabs_all_df['LC2014']) & (tabs_all_df['LC2030_cust'].isin(developed))),'gridcode30_cust'] = tabs_all_df['gridcode14'] + 100
         tabs_all_df['gridcode30_trt_cust'] = tabs_all_df['gridcode30_cust']
         
         tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'gridcode30_cust'] = 13
@@ -81,44 +83,36 @@ def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb,
         pts = Helpers.create_processing_table(points,conmask, tempgdb, scratch)
         plist = pts['pointid'].tolist()
         Helpers.pmes('Creating User Defined Conservation Polygons')
-        
-        tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'gridcode30_trt_bau'] = tabs_all_df['gridcode14'] + 100
-        tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'gridcode30_trt_med'] = tabs_all_df['gridcode14'] + 100
-        tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'gridcode30_trt_max'] = tabs_all_df['gridcode14'] + 100
 
         tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'LC2030_trt_bau'] = tabs_all_df['LC2014']
         tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'LC2030_trt_med'] = tabs_all_df['LC2014']
-        tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'LC2030_trt_max'] = tabs_all_df['LC2014'] 
+        tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'LC2030_trt_max'] = tabs_all_df['LC2014']
         if cd in [1,2]:
-            tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'gridcode30_trt_cust'] = tabs_all_df['gridcode14'] + 100        
+                  
             tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'LC2030_trt_cust'] = tabs_all_df['LC2014']  
         
         tabs_all_df['con_flag'] = 0
         tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'con_flag'] = 1
         if cd == 1:
             tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'dev_flag'] = 1
+            
+            
+    gcdict = {'Wetland':0, 'Water':1, 'Grassland':2,'Barren':4, 'Orchard':7,'Vineyard':8,'Annual Cropland':9,'Rice':10,'Irrigated Pasture':11,'Young Forest':14, 'Young Shrubland':15}
+    
+    
+    devlist = ['bau','med','max']
+    keylist = [*gcdict]
+    
+    for i in devlist:
+        for x in keylist:
+            tabs_all_df.loc[(tabs_all_df['LC2030_trt_'+i] ==  x),'gridcode30_trt_' + i] = gcdict[x]
+
+
+        
     else:
         pass
     
-    
-    if acu == 1:
-        pts = Helpers.create_processing_table(points,acumask, tempgdb, scratch)
-        plist = pts['pointid'].tolist()
-        Helpers.pmes('Flagging points for avoid conversion to urban')
-        tabs_all_df['acu_flag'] = 0
-        tabs_all_df.loc[(tabs_all_df['pointid'].isin(plist)) ,'acu_flag'] = 1
 
-    else:
-        pass
-    if aca == 1:
-        pts = Helpers.create_processing_table(points,acamask, tempgdb, scratch)
-        plist = pts['pointid'].tolist()
-        Helpers.pmes('Flagging points for avoid conversion to agriculture')
-        tabs_all_df['aca_flag'] = 0
-        tabs_all_df.loc[(tabs_all_df['pointid'].isin(plist)) ,'aca_flag'] = 1
-
-    else:
-        pass
     if treatmask != 'None':
         pts = Helpers.create_processing_table(points,treatmask, tempgdb, scratch)
         plist = pts['pointid'].tolist()
@@ -127,7 +121,8 @@ def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb,
         tabs_all_df.loc[(tabs_all_df['pointid'].isin(plist)) ,'trt_flag'] = 1
 
     else:
-        pass
+        tabs_all_df['trt_flag'] = 0
+        
     carb01 = pd.read_csv(c1)
     carb14 = pd.read_csv(c14)
     carb30 = pd.read_csv(c30)

@@ -12,38 +12,34 @@ def pmes(message):
     arcpy.AddMessage(message)
     print (message)
     
-def CreateEligDict(df, activity, dictact, dict_eligibility):
+def CreateEligDict(df, activity, dictact, dict_eligibility, act = 'None'):
     import sys
-    initflag = activity + 'suitflag'
-    if activity in dict_eligibility.keys():
+    if act == 'None':
+        act = activity
+    initflag = act + 'suitflag'
+    df = df[['LC2030_bau', initflag]]
+    if act in dict_eligibility.keys():
         pmes('The activity is already in the dict_eligibility dictionary')
         sys.exit('***The activity is already in the dict_eligibility dictionary***')
-    eli = df.groupby('LC2030_trt_bau').sum()[initflag]
-#    tempd = eli.add_suffix('_sum').reset_index()
-#    if 'Annual Cropland' in tempd['LC2030_trt'].values:
-#        pmes (eli[initflag])
-#        tempd.loc[tempd['LC2030_trt' == 'Annual Cropland', initflag]] = tempd[initflag] * dictact[activity]['ag_modifier']
-#    tempd[initflag] = tempd[initflag] * dictact[activity]['adoptcap']
-#    pmes(dictact[activity]['adoption'])
-#    tempd[initflag] = tempd[initflag] * (dictact[activity]['adoption']/100)
-    
-
+    eli = df.groupby('LC2030_bau').sum()[initflag]   
+    eli.loc[(eli['LC2030_bau'] == 'Annual Cropland'),initflag] = eli[initflag] * dictact[activity]['ag_modifier']
     eli_dict_element = eli.to_dict()
-    dict_eligibility[activity] = eli_dict_element
+    dict_eligibility[act] = eli_dict_element
     
 
-def selectionfunc (dict_eligibility,df, activity,dictact):
+def selectionfunc (dict_eligibility,df, activity,dictact, act):
     """
     This function takes a dictionary, a dataframe and an activity.
     It takes a user input to determine how many pixels to select for the activity.
     """
     pmes('Selecting points for: ' + activity)
     import arcpy
+    if act == 'None':
+        act = activity
     #Create a temporary dictionary of the activity's dictionary from the eligibility dict
     goal = 0
-    tempdict = dict_eligibility[activity]
+    tempdict = dict_eligibility[act]
     klist = list(tempdict.keys())
-    print (klist)
     for i in klist:
         pmes (i)
         pmes (goal)
@@ -51,19 +47,18 @@ def selectionfunc (dict_eligibility,df, activity,dictact):
         goal = goal + tempdict[i]
     pmes ('Suitable pixels: ' + str(goal))
     
-    goal = goal * (dictact[activity]['adoption']/100) #update to link to user defined % for final tool
-    goal = goal * dictact[activity]['adoptcap']
-    if 'Annual Cropland' == activity:
-#        pmes (eli[initflag])
-        goal = goal * dictact[activity]['ag_modifier']
-    
-    
-    
+    goal1 = dictact[activity]['adoption']*4046.86  #update to link to user defined % for final tool
+    cap = goal * dictact[activity]['adoptcap']
+    if cap < goal1:
+        goal = goal * dictact[activity]['adoptcap']
+    elif cap > goal1:
+        goal = dictact[activity]['adoption']*4046.86
+ 
     count = 0
     
     pmes ('Goal is : ' + str (goal))
-    initflag =  activity + 'suitflag'
-    selflag = activity + 'selected'
+    initflag =  act + 'suitflag'
+    selflag = act + 'selected'
     df[selflag] = 0
     pmes ('group size is :' + str(dictact[activity]['grpsize']))
     if dictact[activity]['grpsize'] == 'medium':
@@ -88,7 +83,7 @@ def selectionfunc (dict_eligibility,df, activity,dictact):
                 pass
     
         pmes (str(count))
-        query = (df['medgroup_val'].isin(glist)) & (df[activity + 'suitflag'] == 1)
+        query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
     
         df.loc[query,selflag] = 1       
     else:
@@ -112,22 +107,24 @@ def selectionfunc (dict_eligibility,df, activity,dictact):
                 pass
     
         pmes (str(count))
-        query = (df['smallgroup_val'].isin(glist)) & (df[activity + 'suitflag'] == 1)
+        query = (df['smallgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
     
         df.loc[query,selflag] = 1           
     return df
 
                 
                 
-def CreateSuitFlags(activity,df,dictact):
+def CreateSuitFlags(activity,df,dictact, act = 'None'):
     '''Takes an activity name (a key from dict_activity) and uses
     that to calculate a 1/0 suitability flag for the activity 
     in the tabs_all_df dataframe'''
-    initflag = activity + 'suitflag'
+    if act == 'None':
+        act = activity
+    initflag = act + 'suitflag'
     pmes (initflag)
     df[initflag] = 0
     df.loc[dictact[activity]['query'], initflag] = 1
-    
+
     
     
 """
@@ -481,41 +478,110 @@ def lc_mod(flagfield, label, labelfield, dataframe):
 
 def devscen (td):
     
-    td['gridcode30_med'] = td['gridcode30']
-    td['LC2030_med'] = td['LC2030']
-    td['LC2030_max'] = td['LC2030']
-    td['gridcode30_max'] = td['gridcode30']
-    td.loc[((td['LC2030_med'] != td['LC2014']) & (td['LC2030_med'].isin(['Developed','Urban','Developed Roads']))), 'gridcode30_med'] = td['gridcode14'] + 100
-    td.loc[((td['LC2030_max'] != td['LC2014']) & (td['LC2030_max'].isin(['Developed','Urban','Developed Roads']))), 'gridcode30_max'] = td['gridcode14'] + 100
+    
+    td.loc[(td['LC2030_bau'] == 'Urban'), 'gridcode30_bau'] = 13
+    td.loc[(td['LC2030_bau'] == 'Developed'), 'gridcode30_bau'] = 6
+    td.loc[(td['dcode_maxinfill'] == 6), 'LC2030_max'] = 'Developed'
+    td['gridcode30_med'] = td['gridcode30_bau']
+    td['LC2030_med'] = td['LC2030_bau']
+    td['LC2030_max'] = td['LC2030_bau']
+    td['gridcode30_max'] = td['gridcode30_bau']
     td.loc[((td['LC2030_max'] != td['LC2014']) & (td['LC2030_max'].isin(['Developed','Urban','Developed Roads']))), 'LC2030_max'] = td['LC2014']
     td.loc[((td['LC2030_med'] != td['LC2014']) & (td['LC2030_med'].isin(['Developed','Urban','Developed Roads']))), 'LC2030_med'] = td['LC2014']
+    
     td.loc[(td['dcode_medinfill'] ==  14),'dcode_medinfill'] = 13
     td.loc[(td['dcode_maxinfill'] ==  14),'dcode_maxinfill'] = 13
     td.loc[(td['dcode_maxinfill'] ==  7),'dcode_maxinfill'] = 6
     td.loc[(td['dcode_medinfill'] ==  7),'dcode_medinfill'] = 6
     td.loc[(td['dcode_maxinfill'] == 13), 'LC2030_max'] = 'Urban'
+    
+    td.loc[(td['dcode_maxinfill'] >0), 'gridcode30_max'] = ['dcode_maxinfill']
     td.loc[(td['dcode_medinfill'] == 13), 'LC2030_med'] = 'Urban'
+    td.loc[(td['dcode_medinfill'] >0), 'gridcode30_med'] = ['dcode_medinfill']
     td.loc[(td['dcode_maxinfill'] == 6), 'LC2030_max'] = 'Developed'
+    
     td.loc[(td['dcode_medinfill'] == 6), 'LC2030_med'] = 'Developed'
-    td.loc[(td['dcode_maxinfill'] == 13), 'LC2030_max'] = 'Urban'
-    td.loc[(td['dcode_medinfill'] == 13), 'LC2030_med'] = 'Urban'
-    td.loc[(td['dcode_maxinfill'] == 6), 'LC2030_max'] = 'Developed'
-    td.loc[(td['dcode_medinfill'] == 6), 'LC2030_med'] = 'Developed'
+    
+
+
+    new.loc[(new['LC2030_med'] ==  'Wetland'),'gridcode30_med'] = 0
+    new.loc[(new['LC2030_med'] ==  'Water'),'gridcode30_med'] = 1
+    new.loc[(new['LC2030_med'] ==  'Grassland'),'gridcode30_med'] = 2
+    new.loc[(new['LC2030_med'] ==  'Barren'),'gridcode30_med'] = 4
+    new.loc[(new['LC2030_med'] ==  'Orchard'),'gridcode30_med'] = 7
+    new.loc[(new['LC2030_med'] ==  'Vineyard'),'gridcode30_med'] = 8
+    new.loc[(new['LC2030_med'] ==  'Annual Cropland'),'gridcode30_med'] = 9
+    new.loc[(new['LC2030_med'] ==  'Rice'),'gridcode30_med'] = 10
+    new.loc[(new['LC2030_med'] ==  'Irrigated Pasture'),'gridcode30_med'] = 11
+    new.loc[(new['LC2030_med'] ==  'Young Forest'),'gridcode30_med'] = 14
+    new.loc[(new['LC2030_med'] ==  'Young Shrubland'),'gridcode30_med'] = 15
+    new.loc[(new['LC2030_max'] ==  'Wetland'),'gridcode30_max'] = 0
+    new.loc[(new['LC2030_max'] ==  'Water'),'gridcode30_max'] = 1
+    new.loc[(new['LC2030_max'] ==  'Grassland'),'gridcode30_max'] = 2
+    new.loc[(new['LC2030_max'] ==  'Barren'),'gridcode30_max'] = 4
+    new.loc[(new['LC2030_max'] ==  'Orchard'),'gridcode30_max'] = 7
+    new.loc[(new['LC2030_max'] ==  'Vineyard'),'gridcode30_max'] = 8
+    new.loc[(new['LC2030_max'] ==  'Annual Cropland'),'gridcode30_max'] = 9
+    new.loc[(new['LC2030_max'] ==  'Rice'),'gridcode30_max'] = 10
+    new.loc[(new['LC2030_max'] ==  'Irrigated Pasture'),'gridcode30_max'] = 11
+    new.loc[(new['LC2030_max'] ==  'Young Forest'),'gridcode30_max'] = 14
+    new.loc[(new['LC2030_max'] ==  'Young Shrubland'),'gridcode30_max'] = 15
     return td
     
     
 
+def carbon30(df):
+    import Generic
+    import pandas as pd
+    c14 = pd.read_csv(Generic.Carbon2014)
+    c14['gridcode30_bau'] = c14['gridcode14'] + 100
+    df2 = df[['gridcode30','LC2030_bau','gridcode14','pointid']]
+    df2 = df2.groupby(['gridcode30','LC2030_bau','gridcode14'],as_index = False).count()
+    d3 = pd.merge(df2,c14, left_on = 'gridcode14', right_on = 'gridcode14', how = 'left')
+    d3['carb*pointid'] = d3['pointid'] * d3['carbrate14']
+    d3.loc[(d3['landcover'] ==  'Developed'),'landcover'] = 'Urban'
+    d3.loc[(d3['landcover'] ==  'Developed Roads'),'landcover'] = 'Urban'
+    tsum = d3.groupby(['landcover'], as_index = False).sum()
+    tsum = tsum[['landcover','carb*pointid', 'pointid']]
+    tsum['avgrate'] = tsum['carb*pointid']/tsum['pointid']
+    tsum2 = tsum[['landcover','avgrate']]
+    tsum3 = tsum2.loc[tsum2['landcover'].isin(['Forest','Shrubland', 'Urban'])]
+    tsum3.loc[(tsum3['landcover'] == 'Forest'), 'landcover'] = 'Young Forest'
+    tsum3.loc[(tsum3['landcover'] == 'Shrubland'), 'landcover'] = 'Young Shrubland'
+    tsum3.loc[(tsum3['landcover'] == 'Urban'), 'landcover'] = 'Developed'
+    tsum4 = tsum2.loc[tsum2['landcover'].isin(['Urban'])]
+    tsum4.loc[(tsum4['landcover'] == 'Urban'), 'landcover'] = 'Developed Roads'
+    tsum5 = pd.concat([tsum2,tsum3,tsum4], ignore_index=True)
     
     
+    d4 = pd.merge(d3,tsum5, left_on = 'LC2030_bau',right_on = 'landcover', how = 'left')
+    d4['carb30temp'] = 0
+    d4.loc[(d4['gridcode30'] < 20), 'carb30temp'] = d4['avgrate']
+    d4.loc[(d4['gridcode30'] > 20), 'carb30temp'] = d4['carbrate14']
+    
+    d4['templc'] = d4['LC2030_bau']
+    d4.loc[(d4['templc'] == 'Young Forest'), 'templc'] = 'Forest'
+    d4.loc[(d4['templc'] == 'Young Shrubland'), 'templc'] = 'Shrubland'
+    d4.loc[(d4['templc'] == 'Developed'), 'templc'] = 'Urban'
+    d4.loc[(d4['templc'] == 'Developed Roads'), 'templc'] = 'Urban'
+    
+    newdf = d4.groupby(['gridcode30', 'templc','LC2030_bau', 'carb30temp' ], as_index = False).sum()
+    newdf['carb30*pointid'] = newdf['pointid'] * newdf['carb30temp'] #Make total carbon per gridcode
     
     
+    newdf2 = newdf.groupby(['templc'], as_index = False).sum()
+    newdf2 = newdf2[['templc','carb30*pointid']]
     
+    newdf2 = newdf2.rename(columns = {'carb30*pointid':'sumcarb30'})
     
-    
-    
-    
-    
-    
+    newdf3 = pd.merge(newdf,newdf2, left_on = 'templc',right_on = 'templc', how = 'left')
+    newdf3['share30'] = newdf3['carb30*pointid']/newdf3['sumcarb30']
+    total30 = pd.read_csv(r"D:\TGS\projects\64 - Merced Carbon\MBA\ToolData\Tables\LookUpTables\carbon2030totals.csv")
+    newdf4 = pd.merge(newdf3, total30, left_on = 'templc',right_on = 'landcover', how = 'left')
+    newdf4['totshare30'] = newdf4['share30']*newdf4['carbontotal']
+    newdf4['finalcarb30rate'] = newdf4['totshare30']/newdf4['pointid']
+    return newdf4
+
     
     
     
