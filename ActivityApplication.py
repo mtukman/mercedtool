@@ -126,41 +126,51 @@ def DoActivities(df,activitylist, dictact,acdict, treatmask = 'None',customdev =
     keylist = [*acdict]
     for i in keylist:
         if i == 'ac_for_urb':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1) & queryadd
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Forest')
+            t = 'Forest'
+            g = 3
         if i == 'ac_for_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1) & queryadd
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Forest')
+            t = 'Forest'
+            g = 3
         if i == 'ac_gra_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1) & queryadd
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Grassland')
+            t = 'Grassland'
+            g = 2
         if i == 'ac_irr_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1) & queryadd
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Irrigated Pasture')
+            t = 'Irrigated Pasture'
+            g = 11
         if i == 'ac_orc_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1) & queryadd
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Orchard')
+            t = 'Orchard'
+            g = 7
         if i == 'ac_shr_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1) & queryadd
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Shrubland')
+            t = 'Shrubland'
+            g = 5
         if i == 'ac_vin_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1) & queryadd
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Vineyard')
+            t = 'Vineyard'
+            g = 8
         if i == 'ac_shr_urb':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1) & queryadd
-        if i == 'ac_orb_urb':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1) & queryadd
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Forest')
+            t = 'Forest'
+            g = 3
+        if i == 'ac_orc_urb':
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Orchard')
+            t = 'Orchard'
+            g = 7
+            
         Helpers.CreateSuitFlags('aco',df,dictact, i)
         Helpers.CreateEligDict(df, 'aco', dictact,dict_eligibility, i)
         Helpers.selectionfunc (dict_eligibility,df,'aco',dictact, i)
+        Helpers.lc_mod(i+'selected',t, 'LC2030_trt_bau', df)
 
-    
+        Helpers.lc_mod(i+'selected',g, 'gridcode30_trt_bau', df)
 
-        
-    
+
     return df
-
-
-
-
-
-
-
-
-
 
 
 

@@ -504,28 +504,28 @@ def devscen (td):
     
 
 
-    new.loc[(new['LC2030_med'] ==  'Wetland'),'gridcode30_med'] = 0
-    new.loc[(new['LC2030_med'] ==  'Water'),'gridcode30_med'] = 1
-    new.loc[(new['LC2030_med'] ==  'Grassland'),'gridcode30_med'] = 2
-    new.loc[(new['LC2030_med'] ==  'Barren'),'gridcode30_med'] = 4
-    new.loc[(new['LC2030_med'] ==  'Orchard'),'gridcode30_med'] = 7
-    new.loc[(new['LC2030_med'] ==  'Vineyard'),'gridcode30_med'] = 8
-    new.loc[(new['LC2030_med'] ==  'Annual Cropland'),'gridcode30_med'] = 9
-    new.loc[(new['LC2030_med'] ==  'Rice'),'gridcode30_med'] = 10
-    new.loc[(new['LC2030_med'] ==  'Irrigated Pasture'),'gridcode30_med'] = 11
-    new.loc[(new['LC2030_med'] ==  'Young Forest'),'gridcode30_med'] = 14
-    new.loc[(new['LC2030_med'] ==  'Young Shrubland'),'gridcode30_med'] = 15
-    new.loc[(new['LC2030_max'] ==  'Wetland'),'gridcode30_max'] = 0
-    new.loc[(new['LC2030_max'] ==  'Water'),'gridcode30_max'] = 1
-    new.loc[(new['LC2030_max'] ==  'Grassland'),'gridcode30_max'] = 2
-    new.loc[(new['LC2030_max'] ==  'Barren'),'gridcode30_max'] = 4
-    new.loc[(new['LC2030_max'] ==  'Orchard'),'gridcode30_max'] = 7
-    new.loc[(new['LC2030_max'] ==  'Vineyard'),'gridcode30_max'] = 8
-    new.loc[(new['LC2030_max'] ==  'Annual Cropland'),'gridcode30_max'] = 9
-    new.loc[(new['LC2030_max'] ==  'Rice'),'gridcode30_max'] = 10
-    new.loc[(new['LC2030_max'] ==  'Irrigated Pasture'),'gridcode30_max'] = 11
-    new.loc[(new['LC2030_max'] ==  'Young Forest'),'gridcode30_max'] = 14
-    new.loc[(new['LC2030_max'] ==  'Young Shrubland'),'gridcode30_max'] = 15
+#    new.loc[(new['LC2030_med'] ==  'Wetland'),'gridcode30_med'] = 0
+#    new.loc[(new['LC2030_med'] ==  'Water'),'gridcode30_med'] = 1
+#    new.loc[(new['LC2030_med'] ==  'Grassland'),'gridcode30_med'] = 2
+#    new.loc[(new['LC2030_med'] ==  'Barren'),'gridcode30_med'] = 4
+#    new.loc[(new['LC2030_med'] ==  'Orchard'),'gridcode30_med'] = 7
+#    new.loc[(new['LC2030_med'] ==  'Vineyard'),'gridcode30_med'] = 8
+#    new.loc[(new['LC2030_med'] ==  'Annual Cropland'),'gridcode30_med'] = 9
+#    new.loc[(new['LC2030_med'] ==  'Rice'),'gridcode30_med'] = 10
+#    new.loc[(new['LC2030_med'] ==  'Irrigated Pasture'),'gridcode30_med'] = 11
+#    new.loc[(new['LC2030_med'] ==  'Young Forest'),'gridcode30_med'] = 14
+#    new.loc[(new['LC2030_med'] ==  'Young Shrubland'),'gridcode30_med'] = 15
+#    new.loc[(new['LC2030_max'] ==  'Wetland'),'gridcode30_max'] = 0
+#    new.loc[(new['LC2030_max'] ==  'Water'),'gridcode30_max'] = 1
+#    new.loc[(new['LC2030_max'] ==  'Grassland'),'gridcode30_max'] = 2
+#    new.loc[(new['LC2030_max'] ==  'Barren'),'gridcode30_max'] = 4
+#    new.loc[(new['LC2030_max'] ==  'Orchard'),'gridcode30_max'] = 7
+#    new.loc[(new['LC2030_max'] ==  'Vineyard'),'gridcode30_max'] = 8
+#    new.loc[(new['LC2030_max'] ==  'Annual Cropland'),'gridcode30_max'] = 9
+#    new.loc[(new['LC2030_max'] ==  'Rice'),'gridcode30_max'] = 10
+#    new.loc[(new['LC2030_max'] ==  'Irrigated Pasture'),'gridcode30_max'] = 11
+#    new.loc[(new['LC2030_max'] ==  'Young Forest'),'gridcode30_max'] = 14
+#    new.loc[(new['LC2030_max'] ==  'Young Shrubland'),'gridcode30_max'] = 15
     return td
     
     
@@ -535,8 +535,8 @@ def carbon30(df):
     import pandas as pd
     c14 = pd.read_csv(Generic.Carbon2014)
     c14['gridcode30_bau'] = c14['gridcode14'] + 100
-    df2 = df[['gridcode30','LC2030_bau','gridcode14','pointid']]
-    df2 = df2.groupby(['gridcode30','LC2030_bau','gridcode14'],as_index = False).count()
+    df2 = df[['gridcode30_bau','LC2030_bau','gridcode14','pointid']]
+    df2 = df2.groupby(['gridcode30_bau','LC2030_bau','gridcode14'],as_index = False).count()
     d3 = pd.merge(df2,c14, left_on = 'gridcode14', right_on = 'gridcode14', how = 'left')
     d3['carb*pointid'] = d3['pointid'] * d3['carbrate14']
     d3.loc[(d3['landcover'] ==  'Developed'),'landcover'] = 'Urban'
@@ -556,8 +556,8 @@ def carbon30(df):
     
     d4 = pd.merge(d3,tsum5, left_on = 'LC2030_bau',right_on = 'landcover', how = 'left')
     d4['carb30temp'] = 0
-    d4.loc[(d4['gridcode30'] < 20), 'carb30temp'] = d4['avgrate']
-    d4.loc[(d4['gridcode30'] > 20), 'carb30temp'] = d4['carbrate14']
+    d4.loc[(d4['gridcode30_bau_x'] < 20), 'carb30temp'] = d4['avgrate']
+    d4.loc[(d4['gridcode30_bau_x'] > 20), 'carb30temp'] = d4['carbrate14']
     
     d4['templc'] = d4['LC2030_bau']
     d4.loc[(d4['templc'] == 'Young Forest'), 'templc'] = 'Forest'
@@ -565,7 +565,7 @@ def carbon30(df):
     d4.loc[(d4['templc'] == 'Developed'), 'templc'] = 'Urban'
     d4.loc[(d4['templc'] == 'Developed Roads'), 'templc'] = 'Urban'
     
-    newdf = d4.groupby(['gridcode30', 'templc','LC2030_bau', 'carb30temp' ], as_index = False).sum()
+    newdf = d4.groupby(['gridcode30_bau_x', 'templc','LC2030_bau', 'carb30temp' ], as_index = False).sum()
     newdf['carb30*pointid'] = newdf['pointid'] * newdf['carb30temp'] #Make total carbon per gridcode
     
     

@@ -2,7 +2,9 @@ gridcode30,landcover,carbrate30
 0,Wetland,9.414024986
 1,Water,6.601782417
 2,Grassland,7.587561033
+3,Forest,49.36200881
 4,Barren,37.62726307
+5,Shrubland,26.52466414
 6,Developed,5.735056379
 7,Orchard,10.79392397
 8,Vineyard,6.011337993

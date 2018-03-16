@@ -56,21 +56,26 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
             group = tempdf.groupby('fmmp_class', as_index = False).count()
             group = group[['fmmp_class','pointid']]
             group['pointid'] = (group['pointid']*900)/10000
-            group = group.rename(columns = {'pointid':'ha_loss_' + name + '_' + dev})
-#            if name in ['aca','acu']:
-            
+            if 'urb' in name:
+                group['pointid'] = group['pointid']* (-1)
+                group = group.rename(columns = {'pointid':'ha_loss_avoided_' + name})
+            else:
+                group = group.rename(columns = {'pointid':'ha_loss_' + name + '_' + dev})
+                
             fmmpdict[name + dev] = group
 
         fmmpdict = {}
         for x in keylist:
-            if x in ['base', 'dev', 'trt']:
+            if x in ['base', 'dev', 'trt', 'con']:
                 if x == 'base':
                     for i in devlist:
                         ffunct(x, 'LC2030_' + i, i, dfdict[x])
                 else:
                     for i in devlist:
                         ffunct(x, 'LC2030_trt_' + i, i, dfdict[x])
-        
+            elif ('urb' in x):
+                ffunct(x, 'LC2030_trt_bau', i, dfdict[x])
+                
         td = df[['LC2014','pointid', 'fmmp_class']]
         tempdf = td.loc[(~td['LC2014'].isin(developed))]
         tempdf = tempdf.loc[(tempdf['fmmp_class'].isin(flist))]
@@ -90,6 +95,7 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
         temp.loc[temp['fmmp_class'] == 'L', 'fmmp_class' ] = 'Local Importance' 
         temp.loc[temp['fmmp_class'] == 'S', 'fmmp_class' ] = 'Statewide Importance' 
         temp.loc[temp['fmmp_class'] == 'U', 'fmmp_class' ] = 'Unique Farmland' 
+        temp.fillna(0)
         temp.to_csv(outpath + 'fmmp.csv')
 
     
@@ -130,11 +136,20 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                     tempmerge = tempmerge[['gen_class', 'change','count30']]
                     tempmerge = tempmerge.rename(columns = {'count30':'ha_' + name +'_'+ dev})
                     tempmerge['ha_' + name+ '_'+dev] = (tempmerge['ha_' + name+ '_'+dev]*900)/10000
-
-                    
+                    tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name+ '_'+dev})
+                elif 'ac' in x:
+                    tempdf302 = td.loc[(td['fema_class'].isin(query)) & (td['near_fema'] == 0)]
+                    tempdf302 = pd.merge(tempdf302,gclass, how = 'outer', left_on = 'LC2030_bau', right_on = 'landcover')
+                    group302 = tempdf302.groupby(['gen_class'], as_index = False).count()
+                    group302 = group302[['pointid','gen_class']]
+                    group302 = group302.rename(columns={'pointid':'count302'})
+                    tempmerge = pd.merge(group302,group30, on = 'gen_class', how = 'outer')
+                    tempmerge['change'] = tempmerge['count30']-tempmerge['count302']
+                    tempmerge['change'] = (tempmerge['change']*900)/10000
+                    tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name})
                 else:
                     tempmerge = tempmerge[['gen_class', 'change']]
-                tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name+ '_'+dev})
+                    tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name})
                 femadict[name + dev] = tempmerge
                 
         for z in flist:
@@ -146,16 +161,16 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
 
             for x in keylist:
                 Helpers.pmes('Doing : ' + x)
-                if x in ['base', 'cdev','cons', 'trt']:
+                if x in ['base', 'dev','cons', 'trt']:
                     if x == 'base':
                         for i in devlist:
                             femafunct(x, 'LC2030_' + i, query, i, dfdict[x])
                     else:
                         for i in devlist:
                             femafunct(x, 'LC2030_trt_' + i, query, i, dfdict[x])
-                elif x in ['acu', 'aca']:
-#                    femafunct(x, 'LC2030_ac',query, 'bau',dfdict[x])
-                    pass
+                elif 'ac' in x:
+                    femafunct(x, 'LC2030_trt_bau',query, 'bau',dfdict[x])
+
                 else:
                     femafunct(x, 'LC2030_trt_bau', query, 'bau', dfdict[x])
                     
@@ -168,8 +183,6 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
             group14 = group14.rename(columns={'pointid':'ha_2014'})
             group14['ha_2014'] = (group14['ha_2014']*900)/10000
             femadict['Base_2014'] = group14
-            
-            
             tlist = list(femadict.values())
             l = len(tlist)
             count = 1
@@ -177,6 +190,7 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
             while count < l:
                 temp = pd.merge(temp,tlist[count],on = 'gen_class', how = 'outer' )
                 count = count + 1
+            temp.fillna(0)
             temp.to_csv(outpath + 'flood' + str(z) + '.csv')
                     
     
@@ -220,10 +234,20 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                     tempmerge = tempmerge[['gen_class', 'change','count30']]
                     tempmerge = tempmerge.rename(columns = {'count30':'ha_' + name +'_'+ dev})
                     tempmerge['ha_' + name +'_'+ dev] = (tempmerge['ha_' + name +'_'+ dev]*900)/10000
-
+                    tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name +'_'+ dev})
+                elif 'ac' in x:
+                    tempdf302 = td.loc[td['scenic_val'] > 5]
+                    tempdf302 = pd.merge(tempdf302,gclass, how = 'outer', left_on = 'LC2030_bau', right_on = 'landcover')
+                    group302 = tempdf302.groupby(['gen_class'], as_index = False).count()
+                    group302 = group302[['pointid','gen_class']]
+                    group302 = group302.rename(columns={'pointid':'count302'})
+                    tempmerge = pd.merge(group302,group30, on = 'gen_class', how = 'outer')
+                    tempmerge['change'] = tempmerge['count30']-tempmerge['count302']
+                    tempmerge['change'] = (tempmerge['change']*900)/10000
+                    tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name})
                 else:
                     tempmerge = tempmerge[['gen_class', 'change']]
-                tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name +'_'+ dev})
+                    tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name})
                 scendict[name + dev] = tempmerge
         scendict = {}
         for x in keylist:
@@ -234,9 +258,9 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                 else:
                     for i in devlist:
                         scenicfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
-            elif x in ['acu', 'aca']:
-#                    scenicfunct(x, 'LC2030_ac', 'bau',dfdict[x])
-                    pass
+            elif 'ac' in x:
+                    scenicfunct(x, 'LC2030_trt_bau', 'bau',dfdict[x])
+
             else:
                 scenicfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
                 
@@ -255,8 +279,9 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
         count = 1
         temp = tlist[0]
         while count < l:
-                temp = pd.merge(temp,tlist[count],on = 'gen_class', how = 'outer' )
-                count = count + 1
+            temp = pd.merge(temp,tlist[count],on = 'gen_class', how = 'outer' )
+            count = count + 1
+        temp.fillna(0)
         temp.to_csv(outpath + 'scenic' + '.csv')
 
     
@@ -288,11 +313,21 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
             tempmerge = pd.merge(group14,group30, left_on = 'LC2014', right_on= field, how = 'outer')
             tempmerge['change'] = tempmerge['water30']-tempmerge['water14']
             if name in ['base','trt']:
-                    tempmerge = tempmerge[['LC2014', 'change', 'water30']]
-                    tempmerge = tempmerge.rename(columns = {'water30':'ac_ft_' + name +'_'+ dev})
-                    tempmerge['ac_ft_' + name +'_'+ dev] = tempmerge['ac_ft_' + name +'_'+ dev]*4.49651111111
-                    tempmerge['change'] = tempmerge['change']*4.49651111111
-                    tempmerge = tempmerge.rename(columns = {'LC2014':'landcover','change':'ac_ft_change_' + name +'_'+ dev})
+                tempmerge = tempmerge[['LC2014', 'change', 'water30']]
+                tempmerge = tempmerge.rename(columns = {'water30':'ac_ft_' + name +'_'+ dev})
+                tempmerge['ac_ft_' + name +'_'+ dev] = tempmerge['ac_ft_' + name +'_'+ dev]*4.49651111111
+                tempmerge['change'] = tempmerge['change']*4.49651111111
+                tempmerge = tempmerge.rename(columns = {'LC2014':'landcover','change':'ac_ft_change_' + name +'_'+ dev})
+            elif 'ac' in name:
+                tempdf302 = pd.merge(td,wclass, how = 'outer', left_on = 'LC2030_bau', right_on = 'landcover')
+                group302 = tempdf302.groupby(['LC2030_bau'], as_index = False).sum()
+                group302 = group302[['LC2030_bau','wat_val']]
+                group302 = group302.rename(columns={'wat_val':'water302'})
+                tempmerge = pd.merge(group302,group30, left_on = 'LC2030_bau',right_on = 'LC2030_trt_bau', how = 'outer')
+                tempmerge['change'] = tempmerge['water30']-tempmerge['water302']
+                tempmerge['change'] = tempmerge['change']*4.49651111111
+                tempmerge = tempmerge.rename(columns = {'change':'ac_ft_change_' + name})
+                
             else:
                 tempmerge = tempmerge[['LC2014', 'change']]
                 tempmerge = tempmerge.rename(columns = {'LC2014':'landcover','change':'ac_ft_change_' + name})
@@ -307,9 +342,8 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                 else:
                     for i in devlist:
                         watfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
-            elif x in ['acu', 'aca']:
-#                    watfunct(x, 'LC2030_ac', 'bau',dfdict[x]) 
-                    pass                       
+            elif 'ac' in x:
+                watfunct(x, 'LC2030_trt_bau', 'bau',dfdict[x])
             else:
                 watfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
         td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid']]
@@ -325,9 +359,9 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
         count = 1
         temp = tlist[0]
         while count < l:
-                temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
-                count = count + 1
-        
+            temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
+            count = count + 1
+        temp.fillna(0)
         temp.to_csv(outpath+'watcon.csv')
     
     def lcchange(df, outpath):
@@ -360,6 +394,14 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                 tempmerge = tempmerge.rename(columns = {'count30':'ha_' + name +'_'+ dev})
                 tempmerge['ha_' + name +'_'+ dev] = tempmerge['ha_' + name +'_'+ dev]*0.09
                 tempmerge = tempmerge.rename(columns = {'index1':'landcover','change':'ha_change_' + name +'_'+ dev})
+            elif 'ac' in name:
+                group302 = td.groupby(['LC2030_bau'], as_index = False).count()
+                group302 = group302[['LC2030_bau','pointid']]
+                group302 = group302.rename(columns={'pointid':'count302'})
+                tempmerge = pd.merge(group302,group30, left_on = 'LC2030_bau',right_on = 'LC2030_trt_bau', how = 'outer')
+                tempmerge['change'] = tempmerge['count30']-tempmerge['count302']
+                tempmerge['change'] = tempmerge['change']*.09
+                tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name})
             else:
                 tempmerge = tempmerge[['index1', 'change']]
                 tempmerge = tempmerge.rename(columns = {'index1':'landcover','change':'ha_change_' + name})
@@ -375,8 +417,8 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                     for i in devlist:
                         lcfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
                         pass
-            elif x in ['acu', 'aca']:
-#                    lcfunct(x, 'LC2030_ac', 'bau',dfdict[x])   
+            elif 'ac' in name:
+                    lcfunct(x, 'LC2030_bau', 'bau',dfdict[x])   
                     pass                        
             else:
                 lcfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
@@ -395,9 +437,9 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
         count = 1
         temp = tlist[0]
         while count < l:
-                temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
-                count = count + 1
-        
+            temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
+            count = count + 1
+        temp.fillna(0)
         temp.to_csv(outpath+'lcchange.csv')    
     
     def pcalcchange(df, outpath):
@@ -434,10 +476,18 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                 tempmerge = tempmerge[['index1', 'change','count30']]
                 tempmerge = tempmerge.rename(columns = {'count30':'ha_' + name +'_'+ dev})
                 tempmerge['ha_' + name +'_'+ dev] = (tempmerge['ha_' + name +'_'+ dev]*900)/10000
-
+                tempmerge = tempmerge.rename(columns = {'index1':'landcover','change':'ha_change_' + name +'_'+ dev})
+            elif 'ac' in name:
+                group302 = td.groupby(['LC2030_bau'], as_index = False).count()
+                group302 = group302[['LC2030_bau','pointid']]
+                group302 = group302.rename(columns={'pointid':'count302'})
+                tempmerge = pd.merge(group302,group30, left_on = 'LC2030_bau',right_on = 'LC2030_trt_bau', how = 'outer')
+                tempmerge['change'] = tempmerge['count30']-tempmerge['count302']
+                tempmerge['change'] = tempmerge['change']*.09
+                tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name})
             else:
                 tempmerge = tempmerge[['index1', 'change']]
-            tempmerge = tempmerge.rename(columns = {'index1':'landcover','change':'ha_change_' + name +'_'+ dev})
+                tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name})
             pcadict[name + dev] = tempmerge
         pcadict = {}
         for x in keylist:
@@ -448,9 +498,9 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                 else:
                     for i in devlist:
                         pcafunct(x, 'LC2030_trt_' + i, i, dfdict[x])
-            elif x in ['acu', 'aca']:
-#                    pcafunct(x, 'LC2030_ac', 'bau',dfdict[x])      
-                    pass                        
+            elif 'ac' in x:
+                    pcafunct(x, 'LC2030_trt_bau', 'bau',dfdict[x])      
+                       
             else:
                 pcafunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
         td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid', 'pca_val']]
@@ -466,9 +516,9 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
         count = 1
         temp = tlist[0]
         while count < l:
-                temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
-                count = count + 1
-        
+            temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
+            count = count + 1
+        temp.fillna(0)
         temp.to_csv(outpath+'pca_cover_change.csv')       
     def aqua(df, outpath):
 
@@ -511,7 +561,16 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                     tempmerge = tempmerge.rename(columns = {'count30':'ha_' + name +'_'+ dev})
                     tempmerge['ha_' + name +'_'+ dev] = (tempmerge['ha_' + name +'_'+ dev]*900)/10000
                     tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name +'_'+ dev})
-
+                elif 'ac' in name:
+                    tempdf302 = td.loc[td['c_abf75_rnk'] > 0.632275]
+                    tempdf302 = pd.merge(tempdf302,gclass, how = 'outer', left_on = 'LC2030_bau', right_on = 'landcover')
+                    group302 = tempdf302.groupby('gen_class', as_index = False).count()
+                    group302 = group302[['pointid','gen_class']]
+                    group302 = group302.rename(columns={'pointid':'count302'})
+                    tempmerge = pd.merge(group30,group302, on = 'gen_class', how = 'outer')
+                    tempmerge['change'] = tempmerge['count30']-tempmerge['count302']
+                    tempmerge['change'] = (tempmerge['change']*900)/10000
+                    tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name})
                 else:
                     tempmerge = tempmerge[['gen_class', 'change']]
                     tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name})
@@ -520,16 +579,16 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
             
         scendict = {}
         for x in keylist:
-            if x in ['base', 'cdev','cons', 'trt']:
+            if x in ['base', 'dev','cons', 'trt']:
                 if x == 'base':
                     for i in devlist:
                         aquahabfunct(x, 'LC2030_' + i, i, dfdict[x])
                 else:
                     for i in devlist:
                         aquahabfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
-            elif x in ['acu', 'aca']:
-#                    aquahabfunct(x, 'LC2030_ac', 'bau',dfdict[x])
-                    pass
+            elif 'ac' in x:
+                    aquahabfunct(x, 'LC2030_trt_bau', 'bau',dfdict[x])
+                    
             else:
                 aquahabfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
         td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid','c_abf75_rnk']]
@@ -545,8 +604,9 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
         count = 1
         temp = tlist[0]
         while count < l:
-                temp = pd.merge(temp,tlist[count],on = 'gen_class', how = 'outer' )
-                count = count + 1
+            temp = pd.merge(temp,tlist[count],on = 'gen_class', how = 'outer' )
+            count = count + 1
+        temp.fillna(0)
         temp.to_csv(outpath + 'aquatic.csv')
     def termovement(df, outpath):
         
@@ -588,6 +648,16 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                 tempmerge = tempmerge.rename(columns = {'count30':'ha_' + name +'_'+ dev})
                 tempmerge['ha_' + name +'_'+ dev] = (tempmerge['ha_' + name +'_'+ dev]*900)/10000
                 tempmerge = tempmerge.rename(columns = {'index1':'movement_potential','change':'ha_change_' + name +'_'+ dev})
+            elif 'ac' in name:
+                tempdf302 = pd.merge(td,rclass, how = 'outer', left_on = field, right_on = 'landcover')
+                group302 = tempdf302.groupby('res_val').count()
+                group302['index1'] = group302.index
+                group302 = group302[['pointid','index1']]
+                group302 = group302.rename(columns={'pointid':'count30'})
+                tempmerge = pd.merge(group30,group302, on = 'index1', how = 'outer')
+                tempmerge['change'] = tempmerge['count30']-tempmerge['count302']
+                tempmerge['change'] = (tempmerge['change']*900)/10000
+                tempmerge = tempmerge.rename(columns = {'index1':'movement_potential','change':'ha_change_' + name})
             else:
                 tempmerge = tempmerge[['index1', 'change']]
                 tempmerge = tempmerge.rename(columns = {'index1':'movement_potential','change':'ha_change_' + name})
@@ -604,9 +674,9 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                     else:
                         for i in devlist:
                             movefunct(x, 'LC2030_trt_' + i, i, dfdict[x], y)
-                elif x in ['acu', 'aca']:
-#                    movefunct(x, 'LC2030_ac', 'bau',dfdict[x],y)             
-                    pass
+                elif 'ac' in x:
+                    movefunct(x, 'LC2030_trt_bau', 'bau',dfdict[x],y)             
+
                 else:
                     movefunct(x, 'LC2030_trt_bau', 'bau', dfdict[x], y)
             td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid','eca_val']]
@@ -625,7 +695,7 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
             while count < l:
                 temp = pd.merge(temp,tlist[count],on = 'movement_potential', how = 'outer' )
                 count = count + 1
-        
+            temp.fillna(0)
             temp.to_csv(outpath+y+'movement.csv')   
     
     
@@ -671,8 +741,8 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                 else:
                     for i in devlist:
                         cropfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
-            elif x in ['acu', 'aca']:
-#                cropfunct(x, 'LC2030_ac', 'bau',dfdict[x])
+            elif 'ac' in x:
+                cropfunct(x, 'LC2030_trt_bau', 'bau',dfdict[x])
                 pass
             else:
                 cropfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
@@ -691,9 +761,9 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
         count = 1
         temp = tlist[0]
         while count < l:
-                temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
-                count = count + 1
-    
+            temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
+            count = count + 1
+        temp.fillna(0)
         temp.to_csv(outpath+'cropvalue.csv')              
             
     
@@ -740,9 +810,9 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
         count = 1
         temp = tlist[0]
         while count < l:
-                temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
-                count = count + 1
-    
+            temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
+            count = count + 1
+        temp.fillna(0)
         temp.to_csv(outpath+'groundwater.csv')       
 
     def nitrates(df, outpath):
@@ -821,7 +891,7 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
             while count < l:
                 temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
                 count = count + 1
-        
+            temp.fillna(0)
             temp.to_csv(outpath+y+'_nitrates.csv')                       
     
     def watershedintegrity(df, outpath):
@@ -1020,9 +1090,9 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
         count = 1
         temp = tlist[0]
         while count < l:
-                temp = pd.merge(temp,tlist[count],on = 'Integrity_Class', how = 'outer' )
-                count = count + 1
-    
+            temp = pd.merge(temp,tlist[count],on = 'Integrity_Class', how = 'outer' )
+            count = count + 1
+        temp.fillna(0)
         temp.to_csv(outpath+'watint.csv')      
         
     fmmp(df,outpath)
@@ -1099,7 +1169,8 @@ def carbreport(df, outpath,activitylist,carb14, carb30, cd = 0 , cm = 0):
                 td.loc[(td['LC2030_trt_bau'] == 'Oak Conversion'), 'LC2030_trt_bau'] = td['LC2030_bau']
         if name in ['con']:
             td = df[['LC2030_bau', 'LC2030_trt_bau', 'LC2014', 'gridcode14', 'gridcode30_bau', 'gridcode30_trt_bau']]
-        
+        if 'ac' in name:
+            td = df[['LC2030_bau', 'LC2030_trt_bau','gridcode30_bau', 'gridcode30_trt_bau']]
         
         c30 = pd.read_csv(carb30)
         c14 = pd.read_csv(carb14)
@@ -1140,6 +1211,26 @@ def carbreport(df, outpath,activitylist,carb14, carb30, cd = 0 , cm = 0):
             
             lct = lct.rename(columns = {'LC2030_trt_bau':'landcover','conchange':'carbon_change_' + name}) 
             intdict[name] = lct
+        elif 'ac' in name:
+            temp30_bau = pd.merge(td,c30, how = 'left', left_on = 'gridcode30_bau', right_on = 'gridcode30')
+            temp30_trt = pd.merge(td,c30, how = 'left', left_on = 'gridcode30_trt_bau', right_on = 'gridcode30')
+
+            lct30_bau = lct30_bau.groupby(['LC2030_bau'], as_index = False).sum()
+            lct30_trt = lct30_trt.groupby(['LC2030_trt_bau'], as_index = False).sum()
+            lct30_bau = lct30_bau.rename(columns = {'carbrate30':'sumbase'})
+            lct30_trt = lct30_trt.rename(columns = {'carbrate30':'sumtrt'})
+            lct = pd.merge(lct30_bau,lct30_trt, left_on ='LC2030_bau', right_on = 'LC2030_trt_bau', how = 'outer')
+            lct['sumbase'].fillna(0)
+            lct['sumtrt'].fillna(0)
+            lct.loc[(lct['LC2030_bau'] == 0), 'sumbase'] = lct['sumbase'].sum()
+            
+            temp = lct.loc[lct['sumtrt'] > 0]
+            
+            temp['change'] = temp['sumtrt'] - temp['sumbase']
+            temp = temp[['LC2030_trt_bau', 'change']]
+            
+            temp = temp.rename(columns = {'LC2030_trt_bau':'landcover','change':'carbon_avoided_' + name}) 
+            intdict[name] = temp
             
             
     intdict= {}
@@ -1182,7 +1273,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30, cd = 0 , cm = 0):
     while count < l:
             temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
             count = count + 1
-
+    temp.fillna(0)
     temp.to_csv(outpath+'carbon.csv')  
     
     
