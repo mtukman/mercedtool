@@ -726,6 +726,15 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                 tempmerge = tempmerge[['index1', 'change','crop30']]
                 tempmerge = tempmerge.rename(columns = {'crop30':'usd' + name +'_'+ dev})
                 tempmerge = tempmerge.rename(columns = {'index1':'landcover','change':'usd_change_' + name +'_'+ dev})
+            elif 'ac' in name:
+                tempdf302 = pd.merge(td,wclass, how = 'left', left_on = field, right_on = 'landcover')
+                group302 = tempdf302.groupby(field).sum()
+                group302['index1'] = group30.index
+                group302 = group302[['crop_val','index1']]
+                group302 = group302.rename(columns={'crop_val':'crop302'})
+                tempmerge = pd.merge(group30,group14, on = 'index1', how = 'outer')
+                tempmerge['change'] = tempmerge['crop30']-tempmerge['crop302']
+                tempmerge = tempmerge.rename(columns = {'index1':'landcover','change':'usd_change_' + name})
             else:
                 
                 tempmerge = tempmerge[['index1', 'change']]
@@ -743,7 +752,7 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                         cropfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
             elif 'ac' in x:
                 cropfunct(x, 'LC2030_trt_bau', 'bau',dfdict[x])
-                pass
+ 
             else:
                 cropfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
         td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid']]
@@ -764,6 +773,7 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
             temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
             count = count + 1
         temp.fillna(0)
+        temp = temp.loc[temp['landcover'].isin(['Annual Cropland','Rice','Orchard','Vineyard','Irrigated Pasture'])]
         temp.to_csv(outpath+'cropvalue.csv')              
             
     
@@ -800,11 +810,11 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                 else:
                     for i in devlist:
                         gwfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
-#            elif x in ['acu', 'aca']:
-##                gwfunct(x, 'LC2030_ac', 'bau',dfdict[x])  
-#                pass
-#            else:
-#                gwfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
+            elif 'urb' in x:
+                gwfunct(x, 'LC2030_trt_bau', 'bau',dfdict[x])  
+
+            else:
+                gwfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
         tlist = list(gwdict.values())
         l = len(tlist)
         count = 1
@@ -853,6 +863,16 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                     tempmerge = tempmerge[['index1', 'change',y+'30']]
                     tempmerge = tempmerge.rename(columns = {y + '30':'kgs_no3_' + name +'_' + dev })
                     tempmerge = tempmerge.rename(columns = {'index1':'landcover','change':'kgs_no3_change_' + name + '_' + dev})
+                elif 'ac' in name:
+                    tempdf302 = pd.merge(td,wclass, how = 'outer', left_on = 'LC2030_bau', right_on = 'landcover')
+                    group302 = tempdf302.groupby(field).sum()
+                    group302['index1'] = group30.index
+                    group302 = group302[[y,'index1']]
+                    group302[y] = group302[y]*.09
+                    group302 = group302.rename(columns={y:y + '302'})
+                    tempmerge = pd.merge(group30,group302, on = 'index1', how = 'outer')
+                    tempmerge['change'] = tempmerge[y+'30']-tempmerge[y+'302']
+                    tempmerge = tempmerge.rename(columns = {'index1':'landcover','change':'kgs_no3_change_' + name})
                 else:
                     tempmerge = tempmerge[['index1', 'change']]
                     tempmerge = tempmerge.rename(columns = {'index1':'landcover','change':'kgs_no3_change_' + name})
@@ -868,8 +888,8 @@ def report(df, outpath, acdict, oak = 0, rre = 0, cd = 0 , cm = 0, acdict):
                     else:
                         for i in devlist:
                             nitfunct(x, 'LC2030_trt_' + i, i, dfdict[x],y)
-                elif x in ['acu', 'aca']:
-#                    nitfunct(x, 'LC2030_ac', 'bau',dfdict[x],y)  
+                elif 'ac' in x:
+                    nitfunct(x, 'LC2030_trt_bau', 'bau',dfdict[x],y)  
                     pass
                 else:
                     nitfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x],y)
