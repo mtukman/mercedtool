@@ -38,6 +38,7 @@ Helpers.add_to_logfile(logfile,'Custom Development Mask' + ': ' + arcpy.GetParam
 #Set the development mask variable, if a development mask is provided, this will point to the polygon feature class
 devmask = arcpy.GetParameterAsText(5)
 
+#Look through the Avoided Conversion parameters and see if any avoided conversion parameters have been set. If they have, add them to the avoided conversion activity dictionary.
 acdict = {}
 aclist2 = [35,37,39,41,43,45,47,49,51]
 for i in aclist2:
@@ -86,16 +87,19 @@ if arcpy.GetParameterAsText(26) == 'Yes':
 #Set the custom development parameters
 if arcpy.GetParameterAsText(4) == 'Custom (Replaces Business as Usual)':
     dev = 1
-    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(34),newdir + '/DevMask.shp' )
+    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(5),newdir + '/DevMask.shp' )
     
 elif arcpy.GetParameterAsText(4) == 'Custom (Adds on to Business as Usual)':
     dev = 2
-    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(34),newdir + '/DevMask.shp' )
+    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(5),newdir + '/DevMask.shp' )
     
 else:
     dev = 0
 
+Helpers.pmes('Dev Scenario is : ' + str(dev))
 
+
+#Set the conservation mask parameters and variables
 if not arcpy.GetParameterAsText(2):
     conservation = "None"
     cm = 0
@@ -104,6 +108,7 @@ else:
     conservation = arcpy.GetParameterAsText(2)
     conmask = arcpy.GetParameterAsText(2)
 
+#Set the custom processing area variables if one has been chosen
 if not arcpy.GetParameterAsText(3):
     mask="None"
 else:
@@ -133,7 +138,9 @@ else:
 Helpers.pmes ('Mask is :' + mask)
 Generic.set_paths_and_workspaces(rootpath, mask, 'MASTER_DATA/', output_file_location)
 adoptdict = {}
-Helpers.add_to_logfile(logfile,'Riparian Restoration' + ': ' + arcpy.GetParameterAsText(6))
+
+
+#Check to see what activities have been selected. For each activity that has been selected, add the relevant variables into the activity dictionary and send a message to the console.
 if 'rre' in activitylist:
     rre = 1
     Generic.dict_activity['rre']['adoption'] = float(arcpy.GetParameterAsText(7)) #Uncomment for final
@@ -192,32 +199,32 @@ if 'hpl' in activitylist:
     Helpers.add_to_logfile(logfile,'Hedgerow Planting Beginning Year' + ': ' + arcpy.GetParameterAsText(28))
     Helpers.add_to_logfile(logfile,'Hedgerow Planting Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(29))
     
-    
-Helpers.add_to_logfile(logfile,'Urban Forestry' + ': ' + arcpy.GetParameterAsText(30))
-Helpers.add_to_logfile(logfile,'Urban Forestry Adoption %' + ': ' + arcpy.GetParameterAsText(31))
-Helpers.add_to_logfile(logfile,'Urban Forestry Beginning Year' + ': ' + arcpy.GetParameterAsText(32))
-Helpers.add_to_logfile(logfile,'Urban Forestry Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(33))
 
+#Helpers.add_to_logfile(logfile,'Urban Forestry' + ': ' + arcpy.GetParameterAsText(30))
+#Helpers.add_to_logfile(logfile,'Urban Forestry Adoption %' + ': ' + arcpy.GetParameterAsText(31))
+#Helpers.add_to_logfile(logfile,'Urban Forestry Beginning Year' + ': ' + arcpy.GetParameterAsText(32))
+#Helpers.add_to_logfile(logfile,'Urban Forestry Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(33))
+
+
+#If a treatment mask has been provided, set the variable
 if arcpy.GetParameterAsText(34):
     treatmask = arcpy.GetParameterAsText(34)
 else:
     treatmask = 'None'
 
-
+#Import the modules
 import Initial
 import ActivityApplication
 import ApplyActions
 import ReportingTemp
 
 
+#Run each module
 initout = Initial.DoInitial(mask, cproc, devmask, arcpy.GetParameterAsText(6), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict, treatmask, dev)
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity)
 templist[0].to_csv('P:/Temp/Temperino.csv')
-
-
 ReportingTemp.report(templist[0],outpath, acdict,oak ,rre , dev,cm)
-
 ReportingTemp.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030, dev,cm)
 
 

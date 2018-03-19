@@ -12,17 +12,15 @@ def pmes(message):
     arcpy.AddMessage(message)
     print (message)
     
-def CreateEligDict(df, activity, dictact, dict_eligibility, act = 'None'):
+def CreateEligDict(df, activity, dictact, dict_eligibility, act):
     import sys
-    if act == 'None':
-        act = activity
     initflag = act + 'suitflag'
-    df = df[['LC2030_bau', initflag]]
-    if act in dict_eligibility.keys():
-        pmes('The activity is already in the dict_eligibility dictionary')
-        sys.exit('***The activity is already in the dict_eligibility dictionary***')
-    eli = df.groupby('LC2030_bau').sum()[initflag]   
-    eli.loc[(eli['LC2030_bau'] == 'Annual Cropland'),initflag] = eli[initflag] * dictact[activity]['ag_modifier']
+    df = df[['LC2030_trt_bau', initflag]]
+#    if act in dict_eligibility.keys():
+#        pmes('The activity is already in the dict_eligibility dictionary')
+#        sys.exit('***The activity is already in the dict_eligibility dictionary***')
+    eli = df.groupby(['LC2030_trt_bau'], as_index = False).sum()  
+    eli.loc[(eli['LC2030_trt_bau'] == 'Annual Cropland'),initflag] = eli[initflag] * dictact[activity]['ag_modifier']
     eli_dict_element = eli.to_dict()
     dict_eligibility[act] = eli_dict_element
     
@@ -34,25 +32,24 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act):
     """
     pmes('Selecting points for: ' + activity)
     import arcpy
-    if act == 'None':
-        act = activity
     #Create a temporary dictionary of the activity's dictionary from the eligibility dict
     goal = 0
     tempdict = dict_eligibility[act]
-    klist = list(tempdict.keys())
+    tempdict2 = tempdict[act + 'suitflag']
+    klist = list(tempdict2.keys())
     for i in klist:
         pmes (i)
         pmes (goal)
-        pmes (tempdict[i])
-        goal = goal + tempdict[i]
+        pmes (tempdict2[i])
+        goal = goal + tempdict2[i]
     pmes ('Suitable pixels: ' + str(goal))
     
-    goal1 = dictact[activity]['adoption']*4046.86  #update to link to user defined % for final tool
+    goal1 = float(dictact[activity]['adoption']) * 4.49555  #update to link to user defined % for final tool
     cap = goal * dictact[activity]['adoptcap']
     if cap < goal1:
-        goal = goal * dictact[activity]['adoptcap']
+        goal = goal * float(dictact[activity]['adoptcap'])
     elif cap > goal1:
-        goal = dictact[activity]['adoption']*4046.86
+        goal = float(dictact[activity]['adoption'])*4.49555
  
     count = 0
     
@@ -114,12 +111,10 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act):
 
                 
                 
-def CreateSuitFlags(activity,df,dictact, act = 'None'):
+def CreateSuitFlags(activity,df,dictact, act):
     '''Takes an activity name (a key from dict_activity) and uses
     that to calculate a 1/0 suitability flag for the activity 
     in the tabs_all_df dataframe'''
-    if act == 'None':
-        act = activity
     initflag = act + 'suitflag'
     pmes (initflag)
     df[initflag] = 0
