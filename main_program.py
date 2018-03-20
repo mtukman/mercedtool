@@ -225,6 +225,6 @@ outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_a
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity)
 templist[0].to_csv('P:/Temp/Temperino.csv')
 ReportingTemp.report(templist[0],outpath, acdict,oak ,rre , dev,cm)
-ReportingTemp.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030, dev,cm)
+ReportingTemp.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm)
 
 
