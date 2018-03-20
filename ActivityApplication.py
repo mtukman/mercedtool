@@ -48,25 +48,31 @@ def DoActivities(df,activitylist, dictact,acdict, treatmask = 'None',customdev =
         if treatmask != 'None':
             Helpers.pmes ('customdev != 1, treatmask')
             queryadd = queryadd &  (df['trt_flag'] == 1)
+        
             
             
-
-    Helpers.pmes (str(queryadd))
+    # Start the activity applications. This first section creates suitability flags for the riparian activity.
     if 'rre' in activitylist:
         Helpers.pmes ('Applying Riparian Restoration')
-        Helpers.pmes (queryadd)
+        
+        
+        #Set the query that will define suitability
         dictact['rre']['query'] = (df['LC2030_trt_bau'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (df['lcchange'] == 1) & ((df['near_rivers'] < 650) | (df['near_streams'] < 100)) & (df['near_woody'] != 0) & queryadd
-        Helpers.pmes (str(dictact['rre']['query']))
         Helpers.CreateSuitFlags('rre',df,dictact,'rre')
         Helpers.CreateEligDict(df, 'rre', dictact,dict_eligibility, 'rre')
+        
+        # Select points randomly that were flagged as suitable
         Helpers.selectionfunc (dict_eligibility,df, 'rre',dictact, 'rre')
-
+        
+        #Update treatment scenario fields to reflect selection
         Helpers.lc_mod('rreselected','Woody Riparian', 'LC2030_trt_bau', df)
         Helpers.lc_mod('rreselected','Woody Riparian', 'LC2030_trt_med', df)
         Helpers.lc_mod('rreselected','Woody Riparian', 'LC2030_trt_max', df)
         Helpers.lc_mod('rreselected',16, 'gridcode30_trt_bau', df)
         Helpers.lc_mod('rreselected',16, 'gridcode30_trt_med', df)
         Helpers.lc_mod('rreselected',16, 'gridcode30_trt_max', df)
+        
+        #If there is a custom baseline, change the custom landcover and gridcode to riparian
         if customdev == 1:
             Helpers.lc_mod('rreselected','Woody Riparian', 'LC2030_trt_cust', df)        
         if customdev == 1:
@@ -75,35 +81,29 @@ def DoActivities(df,activitylist, dictact,acdict, treatmask = 'None',customdev =
     #Create Oak Suitability and Selection
     if 'oak' in activitylist:
         dictact['oak']['query'] =(df['LC2030_trt_bau'].isin(['Grassland','Shrubland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (df['rreselected'] != 1) & (df['lcchange'] == 1) & (df['oakrange_flg'] == 1) & queryadd
-               
+        #Create suitability flags for the oak conversion activity
         Helpers.CreateSuitFlags('oak',df,dictact, 'oak')
         Helpers.CreateEligDict(df, 'oak', dictact,dict_eligibility, 'oak')
+        #Select points randomly for the oak conversion activity
         Helpers.selectionfunc (dict_eligibility,df, 'oak',dictact, 'oak')
 
         
-    
+        #Change landcover and gridcode fields for points selected for the activity
         Helpers.lc_mod('oakselected','Oak Conversion', 'LC2030_trt_bau', df)
         Helpers.lc_mod('oakselected','Oak Conversion', 'LC2030_trt_med', df)  
         Helpers.lc_mod('oakselected','Oak Conversion', 'LC2030_trt_max', df)
-        
         if customdev == 1:
             Helpers.lc_mod('rreselected','Oak Conversion', 'LC2030_trt_cust', df)
-        
-
         Helpers.lc_mod('oakselected',17, 'gridcode30_trt_bau', df)  
-        
         Helpers.lc_mod('oakselected',17, 'gridcode30_trt_med', df) 
-        
         Helpers.lc_mod('oakselected',17, 'gridcode30_trt_max', df) 
         if customdev == 1:
             Helpers.lc_mod('oakselected',17, 'gridcode30_trt_cust', df)
     
     #Calculate 2030MOD values
-    #Create GHG dictionary entries for suitability
-    
+    #Create GHG dictionary entries for suitability, these queries will be used for the ag activity suitability function
     df['lcchange'] = 0
     df.loc[(df['LC2030_trt_bau'] == df['LC2014']), 'lcchange'] = 1
-    
     dictact['ccr']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & queryadd
     dictact['mul']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland', 'Irrigated Pasture','Rice'])) & (df['lcchange'] == 1) & queryadd
     dictact['nfm']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['lcchange'] == 1) & queryadd
@@ -129,47 +129,48 @@ def DoActivities(df,activitylist, dictact,acdict, treatmask = 'None',customdev =
         ghg_selection (df,'hpl',dict_eligibility,dictact)
 
 
-
+    #Loop through the keys in the acdict dictionary, created in the main program. For each avoided conversion activity found, perform suitability, eligibility and selection functions.
     keylist = [*acdict]
     Helpers.pmes(keylist)
     for i in keylist:
         if i == 'ac_for_urb':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Forest')
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Forest') & (df['LC2030_bau'].isin(['Urban', 'Developed', 'Developed Roads']))
             t = 'Forest'
             g = 3
         if i == 'ac_for_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Forest')
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Forest') & (df['LC2030_bau'].isin(['Annual Cropland']))
             t = 'Forest'
             g = 3
         if i == 'ac_gra_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Grassland')
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Grassland') & (df['LC2030_bau'].isin(['Annual Cropland']))
             t = 'Grassland'
             g = 2
         if i == 'ac_irr_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Irrigated Pasture')
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Irrigated Pasture') & (df['LC2030_bau'].isin(['Annual Cropland']))
             t = 'Irrigated Pasture'
             g = 11
         if i == 'ac_orc_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Orchard')
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Orchard') & (df['LC2030_bau'].isin(['Annual Cropland']))
             t = 'Orchard'
             g = 7
         if i == 'ac_shr_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Shrubland')
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Shrubland') & (df['LC2030_bau'].isin(['Annual Cropland']))
             t = 'Shrubland'
             g = 5
         if i == 'ac_vin_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Vineyard')
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Vineyard') & (df['LC2030_bau'].isin(['Annual Cropland']))
             t = 'Vineyard'
             g = 8
         if i == 'ac_shr_urb':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Forest')
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Forest') & (df['LC2030_bau'].isin(['Urban', 'Developed', 'Developed Roads']))
             t = 'Forest'
             g = 3
         if i == 'ac_orc_urb':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Orchard')
+            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Orchard') & (df['LC2030_bau'].isin(['Urban', 'Developed', 'Developed Roads']))
             t = 'Orchard'
             g = 7
-            
+        
+        #Do the suitability, eligibility and selection functions for an avoided conversion activity
         Helpers.pmes(acdict[i])
         Helpers.pmes(i)
         dictact['aco']['adoption'] = acdict[i]
@@ -178,7 +179,7 @@ def DoActivities(df,activitylist, dictact,acdict, treatmask = 'None',customdev =
         Helpers.CreateEligDict(df, 'aco', dictact,dict_eligibility, i)
         Helpers.selectionfunc (dict_eligibility,df,'aco',dictact, i)
     
-    
+        #Change the gridcode and landcover label in the treatment bau
         Helpers.lc_mod(i+'selected',t, 'LC2030_trt_bau', df)
 
         Helpers.lc_mod(i+'selected',g, 'gridcode30_trt_bau', df)

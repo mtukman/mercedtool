@@ -73,6 +73,7 @@ def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb,
         
         #Where the 2030 bau landcover is different from the 2014 landcover, and the 2030 bau landcover is a developed landcover, change the landcover to the 2014 landcover (revert) 
         tabs_all_df.loc[((tabs_all_df['LC2030_cust'] != tabs_all_df['LC2014']) & (tabs_all_df['LC2030_cust'].isin(developed))),'LC2030_cust'] = tabs_all_df['LC2014']
+        
         tabs_all_df['LC2030_trt_cust'] = tabs_all_df['LC2030_cust']
         
         tabs_all_df['gridcode30_trt_cust'] = tabs_all_df['gridcode30_cust']
@@ -85,7 +86,7 @@ def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb,
         tabs_all_df['dev_flag'] = 0
         tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'dev_flag'] = 1        
     # If a custom development area is specified, change pixels in the treatment landcover and treatment gridcodes to urban.
-    if cd == 2:
+    elif cd == 2:
         pts = Helpers.create_processing_table(points,devmask, tempgdb, scratch)
         plist = pts['pointid'].tolist()
         Helpers.pmes('Creating User Defined Developent Polygons')

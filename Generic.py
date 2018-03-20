@@ -67,6 +67,20 @@ def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None',
 
 
 
+    #Look up tables for reporting functions
+    
+    global lut_genclass
+    lut_genclass = os.path.join(lutables,'lut_genclass.csv')
+    global lut_wateruse
+    lut_wateruse = os.path.join(lutables,'lut_wateruse.csv')
+    global lut_resistance
+    lut_resistance = os.path.join(lutables,'lut_resistance.csv')
+    global lut_crop_value
+    lut_crop_value = os.path.join(lutables,'lut_crop_value.csv')
+    global lut_nitrates
+    lut_nitrates = os.path.join(lutables,'lut_nitrates.csv')
+
+
     #Vectors
     global Points
     Points = os.path.join('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Vectors.gdb/Just_PointID')

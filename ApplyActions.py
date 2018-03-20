@@ -94,13 +94,13 @@ def ApplyGHG(df,activitylist, dictact):
             if tempix > 0:
                 tempdf[activity +'_carbred'] = tempdf[activity+'selected']*(carb1/pixels)
                     
-                    
+    # Run the above functionf or every activity selected
     for i in activitylist:
         UpdateValues(tempdf,i, carb, carb2, dictact)
         
+        
+    # Update gridcodes for treatment scenarios
     gcdict = {'Wetland':0, 'Water':1, 'Grassland':2,'Barren':4, 'Orchard':7,'Vineyard':8,'Annual Cropland':9,'Rice':10,'Irrigated Pasture':11,'Young Forest':14, 'Young Shrubland':15}
-    
-    
     devlist = ['bau','med','max']
     keylist = [*gcdict]
     

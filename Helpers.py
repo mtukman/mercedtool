@@ -13,6 +13,12 @@ def pmes(message):
     print (message)
     
 def CreateEligDict(df, activity, dictact, dict_eligibility, act):
+    """
+    This function takes the suitably flagged points and creates a dictionary with the number of suitable points for each activity, modified by ag modifiers for annual croplands.
+    
+    
+    """
+    
     import sys
     initflag = act + 'suitflag'
     df = df[['LC2030_trt_bau', initflag]]

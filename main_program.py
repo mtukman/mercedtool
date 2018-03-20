@@ -34,7 +34,8 @@ Helpers.add_to_logfile(logfile,'Conservation Mask' + ': ' + arcpy.GetParameterAs
 Helpers.add_to_logfile(logfile,'Custom Processing Area' + ': ' + arcpy.GetParameterAsText(3))
 Helpers.add_to_logfile(logfile,'Development Scenario' + ': ' + arcpy.GetParameterAsText(4))
 Helpers.add_to_logfile(logfile,'Custom Development Mask' + ': ' + arcpy.GetParameterAsText(5))
-
+#Helpers.add_to_logfile(logfile,'Treatment Mask' + ': ' + arcpy.GetParameterAsText(5))
+#Helpers.add_to_logfile(logfile,'Custom Development Mask' + ': ' + arcpy.GetParameterAsText(5))
 #Set the development mask variable, if a development mask is provided, this will point to the polygon feature class
 devmask = arcpy.GetParameterAsText(5)
 
@@ -44,22 +45,31 @@ aclist2 = [35,37,39,41,43,45,47,49,51]
 for i in aclist2:
     if arcpy.GetParameterAsText(i) == 'Forest to Annual Row Crop':
         acdict['ac_for_urb'] = arcpy.GetParameterAsText(i + 1)
+        Helpers.add_to_logfile(logfile,'Avoided Conversion - Forest to Urban has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
     if arcpy.GetParameterAsText(i) == 'Forest to Urban':
         acdict['ac_for_arc'] = arcpy.GetParameterAsText(i + 1)
+        Helpers.add_to_logfile(logfile,'Avoided Conversion - Forest to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
     if arcpy.GetParameterAsText(i) == 'Grassland to Annual Row Crop':
         acdict['ac_gra_arc'] = arcpy.GetParameterAsText(i + 1)
+        Helpers.add_to_logfile(logfile,'Avoided Conversion - Grassland to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
     if arcpy.GetParameterAsText(i) == 'Irrigated Pasture to Annual Row Crop':
         acdict['ac_irr_arc'] = arcpy.GetParameterAsText(i + 1)
+        Helpers.add_to_logfile(logfile,'Avoided Conversion - Irrigated Pasture to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
     if arcpy.GetParameterAsText(i) == 'Orchard to Annual Row Crop':
         acdict['ac_orc_arc'] = arcpy.GetParameterAsText(i + 1)
+        Helpers.add_to_logfile(logfile,'Avoided Conversion - Orchard to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
     if arcpy.GetParameterAsText(i) == 'Shrubland to Annual Row Crop':
         acdict['ac_shr_arc'] = arcpy.GetParameterAsText(i + 1)
+        Helpers.add_to_logfile(logfile,'Avoided Conversion - Shrubland to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
     if arcpy.GetParameterAsText(i) == 'Vineyard to Annual Row Crop':
         acdict['ac_vin_arc'] = arcpy.GetParameterAsText(i + 1)
+        Helpers.add_to_logfile(logfile,'Avoided Conversion - Vineyard to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
     if arcpy.GetParameterAsText(i) == 'Shrubland to Urban':
         acdict['ac_shr_urb'] = arcpy.GetParameterAsText(i + 1)
+        Helpers.add_to_logfile(logfile,'Avoided Conversion - Shrubland to Urban has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
     if arcpy.GetParameterAsText(i) == 'Orchard to Urban':
         acdict['ac_orc_urb'] = arcpy.GetParameterAsText(i + 1)
+        Helpers.add_to_logfile(logfile,'Avoided Conversion - Orchard to Urban has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
         
 
 outpath = newdir +  '/'
@@ -88,11 +98,11 @@ if arcpy.GetParameterAsText(26) == 'Yes':
 if arcpy.GetParameterAsText(4) == 'Custom (Replaces Business as Usual)':
     dev = 1
     arcpy.CopyFeatures_management(arcpy.GetParameterAsText(5),newdir + '/DevMask.shp' )
-    
+    arcpy.AddMessage('New BAU')
 elif arcpy.GetParameterAsText(4) == 'Custom (Adds on to Business as Usual)':
     dev = 2
     arcpy.CopyFeatures_management(arcpy.GetParameterAsText(5),newdir + '/DevMask.shp' )
-    
+    arcpy.AddMessage('Adding on to BAU')
 else:
     dev = 0
 
@@ -220,11 +230,11 @@ import ReportingTemp
 
 
 #Run each module
-initout = Initial.DoInitial(mask, cproc, devmask, arcpy.GetParameterAsText(6), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
+initout = Initial.DoInitial(mask, cproc, dev, arcpy.GetParameterAsText(5), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict, treatmask, dev)
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity)
-templist[0].to_csv('P:/Temp/Temperino.csv')
-ReportingTemp.report(templist[0],outpath, acdict,oak ,rre , dev,cm)
+templist[0].to_csv('P:/Temp/Temperino2.csv')
+ReportingTemp.report(templist[0],outpath, acdict,oak ,rre ,dev,cm)
 ReportingTemp.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm)
 
 
