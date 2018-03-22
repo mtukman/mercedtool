@@ -149,23 +149,21 @@ Helpers.pmes('Dev Scenario is : ' + str(dev))
 
 #Set the conservation mask parameters and variables
 if not arcpy.GetParameterAsText(2):
-    conservation = "None"
     cm = 0
+    conmask = 'None'
+    Helpers.pmes('No cm')
 else:
     cm = 1
-    conservation = arcpy.GetParameterAsText(2)
     conmask = arcpy.GetParameterAsText(2)
-
+    Helpers.pmes('Yes cm')
 #Set the custom processing area variables if one has been chosen
-if not arcpy.GetParameterAsText(3):
-    mask="None"
-else:
-    mask = arcpy.GetParameterAsText(3)
 if arcpy.GetParameterAsText(3):
     cproc = 1
+    mask = arcpy.GetParameterAsText(3)
     Helpers.pmes('User has chosen a custom processing area')
 else:
     cproc = 0
+    mask = 'None'
     Helpers.pmes ('No custom processing area')
 
 
@@ -309,7 +307,7 @@ initout = Initial.DoInitial(mask, cproc, dev, arcpy.GetParameterAsText(5), Gener
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev)
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity)
 templist[0].to_csv('P:/Temp/Temperino2.csv')
-ReportingTemp.report(templist[0],outpath, acdict,oak ,rre ,dev,cm, gra)
+ReportingTemp.report(templist[0],outpath, acdict,oak ,rre ,dev,cm, gra, cproc)
 ReportingTemp.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm)
 
 

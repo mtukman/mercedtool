@@ -1,7 +1,7 @@
 #Import System Modules
 
     
-def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb, scratch, cm, conmask = 'None', treatmask = 'None'):
+def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb, scratch, cm = 0, conmask = 'None', treatmask = 'None'):
     """
     This function imports the primary tables, sets the dataframes used in the rest of the tool, and applies the conservation, developed, and treatment masks specificed in the tool inputs.
     ______________________________________________________________________________________________________________

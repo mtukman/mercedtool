@@ -25,15 +25,17 @@ def CreateEligDict(df, activity, dictact, dict_eligibility, act):
     
     
     """
-    
-    import sys
+    pmes ('Eligibility for: ' + act)
     initflag = act + 'suitflag'
     df = df[['LC2030_trt_bau', initflag]]
 #    if act in dict_eligibility.keys():
 #        pmes('The activity is already in the dict_eligibility dictionary')
 #        sys.exit('***The activity is already in the dict_eligibility dictionary***')
     eli = df.groupby(['LC2030_trt_bau'], as_index = False).sum()  
+    
     eli.loc[(eli['LC2030_trt_bau'] == 'Annual Cropland'),initflag] = eli[initflag] * dictact[activity]['ag_modifier']
+    if act == 'cam':
+        eli.loc[(eli['LC2030_trt_bau'] == 'Orchard'),initflag] = eli[initflag] * dictact[activity]['orc_modifier']
     eli_dict_element = eli.to_dict()
     dict_eligibility[act] = eli_dict_element
     
@@ -49,6 +51,7 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
     goal = 0
     tempdict = dict_eligibility[act]
     tempdict2 = tempdict[act + 'suitflag']
+    pmes(tempdict2)
     klist = list(tempdict2.keys())
     for i in klist:
         pmes (i)
@@ -133,7 +136,7 @@ def CreateSuitFlags(activity,df,dictact, act):
     that to calculate a 1/0 suitability flag for the activity 
     in the tabs_all_df dataframe'''
     initflag = act + 'suitflag'
-    pmes (initflag)
+    pmes ('Calculating Suitability for : ' + initflag)
     df[initflag] = 0
     df.loc[dictact[activity]['query'], initflag] = 1
 
