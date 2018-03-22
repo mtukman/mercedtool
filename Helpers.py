@@ -5,6 +5,13 @@ This script holds the functions used in other modules of the tool.
 @author: mtukman
 """
 import arcpy
+def add_to_logfile(logfile,string_to_add):
+    import arcpy
+    lf = open(logfile, "a")
+    lf.write(string_to_add + "\n")
+    lf.close()
+    arcpy.AddMessage(string_to_add)
+    print (string_to_add)
 def pmes(message):
     """
     Takes a string and prints it as an arcpy msg and as a python print statement
@@ -31,7 +38,7 @@ def CreateEligDict(df, activity, dictact, dict_eligibility, act):
     dict_eligibility[act] = eli_dict_element
     
 
-def selectionfunc (dict_eligibility,df, activity,dictact, act):
+def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
     """
     This function takes a dictionary, a dataframe and an activity.
     It takes a user input to determine how many pixels to select for the activity.
@@ -50,8 +57,9 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act):
         goal = goal + tempdict2[i]
     pmes ('Suitable pixels: ' + str(goal))
     
-    goal1 = float(dictact[activity]['adoption']) * 4.49555  #update to link to user defined % for final tool
+    goal1 = float(dictact[activity]['adoption']) * 4.49555  #update to link to user defined acres for final tool
     cap = goal * dictact[activity]['adoptcap']
+    
     if cap < goal1:
         goal = goal * float(dictact[activity]['adoptcap'])
     elif cap > goal1:
@@ -86,6 +94,7 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act):
                 pass
     
         pmes (str(count))
+        add_to_logfile(logfile,'User specified ' + str(goal1) + ' acres, max eligible acres are ' + str(cap))
         query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
     
         df.loc[query,selflag] = 1       
@@ -110,9 +119,11 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act):
                 pass
     
         pmes (str(count))
+        add_to_logfile(logfile,'User specified ' + str(goal1) + ' acres, max eligible acres are ' + str(cap))
         query = (df['smallgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
     
-        df.loc[query,selflag] = 1           
+        df.loc[query,selflag] = 1      
+    
     return df
 
                 
@@ -457,13 +468,7 @@ def create_processing_table(InPoints,inmask, tempgdb, scratch):
         
         
         
-def add_to_logfile(logfile,string_to_add):
-    import arcpy
-    lf = open(logfile, "a")
-    lf.write(string_to_add + "\n")
-    lf.close()
-    arcpy.AddMessage(string_to_add)
-    print (string_to_add)
+
         
         
         

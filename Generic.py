@@ -139,8 +139,6 @@ aca - AVOIDED CONVERSION TO AG
 acu - AVOIDED CONVERSION TO URBAN
 hpl - HEDGEROW PLANTING
 urb - URBAN FORESTRY
-
-
 '''
 global dict_activity
 
@@ -152,9 +150,13 @@ ccrdict = {'name':'Cover Crops', 'query':'holder', 'ag_modifier':.449,  'grpsize
 hpldict = {'name':'Hedgerow Planting', 'query':'holder', 'ag_modifier':1,  'grpsize':'small', 'suitflag':'hplsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.3}
 urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'urbsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.25}
 acodict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'urbsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':1}
+camdict = {'name':'Compost Amendment', 'query':'holder', 'ag_modifier':0.259797042, 'grpsize':'small', 'suitflag':'camsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2, 'orc_modifier': .25}
+gradict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':'medium', 'suitflag':'oaksuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2}
+cagdict = {'name':'Compost Amendment', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'camsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2}
 
 
-dict_activity = {'oak':oakdict, 'rre': rredict, 'mul':muldict, 'nfm':nfmdict, 'ccr':ccrdict,'hpl':hpldict, 'urb':urbdict, 'aco':acodict}
+
+dict_activity = {'oak':oakdict, 'rre': rredict, 'mul':muldict, 'nfm':nfmdict, 'ccr':ccrdict,'hpl':hpldict, 'urb':urbdict, 'aco':acodict, 'gra':acodict, 'cam':acodict, 'cag':acodict}
 
 
 #######################################################################################################################

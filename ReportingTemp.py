@@ -11,7 +11,7 @@ Created on Thu Feb 22 08:58:23 2018
 
 
 #def report(outpath, df):
-def report(df, outpath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0):
+def report(df, outpath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0, gra = 0):
     
     """
     This function reports on the multi-benefits. 
@@ -48,11 +48,16 @@ def report(df, outpath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0):
     if rre == 1:
         df2 = df.loc[(df['rreselected'] == 1)]
         dfdict['rre'] = df2
+    if gra == 1:
+        df2 = df.loc[(df['graselected'] == 1)]
+        dfdict['gra'] = df2
     if oak == 1:
         df3 = df.loc[df['oakselected'] == 1]
         dfdict['oak'] = df3  
     if cd == 1:
-        dfdict['dev'] = 'cust'
+        df3 = df.loc[df['dev_flag'] == 1]
+        dfdict['cust'] = df3  
+        
     if cm == 1:
         df5 = df.loc[df['con_flag'] == 1]
         dfdict['con'] = df5          
@@ -132,6 +137,7 @@ def report(df, outpath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0):
         
         #loop through scenarios and activities and run the reporting function
         for x in keylist:
+            Helpers.pmes('Doing FMMP for: ' + x)
             if x in ['base', 'dev', 'trt', 'con']:
                 if x == 'base':
                     for i in devlist:
@@ -474,8 +480,8 @@ def report(df, outpath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0):
             if name in ['base','trt']:
                 tempmerge = tempmerge[['LC2014', 'change', 'water30']]
                 tempmerge = tempmerge.rename(columns = {'water30':'ac_ft_' + name +'_'+ dev})
-                tempmerge['ac_ft_' + name +'_'+ dev] = tempmerge['ac_ft_' + name +'_'+ dev]*4.49651111111
-                tempmerge['change'] = tempmerge['change']*4.49651111111
+                tempmerge['ac_ft_' + name +'_'+ dev] = tempmerge['ac_ft_' + name +'_'+ dev]
+                tempmerge['change'] = tempmerge['change']
                 tempmerge = tempmerge.rename(columns = {'LC2014':'landcover','change':'ac_ft_change_' + name +'_'+ dev})
                 
                 #If the scenario is not a development scenario, do this section instead to find the change from 2030 baseline to 2030 treatment BAU
@@ -492,7 +498,7 @@ def report(df, outpath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0):
                 tempmerge['water30'].fillna(0, inplace = True)
                 
                 tempmerge['change'] = tempmerge['water30']-tempmerge['water302']
-                tempmerge['change'] = tempmerge['change']*4.49651111111
+                tempmerge['change'] = tempmerge['change']
                 tempmerge = tempmerge[['change','landcover']]
                 tempmerge = tempmerge.rename(columns = {'change':'ac_ft_change_' + name})
             #Add the datafrme to the dataframes dictionary
@@ -520,7 +526,7 @@ def report(df, outpath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0):
         group14 = tempdf14.groupby('LC2014', as_index = False).sum()
         group14 = group14[['wat_val','LC2014']]
         group14 = group14.rename(columns={'wat_val':'ac_ft_2014','LC2014':'landcover'})
-        group14['ac_ft_2014'] = group14['ac_ft_2014']*4.49651111111
+        group14['ac_ft_2014'] = group14['ac_ft_2014']
         watdict['Base_2014'] = group14
         tlist = list(watdict.values())
         l = len(tlist)
@@ -539,12 +545,12 @@ def report(df, outpath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0):
         
     def lcchange(df, outpath):
         """
-        This function reports on landcover change at the county scale
+        This function reports on landcover change at the county scale.
         
         """
         def lcfunct(name, field, dev, df): 
             """
-            
+            This is the subfunction that creates a dataframe for each scenario. The dataframes are merged at the end and reported as a csv.
             
             """
             
