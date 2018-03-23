@@ -1,4 +1,4 @@
-r## -*- coding: utf-8 -*-
+## -*- coding: utf-8 -*-
 ##"""
 ##Created on Thu Dec 14 10:44:39 2017
 ##
@@ -87,8 +87,8 @@ Generic.set_paths_and_workspaces()
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/smallgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/smallgroup.csv')
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/mediumgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/mediumgroup.csv')
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/Aquatic_fewerfields','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/aquatic_habitat.csv')
-Helpers.FCtoCSV(r'E:\Temp\CellPoints.gdb\LFC_Points_Merged',r'E:\Temp\LFC_Points_Merged.csv')
-
+#Helpers.FCtoCSV(r'E:\Temp\CellPoints.gdb\LFC_Points_Merged',r'E:\Temp\LFC_Points_Merged.csv')
+Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/EDA_Communities','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/eda.csv')
 
 
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/temppts.gdb/terhab','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/JoinTables/terhab.csv')

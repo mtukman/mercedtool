@@ -79,7 +79,8 @@ def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None',
     lut_crop_value = os.path.join(lutables,'lut_crop_value.csv')
     global lut_nitrates
     lut_nitrates = os.path.join(lutables,'lut_nitrates.csv')
-
+    global trt_reductions
+    trt_reductions = os.path.join(root_data_path,midpath,'Tables/trt/trt_reductions.csv')
 
     #Vectors
     global Points
@@ -100,11 +101,7 @@ def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None',
     global Carbon2030
     Carbon2030 = os.path.join(root_data_path, midpath, 'Tables/CarbonTables/Carb30.csv')
     all_layers.append(Carbon2030)
-#    
 
-    global trt
-    trt = os.path.join(root_data_path,midpath,'Tables/trt', 'trt_reductions.csv')
-    all_layers.append(trt)
 
 
     #other vars

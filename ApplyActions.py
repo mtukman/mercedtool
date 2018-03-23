@@ -18,12 +18,12 @@ import pandas as pd
 import Helpers
 global _eligibility
 
-def ApplyGHG(df,activitylist, dictact):
+def ApplyGHG(df,activitylist, dictact, trt):
 
     tempdf = df.sort_values(['pointid'])
     carb = {}
     carb2 = {}
-    trt = pd.read_csv("E:/mercedtool/MASTER_DATA/Tables/trt/trt_reductions.csv")    
+    trt = pd.read_csv(trt)    
     def UpdateValues (tempdf,activity,carb,carb2, dictact):
         Helpers.pmes('Updating Carbon For: ' + activity)
         upact = activity.upper()
