@@ -580,10 +580,6 @@ def carbon30(df):
     newdf4['finalcarb30rate'] = newdf4['totshare30']/newdf4['pointid']
     return newdf4
 
-    
-    
-    
-    
-    
+
     
         
