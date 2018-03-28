@@ -34,7 +34,7 @@ Helpers.add_to_logfile(logfile,'Conservation Mask' + ': ' + arcpy.GetParameterAs
 Helpers.add_to_logfile(logfile,'Custom Processing Area' + ': ' + arcpy.GetParameterAsText(3))
 Helpers.add_to_logfile(logfile,'Development Scenario' + ': ' + arcpy.GetParameterAsText(4))
 Helpers.add_to_logfile(logfile,'Custom Development Mask' + ': ' + arcpy.GetParameterAsText(5))
-Helpers.add_to_logfile(logfile,'Treatment Mask' + ': ' + arcpy.GetParameterAsText(45))
+Helpers.add_to_logfile(logfile,'Treatment Mask' + ': ' + arcpy.GetParameterAsText(46))
 
 #Set the development mask variable, if a development mask is provided, this will point to the polygon feature class
 devmask = arcpy.GetParameterAsText(5)
@@ -155,11 +155,13 @@ if not arcpy.GetParameterAsText(2):
 else:
     cm = 1
     conmask = arcpy.GetParameterAsText(2)
+    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(2),newdir + '/ConMask.shp' )
     Helpers.pmes('Yes cm')
 #Set the custom processing area variables if one has been chosen
 if arcpy.GetParameterAsText(3):
     cproc = 1
     mask = arcpy.GetParameterAsText(3)
+    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(3),newdir + '/CustProcMask.shp' )
     Helpers.pmes('User has chosen a custom processing area')
 else:
     cproc = 0
@@ -281,8 +283,12 @@ if 'cag' in activitylist:
     Helpers.add_to_logfile(logfile,'Grassland Compost Amendment Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
 
 
-
-
+trt = Generic.trt_reductions
+gen = Generic.lut_genclass
+water = Generic.lut_wateruse
+resistance =  Generic.lut_resistance
+crop = Generic.lut_crop_value
+nitrate = Generic.lut_nitrates
 #Helpers.add_to_logfile(logfile,'Urban Forestry' + ': ' + arcpy.GetParameterAsText(30))
 #Helpers.add_to_logfile(logfile,'Urban Forestry Adoption %' + ': ' + arcpy.GetParameterAsText(31))
 #Helpers.add_to_logfile(logfile,'Urban Forestry Beginning Year' + ': ' + arcpy.GetParameterAsText(32))
@@ -292,6 +298,7 @@ if 'cag' in activitylist:
 #If a treatment mask has been provided, set the variable
 if arcpy.GetParameterAsText(46):
     treatmask = arcpy.GetParameterAsText(46)
+    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(46),newdir + '/TreatMask.shp' )
 else:
     treatmask = 'None'
 
@@ -305,9 +312,9 @@ import ReportingTemp
 #Run each module
 initout = Initial.DoInitial(mask, cproc, dev, arcpy.GetParameterAsText(5), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev)
-templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity)
+templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt)
 templist[0].to_csv('P:/Temp/Temperino2.csv')
-ReportingTemp.report(templist[0],outpath, acdict,oak ,rre ,dev,cm, gra, cproc)
+ReportingTemp.report(templist[0],outpath,gen, water, resistance,crop,nitrate, acdict,oak ,rre ,dev,cm, gra, cproc)
 ReportingTemp.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm)
 
 

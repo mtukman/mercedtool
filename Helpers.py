@@ -6,6 +6,9 @@ This script holds the functions used in other modules of the tool.
 """
 import arcpy
 def add_to_logfile(logfile,string_to_add):
+    """
+    This function writes to a logfile.
+    """
     import arcpy
     lf = open(logfile, "a")
     lf.write(string_to_add + "\n")
@@ -26,17 +29,23 @@ def CreateEligDict(df, activity, dictact, dict_eligibility, act):
     
     """
     pmes ('Eligibility for: ' + act)
+    
+    #Create a suiability flag field
     initflag = act + 'suitflag'
     df = df[['LC2030_trt_bau', initflag]]
-#    if act in dict_eligibility.keys():
-#        pmes('The activity is already in the dict_eligibility dictionary')
-#        sys.exit('***The activity is already in the dict_eligibility dictionary***')
+    
+    #Group on landcover to get counts of suitable points
     eli = df.groupby(['LC2030_trt_bau'], as_index = False).sum()  
     
+    #Apply the annual cropland ag modifier
     eli.loc[(eli['LC2030_trt_bau'] == 'Annual Cropland'),initflag] = eli[initflag] * dictact[activity]['ag_modifier']
+    
+    #For compost amendment, apply the orchard modifier
     if act == 'cam':
         eli.loc[(eli['LC2030_trt_bau'] == 'Orchard'),initflag] = eli[initflag] * dictact[activity]['orc_modifier']
     eli_dict_element = eli.to_dict()
+    
+    #Add the number of eligible points to the eligibility dictionary
     dict_eligibility[act] = eli_dict_element
     
 
@@ -52,7 +61,11 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
     tempdict = dict_eligibility[act]
     tempdict2 = tempdict[act + 'suitflag']
     pmes(tempdict2)
+    
+    #Create a list of the landcovers for the activity
     klist = list(tempdict2.keys())
+    
+    #Add up the points to get a total number of eligible points
     for i in klist:
         pmes (i)
         pmes (goal)
@@ -60,9 +73,11 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
         goal = goal + tempdict2[i]
     pmes ('Suitable pixels: ' + str(goal))
     
+    #Multiply the adoption goal to convert from acres to points
     goal1 = float(dictact[activity]['adoption']) * 4.49555  #update to link to user defined acres for final tool
-    cap = goal * dictact[activity]['adoptcap']
+    cap = goal * dictact[activity]['adoptcap'] #Modify the goal by the adoption cap
     
+    #Use either the cap or the user defined goal, depending on number of points available
     if cap < goal1:
         goal = goal * float(dictact[activity]['adoptcap'])
     elif cap > goal1:
@@ -70,12 +85,14 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
  
     count = 0
     
+    #Define fields
     pmes ('Goal is : ' + str (goal))
     initflag =  act + 'suitflag'
     selflag = act + 'selected'
     df[selflag] = 0
     pmes ('group size is :' + str(dictact[activity]['grpsize']))
-    if dictact[activity]['grpsize'] == 'medium':
+    
+    def select(groupsize, count):
         #Group pixels by their medium group value (medium grid)
         tempdf = df.groupby('medgroup_val').sum()[['pointid',initflag]]
         
@@ -97,35 +114,16 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
                 pass
     
         pmes (str(count))
-        add_to_logfile(logfile,'User specified ' + str(goal1) + ' acres, max eligible acres are ' + str(cap))
+        add_to_logfile(logfile,activity + ': user specified ' + str(goal1) + ' acres, max eligible acres are ' + str(cap))
         query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
     
-        df.loc[query,selflag] = 1       
-    else:
-        tempdf = df.groupby('smallgroup_val').sum()[['pointid',initflag]]
+        df.loc[query,selflag] = 1  
         
-        tempdf.loc[0:,'grptemp'] = tempdf.index
-        tempdf.loc[tempdf[initflag] == 1]
-        vlen = len(tempdf['grptemp']) #Get the length of the number of groups
-        
-        # s will be a randomly sampled list of all group values
-        s = tempdf['grptemp'].sample(n = vlen)
-        glist = [] #Any empty list to hold selected group values
-        #Now the function loops through the list of group values and adds the pixels in each group to the count until the goal is reached
-        arcpy.AddMessage(goal)
-        for i in s:
-            if count<goal:
-                count = count + tempdf.at[i,initflag]
-                glist.append(i)
-                
-            else:
-                pass
-    
-        pmes (str(count))
-        add_to_logfile(logfile,'User specified ' + str(goal1) + ' acres, max eligible acres are ' + str(cap))
-        query = (df['smallgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
-    
-        df.loc[query,selflag] = 1      
+    #Run the select function using either small or large groups of points
+    if dictact[activity]['grpsize'] == 'medium':
+        select('medgroup_val', count)
+    elif dictact[activity]['grpsize'] == 'small':
+         select('smallgroup_val', count)
     
     return df
 
@@ -182,6 +180,8 @@ def FCstoCSVs (inputgdb,Outpath):
             with arcpy.da.SearchCursor(table,field_names) as cursor:
                 for row in cursor:
                     dw.writerow(dict(zip(field_names,row)))
+                    
+                    
 def FCtoCSV (inputfc,Outpath):
     """
     This function takes a workspace with vector feature classes and writes out their tables as CSVs
@@ -378,6 +378,11 @@ rids_only = "D:\\TGS\\projects\\64 - Merced Carbon\\MBA\\ToolData\\Vector\\speci
     return out_df
     
 def Carbon2030calc():
+    """
+    This function calculate weighted carbon rates for 2030 using the 2014 carbon rates and the baseline carbon data.
+    
+    """
+    
     import pandas as pd
     import numpy as np
     lf2014lu = pd.read_csv('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/LC2014_Full.csv')
@@ -421,7 +426,7 @@ def Carbon2030calc():
         df1 = pd.concat([df1,temp1])
         
 def samples(workspace,outputfolder,samplesize):
-    #This function takes a workspace of CSVs, takes the first # of rows and writes them to a new directory with the same csv names.
+    """This function takes a workspace of CSVs, takes the first # of rows and writes them to a new directory with the same csv names."""
     import pandas as pd
     import arcpy
     arcpy.env.workspace = workspace
@@ -443,7 +448,7 @@ def samples(workspace,outputfolder,samplesize):
 def create_processing_table(InPoints,inmask, tempgdb, scratch):
     """
     This function takes a point feature class (InPoints) and the user-defined processing area (inmask), selects by location
-    abd exports a CSV file and reads the file into a global variable as a Pandas DF.
+    and exports a CSV file and reads the file into a global variable as a Pandas DF.
     """
     import arcpy
     import os
@@ -478,6 +483,8 @@ def create_processing_table(InPoints,inmask, tempgdb, scratch):
         
         
 def lc_mod(flagfield, label, labelfield, dataframe):
+    """
+    This function just simplifies the query that calculates a field"""
     dataframe.loc[(dataframe[flagfield] == 1), labelfield] = label
         
     
@@ -486,7 +493,9 @@ def lc_mod(flagfield, label, labelfield, dataframe):
     
 
 def devscen (td):
-    
+    """
+    This function takes the development scenarios and creates a new field for each, and updates the landcovers and gridcodes.
+    """
     
     td.loc[(td['LC2030_bau'] == 'Urban'), 'gridcode30_bau'] = 13
     td.loc[(td['LC2030_bau'] == 'Developed'), 'gridcode30_bau'] = 6
@@ -511,35 +520,15 @@ def devscen (td):
     
     td.loc[(td['dcode_medinfill'] == 6), 'LC2030_med'] = 'Developed'
     
-
-
-#    new.loc[(new['LC2030_med'] ==  'Wetland'),'gridcode30_med'] = 0
-#    new.loc[(new['LC2030_med'] ==  'Water'),'gridcode30_med'] = 1
-#    new.loc[(new['LC2030_med'] ==  'Grassland'),'gridcode30_med'] = 2
-#    new.loc[(new['LC2030_med'] ==  'Barren'),'gridcode30_med'] = 4
-#    new.loc[(new['LC2030_med'] ==  'Orchard'),'gridcode30_med'] = 7
-#    new.loc[(new['LC2030_med'] ==  'Vineyard'),'gridcode30_med'] = 8
-#    new.loc[(new['LC2030_med'] ==  'Annual Cropland'),'gridcode30_med'] = 9
-#    new.loc[(new['LC2030_med'] ==  'Rice'),'gridcode30_med'] = 10
-#    new.loc[(new['LC2030_med'] ==  'Irrigated Pasture'),'gridcode30_med'] = 11
-#    new.loc[(new['LC2030_med'] ==  'Young Forest'),'gridcode30_med'] = 14
-#    new.loc[(new['LC2030_med'] ==  'Young Shrubland'),'gridcode30_med'] = 15
-#    new.loc[(new['LC2030_max'] ==  'Wetland'),'gridcode30_max'] = 0
-#    new.loc[(new['LC2030_max'] ==  'Water'),'gridcode30_max'] = 1
-#    new.loc[(new['LC2030_max'] ==  'Grassland'),'gridcode30_max'] = 2
-#    new.loc[(new['LC2030_max'] ==  'Barren'),'gridcode30_max'] = 4
-#    new.loc[(new['LC2030_max'] ==  'Orchard'),'gridcode30_max'] = 7
-#    new.loc[(new['LC2030_max'] ==  'Vineyard'),'gridcode30_max'] = 8
-#    new.loc[(new['LC2030_max'] ==  'Annual Cropland'),'gridcode30_max'] = 9
-#    new.loc[(new['LC2030_max'] ==  'Rice'),'gridcode30_max'] = 10
-#    new.loc[(new['LC2030_max'] ==  'Irrigated Pasture'),'gridcode30_max'] = 11
-#    new.loc[(new['LC2030_max'] ==  'Young Forest'),'gridcode30_max'] = 14
-#    new.loc[(new['LC2030_max'] ==  'Young Shrubland'),'gridcode30_max'] = 15
     return td
     
     
 
 def carbon30(df):
+    """
+    This function calculate weighted carbon rates for 2030 using the 2014 carbon rates and the baseline carbon data.
+    
+    """
     import Generic
     import pandas as pd
     c14 = pd.read_csv(Generic.Carbon2014)
@@ -591,10 +580,6 @@ def carbon30(df):
     newdf4['finalcarb30rate'] = newdf4['totshare30']/newdf4['pointid']
     return newdf4
 
-    
-    
-    
-    
-    
+
     
         

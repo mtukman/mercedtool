@@ -64,6 +64,12 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         # Select points randomly that were flagged as suitable
         Helpers.selectionfunc (dict_eligibility,df, 'rre',dictact, 'rre', logfile)
         queryadd = queryadd & (df['rreselected'] != 1)
+        df.loc[df['rreselected'] == 1, 'LC2030_trt_bau'] = 'Forest'
+        df.loc[df['rreselected'] == 1, 'LC2030_trt_med'] = 'Forest'
+        df.loc[df['rreselected'] == 1, 'LC2030_trt_max'] = 'Forest'
+        if customdev == 1:
+            df.loc[df['rreselected'] == 1, 'LC2030_trt_cust'] = 'Forest'
+
         #Update treatment scenario fields to reflect selections
 
     
@@ -76,7 +82,11 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         #Select points randomly for the oak conversion activity
         Helpers.selectionfunc (dict_eligibility,df, 'oak',dictact, 'oak', logfile)
         queryadd = queryadd & (df['oakselected'] != 1)
-        
+        df.loc[df['oakselected'] == 1, 'LC2030_trt_bau'] = 'Forest'
+        df.loc[df['oakselected'] == 1, 'LC2030_trt_med'] = 'Forest'
+        df.loc[df['oakselected'] == 1, 'LC2030_trt_max'] = 'Forest'
+        if customdev == 1:
+            df.loc[df['oakselected'] == 1, 'LC2030_trt_cust'] = 'Forest'
         #Change landcover and gridcode fields for points selected for the activity
 
     
