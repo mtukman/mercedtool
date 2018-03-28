@@ -57,7 +57,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         
         
         #Set the query that will define suitability
-        dictact['rre']['query'] = (df['LC2030_trt_bau'].isin(['Grassland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (df['lcchange'] == 1) & ((df['near_rivers'] < 650) | (df['near_streams'] < 100)) & (df['near_woody'] != 0) & queryadd
+        dictact['rre']['query'] = (df['LC2030_trt_bau'].isin(['Grassland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (df['lcchange'] == 1) & ((df['near_rivers'] < 650) | ((df['ripstr_dist'] < 100) & (df['ripstr_flag'] == 1))) & (df['near_woody'] != 0) & queryadd
         Helpers.CreateSuitFlags('rre',df,dictact,'rre')
         Helpers.CreateEligDict(df, 'rre', dictact,dict_eligibility, 'rre')
         
@@ -70,9 +70,6 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         if customdev == 1:
             df.loc[df['rreselected'] == 1, 'LC2030_trt_cust'] = 'Forest'
 
-        #Update treatment scenario fields to reflect selections
-
-    
     #Create Oak Suitability and Selection
     if 'oak' in activitylist:
         dictact['oak']['query'] =((df['LC2030_trt_bau'].isin(['Grassland','Shrubland','Irrigated Pasture','Barren']))|((df['LC2030_trt_bau']== 'Urban') & df['nlcd_val'].isin([21,22,31]))) & (df['lcchange'] == 1) & (df['oakrange_flg'] == 1) & queryadd
@@ -185,7 +182,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     dictact['hpl']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1) & queryadd
     dictact['cam']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & queryadd
     
-    dictact['cag']['query'] = (df['LC2030_trt_bau'].isin(['Grassland'])) & (df['lcchange'] == 1) & queryadd
+    dictact['cag']['query'] = (df['LC2030_trt_bau'].isin(['Grassland'])) & (df['lcchange'] == 1) & (df['slope_val'] < 15) & ((df['near_rivers'] < 650) | (df['near_streams'] < 100)) & queryadd
     dictact['gra']['query'] = (df['LC2030_trt_bau'].isin(['Grassland'])) & (df['lcchange'] == 1) & queryadd
 
     #Create green house gas function to run suitability, eligibility and selection functions from Helpers
@@ -209,11 +206,6 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         ghg_selection (df,'cag',dict_eligibility,dictact)
     if 'gra' in activitylist:
         ghg_selection (df,'gra',dict_eligibility,dictact)
-
-
-
-
-        
 
 
     return df

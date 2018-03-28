@@ -120,7 +120,9 @@ if arcpy.GetParameterAsText(22) == 'Yes':
 if arcpy.GetParameterAsText(26) == 'Yes':
     activitylist.append('hpl')
     arcpy.AddMessage('added hpl to activity list')
-
+if arcpy.GetParameterAsText(30) == 'Yes':
+    activitylist.append('urb')
+    arcpy.AddMessage('added hpl to activity list')
 if arcpy.GetParameterAsText(34) == 'Yes':
     activitylist.append('gra')
     arcpy.AddMessage('added gra to activity list')
@@ -194,7 +196,7 @@ if 'rre' in activitylist:
     Generic.dict_activity['rre']['adoption'] = float(arcpy.GetParameterAsText(7)) 
     Generic.dict_activity['rre']['years'] = float(arcpy.GetParameterAsText(9))    
     Generic.dict_activity['rre']['adoptyear'] = float(arcpy.GetParameterAsText(8))  
-    Helpers.add_to_logfile(logfile,'Riparian Restoration Adoption %' + ': ' + arcpy.GetParameterAsText(7))
+    Helpers.add_to_logfile(logfile,'Riparian Restoration Adoption Acres' + ': ' + arcpy.GetParameterAsText(7))
     Helpers.add_to_logfile(logfile,'Riparian Restoration Beginning Year' + ': ' + arcpy.GetParameterAsText(8))
     Helpers.add_to_logfile(logfile,'Riparian Restoration Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(9))
 else:
@@ -205,7 +207,7 @@ if 'oak' in activitylist:
     Generic.dict_activity['oak']['adoption'] = float(arcpy.GetParameterAsText(11)) 
     Generic.dict_activity['oak']['years'] = float(arcpy.GetParameterAsText(13))    
     Generic.dict_activity['oak']['adoptyear'] = float(arcpy.GetParameterAsText(12))  
-    Helpers.add_to_logfile(logfile,'Oak Woodland Conversion Adoption %' + ': ' + arcpy.GetParameterAsText(11))
+    Helpers.add_to_logfile(logfile,'Oak Woodland Conversion Adoption Acres' + ': ' + arcpy.GetParameterAsText(11))
     Helpers.add_to_logfile(logfile,'Oak Woodland Conversion Beginning Year' + ': ' + arcpy.GetParameterAsText(12))
     Helpers.add_to_logfile(logfile,'Oak Woodland Conversion Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(13))
 else:
@@ -216,7 +218,7 @@ if 'ccr' in activitylist:
     Generic.dict_activity['ccr']['adoption'] = float(arcpy.GetParameterAsText(15)) 
     Generic.dict_activity['ccr']['years'] = float(arcpy.GetParameterAsText(17))    
     Generic.dict_activity['ccr']['adoptyear'] = float(arcpy.GetParameterAsText(16))  
-    Helpers.add_to_logfile(logfile,'Cover Cropping Adoption %' + ': ' + arcpy.GetParameterAsText(15))
+    Helpers.add_to_logfile(logfile,'Cover Cropping Adoption Acres' + ': ' + arcpy.GetParameterAsText(15))
     Helpers.add_to_logfile(logfile,'Cover Cropping Beginning Year' + ': ' + arcpy.GetParameterAsText(16))
     Helpers.add_to_logfile(logfile,'Cover Cropping Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(17))
     
@@ -227,7 +229,7 @@ if 'mul' in activitylist:
     Generic.dict_activity['mul']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
     Generic.dict_activity['mul']['years'] = float(arcpy.GetParameterAsText(x + 3))        
     Generic.dict_activity['mul']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2))  
-    Helpers.add_to_logfile(logfile,'Mulching Adoption %' + ': ' + arcpy.GetParameterAsText(x + 1))
+    Helpers.add_to_logfile(logfile,'Mulching Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
     Helpers.add_to_logfile(logfile,'Mulching Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Mulching Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
     
@@ -247,7 +249,7 @@ if 'hpl' in activitylist:
     Generic.dict_activity['hpl']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
     Generic.dict_activity['hpl']['years'] = float(arcpy.GetParameterAsText(x + 3))        
     Generic.dict_activity['hpl']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2))   
-    Helpers.add_to_logfile(logfile,'Hedgerow Planting Adoption %' + ': ' + arcpy.GetParameterAsText(x + 1))
+    Helpers.add_to_logfile(logfile,'Hedgerow Planting Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
     Helpers.add_to_logfile(logfile,'Hedgerow Planting Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Hedgerow Planting Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
     
@@ -257,7 +259,7 @@ if 'cam' in activitylist:
     Generic.dict_activity['cam']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
     Generic.dict_activity['cam']['years'] = float(arcpy.GetParameterAsText(x + 3))        
     Generic.dict_activity['cam']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2))   
-    Helpers.add_to_logfile(logfile,'Compost Amendment Adoption %' + ': ' + arcpy.GetParameterAsText(x + 1))
+    Helpers.add_to_logfile(logfile,'Compost Amendment Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
     Helpers.add_to_logfile(logfile,'Compost Amendment Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Compost Amendment Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
 
@@ -268,7 +270,7 @@ if 'gra' in activitylist:
     Generic.dict_activity['gra']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
     Generic.dict_activity['gra']['years'] = float(arcpy.GetParameterAsText(x + 3))        
     Generic.dict_activity['gra']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2))   
-    Helpers.add_to_logfile(logfile,'Grassland Restoration Adoption %' + ': ' + arcpy.GetParameterAsText(x + 1))
+    Helpers.add_to_logfile(logfile,'Grassland Restoration Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
     Helpers.add_to_logfile(logfile,'Grassland Restoration Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Grassland Restoration Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
 
@@ -278,9 +280,19 @@ if 'cag' in activitylist:
     Generic.dict_activity['cag']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
     Generic.dict_activity['cag']['years'] = float(arcpy.GetParameterAsText(x + 3))        
     Generic.dict_activity['cag']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2))   
-    Helpers.add_to_logfile(logfile,'Grassland Compost Amendment Adoption %' + ': ' + arcpy.GetParameterAsText(x + 1))
+    Helpers.add_to_logfile(logfile,'Grassland Compost Amendment Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
     Helpers.add_to_logfile(logfile,'Grassland Compost Amendment Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Grassland Compost Amendment Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
+    
+Helpers.add_to_logfile(logfile,'Urban Forestry' + ': ' + arcpy.GetParameterAsText(30))   
+if 'urb' in activitylist:
+    x = 30
+    Generic.dict_activity['cag']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
+    Generic.dict_activity['cag']['years'] = float(arcpy.GetParameterAsText(x + 3))        
+    Generic.dict_activity['cag']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2)) 
+    Helpers.add_to_logfile(logfile,'Urban Forestry Growth Rate' + ': ' + arcpy.GetParameterAsText(x + 1))
+    Helpers.add_to_logfile(logfile,'Urban Forestry Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
+    Helpers.add_to_logfile(logfile,'Urban Forestry Ending Year' + ': ' + arcpy.GetParameterAsText(x + 3))
 
 
 trt = Generic.trt_reductions
@@ -289,10 +301,6 @@ water = Generic.lut_wateruse
 resistance =  Generic.lut_resistance
 crop = Generic.lut_crop_value
 nitrate = Generic.lut_nitrates
-#Helpers.add_to_logfile(logfile,'Urban Forestry' + ': ' + arcpy.GetParameterAsText(30))
-#Helpers.add_to_logfile(logfile,'Urban Forestry Adoption %' + ': ' + arcpy.GetParameterAsText(31))
-#Helpers.add_to_logfile(logfile,'Urban Forestry Beginning Year' + ': ' + arcpy.GetParameterAsText(32))
-#Helpers.add_to_logfile(logfile,'Urban Forestry Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(33))
 
 
 #If a treatment mask has been provided, set the variable
@@ -301,6 +309,21 @@ if arcpy.GetParameterAsText(46):
     arcpy.CopyFeatures_management(arcpy.GetParameterAsText(46),newdir + '/TreatMask.shp' )
 else:
     treatmask = 'None'
+    
+if arcpy.GetParameterAsText(65):
+    terflag = 1
+else:
+    terflag = 0
+
+
+if arcpy.GetParameterAsText(30) == 'Yes':
+    ug = ((arcpy.GetParameterAsText(33)-arcpy.GetParameterAsText(32))*arcpy.GetParameterAsText(31))
+    if ug > 0:
+        ucc = 0.102 + ug
+    else: 
+        ucc = 0.102
+
+
 
 #Import the modules
 import Initial
@@ -313,8 +336,8 @@ import ReportingTemp
 initout = Initial.DoInitial(mask, cproc, dev, arcpy.GetParameterAsText(5), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev)
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt)
-templist[0].to_csv('P:/Temp/Temperino2.csv')
-ReportingTemp.report(templist[0],outpath,gen, water, resistance,crop,nitrate, acdict,oak ,rre ,dev,cm, gra, cproc)
-ReportingTemp.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm)
-
+#templist[0].to_csv('P:/Temp/Temperino2.csv')
+ReportingTemp.report(templist[0],outpath,gen, water, resistance,crop,nitrate,Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
+ReportingTemp.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
+ReportingTemp.report_acres(templist[0],activitylist,outpath)
 

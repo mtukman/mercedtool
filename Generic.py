@@ -1,5 +1,5 @@
 from __future__ import unicode_literals #Can Delete This
-def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None', midpath = 'MASTER_DATA', output_file_loc = 'P:/Temp'):
+def set_paths_and_workspaces(root_data_path = r"E:\TGS\projects\Merced Carbon", mask_fc = 'None', midpath = 'MASTER_DATA', output_file_loc = 'P:/Temp'):
     """Workspace must be a file .gdb and is the place where all temp files and outputs will be placed.
     root_data_path -->  This path the top level folder for the data files (e.g., D:/CLOUD/Shared/Open Space/)
     midpath -->  This path is the path to the data files from roopath down the tree (e.g., Carbon Framework/GIS Data/SAMPLE_DATA/)
@@ -65,7 +65,8 @@ def set_paths_and_workspaces(root_data_path = 'E:/mercedtool', mask_fc = 'None',
     valuetables = os.path.join(root_data_path,midpath,'Tables/ValueTables')
 
 
-
+    global rids
+    rids = os.path.join(root_data_path,midpath,'Tables/LUTables/env_rids.csv')
 
     #Look up tables for reporting functions
     
@@ -151,7 +152,7 @@ camdict = {'name':'Compost Amendment', 'query':'holder', 'ag_modifier':0.2597970
 gradict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':'medium', 'suitflag':'oaksuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2}
 cagdict = {'name':'Grassland Compost Amendment', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'camsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2}
 
-
+    
 
 dict_activity = {'oak':oakdict, 'rre': rredict, 'mul':muldict, 'nfm':nfmdict, 'ccr':ccrdict,'hpl':hpldict, 'urb':urbdict, 'aco':acodict, 'gra':gradict, 'cam':camdict, 'cag':cagdict}
 

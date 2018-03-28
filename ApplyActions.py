@@ -41,7 +41,7 @@ def ApplyGHG(df,activitylist, dictact, trt):
         # Loop through landcovers for the activity and calculate and sum up carbon
         tempix = 0
         for i in dfList:
-        
+            Helpers.pmes('maxyears: ' + str(maxyrs) + ' and full adoptyears : ' + str(fulladoptyrs))
             if i in actcount:
                 carb1 = 0
                 tempix = 0
@@ -56,44 +56,58 @@ def ApplyGHG(df,activitylist, dictact, trt):
                     counter2 = 0
                     
                     #Do the first years of activity growth 
-                    while counter2 < dictact[activity]['years'] and counter2<maxyrs:
+                    while counter2 < (dictact[activity]['years']-1) and counter2<maxyrs:
                         
-                        carb1 = carb1 + (((counter1 + 1)*anngrowth)*redrate)
-            
+                        carb1 = carb1 + (((counter2 + 1)*anngrowth)*redrate)
+                        
+                        Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Year: ' + str(counter2 + 1))
+                        
                         counter2 = counter2 + 1
                     fullcount = 0
+                    Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Full adoption.')
+                    
+                    
+                    
+                    
                     
                     #For oak and Riparian, carry through 2030 at full capacity
-                    if activity == 'rre' or activity == 'oak':
+                    if activity == 'rre' or activity == 'oak' or activity == 'gra':
                         while counter2<maxyrs:
+                            Helpers.pmes('maxyears: ' + str(maxyrs) + ' and counter: ' + str(counter2))
                             carb1 = carb1 + (pixels*redrate)
-                
+                            Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Year: ' + str(counter2 + 1))
                             counter2 = counter2 + 1
-                                                    
+                        Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Finishing rre/oak.')        
+                        
                     else: #If not oak or riparian, do the middle years are full adoption
                         while counter2<maxyrs and fullcount < fulladoptyrs:
+                            Helpers.pmes('maxyears: ' + str(maxyrs) + ' and counter: ' + str(counter2))
                             carb1 = carb1 + (pixels*redrate)
-                
+                            Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Year: ' + str(counter2 + 1))
                             counter2 = counter2 + 1
                             fullcount = fullcount + 1
-                    endcount = dictact[activity]['years']
-                    
+                        Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Full adoption end.')
+                        
+                    endcount = dictact[activity]['years'] - 1
+                        
                     #Count down the tail end of the adoption period until it its 2030
                     while counter2<maxyrs and endcount>0:
                         carb1 = carb1 + (((endcount)*anngrowth)*redrate)
-            
+                        Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Year: ' + str(counter2 + 1))
                         counter2 = counter2 + 1
                         endcount = endcount - 1       
-                        
+                    Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Declining adoption.')    
+                    
                     carb[activity+i+'_co2'] = carb1
                     tempix = tempix + pixels
                     
                     carb2[activity +i+ '_sel'] = tempix
+                    
+                    
             counter1 = counter1 + 1
-            
+            Helpers.pmes('tempix: ' + str(tempix))   
             if tempix > 0:
                 tempdf[activity +'_carbred'] = tempdf[activity+'selected']*(carb1/pixels)
-                    
     # Run the above functionf or every activity selected
     for i in activitylist:
         UpdateValues(tempdf,i, carb, carb2, dictact)

@@ -114,9 +114,9 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
                 pass
     
         pmes (str(count))
-        add_to_logfile(logfile,activity + ': user specified ' + str(goal1) + ' acres, max eligible acres are ' + str(cap))
+        add_to_logfile(logfile,activity + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
         query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
-    
+        add_to_logfile(logfile,activity + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
         df.loc[query,selflag] = 1  
         
     #Run the select function using either small or large groups of points
