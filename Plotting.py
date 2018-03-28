@@ -1,4 +1,6 @@
 mba_title_font = 24
+plot_dict = {'groundwater':["2014-2030 Projected Loss of Groundwater Recharge",1,-1, "Loss of Recharge by Development Scenario (Acre Feet per Year)", ]}
+plot_dict['cropvalue'] = ["2014-2030 Projected Change in Crop Value by Developmetn Scenario",5000000,-7, "Crop Value (Millions of Dollars)"]
 
 def mba_cropvalue_plot_tables(csv='D:/TGS/projects/64 - Merced Carbon/Reports/Draft Reports/cropvalue.csv', outpath='D:/TGS/projects/64 - Merced Carbon/Reports/Draft Reports/plot_tables/'):
     import os
@@ -31,64 +33,8 @@ def mba_cropvalue_plot_tables(csv='D:/TGS/projects/64 - Merced Carbon/Reports/Dr
     all_acts['scenario'] = ['ref', 'med', 'max']
     all_acts.to_csv(os.path.join(outpath, 'plt_cropvalue_all.csv'))
     return all_acts
-
-def mba_chart_cropvalue(table, title = "2014-2030 Projected Loss of Groundwater Recharge"):
-    import plotly.plotly as py
-    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
-    #import plotly.plotly as py
-    from plotly import tools
-    import plotly.graph_objs as go
     
-    def max_y_range(table):
-        c =table.max(axis=0, numeric_only = True)
-        return round(max(c) +5, -1)
-        
-    def min_y_range(table):
-        c =table.min(axis=0, numeric_only = True)
-        return round(min(c) -5, -1)        
-
-    trace1 = {
-      "x": table['Scenario'], 
-      "y": table['Untreated'], 
-      "name": "Untreated", 
-      "type": "bar"
-    }
-    trace2 = {
-      "x": table['Scenario'], 
-      "y": table['Treated'], 
-      "name": "Treated", 
-      "type": "bar"
-    }
-
-    data = go.Data([trace1, trace2])
-    layout = {
-      "autosize": True, 
-      "hovermode": "closest", 
-      "showlegend": True, 
-      "title": title, 
-      "titlefont": {
-      "size": mba_title_font
-          },
-      "xaxis": {
-        "autorange": True, 
-        "range": [-0.5, 2.5], 
-        "title": "Scenario", 
-        "type": "category"
-      }, 
-      "yaxis": {
-        "autorange": False, 
-        "range": [min_y_range(table), max_y_range(table)], 
-        "title": "Loss of Recharge (Acre Feet per Year)", 
-        "type": "linear"
-      }
-    }
-   
-    fig = go.Figure(data=data, layout=layout)
-    plot(fig, filename= title + '.html')
-
-
-
-
+    
 def mba_gwater_plot_tables(csv='D:/TGS/projects/64 - Merced Carbon/Reports/Draft Reports/groundwater.csv', outpath='D:/TGS/projects/64 - Merced Carbon/Reports/Draft Reports/plot_tables/'):
     import os
     import pandas as pd 
@@ -107,7 +53,7 @@ def mba_gwater_plot_tables(csv='D:/TGS/projects/64 - Merced Carbon/Reports/Draft
     gwrc.to_csv(os.path.join(outpath, 'plt_groundwater.csv'))
     return gwrc
 
-def mba_chart_gwater(table, title = "2014-2030 Projected Loss of Groundwater Recharge"):
+def mba_chart_3scenario(table, plot_dict):
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
     #import plotly.plotly as py
@@ -116,20 +62,20 @@ def mba_chart_gwater(table, title = "2014-2030 Projected Loss of Groundwater Rec
     
     def max_y_range(table):
         c =table.max(axis=0, numeric_only = True)
-        return round(max(c) +5, -1)
+        return round(max(c) +plot_dict[1], plot_dict[2])
         
     def min_y_range(table):
         c =table.min(axis=0, numeric_only = True)
-        return round(min(c) -5, -1)        
+        return round(min(c) -plot_dict[1], plot_dict[2])        
 
     trace1 = {
-      "x": table['Scenario'], 
+      "x": table['scenario'], 
       "y": table['Untreated'], 
       "name": "Untreated", 
       "type": "bar"
     }
     trace2 = {
-      "x": table['Scenario'], 
+      "x": table['scenario'], 
       "y": table['Treated'], 
       "name": "Treated", 
       "type": "bar"
@@ -140,7 +86,7 @@ def mba_chart_gwater(table, title = "2014-2030 Projected Loss of Groundwater Rec
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": True, 
-      "title": title, 
+      "title": plot_dict[0], 
       "titlefont": {
       "size": mba_title_font
           },
@@ -153,10 +99,16 @@ def mba_chart_gwater(table, title = "2014-2030 Projected Loss of Groundwater Rec
       "yaxis": {
         "autorange": False, 
         "range": [min_y_range(table), max_y_range(table)], 
-        "title": "Loss of Recharge (Acre Feet per Year)", 
+        "title": plot_dict[3], 
         "type": "linear"
       }
     }
    
     fig = go.Figure(data=data, layout=layout)
-    plot(fig, filename= title + '.html')
+    plot(fig, filename= plot_dict[0] + '.html')
+
+
+
+
+
+
