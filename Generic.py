@@ -146,7 +146,7 @@ muldict =  {'name':'Mulching','query' : 'holder', 'ag_modifier':1, 'grpsize':'sm
 nfmdict = {'name':'Nirtrogen Fertilizer Management','query' : 'holder', 'ag_modifier':.684,  'grpsize':'small', 'suitflag':'nfmsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.25}
 ccrdict = {'name':'Cover Crops', 'query':'holder', 'ag_modifier':.449,  'grpsize':'small', 'suitflag':'ccrsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2}
 hpldict = {'name':'Hedgerow Planting', 'query':'holder', 'ag_modifier':1,  'grpsize':'small', 'suitflag':'hplsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.3}
-urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'urbsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.25}
+urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'urbsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':1}
 acodict = {'name':'Avoid Conversion', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'urbsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':1}
 camdict = {'name':'Compost Amendment', 'query':'holder', 'ag_modifier':0.259797042, 'grpsize':'small', 'suitflag':'camsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2, 'orc_modifier': .25}
 gradict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':'medium', 'suitflag':'oaksuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2}
@@ -154,7 +154,7 @@ cagdict = {'name':'Grassland Compost Amendment', 'query':'holder', 'ag_modifier'
 
     
 
-dict_activity = {'oak':oakdict, 'rre': rredict, 'mul':muldict, 'nfm':nfmdict, 'ccr':ccrdict,'hpl':hpldict, 'urb':urbdict, 'aco':acodict, 'gra':gradict, 'cam':camdict, 'cag':cagdict}
+dict_activity = {'oak':oakdict, 'rre': rredict, 'mul':muldict, 'nfm':nfmdict, 'ccr':ccrdict,'hpl':hpldict, 'urb':urbdict, 'aco':acodict, 'gra':gradict, 'cam':camdict, 'cag':cagdict, 'urb2':urbdict}
 
 
 #######################################################################################################################

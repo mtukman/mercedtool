@@ -5,7 +5,7 @@ import Helpers
 global dict_eligibility
 
 
-def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',customdev = 0):
+def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',customdev = 0, ug = 0, ucc = 0):
     ''' This function takes the activities selected by the user, finds suitable pixels and randomly selects pixels for the activity based on spatial attributes until the desired amount of pixels have been selected.
     
     df: The dataframe fom the initial module
@@ -181,7 +181,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     dictact['nfm']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland', 'Orchard', 'Vineyard', 'Rice'])) & (df['lcchange'] == 1) & queryadd
     dictact['hpl']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1) & queryadd
     dictact['cam']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & queryadd
-    
+    dictact['urb']['query'] = (df['LC2030_trt_bau'].isin(['Urban'])) & (df['lcchange'] == 1) & queryadd
     dictact['cag']['query'] = (df['LC2030_trt_bau'].isin(['Grassland'])) & (df['lcchange'] == 1) & (df['slope_val'] < 15) & ((df['near_rivers'] < 650) | (df['near_streams'] < 100)) & queryadd
     dictact['gra']['query'] = (df['LC2030_trt_bau'].isin(['Grassland'])) & (df['lcchange'] == 1) & queryadd
 
@@ -206,8 +206,18 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         ghg_selection (df,'cag',dict_eligibility,dictact)
     if 'gra' in activitylist:
         ghg_selection (df,'gra',dict_eligibility,dictact)
-
-
+    if ug != 0:
+        temp = df.loc[(df['LC2030_trt_bau'].isin(['Urban', 'Developed','Developed Roads'])) & (df['lcchange'] == 1) & queryadd]
+        numb = len(temp.index)
+        dictact['urb']['adoption'] = numb/4.49555
+        ghg_selection (df,'urb',dict_eligibility,dictact)
+    if ug != 0:
+        temp = df.loc[(df['LC2030_trt_bau'].isin(['Urban', 'Developed','Developed Roads'])) & (df['lcchange'] == 1) & queryadd]
+        numb = len(temp.index)
+        dictact['urb2']['adoption'] = numb/4.49555
+        dictact['urb2']['adoption'] = dictact['urb2']['adoption']*ucc
+        ghg_selection (df,'urb2',dict_eligibility,dictact)
+        
     return df
 
 

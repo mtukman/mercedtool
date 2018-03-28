@@ -87,7 +87,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,lupath, acdict = 'None', oak = 0
         df2 = df.loc[(df['dev_flag'] == 1)]
         dfdict['dev_flagged'] = df2
         Helpers.pmes('Developed Added to Reporting List')
-    
+    if ucc != 0:
+        dfdict['urb'] = df.loc[(df['urb_selected'] == 1)]
     dfdict['hpl'] = df.loc[(df['hplselected'] == 1)]
     #Create avoided conversion dataframes if they were selected
     if acdict != 'None':
@@ -96,8 +97,6 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,lupath, acdict = 'None', oak = 0
             df2 = df.loc[(df[i+'selected'] == 1)]
             dfdict[i] = df2
     keylist = [*dfdict]
-
-
 
 
 
@@ -1411,12 +1410,16 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,lupath, acdict = 'None', oak = 0
                 df: The dataframe the report is based on
                 y: Which field to report on, either runoff or leaching
                 """
-                
+                td = df
                 #Create the initial dataframes
+                if 'trt' in field:
+                    
+                    td.loc[(td['urb_selected'] == 1), field] = 'Forest'
+                    
                 if x in ['base', 'trt']:
-                    td = df[['LC2014','pointid', field]]
+                    td = td[['LC2014','pointid', field]]
                 else:
-                    td = df[['LC2014','pointid', field, 'LC2030_bau']]
+                    td = td[['LC2014','pointid', field, 'LC2030_bau']]
                     td.loc[(td['LC2030_bau'] == 'Young Forest'), 'LC2030_bau'] = 'Forest'
                     td.loc[(td['LC2030_bau'] == 'Young Shrubland'), 'LC2030_bau'] = 'Shrubland'
                     td.loc[(td['LC2030_bau'] == 'Woody Riparian'), 'LC2030_bau'] = 'Forest'
@@ -1427,7 +1430,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,lupath, acdict = 'None', oak = 0
                 td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
                 td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
                 Helpers.pmes('Air Pollution Reporting: ' + y + ',' + name + ', ' + dev)
-
+                
                 # Create 2014 nitrate reporting dataframe
                 group14 = td.groupby('LC2014', as_index = False).count()
                 tempdf14 = pd.merge(nclass,group14, how = 'outer', left_on = 'landcover', right_on = 'LC2014')
@@ -1484,8 +1487,11 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,lupath, acdict = 'None', oak = 0
                 else:
                     if x == 'eda':
                         pass
+                    elif x == 'urb':
+                        airfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x],y)
                     else:
                         airfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x],y)
+                        
                     
             #Create a reporting dataframe for 2014 baseline
             td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid']]        
@@ -1941,6 +1947,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,lupath, acdict = 'None', oak = 0
     cropvalue(df,outpath)
     groundwater(df,outpath)
     nitrates(df,outpath)
+    airpol(df,outpath)
 #    if cproc == 0:
 #        watershedintegrity(df,outpath)
 #    else:
@@ -2022,7 +2029,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     c30 = pd.read_csv(carb30)
     c14 = pd.read_csv(carb14)
         
-        
+    collist = []
     def carbrepfull(df, name, dev, field):
         """
             This subfunction create a dataframe which is added to a dataframe dictionary (all will be merged at the end of the parent function to create a csv report)
@@ -2078,6 +2085,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
                 lct = td.groupby(['LC2030_trt_bau'], as_index = False).sum()
                 lct = lct[['LC2030_trt_bau', name + '_carbred']]
                 lct = lct.rename(columns = {'LC2030_trt_bau':'landcover',name + '_carbred':'carbon_' + name}) 
+                collist.append('carbon_' + name)
                 intdict[name] = lct
             else:
                 Helpers.pmes('Activity Carbon Rates not in Dataframe')
@@ -2093,6 +2101,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
             lct = lct[['LC2030_trt_bau', 'conchange']]
             
             lct = lct.rename(columns = {'LC2030_trt_bau':'landcover','conchange':'carbon_change_' + name}) 
+            
             intdict[name] = lct
         
         #If the activity is avoided conversion, then this function will show the change between baseline and treatment carbon totals
@@ -2163,6 +2172,13 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
             count = count + 1
     temp.fillna(0, inplace = True)
     
+    
+    temp['trt_total'] = 0
+    temp['trt_total'] = temp['carbon_trt_bau'] + temp['trt_total']
+    
+    for i in collist:
+        temp['trt_total'] = temp[i] + temp['trt_total']
+
     #Export the dataframe to a csv
     temp.to_csv(outpath+'carbon.csv')  
     

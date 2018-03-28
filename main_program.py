@@ -122,7 +122,7 @@ if arcpy.GetParameterAsText(26) == 'Yes':
     arcpy.AddMessage('added hpl to activity list')
 if arcpy.GetParameterAsText(30) == 'Yes':
     activitylist.append('urb')
-    arcpy.AddMessage('added hpl to activity list')
+    arcpy.AddMessage('added urb to activity list')
 if arcpy.GetParameterAsText(34) == 'Yes':
     activitylist.append('gra')
     arcpy.AddMessage('added gra to activity list')
@@ -287,9 +287,9 @@ if 'cag' in activitylist:
 Helpers.add_to_logfile(logfile,'Urban Forestry' + ': ' + arcpy.GetParameterAsText(30))   
 if 'urb' in activitylist:
     x = 30
-    Generic.dict_activity['cag']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
-    Generic.dict_activity['cag']['years'] = float(arcpy.GetParameterAsText(x + 3))        
-    Generic.dict_activity['cag']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2)) 
+    Generic.dict_activity['urb']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
+    Generic.dict_activity['urb']['years'] = float(arcpy.GetParameterAsText(x + 3))        
+    Generic.dict_activity['urb']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2)) 
     Helpers.add_to_logfile(logfile,'Urban Forestry Growth Rate' + ': ' + arcpy.GetParameterAsText(x + 1))
     Helpers.add_to_logfile(logfile,'Urban Forestry Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Urban Forestry Ending Year' + ': ' + arcpy.GetParameterAsText(x + 3))
@@ -317,7 +317,8 @@ else:
 
 
 if arcpy.GetParameterAsText(30) == 'Yes':
-    ug = ((arcpy.GetParameterAsText(33)-arcpy.GetParameterAsText(32))*arcpy.GetParameterAsText(31))
+    ug = ((float(arcpy.GetParameterAsText(33))-float(arcpy.GetParameterAsText(32)))*float(arcpy.GetParameterAsText(31)))
+    rate = float(arcpy.GetParameterAsText(31))
     if ug > 0:
         ucc = 0.102 + ug
     else: 
@@ -334,9 +335,9 @@ import ReportingTemp
 
 #Run each module
 initout = Initial.DoInitial(mask, cproc, dev, arcpy.GetParameterAsText(5), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
-outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev)
-templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt)
-#templist[0].to_csv('P:/Temp/Temperino2.csv')
+outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, ucc)
+templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, rate, logfile)
+templist[0].to_csv('P:/Temp/Temperino2.csv')
 ReportingTemp.report(templist[0],outpath,gen, water, resistance,crop,nitrate,Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
 ReportingTemp.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
 ReportingTemp.report_acres(templist[0],activitylist,outpath)

@@ -18,7 +18,7 @@ import pandas as pd
 import Helpers
 global _eligibility
 
-def ApplyGHG(df,activitylist, dictact, trt):
+def ApplyGHG(df,activitylist, dictact, trt, ug = 0, rate = 0, logfile = 'None'):
 
     tempdf = df.sort_values(['pointid'])
     carb = {}
@@ -65,11 +65,7 @@ def ApplyGHG(df,activitylist, dictact, trt):
                         counter2 = counter2 + 1
                     fullcount = 0
                     Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Full adoption.')
-                    
-                    
-                    
-                    
-                    
+
                     #For oak and Riparian, carry through 2030 at full capacity
                     if activity == 'rre' or activity == 'oak' or activity == 'gra':
                         while counter2<maxyrs:
@@ -108,9 +104,12 @@ def ApplyGHG(df,activitylist, dictact, trt):
             Helpers.pmes('tempix: ' + str(tempix))   
             if tempix > 0:
                 tempdf[activity +'_carbred'] = tempdf[activity+'selected']*(carb1/pixels)
+            
+        Helpers.add_to_logfile(logfile,'Activity is : ' + activity + ', Pixels are : ' + str(tempix) + ' AND carbon rate is : ' + str(carb1/pixels))
     # Run the above functionf or every activity selected
     for i in activitylist:
-        UpdateValues(tempdf,i, carb, carb2, dictact)
+        if i != 'urb':
+            UpdateValues(tempdf,i, carb, carb2, dictact)
         
         
     # Update gridcodes for treatment scenarios
@@ -121,7 +120,59 @@ def ApplyGHG(df,activitylist, dictact, trt):
     for i in devlist:
         for x in keylist:
             tempdf.loc[(tempdf['LC2030_trt_'+i] ==  x),'gridcode30_trt_' + i] = gcdict[x]
+        
+        
+        
+    if ug != 0 :
+        years = float(dictact['urb']['years']) - float(dictact['urb']['adoptyear'])
+        carbon =  328.98 * .09 #Convert tons/ha to tons/pixel
+        count = 0
+        tot = 0
+        temp = tempdf.loc[(dictact['urb']['query'])]
+        numb = len(temp.index)
+        pix = rate * numb
+        tot = 0
+        while count < years:
+            count = count + 1
+            tot = ((count * pix)* carbon) + tot
+        tempdf['urb' +'_carbred'] = 0
+        rater = tot/numb
+
+        tempdf['urb' +'_carbred'] = tempdf['urb'+'selected']*(rater)
+        Helpers.add_to_logfile(logfile,'Activity is : ' + 'urb' + ', Pixels are : ' + str(numb) + ' AND carbon rate is : ' + str(tot/numb))
+        
+        
             
+        
+        
+        
     return (tempdf,carb,carb2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
