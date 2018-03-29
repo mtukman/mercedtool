@@ -69,6 +69,15 @@ def set_paths_and_workspaces(root_data_path = r"E:\TGS\projects\Merced Carbon", 
     rids = os.path.join(root_data_path,midpath,'Tables/LUTables/env_rids.csv')
 
     #Look up tables for reporting functions
+    
+    
+    
+    
+    
+    global lut_cover14
+    lut_air = os.path.join(lutables,'lut_cover14.csv')
+    global lut_cover30
+    lut_air = os.path.join(lutables,'lut_cover30.csv')
     global lut_air
     lut_air = os.path.join(lutables,'lut_air_pollution.csv')
     global lut_genclass

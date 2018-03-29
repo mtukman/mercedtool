@@ -11,7 +11,7 @@ Created on Thu Feb 22 08:58:23 2018
 
 
 #def report(outpath, df):
-def report(df, outpath, glu, wlu, rlu, clu, nlu,alu,lupath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0, gra = 0, cproc = 0, terflag = 0, ucc = 0):
+def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0, gra = 0, cproc = 0, terflag = 0, ucc = 0):
     
     """
     This function reports on the multi-benefits. 
@@ -39,7 +39,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu,lupath, acdict = 'None', oak
     cclass = pd.read_csv(clu) #crop value look up
     nclass = pd.read_csv(nlu) #nitrate look up
     aclass = pd.read_csv(alu) #nitrate look up
-    
+    cov14 = 
+    cov30 = 
     
     #create an empty dataframe with only landcovers, used for outer joins in functions
     lc = pd.DataFrame({'landcover':lclist})
