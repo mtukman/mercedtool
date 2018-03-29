@@ -301,7 +301,7 @@ water = Generic.lut_wateruse
 resistance =  Generic.lut_resistance
 crop = Generic.lut_crop_value
 nitrate = Generic.lut_nitrates
-
+air = Generic.lut_air
 
 #If a treatment mask has been provided, set the variable
 if arcpy.GetParameterAsText(46):
@@ -338,7 +338,7 @@ initout = Initial.DoInitial(mask, cproc, dev, arcpy.GetParameterAsText(5), Gener
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, ucc)
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, rate, logfile)
 templist[0].to_csv('P:/Temp/Temperino2.csv')
-ReportingTemp.report(templist[0],outpath,gen, water, resistance,crop,nitrate,Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
+ReportingTemp.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
 ReportingTemp.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
 ReportingTemp.report_acres(templist[0],activitylist,outpath)
 

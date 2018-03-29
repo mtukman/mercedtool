@@ -11,7 +11,7 @@ Created on Thu Feb 22 08:58:23 2018
 
 
 #def report(outpath, df):
-def report(df, outpath, glu, wlu, rlu, clu, nlu,lupath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0, gra = 0, cproc = 0, terflag = 0, ucc = 0):
+def report(df, outpath, glu, wlu, rlu, clu, nlu,alu,lupath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0, gra = 0, cproc = 0, terflag = 0, ucc = 0):
     
     """
     This function reports on the multi-benefits. 
@@ -38,6 +38,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,lupath, acdict = 'None', oak = 0
     rclass = pd.read_csv(rlu) #resistance look up
     cclass = pd.read_csv(clu) #crop value look up
     nclass = pd.read_csv(nlu) #nitrate look up
+    aclass = pd.read_csv(alu) #nitrate look up
     
     
     #create an empty dataframe with only landcovers, used for outer joins in functions
@@ -88,7 +89,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,lupath, acdict = 'None', oak = 0
         dfdict['dev_flagged'] = df2
         Helpers.pmes('Developed Added to Reporting List')
     if ucc != 0:
-        dfdict['urb'] = df.loc[(df['urb_selected'] == 1)]
+        dfdict['urb'] = df.loc[(df['urbselected'] == 1)]
     dfdict['hpl'] = df.loc[(df['hplselected'] == 1)]
     #Create avoided conversion dataframes if they were selected
     if acdict != 'None':
@@ -1414,8 +1415,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,lupath, acdict = 'None', oak = 0
                 #Create the initial dataframes
                 if 'trt' in field:
                     
-                    td.loc[(td['urb_selected'] == 1), field] = 'Forest'
-                    
+                    td.loc[(td['urb2selected'] == 1), field] = 'Forest'
+
                 if x in ['base', 'trt']:
                     td = td[['LC2014','pointid', field]]
                 else:
@@ -1433,14 +1434,14 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,lupath, acdict = 'None', oak = 0
                 
                 # Create 2014 nitrate reporting dataframe
                 group14 = td.groupby('LC2014', as_index = False).count()
-                tempdf14 = pd.merge(nclass,group14, how = 'outer', left_on = 'landcover', right_on = 'LC2014')
+                tempdf14 = pd.merge(aclass,group14, how = 'outer', left_on = 'landcover', right_on = 'LC2014')
                 tempdf14[y+'2'] = (tempdf14[y]*tempdf14['pointid'])/1000000 #Convert grams tons
                 group14 = tempdf14[[y+'2','landcover']]
                 group14 = group14.rename(columns={y+'2':y + '14'})
 
                 # Create 2030 nitrate reporting dataframe
                 group30 = td.groupby(field, as_index = False).count()
-                tempdf30 = pd.merge(nclass,group30, how = 'outer', left_on = 'landcover', right_on = field)
+                tempdf30 = pd.merge(aclass,group30, how = 'outer', left_on = 'landcover', right_on = field)
                 tempdf30[y+'2'] = (tempdf30[y]*tempdf30['pointid'])/1000000 #Convert grams tons
                 group30 = tempdf30[[y+'2','landcover']]
                 group30 = group30.rename(columns={y+'2':y + '30'})
@@ -1456,7 +1457,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,lupath, acdict = 'None', oak = 0
                 #For other scenarios and activities, use this section to compare 2030 bau to 2030 treatment bau nitrate change
                 else:
                     group302 = td.groupby('LC2030_bau', as_index = False).count()
-                    tempdf302 = pd.merge(nclass,group302, how = 'outer', left_on = 'landcover', right_on = 'LC2030_bau')
+                    tempdf302 = pd.merge(aclass,group302, how = 'outer', left_on = 'landcover', right_on = 'LC2030_bau')
                     tempdf302[y+'2'] = (tempdf302[y]*tempdf302['pointid'])/1000000 #Convert grams tons
                     group302 = tempdf302[[y+'2','landcover']]
                     group302 = group302.rename(columns={y+'2':y + '302'})
@@ -1495,7 +1496,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,lupath, acdict = 'None', oak = 0
                     
             #Create a reporting dataframe for 2014 baseline
             td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid']]        
-            tempdf14 = pd.merge(td,nclass, how = 'outer', left_on = 'LC2014', right_on = 'landcover')
+            tempdf14 = pd.merge(td,aclass, how = 'outer', left_on = 'LC2014', right_on = 'landcover')
             group14 = tempdf14.groupby('LC2014').sum()
             group14['index1'] = group14.index
             group14 = group14[[y,'index1']]
