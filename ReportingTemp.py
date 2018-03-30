@@ -39,9 +39,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
     cclass = pd.read_csv(clu) #crop value look up
     nclass = pd.read_csv(nlu) #nitrate look up
     aclass = pd.read_csv(alu) #nitrate look up
-    cov14 = 
-    cov30 = 
-    
+    cover14 = pd.read_csv(cov14)
+    cover30 =  pd.read_csv(cov30)
+    ucc = ucc
     #create an empty dataframe with only landcovers, used for outer joins in functions
     lc = pd.DataFrame({'landcover':lclist})
     
@@ -67,6 +67,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
     dfdict['trt'] = df
     dfdict['eda'] = df.loc[(df['eda_flag'] == 1)]
     dfdict['pca'] = df.loc[(df['pca_val'] == 1)]
+    test = df.loc[(df['vp_flag'] == 1)]
+    if len(test.index) > 0:
+         dfdict['vp'] = test
     
     if rre == 1:
         df2 = df.loc[(df['rreselected'] == 1)]
@@ -571,7 +574,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     for i in devlist:
                         watfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
             else:
-                watfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
+                if x != 'vp':
+                    watfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
                 
         #Make a baseline report for 2014
         td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid']]
@@ -1156,7 +1160,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                         cropfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
  
             else:
-                cropfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
+                if x != 'vp':
+                    cropfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
         td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid']]
         
         # Create a 2014 baseline reporting dataframe
@@ -1259,7 +1264,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                         gwfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
                         
             else:
-                gwfunct(x, 'LC2030_bau', 'bau', dfdict[x])
+                if x != 'vp':
+                    gwfunct(x, 'LC2030_bau', 'bau', dfdict[x])
         tlist = list(gwdict.values())
         l = len(tlist)
         count = 1
@@ -1403,7 +1409,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         
         xlist = ['no2_val',	'so2_val','pm10_val', 'pm2_5_val','co_val',	'o3_val']
         
-        def airfunct(name, field, dev, df, y): 
+        def airfunct(name, field, dev, df, y, gridcode): 
                 """
                 This subfunction create a dataframe which is added to a dataframe dictionary (all will be merged at the end of the parent function to create a csv report)
                 name: The name of the scenario being processed
@@ -1414,37 +1420,69 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 """
                 td = df
                 #Create the initial dataframes
-                if 'trt' in field:
-                    
-                    td.loc[(td['urb2selected'] == 1), field] = 'Forest'
+#                if 'trt' in field:
+#                    
+#                    td.loc[(td['urb2selected'] == 1), field] = 'Forest'
 
                 if x in ['base', 'trt']:
-                    td = td[['LC2014','pointid', field]]
+                    # 
+                    td = td[['LC2014','pointid', field, 'gridcode14', gridcode]]
+                    td.loc[(td[field] == 'Oak Conversion'), gridcode] = 3
+                    td.loc[(td[field] == 'Young Forest'), gridcode] = 3
+                    td.loc[(td[field] == 'Woody Riparian'), gridcode] = 3
+                    td.loc[(td[field] == 'Young Shrubland'), gridcode] = 5
+
+                    td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
+                    td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
+                    td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
+                    td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
+
+                    td = pd.merge(td,cover14, how = 'left', left_on = 'gridcode14', right_on = 'gridcode14')
+                    td = pd.merge(td,cover30, how = 'left', left_on = gridcode, right_on = 'gridcode30')
+                    td = td.rename (columns = {'cover30':'cover2', 'cover14':'cover1'})
                 else:
-                    td = td[['LC2014','pointid', field, 'LC2030_bau']]
+                    td = td[['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau']]
+                    
+                    td.loc[(td[field] == 'Oak Conversion'), gridcode] = 3
+                    td.loc[(td[field] == 'Young Forest'), gridcode] = 3
+                    td.loc[(td[field] == 'Woody Riparian'), gridcode] = 3
+                    td.loc[(td[field] == 'Young Shrubland'), gridcode] = 5
+                    td.loc[(td['LC2030_bau'] == 'Oak Conversion'), 'gridcode30_bau'] = 3
+                    td.loc[(td['LC2030_bau'] == 'Young Forest'), 'gridcode30_bau'] = 3
+                    td.loc[(td['LC2030_bau'] == 'Woody Riparian'), 'gridcode30_bau'] = 3
+                    td.loc[(td['LC2030_bau'] == 'Young Shrubland'), 'gridcode30_bau'] = 5
+                    
                     td.loc[(td['LC2030_bau'] == 'Young Forest'), 'LC2030_bau'] = 'Forest'
                     td.loc[(td['LC2030_bau'] == 'Young Shrubland'), 'LC2030_bau'] = 'Shrubland'
                     td.loc[(td['LC2030_bau'] == 'Woody Riparian'), 'LC2030_bau'] = 'Forest'
                     td.loc[(td['LC2030_bau'] == 'Oak Conversion'), 'LC2030_bau'] = 'Forest'
+                    td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
+                    td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
+                    td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
+                    td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
                     
-                td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
-                td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
-                td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
-                td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
+                    td = pd.merge(td,cover30, how = 'left', left_on = 'gridcode30_trt_bau', right_on = 'gridcode30')
+                    td = td.rename (columns = {'cover30':'cover2'})
+                    td = pd.merge(td,cover30, how = 'left', left_on = gridcode, right_on = 'gridcode30')
+                    td = td.rename (columns = {'cover30':'cover1'})
+
                 Helpers.pmes('Air Pollution Reporting: ' + y + ',' + name + ', ' + dev)
                 
                 # Create 2014 nitrate reporting dataframe
-                group14 = td.groupby('LC2014', as_index = False).count()
-                tempdf14 = pd.merge(aclass,group14, how = 'outer', left_on = 'landcover', right_on = 'LC2014')
-                tempdf14[y+'2'] = (tempdf14[y]*tempdf14['pointid'])/1000000 #Convert grams tons
-                group14 = tempdf14[[y+'2','landcover']]
+                tempdf14 = pd.merge(td,aclass, how = 'left', left_on = 'LC2014', right_on = 'landcover')
+                tempdf14.loc[tempdf14['LC2014'].isin(['Developed','Urban','Developed Roads']), 'cover1'] = .102
+                tempdf14[y+'2'] = (tempdf14[y]*tempdf14['cover1'])/1000000 #Convert grams tons
+                group14 = tempdf14.groupby('landcover', as_index = False).sum()
+                group14 = group14[[y+'2','landcover']]
                 group14 = group14.rename(columns={y+'2':y + '14'})
 
                 # Create 2030 nitrate reporting dataframe
-                group30 = td.groupby(field, as_index = False).count()
-                tempdf30 = pd.merge(aclass,group30, how = 'outer', left_on = 'landcover', right_on = field)
-                tempdf30[y+'2'] = (tempdf30[y]*tempdf30['pointid'])/1000000 #Convert grams tons
-                group30 = tempdf30[[y+'2','landcover']]
+                tempdf30 = pd.merge(td,aclass, how = 'left', left_on = field, right_on = 'landcover')
+                tempdf30.loc[tempdf30[field].isin(['Developed','Urban','Developed Roads']), 'cover2'] = ucc
+                
+                tempdf30[y+'2'] = (tempdf30[y]*tempdf30['cover2'])/1000000 #Convert grams tons
+                group30 = tempdf30.groupby('landcover', as_index = False).sum()
+                group30 = group30[[y+'2','landcover']]
                 group30 = group30.rename(columns={y+'2':y + '30'})
                 tempmerge = pd.merge(group14,group30, on = 'landcover', how = 'outer')
                 tempmerge['change'] = tempmerge[y+'30']-tempmerge[y+'14']
@@ -1457,10 +1495,12 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     
                 #For other scenarios and activities, use this section to compare 2030 bau to 2030 treatment bau nitrate change
                 else:
-                    group302 = td.groupby('LC2030_bau', as_index = False).count()
-                    tempdf302 = pd.merge(aclass,group302, how = 'outer', left_on = 'landcover', right_on = 'LC2030_bau')
-                    tempdf302[y+'2'] = (tempdf302[y]*tempdf302['pointid'])/1000000 #Convert grams tons
-                    group302 = tempdf302[[y+'2','landcover']]
+
+                    tempdf302 = pd.merge(td,aclass, how = 'left', left_on = 'LC2030_bau', right_on = 'landcover')
+                    tempdf302.loc[tempdf302['LC2030_bau'].isin(['Developed','Urban','Developed Roads']), 'cover2'] = ucc
+                    tempdf302[y+'2'] = (tempdf302[y]*tempdf302['cover2'])/1000000 #Convert grams tons
+                    group302 = tempdf302.groupby('landcover', as_index = False).sum()
+                    group302 = group302[[y+'2','landcover']]
                     group302 = group302.rename(columns={y+'2':y + '302'})
                     tempmerge = pd.merge(group30,group302, on = 'landcover', how = 'outer')
                     
@@ -1482,27 +1522,27 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 if x in ['base', 'trt']:
                     if x == 'base':
                         for i in devlist:
-                            airfunct(x, 'LC2030_' + i, i, dfdict[x],y)
+                            airfunct(x, 'LC2030_' + i, i, dfdict[x],y, 'gridcode30_' + i)
                     else:
                         for i in devlist:
-                            airfunct(x, 'LC2030_trt_' + i, i, dfdict[x],y)
+                            airfunct(x, 'LC2030_trt_' + i, i, dfdict[x],y, 'gridcode30_trt_' + i)
                 else:
-                    if x == 'eda':
+                    if x == 'vp':
                         pass
-                    elif x == 'urb':
-                        airfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x],y)
                     else:
-                        airfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x],y)
+                        airfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x],y, 'gridcode30_trt_bau')
                         
                     
             #Create a reporting dataframe for 2014 baseline
-            td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid']]        
-            tempdf14 = pd.merge(td,aclass, how = 'outer', left_on = 'LC2014', right_on = 'landcover')
-            group14 = tempdf14.groupby('LC2014').sum()
-            group14['index1'] = group14.index
-            group14 = group14[[y,'index1']]
-            group14[y] = group14[y]/1000000 #Convert grams tons
-            group14 = group14.rename(columns={y:'tons__14','index1':'landcover'})
+            td = df[['LC2014','gridcode14','pointid']]   
+            td = pd.merge(td,cover14, how = 'left', left_on = 'gridcode14', right_on = 'gridcode14')
+            tempdf14 = pd.merge(td,aclass, how = 'left', left_on = 'LC2014', right_on = 'landcover')
+            tempdf14.loc[tempdf14['LC2014'].isin(['Developed','Urban','Developed Roads']), 'cover14'] = .102
+            tempdf14[y] = (tempdf14[y]*tempdf14['cover14'])/1000000  #Convert grams tons
+
+            group14 = tempdf14.groupby(['landcover'], as_index = False).sum()
+            group14 = group14.rename(columns={y:'tons_14'})
+            group14 =  group14[['landcover','tons_14']]
             nitdict['Base_2014'] = group14
             
             tlist = list(nitdict.values())
@@ -1950,10 +1990,10 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
     groundwater(df,outpath)
     nitrates(df,outpath)
     airpol(df,outpath)
-#    if cproc == 0:
-#        watershedintegrity(df,outpath)
-#    else:
-#        pass
+    if cproc == 0:
+        watershedintegrity(df,outpath)
+    else:
+        pass
     aqua(df,outpath)
     if terflag == 1:
         thab_func(df,outpath, lupath)
