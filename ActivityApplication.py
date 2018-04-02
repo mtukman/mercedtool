@@ -58,7 +58,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         
         #Set the query that will define suitability
         if sflag == 0:
-            dictact['rre']['query'] = (df['LC2030_trt_bau'].isin(['Grassland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (df['lcchange'] == 1) & ((df['near_rivers'] < 650) | ((df['ripstr_dist'] < 100) & (df['ripstr_flag'] == 1))) & (df['near_woody'] != 0) & queryadd
+            dictact['rre']['query'] = (df['LC2030_trt_bau'].isin(['Grassland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (df['lcchange'] == 1) & ((df['near_rivers'] < 304.8) | ((df['ripstr_dist'] < 30.48) & (df['ripstr_flag'] == 1))) & (df['near_woody'] != 0) & queryadd #Units are in meters for distance requirements
         elif sflag == 1:
             dictact['rre']['query'] = queryadd
         Helpers.CreateSuitFlags('rre',df,dictact,'rre')
@@ -70,9 +70,12 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         df.loc[df['rreselected'] == 1, 'LC2030_trt_bau'] = 'Forest'
         df.loc[df['rreselected'] == 1, 'LC2030_trt_med'] = 'Forest'
         df.loc[df['rreselected'] == 1, 'LC2030_trt_max'] = 'Forest'
+        df.loc[df['rreselected'] == 1, 'gridcode30_trt_bau'] = 3
+        df.loc[df['rreselected'] == 1, 'gridcode30_trt_med'] = 3
+        df.loc[df['rreselected'] == 1, 'gridcode30_trt_max'] = 3
         if customdev == 1:
             df.loc[df['rreselected'] == 1, 'LC2030_trt_cust'] = 'Forest'
-
+            df.loc[df['rreselected'] == 1, 'gridcode30_trt_cust'] = 3
     #Create Oak Suitability and Selection
     if 'oak' in activitylist:
         dictact['oak']['query'] =((df['LC2030_trt_bau'].isin(['Grassland','Shrubland','Irrigated Pasture','Barren']))|((df['LC2030_trt_bau']== 'Urban') & df['nlcd_val'].isin([21,22,31]))) & (df['lcchange'] == 1) & (df['oakrange_flg'] == 1) & queryadd
@@ -85,6 +88,9 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         df.loc[df['oakselected'] == 1, 'LC2030_trt_bau'] = 'Forest'
         df.loc[df['oakselected'] == 1, 'LC2030_trt_med'] = 'Forest'
         df.loc[df['oakselected'] == 1, 'LC2030_trt_max'] = 'Forest'
+        df.loc[df['oakselected'] == 1, 'gridcode30_trt_bau'] = 11
+        df.loc[df['oakselected'] == 1, 'gridcode30_trt_med'] = 11
+        df.loc[df['oakselected'] == 1, 'gridcode30_trt_max'] = 11
         if customdev == 1:
             df.loc[df['oakselected'] == 1, 'LC2030_trt_cust'] = 'Forest'
         #Change landcover and gridcode fields for points selected for the activity
@@ -185,8 +191,8 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     dictact['hpl']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1) & queryadd
     dictact['cam']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & queryadd
     dictact['urb']['query'] = (df['LC2030_trt_bau'].isin(['Urban'])) & (df['lcchange'] == 1) & queryadd
-    dictact['cag']['query'] = (df['LC2030_trt_bau'].isin(['Grassland'])) & (df['lcchange'] == 1) & (df['slope_val'] < 15) & ((df['near_rivers'] < 650) | (df['near_streams'] < 100)) & queryadd
-    dictact['gra']['query'] = (df['LC2030_trt_bau'].isin(['Grassland'])) & (df['lcchange'] == 1) & queryadd
+    dictact['cag']['query'] = (df['LC2030_trt_bau'].isin(['Grassland'])) & (df['lcchange'] == 1) & (df['slope_val'] < 15) & ((df['near_rivers'] > 304.8) | (df['near_streams'] > 30.48)) & queryadd
+    dictact['gra']['query'] = (df['LC2030_trt_bau'].isin(['Grassland'])) & (df['lcchange'] == 1) & queryadd #Units are in meters for distance requirements
 
     #Create green house gas function to run suitability, eligibility and selection functions from Helpers
     def ghg_selection (df,activity,dict_eligibility,dictact):
@@ -214,17 +220,35 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         numb = len(temp.index)
         dictact['urb']['adoption'] = numb/4.49555
         ghg_selection (df,'urb',dict_eligibility,dictact)
+        
+        
     if ug != 0:
         temp = df.loc[(df['LC2030_trt_bau'].isin(['Urban', 'Developed','Developed Roads'])) & (df['lcchange'] == 1) & queryadd]
         numb = len(temp.index)
         dictact['urb2']['adoption'] = numb/4.49555
         dictact['urb2']['adoption'] = dictact['urb2']['adoption']*ucc
         ghg_selection (df,'urb2',dict_eligibility,dictact)
+        
+    import pandas as pd
     
+#    rlist = ['sagbi_class','hydrovuln_flag', 'biodiversity_rank', 'clim_rank','terrhabrank']
+#
+#
+#    df = df.loc[(df['gridcode30_trt_bau'].isin(1,2,3,4,5,7,8,9,10,11,14,15,16)) & (df['gridcode30_trt_med'].isin(6,12,13))]
+#    length = len(df.index)
+#    temp = pd.DataFrame( columns=')
+#    
+#    
+#    df = df.loc[(df['gridcode30_trt_bau'].isin(1,2,3,4,5,7,8,9,10,11,14,15,16)) & (df['gridcode30_trt_max'].isin(6,12,13))]
+#    
+#    
+    blist = ['ccrsuitflag','mulsuitflag','nfmsuitflag','hplsuitflag','camsuitflag','cagsuitflag','grasuitflag','urbsuitflag','urb2suitflag','oaksuitflag','rresuitflag','ac_wet_arc','ac_gra_arc','ac_irr_arc','ac_orc_arc','ac_arc_urb','ac_gra_urb','ac_irr_urb','ac_orc_urb','ac_arc_orc','ac_gra_orc','ac_irr_orc','ac_vin_orc','ac_arc_irr','ac_orc_irr','gp_code','LC2001','hydrovuln_flag','huc12_val','slope_val','medgroup_val','smallgroup_val','gridcode01','pref_dev_flag','near_nwi','near_roads','pref_dev_type','woodyrip_class','near_woody', 'biodiversity_rank','clim_rank','terrhabrank']
     
-    rlist = ['sagbi_class','hydrovuln_flag']
-    
-    df = df.drop(columns = ['ccrsuitflag','mulsuitflag','nfmsuitflag','hplsuitflag','camsuitflag','cagsuitflag','grasuitflag','urbsuitflag','urb2suitflag','oaksuitflag','rresuitflag','ac_wet_arc','ac_gra_arc','ac_irr_arc','ac_orc_arc','ac_arc_urb','ac_gra_urb','ac_irr_urb','ac_orc_urb','ac_arc_orc','ac_gra_orc','ac_irr_orc','ac_vin_orc','ac_arc_irr','ac_orc_irr','gp_code','LC2001','hydrovuln_flag','huc12_val','slope_val','medgroup_val','smallgroup_val','gridcode01','pref_dev_flag','near_nwi','near_roads','pref_dev_type','woodyrip_class','near_woody'])
+    clist = []
+    for i in blist:
+        if i in df.columns:
+            clist.append(i)
+    df = df.drop(columns = clist)
     
     
     

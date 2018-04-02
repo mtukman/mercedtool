@@ -1676,7 +1676,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             
             td['riparian'] = 0 #Riparian flag
             
-            td.loc[(td['near_streams'] < 100) | (td['near_rivers'] < 650),'riparian'] = 1 #Set riparian flag to 1
+            td.loc[(td['near_streams'] < 30.48) | (td['near_rivers'] < 304.8),'riparian'] = 1 #Set riparian flag to 1, Units are in meters for distance requirements
             
             td['watint14'] = 'na'
             td['watint30'] = 'na'
@@ -1860,6 +1860,14 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         #Export merged dataframe to a csv
         temp.to_csv(outpath+'watint.csv')      
     def thab_func(df, outpath, lupath):
+        """
+        This function reports on terrestrial habitat quality. Each pixel is evaluated for the species which can utilize that landcover, and depending on lancover change, a pixel is categorized as improved, degraded or unchanged.
+        
+        
+        
+        
+        """
+        
         import Generic
         global pts
         import pandas as pd
@@ -1870,8 +1878,6 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             Helpers.pmes('Doing Terrestrial Habitat for : ' + name + ' and ' + dev)
             if name in ['base', 'dev','cons', 'trt']:
                         td = df[['LC2014','pointid', 'rid', field, gridcode2,gridcode]]
-                        td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
-                        td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                         td.loc[(td[gridcode] == 14), gridcode] = 3
                         td.loc[(td[gridcode] == 15), gridcode] = 5
                         td.loc[(td[gridcode2] == 14), gridcode2] = 3
@@ -1882,10 +1888,6 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                         
             else:
                 td = df[[gridcode2,'pointid', 'rid',gridcode, 'LC2030_trt_bau', 'LC2030_bau']]
-                td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
-                td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
-                td.loc[(td['LC2030_bau'] == 'Young Forest'), field] = 'Forest'
-                td.loc[(td['LC2030_bau'] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td[gridcode] == 14), gridcode] = 3
                 td.loc[(td[gridcode] == 15), gridcode] = 5
                 td.loc[(td[gridcode2] == 14), gridcode2] = 3
@@ -2020,7 +2022,6 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             a =pd.DataFrame.from_dict(summary_dict, orient='index')
             a.reset_index(inplace=True)
             a.columns=['guild', 'acres_' + name + '_' + dev]
-            a.to_csv(outpath+name + dev+'_terrhab.csv')  
             thab_dict[name + dev] = a
             
             
@@ -2055,7 +2056,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         temp.fillna(0, inplace = True)
         
         #Export the merged reporting dataframe to a csv
-        temp.to_csv(outpath+'_terrhab.csv')    
+        temp.to_csv(outpath+'terrhab.csv')    
 
     
     #Run all of the reporting functions
@@ -2101,18 +2102,23 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
     
     #Change treatment labels for riparian restoration, oak conversion and grass restoration to bau values for carbon reporting
-    df.loc[(df['rreselected'] == 1), 'gridcode30_trt_bau'] = df['gridcode30_bau']
-    df.loc[(df['oakselected'] == 1), 'gridcode30_trt_bau'] = df['gridcode30_bau']
-    df.loc[(df['rreselected'] == 1), 'gridcode30_trt_med'] = df['gridcode30_med']
-    df.loc[(df['oakselected'] == 1), 'gridcode30_trt_med'] = df['gridcode30_med']
-    df.loc[(df['rreselected'] == 1), 'gridcode30_trt_max'] = df['gridcode30_max']
-    df.loc[(df['oakselected'] == 1), 'gridcode30_trt_max'] = df['gridcode30_max']
-    df.loc[(df['rreselected'] == 1), 'LC2030_trt_bau'] = df['LC2030_bau']
-    df.loc[(df['oakselected'] == 1), 'LC2030_trt_bau'] = df['LC2030_bau']
-    df.loc[(df['rreselected'] == 1), 'LC2030_trt_med'] = df['LC2030_med']
-    df.loc[(df['oakselected'] == 1), 'LC2030_trt_med'] = df['LC2030_med']
-    df.loc[(df['rreselected'] == 1), 'LC2030_trt_max'] = df['LC2030_max']
-    df.loc[(df['oakselected'] == 1), 'LC2030_trt_max'] = df['LC2030_max']
+    
+    
+    if 'rreselected' in df.columns:
+        df.loc[(df['rreselected'] == 1), 'gridcode30_trt_med'] = df['gridcode30_med']
+        df.loc[(df['rreselected'] == 1), 'gridcode30_trt_max'] = df['gridcode30_max']
+        df.loc[(df['rreselected'] == 1), 'LC2030_trt_max'] = df['LC2030_max']
+        df.loc[(df['rreselected'] == 1), 'LC2030_trt_med'] = df['LC2030_med']
+        df.loc[(df['rreselected'] == 1), 'LC2030_trt_bau'] = df['LC2030_bau']
+        df.loc[(df['rreselected'] == 1), 'gridcode30_trt_bau'] = df['gridcode30_bau']
+    
+    if 'oakselected' in df.columns:
+        df.loc[(df['oakselected'] == 1), 'gridcode30_trt_bau'] = df['gridcode30_bau']
+        df.loc[(df['oakselected'] == 1), 'gridcode30_trt_med'] = df['gridcode30_med']
+        df.loc[(df['oakselected'] == 1), 'gridcode30_trt_max'] = df['gridcode30_max']
+        df.loc[(df['oakselected'] == 1), 'LC2030_trt_bau'] = df['LC2030_bau']
+        df.loc[(df['oakselected'] == 1), 'LC2030_trt_med'] = df['LC2030_med']
+        df.loc[(df['oakselected'] == 1), 'LC2030_trt_max'] = df['LC2030_max']
 
     #Create dataframes for each scenario and activity
     dfdict = {}
@@ -2307,6 +2313,12 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     
     
 def report_acres(df, activitylist, outpath):
+    """
+    This function reports the number of acres adopted for each activity.
+    
+    
+    """
+    
     import Helpers
     import pandas as pd
     acredict= {}
