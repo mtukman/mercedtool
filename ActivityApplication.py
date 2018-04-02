@@ -5,7 +5,7 @@ import Helpers
 global dict_eligibility
 
 
-def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',customdev = 0, ug = 0, ucc = 0):
+def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',customdev = 0, ug = 0, ucc = 0, sflag = 0):
     ''' This function takes the activities selected by the user, finds suitable pixels and randomly selects pixels for the activity based on spatial attributes until the desired amount of pixels have been selected.
     
     df: The dataframe fom the initial module
@@ -34,7 +34,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
 
     #Create an query addon that is based on whether a custom development or treatment mask has been provided by the user.
     Helpers.pmes (activitylist)
-    queryadd =  ((df['dcode_medinfill'] == 0) & (df['dcode_maxinfill'] == 0))
+    queryadd =  ((df['pref_dev_flag'] == 0) & (df['dcode_maxinfill'] == 0))
     if customdev == 1:
         
         if treatmask != 'None':
@@ -57,7 +57,10 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         
         
         #Set the query that will define suitability
-        dictact['rre']['query'] = (df['LC2030_trt_bau'].isin(['Grassland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (df['lcchange'] == 1) & ((df['near_rivers'] < 650) | ((df['ripstr_dist'] < 100) & (df['ripstr_flag'] == 1))) & (df['near_woody'] != 0) & queryadd
+        if sflag == 0:
+            dictact['rre']['query'] = (df['LC2030_trt_bau'].isin(['Grassland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (df['lcchange'] == 1) & ((df['near_rivers'] < 650) | ((df['ripstr_dist'] < 100) & (df['ripstr_flag'] == 1))) & (df['near_woody'] != 0) & queryadd
+        elif sflag == 1:
+            dictact['rre']['query'] = queryadd
         Helpers.CreateSuitFlags('rre',df,dictact,'rre')
         Helpers.CreateEligDict(df, 'rre', dictact,dict_eligibility, 'rre')
         
@@ -217,7 +220,15 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         dictact['urb2']['adoption'] = numb/4.49555
         dictact['urb2']['adoption'] = dictact['urb2']['adoption']*ucc
         ghg_selection (df,'urb2',dict_eligibility,dictact)
-        
+    
+    
+    rlist = ['sagbi_class','hydrovuln_flag']
+    
+    df = df.drop(columns = ['ccrsuitflag','mulsuitflag','nfmsuitflag','hplsuitflag','camsuitflag','cagsuitflag','grasuitflag','urbsuitflag','urb2suitflag','oaksuitflag','rresuitflag','ac_wet_arc','ac_gra_arc','ac_irr_arc','ac_orc_arc','ac_arc_urb','ac_gra_urb','ac_irr_urb','ac_orc_urb','ac_arc_orc','ac_gra_orc','ac_irr_orc','ac_vin_orc','ac_arc_irr','ac_orc_irr','gp_code','LC2001','hydrovuln_flag','huc12_val','slope_val','medgroup_val','smallgroup_val','gridcode01','pref_dev_flag','near_nwi','near_roads','pref_dev_type','woodyrip_class','near_woody'])
+    
+    
+    
+    
     return df
 
 

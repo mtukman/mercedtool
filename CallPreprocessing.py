@@ -88,7 +88,17 @@ Generic.set_paths_and_workspaces()
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Grids.gdb/mediumgrid_points','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/Tables/ValueTables/mediumgroup.csv')
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/Aquatic_fewerfields','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/aquatic_habitat.csv')
 #Helpers.FCtoCSV(r'E:\Temp\CellPoints.gdb\LFC_Points_Merged',r'E:\Temp\LFC_Points_Merged.csv')
-Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/vernalpools','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/vernalpools.csv')
+#Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/vernalpools','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/vernalpools.csv')
+#Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/preferred_dev','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/preferred_dev.csv')
+Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/species_biodiversity_ecoregion','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/species_biodiversity_ecoregion.csv')
+Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/climate_change_resilience','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/climate_change_resilience.csv')
+Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/significant_habitat_rank','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/significant_habitat_rank.csv')
+
+
+
+
+
+
 
 
 #Generic.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/temppts.gdb/terhab','D:/TGS/projects/64 - Merced Carbon/Python/MercedTool/Deliverables/MASTER_DATA/ValueTables/JoinTables/terhab.csv')

@@ -47,57 +47,60 @@ for i in aclist2:
         acdict['ac_wet_arc'] = arcpy.GetParameterAsText(i + 1)
         Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
         
-    if arcpy.GetParameterAsText(i) == 'Grassland to Annual Cropland':
+    elif arcpy.GetParameterAsText(i) == 'Grassland to Annual Cropland':
         acdict['ac_gra_arc'] = arcpy.GetParameterAsText(i + 1)
         Helpers.add_to_logfile(logfile,'Avoided Conversion - Grassland to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
         
-    if arcpy.GetParameterAsText(i) == 'Irrigated Pasture to Annual Cropland':
+    elif arcpy.GetParameterAsText(i) == 'Irrigated Pasture to Annual Cropland':
         acdict['ac_irr_arc'] = arcpy.GetParameterAsText(i + 1)
         Helpers.add_to_logfile(logfile,'Avoided Conversion - Irrigated Pasture to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
         
-    if arcpy.GetParameterAsText(i) == 'Orchard to Annual Cropland':
+    elif arcpy.GetParameterAsText(i) == 'Orchard to Annual Cropland':
         acdict['ac_orc_arc'] = arcpy.GetParameterAsText(i + 1)
         Helpers.add_to_logfile(logfile,'Avoided Conversion - Orchard to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
         
-    if arcpy.GetParameterAsText(i) == 'Annual Cropland to Urban':
+    elif arcpy.GetParameterAsText(i) == 'Annual Cropland to Urban':
         acdict['ac_arc_urb'] = arcpy.GetParameterAsText(i + 1)
         Helpers.add_to_logfile(logfile,'Avoided Conversion - Annual Cropland to Urban has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
         
-    if arcpy.GetParameterAsText(i) == 'Grassland to Urban':
+    elif arcpy.GetParameterAsText(i) == 'Grassland to Urban':
         acdict['ac_gra_urb'] = arcpy.GetParameterAsText(i + 1)
         Helpers.add_to_logfile(logfile,'Avoided Conversion - Grassland to Urban has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
         
-    if arcpy.GetParameterAsText(i) == 'Irrigated Pasture to Urban':
+    elif arcpy.GetParameterAsText(i) == 'Irrigated Pasture to Urban':
         acdict['ac_irr_urb'] = arcpy.GetParameterAsText(i + 1)
         Helpers.add_to_logfile(logfile,'Avoided Conversion - Irrigated Pasture to Urban has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
         
-    if arcpy.GetParameterAsText(i) == 'Orchard to Urban':
+    elif arcpy.GetParameterAsText(i) == 'Orchard to Urban':
         acdict['ac_orc_urb'] = arcpy.GetParameterAsText(i + 1)
         Helpers.add_to_logfile(logfile,'Avoided Conversion - Orchard to Urban has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
         
-    if arcpy.GetParameterAsText(i) == 'Annual Cropland to Orchard':
+    elif arcpy.GetParameterAsText(i) == 'Annual Cropland to Orchard':
         acdict['ac_arc_orc'] = arcpy.GetParameterAsText(i + 1)
         Helpers.add_to_logfile(logfile,'Avoided Conversion - Annual Cropland to Orchard has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
         
-    if arcpy.GetParameterAsText(i) == 'Grassland to Orchard':
+    elif arcpy.GetParameterAsText(i) == 'Grassland to Orchard':
         acdict['ac_gra_orc'] = arcpy.GetParameterAsText(i + 1)
         Helpers.add_to_logfile(logfile,'Avoided Conversion - Grassland to Orchard has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
         
-    if arcpy.GetParameterAsText(i) == 'Irrigated Pasture to Orchard':
+    elif arcpy.GetParameterAsText(i) == 'Irrigated Pasture to Orchard':
         acdict['ac_irr_orc'] = arcpy.GetParameterAsText(i + 1)
         Helpers.add_to_logfile(logfile,'Avoided Conversion - Irrigated Pasture to Orchard has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
         
-    if arcpy.GetParameterAsText(i) == 'Vineyard to Orchard':
+    elif arcpy.GetParameterAsText(i) == 'Vineyard to Orchard':
         acdict['ac_vin_orc'] = arcpy.GetParameterAsText(i + 1)
         Helpers.add_to_logfile(logfile,'Avoided Conversion - Vineyard to Orchard has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
         
-    if arcpy.GetParameterAsText(i) == 'Annual Cropland to Irrigated Pasture':
+    elif arcpy.GetParameterAsText(i) == 'Annual Cropland to Irrigated Pasture':
         acdict['ac_arc_irr'] = arcpy.GetParameterAsText(i + 1)
         Helpers.add_to_logfile(logfile,'Avoided Conversion - Annual Cropland to Irrigated Pasture has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
         
-    if arcpy.GetParameterAsText(i) == 'Orchard to Irrigated Pasture':
+    elif arcpy.GetParameterAsText(i) == 'Orchard to Irrigated Pasture':
         acdict['ac_orc_irr'] = arcpy.GetParameterAsText(i + 1)
         Helpers.add_to_logfile(logfile,'Avoided Conversion - Orchard to Irrigated Pasture has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+        
+    elif arcpy.GetParameterAsText(i) == 'None':
+        Helpers.add_to_logfile(logfile,'Avoided Conversion set to None')
         
 
 outpath = newdir +  '/'
@@ -273,7 +276,8 @@ if 'gra' in activitylist:
     Helpers.add_to_logfile(logfile,'Grassland Restoration Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
     Helpers.add_to_logfile(logfile,'Grassland Restoration Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Grassland Restoration Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
-
+else: 
+    gra = 0
 Helpers.add_to_logfile(logfile,'Grassland Compost Amendment' + ': ' + arcpy.GetParameterAsText(42))   
 if 'cag' in activitylist:
     x = 42
@@ -320,6 +324,11 @@ if arcpy.GetParameterAsText(65):
 else:
     terflag = 0
 
+if arcpy.GetParameterAsText(65):
+    sflag = 1
+else:
+    sflag = 0
+
 
 if arcpy.GetParameterAsText(30) == 'Yes':
     ug = ((float(arcpy.GetParameterAsText(33))-float(arcpy.GetParameterAsText(32)))*float(arcpy.GetParameterAsText(31)))
@@ -328,8 +337,10 @@ if arcpy.GetParameterAsText(30) == 'Yes':
         ucc = 0.102 + ug
     else: 
         ucc = 0.102
-
-
+else:
+    ug = 0
+    ucc = 0.102
+    rate = 0
 
 #Import the modules
 import Initial
@@ -340,9 +351,9 @@ import ReportingTemp
 
 #Run each module
 initout = Initial.DoInitial(mask, cproc, dev, arcpy.GetParameterAsText(5), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
-outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, ucc)
+outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, ucc, sflag)
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, rate, logfile)
-templist[0].to_csv('P:/Temp/Temperino2.csv')
+#templist[0].to_csv('P:/Temp/Temperino2.csv')
 ReportingTemp.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
 ReportingTemp.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
 ReportingTemp.report_acres(templist[0],activitylist,outpath)

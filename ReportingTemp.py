@@ -92,9 +92,10 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         df2 = df.loc[(df['dev_flag'] == 1)]
         dfdict['dev_flagged'] = df2
         Helpers.pmes('Developed Added to Reporting List')
-    if ucc != 0:
+    if 'urbselected' in df.columns:
         dfdict['urb'] = df.loc[(df['urbselected'] == 1)]
-    dfdict['hpl'] = df.loc[(df['hplselected'] == 1)]
+    if 'hplselected' in df.columns:
+        dfdict['hpl'] = df.loc[(df['hplselected'] == 1)]
     #Create avoided conversion dataframes if they were selected
     if acdict != 'None':
         aclist = [*acdict]
@@ -172,7 +173,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 else:
                     for i in devlist:
                         ffunct(x, 'LC2030_trt_' + i, i, dfdict[x])
-            elif ('urb' in x):
+            elif ('_urb' in x):
                 ffunct(x, 'LC2030_bau', i, dfdict[x])
             elif ('dev_flag' in x):
                 ffunct(x, 'LC2030_trt_bau', i, dfdict[x])
@@ -226,16 +227,25 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             df: The dataframe the report is based on
             """
             #Change landcovers to reporting landcovers
+            
             if x in ['base', 'dev','cons', 'trt']:
-                td = df[['LC2014','pointid','fema_class', 'near_fema', field,'hplselected']]
+                if 'hpl' in df.columns:
+                    flist = ['LC2014','pointid','fema_class', 'near_fema', field,'hplselected']
+                else: 
+                    flist = ['LC2014','pointid','fema_class', 'near_fema', field]
+                td = df[flist]
                 td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
                 td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
                 td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
                 if 'trt' in field:
-                    td.loc[(td['hplselected'] == 1), field] = 'Forest'
+                    if 'hpl' in flist:
+                        td.loc[(td['hplselected'] == 1), field] = 'Forest'
             else:
-                td = df[['LC2014','pointid','fema_class', 'near_fema', field, 'LC2030_bau','hplselected']]
+                if 'hpl' in df.columns:
+                    td = df[['LC2014','pointid','fema_class', 'near_fema', field, 'LC2030_bau','hplselected']]
+                else:
+                    td = df[['LC2014','pointid','fema_class', 'near_fema', field, 'LC2030_bau']]
                 td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
                 td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
@@ -244,7 +254,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 td.loc[(td['LC2030_bau'] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td['LC2030_bau'] == 'Woody Riparian'), field] = 'Forest'
                 td.loc[(td['LC2030_bau'] == 'Oak Conversion'), field] = 'Forest'
-                td.loc[(td['hplselected'] == 1), field] = 'Forest'
+                if 'hpl' in td:
+                    td.loc[(td['hplselected'] == 1), field] = 'Forest'
             
             
             Helpers.pmes('FEMA Reporting: ' + name + ', ' + dev)
@@ -322,7 +333,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                             femafunct(x, 'LC2030_trt_' + i, query, i, dfdict[x])
 
                 else:
-                    femafunct(x, 'LC2030_trt_bau', query, 'bau', dfdict[x])
+                    if x != 'urb':
+                        femafunct(x, 'LC2030_trt_bau', query, 'bau', dfdict[x])
                     
             #Add 2014 Baseline
             td = df[['LC2014','pointid','fema_class', 'near_fema']]
@@ -363,16 +375,25 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             df: The dataframe the report is based on
             """
             #Change the landcovers to reporting landcovers
-            if name in ['base', 'trt']:
-                td = df[['LC2014','pointid','scenic_val', field,'hplselected']]
+  
+            if x in ['base', 'dev','cons', 'trt']:
+                if 'hpl' in df.columns:
+                    flist = ['LC2014','pointid','scenic_val', field,'hplselected']
+                else: 
+                    flist =  ['LC2014','pointid','scenic_val', field]
+                td = df[flist]
                 td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
                 td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
                 td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
                 if 'trt' in field:
-                    td.loc[(td['hplselected'] == 1), field] = 'Forest'
+                    if 'hpl' in flist:
+                        td.loc[(td['hplselected'] == 1), field] = 'Forest'
             else:
-                td = df[['LC2014','pointid','scenic_val', field, 'LC2030_bau','hplselected']]
+                if 'hpl' in df.columns:
+                    td = df[['LC2014','pointid','scenic_val', field, 'LC2030_bau','hplselected']]
+                else:
+                    td = df[['LC2014','pointid','scenic_val', field, 'LC2030_bau']]
                 td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
                 td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
@@ -381,8 +402,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 td.loc[(td['LC2030_bau'] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td['LC2030_bau'] == 'Woody Riparian'), field] = 'Forest'
                 td.loc[(td['LC2030_bau'] == 'Oak Conversion'), field] = 'Forest'
-                td.loc[(td['hplselected'] == 1), field] = 'Forest'
-                
+                if 'hpl' in td:
+                    td.loc[(td['hplselected'] == 1), field] = 'Forest'
             
             Helpers.pmes('Scenic Reporting: ' + name + ', ' + dev)
             
@@ -447,7 +468,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                         scenicfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
 
             else:
-                scenicfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
+                if x != 'urb':
+                    scenicfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
                 
                 
         #Add 2014 Base
@@ -575,7 +597,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                         watfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
             else:
                 if x != 'vp':
-                    watfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
+                    if x != 'urb':
+                        watfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
                 
         #Make a baseline report for 2014
         td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid']]
@@ -688,7 +711,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                         lcfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
                     
             else:
-                lcfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
+                if x != 'urb':
+                    lcfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
                 
         #Create a reporting dataframe for the 2014 baseline
         td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid']]
@@ -802,6 +826,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             else:
                 if x == 'eda':
                     pass
+                elif x == 'urb':
+                    pass
                 else:
                     pcafunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
                 
@@ -845,28 +871,37 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             """
             
             #Create the initial dataframe and change landcovers as necessary for reporting
-            if name in ['base', 'trt']:
-                td = df[['LC2014','pointid','c_abf75_rnk', field, 'hplselected']]
-                if 'trt' in field:
-                    td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
-                    td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
-                    td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
-                    td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
-            else:
-                td = df[['LC2014','pointid','c_abf75_rnk', field, 'LC2030_bau', 'hplselected']]
-                td.loc[(td['LC2030_bau'] == 'Young Forest'), 'LC2030_bau'] = 'Forest'
-                td.loc[(td['LC2030_bau'] == 'Young Shrubland'), 'LC2030_bau'] = 'Shrubland'
-                td.loc[(td['LC2030_bau'] == 'Woody Riparian'), 'LC2030_bau'] = 'Forest'
-                td.loc[(td['LC2030_bau'] == 'Oak Conversion'), 'LC2030_bau'] = 'Forest'
-                if 'trt' in field:
-                    td.loc[(td['hplselected'] == 1), field] = 'Forest'
-            if field == 'LC2030_trt_' + dev:
+             
+            if x in ['base', 'dev','cons', 'trt']:
+                if 'hpl' in df.columns:
+                    flist = ['LC2014','pointid','c_abf75_rnk', field,'hplselected']
+                else: 
+                    flist =  ['LC2014','pointid','c_abf75_rnk', field]
+                td = df[flist]
                 td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
                 td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
                 td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
-                td.loc[(td['hplselected'] == 1), field] = 'Forest'
-            
+                if 'trt' in field:
+                    if 'hpl' in flist:
+                        td.loc[(td['hplselected'] == 1), field] = 'Forest'
+            else:
+                if 'hpl' in df.columns:
+                    td = df[['LC2014','pointid','c_abf75_rnk', field, 'LC2030_bau','hplselected']]
+                else:
+                    td = df[['LC2014','pointid','c_abf75_rnk', field, 'LC2030_bau']]
+                td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
+                td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
+                td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
+                td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
+                td.loc[(td['LC2030_bau'] == 'Young Forest'), field] = 'Forest'
+                td.loc[(td['LC2030_bau'] == 'Young Shrubland'), field] = 'Shrubland'
+                td.loc[(td['LC2030_bau'] == 'Woody Riparian'), field] = 'Forest'
+                td.loc[(td['LC2030_bau'] == 'Oak Conversion'), field] = 'Forest'
+                if 'hpl' in td:
+                    td.loc[(td['hplselected'] == 1), field] = 'Forest'
+                    
+                    
             Helpers.pmes('Aquatic Habitat Reporting: ' + name + ', ' + dev)
             
             # Create the 2014 general landcover dataframe
@@ -928,9 +963,12 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 else:
                     for i in devlist:
                         aquahabfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
-
+                        
             else:
-                aquahabfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
+                if x == 'urb':
+                    pass
+                else:
+                    aquahabfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
                 
         #Create 2014 baseline reporting dataframe
         td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid','c_abf75_rnk']]
@@ -975,23 +1013,36 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             """
             
             #Create the initial dataframe and change landcovers as necessary for reporting
-            if name in ['base','trt']:
-                td = df[['LC2014','pointid','eca_val', field, 'hplselected']]
-            else:
-                td = df[['LC2014','pointid','eca_val', field, 'LC2030_bau', 'hplselected']]
-                td.loc[(td['LC2030_bau'] == 'Young Forest'), 'LC2030_bau'] = 'Forest'
-                td.loc[(td['LC2030_bau'] == 'Young Shrubland'), 'LC2030_bau'] = 'Shrubland'
-                td.loc[(td['LC2030_bau'] == 'Woody Riparian'), 'LC2030_bau'] = 'Forest'
-                td.loc[(td['LC2030_bau'] == 'Oak Conversion'), 'LC2030_bau'] = 'Forest'
-                if 'trt' in field:
-                    td.loc[(td['hplselected'] == 1), field] = 'Forest'
-            
 
-            td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
-            td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
-            td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
-            td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
-            td.loc[(td['hplselected'] == 1), field] = 'Forest'
+            
+            if x in ['base', 'dev','cons', 'trt']:
+                if 'hpl' in df.columns:
+                    flist = ['LC2014','pointid','eca_val', field,'hplselected']
+                else: 
+                    flist =  ['LC2014','pointid','eca_val', field]
+                td = df[flist]
+                td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
+                td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
+                td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
+                td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
+                if 'trt' in field:
+                    if 'hpl' in flist:
+                        td.loc[(td['hplselected'] == 1), field] = 'Forest'
+            else:
+                if 'hpl' in df.columns:
+                    td = df[['LC2014','pointid','eca_val', field, 'LC2030_bau','hplselected']]
+                else:
+                    td = df[['LC2014','pointid','eca_val', field, 'LC2030_bau']]
+                td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
+                td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
+                td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
+                td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
+                td.loc[(td['LC2030_bau'] == 'Young Forest'), field] = 'Forest'
+                td.loc[(td['LC2030_bau'] == 'Young Shrubland'), field] = 'Shrubland'
+                td.loc[(td['LC2030_bau'] == 'Woody Riparian'), field] = 'Forest'
+                td.loc[(td['LC2030_bau'] == 'Oak Conversion'), field] = 'Forest'
+                if 'hpl' in td:
+                    td.loc[(td['hplselected'] == 1), field] = 'Forest'
             if area == 'eca':
                 td = td.loc[td['eca_val'] == 1]
             
@@ -1057,7 +1108,10 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
      
 
                 else:
-                    movefunct(x, 'LC2030_trt_bau', 'bau', dfdict[x], y)
+                    if x == 'urb':
+                        pass
+                    else:
+                        movefunct(x, 'LC2030_trt_bau', 'bau', dfdict[x], y)
                     
             #Create a 2014 baseline dataframe
             td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid','eca_val']]
@@ -1101,9 +1155,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             
             #Create the initial dataframe and change landcovers as necessary for reporting
             if x in ['base', 'trt']:
-                td = df[['LC2014','pointid', field, 'hplselected']]
+                td = df[['LC2014','pointid', field]]
             else:
-                td = df[['LC2014','pointid', field, 'LC2030_bau', 'hplselected']]
+                td = df[['LC2014','pointid', field, 'LC2030_bau']]
                 td.loc[(td['LC2030_bau'] == 'Young Forest'), 'LC2030_bau'] = 'Forest'
                 td.loc[(td['LC2030_bau'] == 'Young Shrubland'), 'LC2030_bau'] = 'Shrubland'
                 td.loc[(td['LC2030_bau'] == 'Woody Riparian'), 'LC2030_bau'] = 'Forest'
@@ -1160,7 +1214,11 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                         cropfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
  
             else:
-                if x != 'vp':
+                if x == 'vp':
+                    pass
+                elif x == 'urb':
+                    pass
+                else:
                     cropfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
         td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid']]
         
@@ -1264,7 +1322,11 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                         gwfunct(x, 'LC2030_trt_' + i, i, dfdict[x])
                         
             else:
-                if x != 'vp':
+                if x == 'vp':
+                    pass
+                elif x == 'urb':
+                    pass
+                else:
                     gwfunct(x, 'LC2030_bau', 'bau', dfdict[x])
         tlist = list(gwdict.values())
         l = len(tlist)
@@ -1371,6 +1433,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 else:
                     if x == 'eda':
                         pass
+                    elif x == 'urb':
+                        pass
                     else:
                         nitfunct(x, 'LC2030_trt_bau', 'bau', dfdict[x],y)
                     
@@ -1426,7 +1490,13 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
 
                 if x in ['base', 'trt']:
                     # 
-                    td = td[['LC2014','pointid', field, 'gridcode14', gridcode]]
+                    
+                    if 'urb' in td.columns:
+                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'urbselected']]
+                        
+                        
+                    else:
+                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode]]
                     td.loc[(td[field] == 'Oak Conversion'), gridcode] = 3
                     td.loc[(td[field] == 'Young Forest'), gridcode] = 3
                     td.loc[(td[field] == 'Woody Riparian'), gridcode] = 3
@@ -1441,8 +1511,12 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     td = pd.merge(td,cover30, how = 'left', left_on = gridcode, right_on = 'gridcode30')
                     td = td.rename (columns = {'cover30':'cover2', 'cover14':'cover1'})
                 else:
-                    td = td[['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau']]
-                    
+                    if 'urb' in td.columns:
+                       td = td[['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau', 'urbselected']]
+                       
+                       
+                    else:
+                        td = td[['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau']]
                     td.loc[(td[field] == 'Oak Conversion'), gridcode] = 3
                     td.loc[(td[field] == 'Young Forest'), gridcode] = 3
                     td.loc[(td[field] == 'Woody Riparian'), gridcode] = 3
@@ -1510,7 +1584,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     tempmerge['change'] = tempmerge[y+'30']-tempmerge[y+'302']
                     tempmerge = tempmerge[['change', 'landcover']]
                     tempmerge = tempmerge.rename(columns = {'change':'tons_change_' + name})
-                
+                    
                 # Add the reporting dataframe to the dictionary of reporting dataframes
                 nitdict[name + dev] = tempmerge
         
@@ -1577,13 +1651,17 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             """
             
             #Create the initial dataframes
-            td = df[['LC2014','pointid', 'HUC_12', 'near_rivers','near_streams', field, 'hplselected']]
+            
+            if 'hplselected' in df.columns:            
+                td = df[['LC2014','pointid', 'HUC_12', 'near_rivers','near_streams', field, 'hplselected']]
+                td.loc[(td['hplselected'] == 1), field] = 'Forest'
+            else:
+                td = df[['LC2014','pointid', 'HUC_12', 'near_rivers','near_streams', field]]
             if 'trt' in field:
                 td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
                 td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
                 td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
-                td.loc[(td['hplselected'] == 1), field] = 'Forest'
                 
                 
                 
@@ -1960,6 +2038,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             else:
                 if x == 'eda':
                     pass
+                elif x == 'urb':
+                    pass
                 else:
                     subfunc(x, 'LC2030_trt_bau', 'bau', dfdict[x],'gridcode30_trt_bau', 'gridcode30_bau')
         
@@ -2021,18 +2101,18 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
     
     #Change treatment labels for riparian restoration, oak conversion and grass restoration to bau values for carbon reporting
-    df.loc[(df['LC2030_trt_bau'] == 'Woody Riparian'), 'gridcode30_trt_bau'] = df['gridcode30_bau']
-    df.loc[(df['LC2030_trt_bau'] == 'Oak Conversion'), 'gridcode30_trt_bau'] = df['gridcode30_bau']
-    df.loc[(df['LC2030_trt_med'] == 'Woody Riparian'), 'gridcode30_trt_med'] = df['gridcode30_med']
-    df.loc[(df['LC2030_trt_med'] == 'Oak Conversion'), 'gridcode30_trt_med'] = df['gridcode30_med']
-    df.loc[(df['LC2030_trt_max'] == 'Woody Riparian'), 'gridcode30_trt_max'] = df['gridcode30_max']
-    df.loc[(df['LC2030_trt_max'] == 'Oak Conversion'), 'gridcode30_trt_max'] = df['gridcode30_max']
-    df.loc[(df['LC2030_trt_bau'] == 'Woody Riparian'), 'LC2030_trt_bau'] = df['LC2030_bau']
-    df.loc[(df['LC2030_trt_bau'] == 'Oak Conversion'), 'LC2030_trt_bau'] = df['LC2030_bau']
-    df.loc[(df['LC2030_trt_med'] == 'Woody Riparian'), 'LC2030_trt_med'] = df['LC2030_med']
-    df.loc[(df['LC2030_trt_med'] == 'Oak Conversion'), 'LC2030_trt_med'] = df['LC2030_med']
-    df.loc[(df['LC2030_trt_max'] == 'Woody Riparian'), 'LC2030_trt_max'] = df['LC2030_max']
-    df.loc[(df['LC2030_trt_max'] == 'Oak Conversion'), 'LC2030_trt_max'] = df['LC2030_max']
+    df.loc[(df['rreselected'] == 1), 'gridcode30_trt_bau'] = df['gridcode30_bau']
+    df.loc[(df['oakselected'] == 1), 'gridcode30_trt_bau'] = df['gridcode30_bau']
+    df.loc[(df['rreselected'] == 1), 'gridcode30_trt_med'] = df['gridcode30_med']
+    df.loc[(df['oakselected'] == 1), 'gridcode30_trt_med'] = df['gridcode30_med']
+    df.loc[(df['rreselected'] == 1), 'gridcode30_trt_max'] = df['gridcode30_max']
+    df.loc[(df['oakselected'] == 1), 'gridcode30_trt_max'] = df['gridcode30_max']
+    df.loc[(df['rreselected'] == 1), 'LC2030_trt_bau'] = df['LC2030_bau']
+    df.loc[(df['oakselected'] == 1), 'LC2030_trt_bau'] = df['LC2030_bau']
+    df.loc[(df['rreselected'] == 1), 'LC2030_trt_med'] = df['LC2030_med']
+    df.loc[(df['oakselected'] == 1), 'LC2030_trt_med'] = df['LC2030_med']
+    df.loc[(df['rreselected'] == 1), 'LC2030_trt_max'] = df['LC2030_max']
+    df.loc[(df['oakselected'] == 1), 'LC2030_trt_max'] = df['LC2030_max']
 
     #Create dataframes for each scenario and activity
     dfdict = {}

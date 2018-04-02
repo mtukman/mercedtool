@@ -87,6 +87,7 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
     
     #Define fields
     pmes ('Goal is : ' + str (goal))
+    pmes ('Cap is : ' + str (cap))
     initflag =  act + 'suitflag'
     selflag = act + 'selected'
     df[selflag] = 0
