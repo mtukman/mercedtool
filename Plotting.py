@@ -2,6 +2,9 @@ mba_title_font = 24
 plot_dict = {'groundwater':["2014-2030 Projected Loss of Groundwater Recharge",1,-1, "Loss of Recharge by Development Scenario (Acre Feet per Year)", ]}
 plot_dict['cropvalue'] = ["2014-2030 Projected Change in Crop Value by Developmetn Scenario",5000000,-7, "Crop Value (Millions of Dollars)"]
 
+
+
+
 def mba_cropvalue_plot_tables(csv='D:/TGS/projects/64 - Merced Carbon/Reports/Draft Reports/cropvalue.csv', outpath='D:/TGS/projects/64 - Merced Carbon/Reports/Draft Reports/plot_tables/'):
     import os
     import pandas as pd 
@@ -52,6 +55,19 @@ def mba_gwater_plot_tables(csv='D:/TGS/projects/64 - Merced Carbon/Reports/Draft
     gwrc['scenario'] = ['ref', 'med', 'max']
     gwrc.to_csv(os.path.join(outpath, 'plt_groundwater.csv'))
     return gwrc
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def mba_chart_3scenario(table, plot_dict):
     import plotly.plotly as py
@@ -106,6 +122,97 @@ def mba_chart_3scenario(table, plot_dict):
    
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename= plot_dict[0] + '.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

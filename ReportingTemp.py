@@ -1883,7 +1883,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             
             #Select the fields needed for the analysis
             if name in ['base', 'dev','cons', 'trt']:
-                        td = df[['pointid', 'rid', gridcode2,gridcode]]
+                        td = df[['LC2014','pointid', 'rid', gridcode2,gridcode, field]]
                         td.loc[(td[gridcode] == 14), gridcode] = 3
                         td.loc[(td[gridcode] == 15), gridcode] = 5
                         td.loc[(td[gridcode2] == 14), gridcode2] = 3
@@ -1893,7 +1893,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                         td = td.loc[td['LC2014'] != td[field]]
                         
             else:
-                td = df[[gridcode2,'pointid', 'rid',gridcode]]
+                td = df[[gridcode2,'pointid', 'rid',gridcode,'LC2030_bau','LC2030_trt_bau']]
                 td.loc[(td[gridcode] == 14), gridcode] = 3
                 td.loc[(td[gridcode] == 15), gridcode] = 5
                 td.loc[(td[gridcode2] == 14), gridcode2] = 3
@@ -2330,37 +2330,28 @@ def report_acres(df, activitylist, outpath):
     import pandas as pd
     acredict= {}
     
-    for i in activitylist:
-        temp = df.loc[df[i + 'selected'] == 1]
-        temp = temp.groupby([i + 'selected'], as_index = False).count()
-        temp = temp [[i + 'selected', 'pointid']]
-        temp['pointid'] = temp['pointid'] * 0.222395
-        temp = temp[['pointid']]
-        temp = temp.rename(columns = {'pointid':i + '_acres'})
+    
+    if activitylist:
+        for i in activitylist:
+            temp = df.loc[df[i + 'selected'] == 1]
+            temp = temp.groupby([i + 'selected'], as_index = False).count()
+            temp = temp [[i + 'selected', 'pointid']]
+            temp['pointid'] = temp['pointid'] * 0.222395
+            temp = temp[['pointid']]
+            temp = temp.rename(columns = {'pointid':i + '_acres'})
+            
+            acredict[i] = temp
+            
         
-        acredict[i] = temp
+        tlist = list(acredict.values())
+
+        temp = tlist[0]
+
         
-    
-    tlist = list(acredict.values())
-#    l = len(tlist)
-#    count = 1
-    temp = tlist[0]
-#    Helpers.pmes('List of tables: ' + str(tlist))
-    
-    Helpers.pmes('Combining Dataframes')
-    result = pd.concat(tlist, axis=1)
-    
-#    
-#    #Loop through the carbon reporting dataframes and merge into one dataframe
-#    while count < l:
-#        
-#            
-#            temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
-#            count = count + 1
-#    temp.fillna(0, inplace = True)
-    
-    #Export the dataframe to a csv
-    result.to_csv(outpath+'act_acres.csv')  
+        Helpers.pmes('Combining Dataframes')
+        result = pd.concat(tlist, axis=1)
+
+        result.to_csv(outpath+'act_acres.csv')  
     
     
     
