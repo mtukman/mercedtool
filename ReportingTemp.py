@@ -1875,9 +1875,15 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         rids = pd.read_csv(lupath + '/env_rids.csv')
         
         def subfunc(name, field, dev, df, gridcode, gridcode2):
+            """
+            This function is used to calculate the acres of improved and degraded habitat for the four animal guilds.
+            """
+            
             Helpers.pmes('Doing Terrestrial Habitat for : ' + name + ' and ' + dev)
+            
+            #Select the fields needed for the analysis
             if name in ['base', 'dev','cons', 'trt']:
-                        td = df[['LC2014','pointid', 'rid', field, gridcode2,gridcode]]
+                        td = df[['pointid', 'rid', gridcode2,gridcode]]
                         td.loc[(td[gridcode] == 14), gridcode] = 3
                         td.loc[(td[gridcode] == 15), gridcode] = 5
                         td.loc[(td[gridcode2] == 14), gridcode2] = 3
@@ -1887,7 +1893,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                         td = td.loc[td['LC2014'] != td[field]]
                         
             else:
-                td = df[[gridcode2,'pointid', 'rid',gridcode, 'LC2030_trt_bau', 'LC2030_bau']]
+                td = df[[gridcode2,'pointid', 'rid',gridcode]]
                 td.loc[(td[gridcode] == 14), gridcode] = 3
                 td.loc[(td[gridcode] == 15), gridcode] = 5
                 td.loc[(td[gridcode2] == 14), gridcode2] = 3
@@ -1895,20 +1901,10 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 
                 
                 td = td.loc[td['LC2030_bau'] != td['LC2030_trt_bau']]
-
-                
-                
-            Generic.set_paths_and_workspaces()
             
             habsuit = pd.read_csv(lupath + '/lut_habsuit.csv')
             lut_uf14 = pd.read_csv(lupath + '/lut_urbanfootprint14.csv')
             lut_uf30 = pd.read_csv(lupath + '/lut_urbanfootprint30.csv')
-#            mammals = pd.read_csv(lupath + '/list_mammals.csv')
-#            amphibs = pd.read_csv(lupath + '/list_amphibians.csv')
-#            birds = pd.read_csv(lupath + '/list_birds.csv')
-#            ccbirds = pd.read_csv(lupath + '/list_climate_change_birds.csv')
-#            ccnobird = pd.read_csv(lupath + '/list_climate_change_except_birds.csv')
-#            reptiles = pd.read_csv(lupath + '/list_reptiles.csv')
             tespp = pd.read_csv(lupath + '/list_threatened_endangered.csv')
             mcount = 0
             bcount = 0
@@ -1918,6 +1914,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 
             specieslist = []
             
+            #This function gets the species list and breaks up species using commas.
             def initialize_dict(row):
                 species_string = rids.loc[rids['rid']==row['rid'], 'species_ranges'].values[0]
                 species_string = species_string[1:-1]
@@ -1927,25 +1924,35 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                         dev_dict[i]['degraded'] = 0
                         dev_dict[i]['improved'] = 0
                         
+            #This function adds habitat suitability to a dictionary using the whr code. 
             def initialize_suit_lu(row):
                 if row['cwhr_id'] not in suit_dict.keys():
                     suit_dict[row['cwhr_id']] = {}
                 else:
                     suit_dict[row['cwhr_id']][row['whr13_code']] = row['habitat_suitability']
             
+            #This function adds the ufcode to each row based on the gridcode for 2014
             def initialize_uf_lu14(row):
                 uf_dict14[row['gridcode14']] =  row['ufcode']
                 
+            #This function adds the ufcode to each row based on the gridcode for 2030
             def initialize_uf_lu30(row):
                 uf_dict30[row['gridcode30']] =  row['ufcode']    
                         
             def tally(row):
+                """
+                This function goes through each combination of rid/species and tallies up the acres of improved and degraded for each species.
+                
+                It then finds the average improved/degraded acres for each guild (mammals, birds, amphibians and threatened/endangered)
+                """
+                
                 species_string = rids.loc[rids['rid']==row['rid'], 'species_ranges'].values[0]
                 species_string = species_string[1:-1]
                 
                 for i in [i for i in species_string.split(',')]:
                     if i.upper() in suit_dict.keys():
                         
+                        #Make a list of unique species in each guild, used to get the average acreage later
                         if i not in specieslist:
                             specieslist.append(i)
                             if 'm' in i:
@@ -1958,7 +1965,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                                 countdict['t'] = countdict['t'] + 1
                         
                         
-            
+                        #This section goes through each species in each rid/species combination, finds the suitability based on the landcover, and decides whether the suitability has improved or degraded.
                         if row[gridcode2] in uf_dict14.keys():
                             lc14 = uf_dict14[row[gridcode2]]
                         else:
