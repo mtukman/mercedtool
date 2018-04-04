@@ -2319,8 +2319,8 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     temp['trt_med_total'] = 0
     temp['trt_max_total'] = 0
     temp['trt_bau_total'] = temp['carbon_trt_bau'] + temp['trt_bau_total']
-    temp['trt_med_total'] = temp['carbon_trt_bau'] + temp['trt_med_total']
-    temp['trt_max_total'] = temp['carbon_trt_bau'] + temp['trt_max_total']
+    temp['trt_med_total'] = temp['carbon_trt_med'] + temp['trt_med_total']
+    temp['trt_max_total'] = temp['carbon_trt_max'] + temp['trt_max_total']
     
     for i in collist:
         temp['trt_med_total'] = temp[i] + temp['trt_med_total']
