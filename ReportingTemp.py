@@ -1182,7 +1182,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             #Merge the dataframes and create a change field
             if name in ['base','trt']:
                 tempmerge = tempmerge[['landcover', 'change','crop30']]
-                tempmerge = tempmerge.rename(columns = {'crop30':'usd' + name +'_'+ dev})
+                tempmerge = tempmerge.rename(columns = {'crop30':'usd_' + name +'_'+ dev})
                 tempmerge = tempmerge.rename(columns = {'change':'usd_change_' + name +'_'+ dev})
                 
             #For other scenarios and activities, do this section to compare 2030 baseline bau to 2030 trt bau
@@ -1867,8 +1867,6 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         
         
         """
-        
-        import Generic
         global pts
         import pandas as pd
         import Helpers
@@ -2026,16 +2024,22 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             summarize('b', 'birds')
             summarize('a', 'amphibians')
             summarize('t', 'tes')
-            a =pd.DataFrame.from_dict(summary_dict, orient='index')
+            Helpers.pmes(a.head(10))
+            a = pd.DataFrame.from_dict(summary_dict, orient='index')
             a.reset_index(inplace=True)
-            a.columns=['guild', 'acres_' + name + '_' + dev]
-            thab_dict[name + dev] = a
+            Helpers.pmes(a.head(10))
+            if a.empty:
+                Helpers.pmes('Dataframe is empty')
+            else:
+                a.columns=['guild', 'acres_' + name + '_' + dev]
+                thab_dict[name + dev] = a
             
             
 
 
         thab_dict = {}
         for x in keylist:
+            
             if x in ['base', 'trt']:
                 if x == 'base':
                     for i in devlist:
@@ -2043,6 +2047,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 else:
                     for i in devlist:
                         subfunc(x, 'LC2030_trt_' + i, i, dfdict[x],'gridcode30_trt_' + i, 'gridcode14')
+                pass
             else:
                 if x == 'eda':
                     pass
@@ -2054,16 +2059,19 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         tlist = list(thab_dict.values())
         l = len(tlist)
         count = 1
-        temp = tlist[0]
-        
-        #Loop through the dataframes and combine them into a single reporting dataframe
-        while count < l:
-            temp = pd.merge(temp,tlist[count],on = 'guild', how = 'outer' )
-            count = count + 1
-        temp.fillna(0, inplace = True)
-        
-        #Export the merged reporting dataframe to a csv
-        temp.to_csv(outpath+'terrhab.csv')    
+        if tlist:
+            temp = tlist[0]
+            
+            #Loop through the dataframes and combine them into a single reporting dataframe
+            while count < l:
+                temp = pd.merge(temp,tlist[count],on = 'guild', how = 'outer' )
+                count = count + 1
+            temp.fillna(0, inplace = True)
+            
+            #Export the merged reporting dataframe to a csv
+            temp.to_csv(outpath+'terrhab.csv')    
+        else:
+            Helpers.pmes('DF List is Empty')
 
     
     #Run all of the reporting functions
@@ -2308,11 +2316,17 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     temp.fillna(0, inplace = True)
     
     
-    temp['trt_total'] = 0
-    temp['trt_total'] = temp['carbon_trt_bau'] + temp['trt_total']
+    temp['trt_bau_total'] = 0
+    temp['trt_med_total'] = 0
+    temp['trt_max_total'] = 0
+    temp['trt_bau_total'] = temp['carbon_trt_bau'] + temp['trt_bau_total']
+    temp['trt_med_total'] = temp['carbon_trt_bau'] + temp['trt_med_total']
+    temp['trt_max_total'] = temp['carbon_trt_bau'] + temp['trt_max_total']
     
     for i in collist:
-        temp['trt_total'] = temp[i] + temp['trt_total']
+        temp['trt_med_total'] = temp[i] + temp['trt_med_total']
+        temp['trt_max_total'] = temp[i] + temp['trt_max_total']
+        temp['trt_bau_total'] = temp[i] + temp['trt_bau_total']
 
     #Export the dataframe to a csv
     temp.to_csv(outpath+'carbon.csv')  
