@@ -110,7 +110,7 @@ def mba_plot_tables_rows(csv=r"E:\Temp\tooloutputs\RRE_FULL\cropvalue.csv", outp
 
 
 
-def mba_chart_3scenario(table, plot_dict, xax = 'holder', yax = 'holder'):
+def mba_chart_3scenario(table, plot_dict, xax = 'holder', yax = 'holder', mba = 'temp'):
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
     #import plotly.plotly as py
@@ -143,20 +143,20 @@ def mba_chart_3scenario(table, plot_dict, xax = 'holder', yax = 'holder'):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": True, 
-      "title": plot_dict[0], 
+      "title": plot_dict[mba]['title'], 
       "titlefont": {
       "size": mba_title_font
           },
       "xaxis": {
         "autorange": True, 
         "range": [-0.5, 2.5], 
-        "title": "Scenario", 
+        "title": plot_dict[mba]['xtitle'], 
         "type": "category"
       }, 
       "yaxis": {
         "autorange": False, 
         "range": [min_y_range(table), max_y_range(table)], 
-        "title": plot_dict[3], 
+        "title": plot_dict[mba]['ytitle'], 
         "type": "linear"
       }
     }
@@ -206,49 +206,49 @@ def mb_panel ():
 
 
 #Dictionary entries
-plot_dict['groundwater'] ={'title':"2014-2030 Projected Loss of Groundwater Recharge",'max': 1,'min' :-1,'ytitle': "Loss of Recharge (Acre Feet per Year)", 'changefield':'ac_ft_rec_lst', 'totfield':  'None','rfield' : 'landcover', 'sum': 1}
+plot_dict['groundwater'] ={'title':"2014-2030 Projected Loss of Groundwater Recharge",'changemax': 1,'changemin' :-1,'ytitle': "Loss of Recharge (Acre Feet per Year)", 'changefield':'ac_ft_rec_lst', 'totfield':  'None','rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['cropvalue'] ={'title':"2014-2030 Projected Change in Crop Value by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Crop Value (Millions of Dollars)", 'changefield':'usd_change', 'totfield':  'usd', 'rfield' : 'landcover', 'sum': 1}
+plot_dict['cropvalue'] ={'title':"2014-2030 Projected Change in Crop Value by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Crop Value (Millions of Dollars)", 'changefield':'usd_change', 'totfield':  'usd', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['aquatic'] ={'title':"2014-2030 Projected Change in Landcover in Watersheds With High Aquatic Habitat Value by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Hectares of Landcover", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'gen_class', 'sum': 0}
+plot_dict['aquatic'] ={'title':"2014-2030 Projected Change in Landcover in Watersheds With High Aquatic Habitat Value by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares of Landcover", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'gen_class', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['co_val_airpollute'] ={'title':"2014-2030 Projected Change in Carbon Monoxide Sequestration by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Tons of CO", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1}
+plot_dict['co_val_airpollute'] ={'title':"2014-2030 Projected Change in Carbon Monoxide Sequestration by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of CO", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['county_movement'] ={'title':"2014-2030 Projected Countywide Change in Terrestrial Movement Resistance by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'movement_potential', 'sum': 0}
+plot_dict['county_movement'] ={'title':"2014-2030 Projected Countywide Change in Terrestrial Movement Resistance by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'movement_potential', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['ecamovement'] ={'title':"2014-2030 Projected Change in Terrestrial Movement Resistance by Development Scenario in Essential Connectivity Areas",'max': 5000000,'min' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'movement_potential', 'sum': 0}
+plot_dict['ecamovement'] ={'title':"2014-2030 Projected Change in Terrestrial Movement Resistance by Development Scenario in Essential Connectivity Areas",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'movement_potential', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['flood100'] ={'title':"2014-2030 Projected Change in 100 Year Floodplain Landcover by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'gen_class', 'sum': 0}
+plot_dict['flood100'] ={'title':"2014-2030 Projected Change in 100 Year Floodplain Landcover by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'gen_class', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['flood500'] ={'title':"2014-2030 Projected Change in 500 Year Floodplain Landcover by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'gen_class', 'sum': 0}
+plot_dict['flood500'] ={'title':"2014-2030 Projected Change in 500 Year Floodplain Landcover by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'gen_class', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['lcchange'] ={'title':"2014-2030 Projected Change in Landcover by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'landcover', 'sum': 0}
+plot_dict['lcchange'] ={'title':"2014-2030 Projected Change in Landcover by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'landcover', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['fmmp'] ={'title':"2014-2030 Projected Impact to Farmland by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Hectares", 'changefield':'ha_loss', 'totfield':  'None', 'rfield' : 'fmmp_class', 'sum': 0}
+plot_dict['fmmp'] ={'title':"2014-2030 Projected Impact to Farmland by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares", 'changefield':'ha_loss', 'totfield':  'None', 'rfield' : 'fmmp_class', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['leach_nitrates'] ={'title':"2014-2030 Projected Change in Nitrate Leaching by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Tons of Nitrate", 'changefield':'kgs_no3_change', 'totfield':  'kgs_no3', 'rfield' : 'landcover', 'sum': 1}
+plot_dict['leach_nitrates'] ={'title':"2014-2030 Projected Change in Nitrate Leaching by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of Nitrate", 'changefield':'kgs_no3_change', 'totfield':  'kgs_no3', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['no2_val_airpollute'] ={'title':"2014-2030 Projected Change in NO2 Sequestration by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Tons of Pollutant Sequestered", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1}
+plot_dict['no2_val_airpollute'] ={'title':"2014-2030 Projected Change in NO2 Sequestration by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of Pollutant Sequestered", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['o3_val_airpollute'] ={'title':"2014-2030 Projected Change in O3 Sequestration by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Tons of Pollutant Sequestered", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1}
+plot_dict['o3_val_airpollute'] ={'title':"2014-2030 Projected Change in O3 Sequestration by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of Pollutant Sequestered", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['pca_cover_change'] ={'title':"2014-2030 Projected Change in Priority Conservation Area Landcover by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Hectares",'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'landcover', 'sum': 1}
+plot_dict['pca_cover_change'] ={'title':"2014-2030 Projected Change in Priority Conservation Area Landcover by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares",'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['pm2_5_val_airpollute'] ={'title':"2014-2030 Projected Change in PM 2.5 Sequestration by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Tons of Pollutant Sequestered", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1}
+plot_dict['pm2_5_val_airpollute'] ={'title':"2014-2030 Projected Change in PM 2.5 Sequestration by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of Pollutant Sequestered", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['pm10_val_airpollute'] ={'title':"2014-2030 Projected Change in PM 10 Sequestration by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Tons of Pollutant Sequestered", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1}
+plot_dict['pm10_val_airpollute'] ={'title':"2014-2030 Projected Change in PM 10 Sequestration by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of Pollutant Sequestered", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['runoff_nitrates'] ={'title':"2014-2030 Projected Change in Nitrate Runoff by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Tons of Nitrate", 'changefield':'kgs_no3_change', 'totfield':  'kgs_no3', 'rfield' : 'landcover', 'sum': 1}
+plot_dict['runoff_nitrates'] ={'title':"2014-2030 Projected Change in Nitrate Runoff by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of Nitrate", 'changefield':'kgs_no3_change', 'totfield':  'kgs_no3', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['scenic'] ={'title':"2014-2030 Projected Change in Highly Visible Landcover by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Hectares",'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'gen_class', 'sum': 0}
+plot_dict['scenic'] ={'title':"2014-2030 Projected Change in Highly Visible Landcover by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares",'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'gen_class', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['so2_val_airpollute'] ={'title':"2014-2030 Projected Change in SO2 Sequestration by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Tons of Pollutant Sequestered", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1}
+plot_dict['so2_val_airpollute'] ={'title':"2014-2030 Projected Change in SO2 Sequestration by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of Pollutant Sequestered", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['terrhab'] ={'title':"2014-2030 Projected Change in Terrestrial Habitat Quality by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Acres", 'changefield':'acres', 'totfield':  'None', 'rfield' : 'guild', 'sum': 0}
+plot_dict['terrhab'] ={'title':"2014-2030 Projected Change in Terrestrial Habitat Quality by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Acres", 'changefield':'acres', 'totfield':  'None', 'rfield' : 'guild', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['watcon'] ={'title':"2014-2030 Projected Change in Water Usage by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Acre Feet of Water (Per Year)", 'changefield':'ac_ft_change', 'totfield':  'ac_ft', 'rfield' : 'landcover', 'sum': 1}
+plot_dict['watcon'] ={'title':"2014-2030 Projected Change in Water Usage by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Acre Feet of Water (Per Year)", 'changefield':'ac_ft_change', 'totfield':  'ac_ft', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['watint'] ={'title':"2014-2030 Projected Change of Watershed Integrity by Development Scenario",'max': 5000000,'min' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'Integrity_Class', 'sum': 0}
+plot_dict['watint'] ={'title':"2014-2030 Projected Change of Watershed Integrity by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'Integrity_Class', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
 
 flist = ['_base_bau','_base_med','_base_max','_trt_bau','_trt_med','_trt_max']
