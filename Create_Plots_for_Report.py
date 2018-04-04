@@ -29,14 +29,15 @@ def flying_m_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
         
     def min_y_range(table):
         c =table.min(axis=0, numeric_only = True)
-        return round(min(c) -plot_dict[1], plot_dict[2])        
+        return round(min(c) -plot_dict[1], plot_dict[2])   
+
+
     
     trace1 = {
-      "x": ["Intense Dev", "Medium Dev", "Conserved"], 
-      "y": ["300", "500", "1000"], 
-      "name": "B", 
+      "x": ["Full Development", "Partial Development", "Conservation"], 
+      "y": [high['trt_bau_total'].sum(), med['trt_bau_total'].sum(), high['carbon_base_max'].sum()], 
       "type": "bar",
-      "text": ['', '', '50 tons reduction v. worst']
+      "text": ['', '', 50]
       }
     
     
@@ -44,26 +45,40 @@ def flying_m_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
     layout = {
       "autosize": True, 
       "hovermode": "closest", 
-      "showlegend": True, 
+      "showlegend": False, 
       "title": "Flying M Ranch - Avoided Conversion", 
       "titlefont": {
       "size": 24
           },
       "xaxis": {
         "autorange": True, 
-        "range": [-0.5, 2.5], 
         "title": ['highly developed', 'medium developed', 'conserved'], 
         "type": "category"
       }, 
       "yaxis": {
         "autorange": False, 
-        "range": [0, 1052.63157895], 
+        "range": [0, 200000], 
         #"range": [min_y_range(table), max_y_range(table)], 
-        "title": 'Tons CO22', 
+        "title": 'Tons CO2 Equivalents', 
         "type": "linear"
+      },
+                  "annotations": [
+      {
+        "xref": "x",
+        "yref": "y",
+        "text":  str(round(high['carbon_base_max'].sum() - high['trt_bau_total'].sum(), 1))  + " tons <br> CO2e reductions <br> v. full development",
+        "y": high['trt_bau_total'].sum(),
+        "x": 2,
+        "font": {
+          "color": "rgb(252, 252, 252)",
+          "size": 12
+        },
+        "showarrow": False
       }
+    ]
     }
        
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename= 'TT' + '.html')
     
+flying_m_reductions()
