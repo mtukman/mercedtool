@@ -1,6 +1,6 @@
 
-folder = r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\\"
-
+folder = r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\\"
+outpath2 = r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\plotting_tables\\"
 mba_title_font = 24
 plot_dict = {}
 
@@ -271,14 +271,15 @@ for i in mbalist:
         print (folder + '/' + i + '.csv')
         if plot_dict[i]['sum'] == 1:
             print ('Doing sum for ' + i)
-            dftest = mba_plot_tables_sum(folder + '/' + i + '.csv', outpath=r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\plotting_tables\\", csvname = i + '_' + 'sum' + '.csv', changefield = plot_dict[i]['changefield'])
+            dftest = mba_plot_tables_sum(folder + '/' + i + '.csv', outpath = outpath2, csvname = i + '_' + 'sum' + '.csv', changefield = plot_dict[i]['changefield'])
         if plot_dict[i]['totfield'] != 'None':
             print ('Doing tot for ' + i)
-            dftest = mba_plot_tables_rows(folder + '/' + i + '.csv', outpath=r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\plotting_tables\\",csvname = i + '_' + 'total' + '.csv', fieldname = plot_dict[i]['totfield'],  rfield = plot_dict[i]['rfield'])
+            dftest = mba_plot_tables_rows(folder + '/' + i + '.csv', outpath=outpath2,csvname = i + '_' + 'total' + '.csv', fieldname = plot_dict[i]['totfield'],  rfield = plot_dict[i]['rfield'])
             
         if plot_dict[i]['changefield'] != 'None':
             print ('Doing change for ' + i)
-            dftest = mba_plot_tables_rows(folder + '/' + i + '.csv', outpath=r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\plotting_tables\\",csvname = i + '_' + 'change' + '.csv', fieldname = plot_dict[i]['changefield'],  rfield = plot_dict[i]['rfield'])
+            dftest = mba_plot_tables_rows(folder + '/' + i + '.csv', outpath=outpath2,csvname = i + '_' + 'change' + '.csv', fieldname = plot_dict[i]['changefield'],  rfield = plot_dict[i]['rfield'])
+        
 
 
 
