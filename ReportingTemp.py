@@ -905,7 +905,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             Helpers.pmes('Aquatic Habitat Reporting: ' + name + ', ' + dev)
             
             # Create the 2014 general landcover dataframe
-            tempdf14 = td.loc[td['c_abf75_rnk'] > 0.632275] #Select pixels that are in important aquatic watersheds
+            tempdf14 = td.loc[td['c_abf75_rnk'] > 0.59] #Select pixels that are in important aquatic watersheds
             tempdf14 = pd.merge(gclass,tempdf14, how = 'outer', left_on = 'landcover', right_on = 'LC2014')
             group14 = tempdf14.groupby('gen_class', as_index = False).count()
             group14 = group14[['pointid','gen_class']]
@@ -913,7 +913,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             
             
             # Create the 2030 general landcover dataframe
-            tempdf30 = td.loc[td['c_abf75_rnk'] > 0.632275] #Select pixels that are in important aquatic watersheds
+            tempdf30 = td.loc[td['c_abf75_rnk'] > 0.59] #Select pixels that are in important aquatic watersheds
             tempdf30 = pd.merge(gclass,tempdf30, how = 'outer', left_on = 'landcover', right_on = field)
             group30 = tempdf30.groupby('gen_class', as_index = False).count()
             group30 = group30[['pointid','gen_class']]
@@ -935,7 +935,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     
                 #For other scenarios and activities, do this section
                 else:
-                    tempdf302 = td.loc[td['c_abf75_rnk'] > 0.632275] #Select pixels that are in important aquatic watersheds
+                    tempdf302 = td.loc[td['c_abf75_rnk'] > 0.59] #Select pixels that are in important aquatic watersheds
                     tempdf302 = pd.merge(gclass,tempdf302, how = 'outer', left_on = 'landcover', right_on = 'LC2030_bau')
                     group302 = tempdf302.groupby('gen_class', as_index = False).count()
                     group302 = group302[['pointid','gen_class']]
@@ -972,7 +972,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 
         #Create 2014 baseline reporting dataframe
         td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid','c_abf75_rnk']]
-        tempdf14 = td.loc[td['c_abf75_rnk'] > 0.632275]
+        tempdf14 = td.loc[td['c_abf75_rnk'] > 0.59]
         tempdf14 = pd.merge(tempdf14,gclass, how = 'outer', left_on = 'LC2014', right_on = 'landcover')
         group14 = tempdf14.groupby('gen_class', as_index = False).count()
         group14 = group14[['pointid','gen_class']]
@@ -1387,17 +1387,17 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 # Create 2030 nitrate reporting dataframe
                 group30 = td.groupby(field, as_index = False).count()
                 tempdf30 = pd.merge(nclass,group30, how = 'outer', left_on = 'landcover', right_on = field)
-                tempdf30[y+'2'] = tempdf30[y]*tempdf30['pointid']
+                tempdf30[y+'2'] = (tempdf30[y]*tempdf30['pointid'])/1000
                 group30 = tempdf30[[y+'2','landcover']]
                 group30 = group30.rename(columns={y+'2':y + '30'})
                 tempmerge = pd.merge(group14,group30, on = 'landcover', how = 'outer')
-                tempmerge['change'] = tempmerge[y+'30']-tempmerge[y+'14']
+                tempmerge['change'] = (tempmerge[y+'30']-tempmerge[y+'14'])/1000
                 
                 # Merge the dataframes and create a change field for the report
                 if name in ['base','trt']:
                     tempmerge = tempmerge[['landcover', 'change',y+'30']]
-                    tempmerge = tempmerge.rename(columns = {y + '30':'kgs_no3_' + name +'_' + dev })
-                    tempmerge = tempmerge.rename(columns = {'change':'kgs_no3_change_' + name + '_' + dev})
+                    tempmerge = tempmerge.rename(columns = {y + '30':'tons_no3_' + name +'_' + dev })
+                    tempmerge = tempmerge.rename(columns = {'change':'tons_no3_change_' + name + '_' + dev})
                     
                 #For other scenarios and activities, use this section to compare 2030 bau to 2030 treatment bau nitrate change
                 else:
@@ -1411,9 +1411,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     #Merge the 2030 dataframes to create a change field
                     tempmerge[y + '302'].fillna(0, inplace = True)
                     tempmerge[y + '30'].fillna(0, inplace = True)
-                    tempmerge['change'] = tempmerge[y+'30']-tempmerge[y+'302']
+                    tempmerge['change'] = (tempmerge[y+'30']-tempmerge[y+'302'])/1000
                     tempmerge = tempmerge[['change', 'landcover']]
-                    tempmerge = tempmerge.rename(columns = {'change':'kgs_no3_change_' + name})
+                    tempmerge = tempmerge.rename(columns = {'change':'tons_no3_change_' + name})
                 
                 # Add the reporting dataframe to the dictionary of reporting dataframes
                 nitdict[name + dev] = tempmerge
@@ -1444,9 +1444,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             group14 = tempdf14.groupby('LC2014').sum()
             group14['index1'] = group14.index
             group14 = group14[[y,'index1']]
-            group14[y] = group14[y]
-            group14 = group14.rename(columns={y:'kgs_no3_14','index1':'landcover'})
-            group14['kgs_no3_14'] = group14['kgs_no3_14']
+            group14[y] = (group14[y])/1000
+            group14 = group14.rename(columns={y:'tons_no3_14','index1':'landcover'})
             nitdict['Base_2014'] = group14
             
             tlist = list(nitdict.values())
