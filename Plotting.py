@@ -1,5 +1,5 @@
 
-folder = "E:/Temp/tooloutputs/RRE_FULL/"
+folder = r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\\"
 
 mba_title_font = 24
 plot_dict = {}
@@ -226,7 +226,7 @@ plot_dict['lcchange'] ={'title':"2014-2030 Projected Change in Landcover by Deve
 
 plot_dict['fmmp'] ={'title':"2014-2030 Projected Impact to Farmland by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares", 'changefield':'ha_loss', 'totfield':  'None', 'rfield' : 'fmmp_class', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['leach_nitrates'] ={'title':"2014-2030 Projected Change in Nitrate Leaching by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of Nitrate", 'changefield':'kgs_no3_change', 'totfield':  'kgs_no3', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
+plot_dict['leach_nitrates'] ={'title':"2014-2030 Projected Change in Nitrate Leaching by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of Nitrate", 'changefield':'tons_no3_change', 'totfield':  'tons_no3', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
 plot_dict['no2_val_airpollute'] ={'title':"2014-2030 Projected Change in NO2 Sequestration by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of Pollutant Sequestered", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
@@ -238,7 +238,7 @@ plot_dict['pm2_5_val_airpollute'] ={'title':"2014-2030 Projected Change in PM 2.
 
 plot_dict['pm10_val_airpollute'] ={'title':"2014-2030 Projected Change in PM 10 Sequestration by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of Pollutant Sequestered", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['runoff_nitrates'] ={'title':"2014-2030 Projected Change in Nitrate Runoff by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of Nitrate", 'changefield':'kgs_no3_change', 'totfield':  'kgs_no3', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
+plot_dict['runoff_nitrates'] ={'title':"2014-2030 Projected Change in Nitrate Runoff by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of Nitrate", 'changefield':'tons_no3_change', 'totfield':  'tons_no3', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
 plot_dict['scenic'] ={'title':"2014-2030 Projected Change in Highly Visible Landcover by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares",'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'gen_class', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
@@ -265,19 +265,20 @@ combined = '\t'.join(csvlist)
 
 print (mbalist)
 print (combined)
+
 for i in mbalist:
     if i in combined:
         print (folder + '/' + i + '.csv')
         if plot_dict[i]['sum'] == 1:
             print ('Doing sum for ' + i)
-            dftest = mba_plot_tables_sum(folder + '/' + i + '.csv', outpath='D:/TGS/projects/64 - Merced Carbon/Reports/Draft Reports/plot_tables/', csvname = i + '_' + 'sum' + '.csv', changefield = plot_dict[i]['changefield'])
+            dftest = mba_plot_tables_sum(folder + '/' + i + '.csv', outpath=r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\plotting_tables\\", csvname = i + '_' + 'sum' + '.csv', changefield = plot_dict[i]['changefield'])
         if plot_dict[i]['totfield'] != 'None':
             print ('Doing tot for ' + i)
-            dftest = mba_plot_tables_rows(folder + '/' + i + '.csv', outpath='D:/TGS/projects/64 - Merced Carbon/Reports/Draft Reports/plot_tables/',csvname = i + '_' + 'total' + '.csv', fieldname = plot_dict[i]['totfield'],  rfield = plot_dict[i]['rfield'])
+            dftest = mba_plot_tables_rows(folder + '/' + i + '.csv', outpath=r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\plotting_tables\\",csvname = i + '_' + 'total' + '.csv', fieldname = plot_dict[i]['totfield'],  rfield = plot_dict[i]['rfield'])
             
         if plot_dict[i]['changefield'] != 'None':
             print ('Doing change for ' + i)
-            dftest = mba_plot_tables_rows(folder + '/' + i + '.csv', outpath='D:/TGS/projects/64 - Merced Carbon/Reports/Draft Reports/plot_tables/',csvname = i + '_' + 'change' + '.csv', fieldname = plot_dict[i]['changefield'],  rfield = plot_dict[i]['rfield'])
+            dftest = mba_plot_tables_rows(folder + '/' + i + '.csv', outpath=r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\plotting_tables\\",csvname = i + '_' + 'change' + '.csv', fieldname = plot_dict[i]['changefield'],  rfield = plot_dict[i]['rfield'])
 
 
 
