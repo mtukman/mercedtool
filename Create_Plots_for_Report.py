@@ -67,3 +67,129 @@ def flying_m_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename= 'TT' + '.html')
     
+def groundwater_plot(high_dev, med_dev):
+    import pandas as pd
+    import plotly.graph_objs as go
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    high = pd.read_csv(high_dev)
+    med = pd.read_csv(med_dev)
+    
+    high2 = high.loc[high['scenario'] == 'ref']
+    med2 = med.loc[med['scenario'] == 'ref']
+
+    def max_y_range(table):
+        c =table.max(axis=0, numeric_only = True)
+        return round(max(c) +plot_dict[1], plot_dict[2])
+        
+    def min_y_range(table):
+        c =table.min(axis=0, numeric_only = True)
+        return round(min(c) -plot_dict[1], plot_dict[2])        
+
+    trace1 = {
+      "x": ['Full Development'], 
+      "y": high2['Treated'], 
+      "name": "Full Development", 
+      "type": "bar"
+    }
+    trace2 = {
+      "x": ['Partial Development'], 
+      "y": med2['Treated'], 
+      "name": "Partial Development", 
+      "type": "bar"
+    }
+
+    data = go.Data([trace1, trace2])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+      "title": 'Groundwater Recharge Loss', 
+      "titlefont": {
+      "size": 24
+          },
+      "xaxis": {
+        "autorange": True, 
+        "range": [0, 3], 
+        "title": ['Full Development', 'Partial Development'], 
+        "type": "category"
+      }, 
+      "yaxis": {
+        "autorange": False, 
+        "range": [0,3], 
+        "title": 'Acre Feet of Groundwater Recharge (Per Year) Lost', 
+        "type": "linear"
+      }
+    }
+   
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'test' + '.html')
+
+
+def terrestrial_habitat_plot(high_dev, med_dev):
+    import pandas as pd
+    import plotly.graph_objs as go
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    high = pd.read_csv(high_dev)
+    med = pd.read_csv(med_dev)
+    
+    high2 = high[['guild','acres_trt_bau']]
+    med2 = med[['guild','acres_trt_bau']]
+    
+#    high3 = high2.iloc[0]
+#    med3 = med2.iloc[0]
+    high3 = high2.loc[high2['guild'].isin(['mammals_avg_deg_acres','birds_avg_deg_acres','amphibians_avg_deg_acres'])]
+    med3 = med2.loc[med2['guild'].isin(['mammals_avg_deg_acres','birds_avg_deg_acres','amphibians_avg_deg_acres'])]
+    
+    def max_y_range(table):
+        c =table.max(axis=0, numeric_only = True)
+        return round(max(c) +plot_dict[1], plot_dict[2])
+        
+    def min_y_range(table):
+        c =table.min(axis=0, numeric_only = True)
+        return round(min(c) -plot_dict[1], plot_dict[2])        
+
+    trace1 = {
+      "x": high3['guild'], 
+      "y": high3['acres_trt_bau'], 
+      "name": "Full Development", 
+      "type": "bar"
+    }
+    trace2 = {
+      "x": med3['guild'], 
+      "y": med3['acres_trt_bau'], 
+      "name": "Partial Development", 
+      "type": "bar"
+    }
+
+    data = go.Data([trace1, trace2])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+      "title": 'Terrestrial Habitat Impacts', 
+      "titlefont": {
+      "size": 24
+          },
+      "xaxis": {
+        "autorange": True, 
+#        "range": [0, 3], 
+        "title": ['Full Development', 'Partial Development'], 
+        "type": "category"
+      }, 
+      "yaxis": {
+        "autorange": True, 
+#        "range": [0,3], 
+        "title": 'Acres of Habitat Degraded', 
+        "type": "linear"
+      }
+    }
+   
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'test' + '.html')
+    
+    
+terrestrial_habitat_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev\plotting_tables\terrhab_change.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\plotting_tables\terrhab_change.csv")
+#groundwater_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev\plotting_tables\groundwater_sum.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\plotting_tables\groundwater_sum.csv")
+
