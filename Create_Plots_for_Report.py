@@ -167,7 +167,50 @@ def groundwater_plot(high_folder, med_folder):
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename= 'test' + '.html')
 
+def wateruse_plot(high_folder, med_folder):
+    import pandas as pd
+    import plotly.graph_objs as go
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 
+    high = pd.read_csv(high_folder + '/watcon.csv')
+    med = pd.read_csv(med_folder + '/watcon.csv')
+       
+
+    trace1 = {
+      "x": ['Full Development','Partial Development', 'Conservation'], 
+      "y": [high['ac_ft_change_dev_flagged'].sum(), med['ac_ft_change_dev_flagged'].sum(),med['ac_ft_base_med'].sum()], 
+      "name": "Water Use", 
+      "type": "bar"
+    }
+
+
+    data = go.Data([trace1])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+      "title": 'Water Use', 
+      "titlefont": {
+      "size": 24
+          },
+      "xaxis": {
+        "autorange": True,  
+        "title": ['Full Development', 'Partial Development', 'Conservation'], 
+        "type": "category"
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [0,3], 
+        "title": 'Acre Feet of Water Demand (Annual)', 
+        "type": "linear"
+      }
+    }
+   
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'test' + '.html')
+    
+    
 def terrestrial_habitat_plot(high_folder, med_folder):
     import pandas as pd
     import plotly.graph_objs as go
@@ -359,26 +402,10 @@ def  scenicvalue_plot(high_folder, med_folder):
       }
     trace3 = {
       "x": xlist, 
-      "y": [highag['ha_trt_bau'].sum(), medag['ha_trt_bau'].sum(), highdev['ha_base_bau'].sum()], 
+      "y": [highag['ha_trt_bau'].sum(), medag['ha_trt_bau'].sum(), highag['ha_base_bau'].sum()], 
       "type": "bar",
       "name": "Agriculture", 
       }
-#    trace4 = {
-#    
-#      "x": xlist, 
-#      "y": [high_pm25['tons_trt_bau'].sum(), med_pm25['tons_trt_bau'].sum(), high_pm25['tons_base_bau'].sum()], 
-#      "type": "bar",
-#      "name": "Partial Development", 
-#      }
-#    trace5 = {
-#      "x": ['Carbon Monoxide','o3','pm10','pm25','no2'], 
-#      "y": [high_pm10['tons_trt_bau'].sum(), med_pm10['tons_trt_bau'].sum(), high_pm10['tons_base_bau'].sum()], 
-#      "type": "bar",
-#      "name": "Partial Development",       
-#      
-#      }
-
-    
     
     data = go.Data([trace1, trace2,trace3])
     layout = {
@@ -408,7 +435,74 @@ def  scenicvalue_plot(high_folder, med_folder):
 
 
 
+def  tconnect_plot(high_folder, med_folder):
+    import pandas as pd
+    
+    
+    #Read O3
+    
+    high = pd.read_csv(high_folder + '/countymovement.csv')
 
+    med = pd.read_csv(med_folder + '/countymovement.csv')
+
+
+
+    highnat = high.loc[high['movement_potential'] == 'high']
+    highdev = high.loc[high['movement_potential'] == 'medium']
+    highag = high.loc[high['movement_potential'] == 'low']
+    
+    mednat = med.loc[med['movement_potential'] == 'high']
+    meddev = med.loc[med['movement_potential'] == 'medium']
+    medag = med.loc[med['movement_potential'] == 'low']
+
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+ 
+
+    xlist = ['Full Development','Partial Development']
+    
+    
+    
+    trace1 = {
+      "x": xlist, 
+      "y": [highnat['ha_change_trt_bau'].sum(), mednat['ha_change_trt_bau'].sum()], 
+      "type": "bar",
+      "name": "High Movement Potential", 
+      
+      }
+    trace3 = {
+      "x": xlist, 
+      "y": [highag['ha_change_trt_bau'].sum(), medag['ha_change_trt_bau'].sum()], 
+      "type": "bar",
+      "name": "Low Movement Potential", 
+      }
+    
+    data = go.Data([trace1,trace3])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+      "title": "Flying M Ranch - Terrestrial Connectivity", 
+      "titlefont": {
+      "size": 24
+          },
+      "xaxis": {
+        "autorange": True, 
+#        "title": ['highly developed', 'medium developed', 'conserved'], 
+        "type": "category"
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "title": 'Change in Hectares of Movement Type', 
+        "type": "linear"
+      },
+    }
+       
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'Flying_M' + '.html')
 
 
 
@@ -425,4 +519,5 @@ def make_plots_flyingm():
     airquality(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
     scenicvalue_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
     terrestrial_habitat_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-
+    wateruse_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
+    tconnect_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
