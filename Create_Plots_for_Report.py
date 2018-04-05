@@ -79,6 +79,7 @@ def  flying_m_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outp
        
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename= 'Flying_M' + '.html')
+    return fig
     
 
 def riparian_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\carbon.csv'):
@@ -122,7 +123,9 @@ def riparian_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
 
     }
 
-
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'Flying_M' + '.html')
+    return fig
 def groundwater_plot(high_folder, med_folder):
     import pandas as pd
     import plotly.graph_objs as go
@@ -166,7 +169,7 @@ def groundwater_plot(high_folder, med_folder):
    
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename= 'test' + '.html')
-
+    return fig
 
 def terrestrial_habitat_plot(high_folder, med_folder):
     import pandas as pd
@@ -220,7 +223,7 @@ def terrestrial_habitat_plot(high_folder, med_folder):
    
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename= 'test' + '.html')
-    
+    return fig
     
     
     
@@ -298,6 +301,7 @@ def  airquality(high_folder, med_folder):
        
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename= 'Flying_M' + '.html')
+    return fig
 #terrestrial_habitat_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev\plotting_tables\terrhab_change.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\plotting_tables\terrhab_change.csv")
 #groundwater_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev\plotting_tables\groundwater_sum.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\plotting_tables\groundwater_sum.csv")
 
@@ -421,8 +425,9 @@ def  scenicvalue_plot(high_folder, med_folder):
 #Saved Function Calls
     
 def make_plots_flyingm():
-    groundwater_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    airquality(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    scenicvalue_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    terrestrial_habitat_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
+    fig_gw = groundwater_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
+    fig_ac=airquality(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
+    fig_sv=scenicvalue_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
+    fig_th=terrestrial_habitat_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
 
+    return [fig_gw, fig_ac, fig_sv, fig_th]
