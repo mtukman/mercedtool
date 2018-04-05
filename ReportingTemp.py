@@ -2074,24 +2074,24 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
 
     
     #Run all of the reporting functions
-    fmmp(df,outpath)
-    fema(df,outpath)
-    scenic(df,outpath)
-    wateruse(df,outpath)
-    lcchange(df,outpath)
-    pcalcchange(df,outpath)
-    termovement(df,outpath)
-    cropvalue(df,outpath)
-    groundwater(df,outpath)
-    nitrates(df,outpath)
-    airpol(df,outpath)
-    if cproc == 0:
-        watershedintegrity(df,outpath)
-    else:
-        pass
-    aqua(df,outpath)
-    if terflag == 1:
-        thab_func(df,outpath, lupath)
+#    fmmp(df,outpath)
+#    fema(df,outpath)
+#    scenic(df,outpath)
+#    wateruse(df,outpath)
+#    lcchange(df,outpath)
+#    pcalcchange(df,outpath)
+#    termovement(df,outpath)
+#    cropvalue(df,outpath)
+#    groundwater(df,outpath)
+#    nitrates(df,outpath)
+#    airpol(df,outpath)
+#    if cproc == 0:
+#        watershedintegrity(df,outpath)
+#    else:
+#        pass
+#    aqua(df,outpath)
+#    if terflag == 1:
+#        thab_func(df,outpath, lupath)
     
     
 def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 , cm = 0, ucc = 0):
