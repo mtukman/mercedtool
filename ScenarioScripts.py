@@ -11,7 +11,7 @@ arcpy.ImportToolbox(r'E:\mercedtool\C-CAT.tbx','')
 
 
 # 25% GHG Scenarios
-def 25_percent():
+def twentyfive_percent():
     arcpy.ImportToolbox(r'E:\mercedtool\C-CAT.tbx','')
     arcpy.MercedCarbonTool(r"E:\Temp\tooloutputs", r"E:\TGS\projects\Merced Carbon", None, None, "None", None, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "Yes", 13750, 2014, 5, "No", 40000, 2014, 5, "No", 80000, 2014, 5, "No", 1000, 2014, 5, "No", 0.001, 2014, 2030, "No", 80000, 2014, 5, "No", 20000, 2014, 5, "No", 20, 2014, 5, None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, None)
     
@@ -43,13 +43,13 @@ def 25_percent():
 
 def riparian_scenarios():
     arcpy.ImportToolbox(r'E:\mercedtool\C-CAT.tbx','')
-    arcpy.MercedCarbonTool(r"E:\Temp\tooloutputs", r"E:\TGS\projects\Merced Carbon", None, r"E:\Downloads\San Joquin Riparian\Stillwater\toBOR_09172014\Potential_Comp_Areas.shp", "None", None, "Yes", 4000, 2014, 6, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "No", 0.001, 2014, 2030, "No", 20, 2014, 5, "No", 20, 2014, 5, "No", 20, 2014, 5, None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, True, None)
+    arcpy.MercedCarbonTool(r"E:\Temp\tooloutputs", r"E:\TGS\projects\Merced Carbon", None, r"E:\Downloads\San Joquin Riparian\Stillwater\toBOR_09172014\Potential_Comp_Areas.shp", "None", None, "Yes", 4000, 2014, 6, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "No", 0.001, 2014, 2030, "No", 20, 2014, 5, "No", 20, 2014, 5, "No", 20, 2014, 5, None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, True)
 
 
 
 
 
-
+riparian_scenarios()
 
 
 
