@@ -554,11 +554,11 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             tempmerge = pd.merge(group14,group30, left_on = 'landcover', right_on= 'landcover', how = 'outer')
             tempmerge['change'] = tempmerge['water30']-tempmerge['water14']
             if name in ['base','trt']:
-                tempmerge = tempmerge[['LC2014', 'change', 'water30']]
+                tempmerge = tempmerge[['landcover', 'change', 'water30']]
                 tempmerge = tempmerge.rename(columns = {'water30':'ac_ft_' + name +'_'+ dev})
                 tempmerge['ac_ft_' + name +'_'+ dev] = tempmerge['ac_ft_' + name +'_'+ dev]
                 tempmerge['change'] = tempmerge['change']
-                tempmerge = tempmerge.rename(columns = {'LC2014':'landcover','change':'ac_ft_change_' + name +'_'+ dev})
+                tempmerge = tempmerge.rename(columns = {'change':'ac_ft_change_' + name +'_'+ dev})
                 
                 #If the scenario is not a development scenario, do this section instead to find the change from 2030 baseline to 2030 treatment BAU
             else:
