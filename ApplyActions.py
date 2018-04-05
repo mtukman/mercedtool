@@ -105,7 +105,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, rate = 0, logfile = 'None'):
             if tempix > 0:
                 tempdf[activity +'_carbred'] = tempdf[activity+'selected']*(carb1/pixels)
             
-        Helpers.add_to_logfile(logfile,'Activity is : ' + activity + ', Pixels are : ' + str(tempix) + ' AND carbon rate is : ' + str(carb1/pixels))
+        Helpers.add_to_logfile(logfile,'Activity is : ' + activity + ', Pixels are : ' + str(pixels) + ' AND carbon rate is : ' + str(carb1/pixels))
     # Run the above functionf or every activity selected
     for i in activitylist:
         if i != 'urb':
