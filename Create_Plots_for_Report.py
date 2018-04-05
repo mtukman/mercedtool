@@ -79,6 +79,7 @@ def  flying_m_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outp
        
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename= 'Flying_M' + '.html')
+    py.image.save_as(fig, outfile, format='png')
     return fig
     
 
@@ -124,16 +125,18 @@ def riparian_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
     }
 
     fig = go.Figure(data=data, layout=layout)
-    plot(fig, filename= 'Flying_M' + '.html')
+    plot(fig, filename= 'Flying_M_reductions' + '.html')
     return fig
-def groundwater_plot(high_folder, med_folder):
+
+def groundwater_plot(high_folder, med_folder, outfile):
     import pandas as pd
     import plotly.graph_objs as go
     import plotly.plotly as py
+    import os
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 
-    high = pd.read_csv(high_folder + '/groundwater.csv')
-    med = pd.read_csv(med_folder + '/groundwater.csv')
+    high = pd.read_csv(os.path.join(high_folder + '/groundwater.csv'))
+    med = pd.read_csv(os.path.join(med_folder + '/groundwater.csv'))
        
 
     trace1 = {
@@ -168,12 +171,12 @@ def groundwater_plot(high_folder, med_folder):
     }
    
     fig = go.Figure(data=data, layout=layout)
-    plot(fig, filename= 'test' + '.html')
-<<<<<<< HEAD
+    plot(fig, filename= 'groundwater_recharge' + '.html')
+    py.image.save_as(fig, outfile, format='png')
     return fig
-=======
 
-def wateruse_plot(high_folder, med_folder):
+
+def wateruse_plot(high_folder, med_folder, outfile):
     import pandas as pd
     import plotly.graph_objs as go
     import plotly.plotly as py
@@ -190,7 +193,7 @@ def wateruse_plot(high_folder, med_folder):
       "type": "bar"
     }
 
->>>>>>> ef789f0efb6255cd41c93d4edc2b6fba7291666c
+
 
     data = go.Data([trace1])
     layout = {
@@ -215,10 +218,11 @@ def wateruse_plot(high_folder, med_folder):
     }
    
     fig = go.Figure(data=data, layout=layout)
-    plot(fig, filename= 'test' + '.html')
+    plot(fig, filename= 'wateruse' + '.html')
+    py.image.save_as(fig, outfile, format='png')
+    return fig
     
-    
-def terrestrial_habitat_plot(high_folder, med_folder):
+def terrestrial_habitat_plot(high_folder, med_folder, outfile):
     import pandas as pd
     import plotly.graph_objs as go
     import plotly.plotly as py
@@ -269,12 +273,12 @@ def terrestrial_habitat_plot(high_folder, med_folder):
 
    
     fig = go.Figure(data=data, layout=layout)
-    plot(fig, filename= 'test' + '.html')
+    plot(fig, filename= 'terr_hab' + '.html')
+    
+    py.image.save_as(fig, outfile, format='png')
     return fig
     
-    
-    
-def  airquality(high_folder, med_folder):
+def  airquality_plot(high_folder, med_folder, outfile):
     import pandas as pd
     
     
@@ -347,7 +351,9 @@ def  airquality(high_folder, med_folder):
     }
        
     fig = go.Figure(data=data, layout=layout)
-    plot(fig, filename= 'Flying_M' + '.html')
+    plot(fig, filename= 'airpoll' + '.html')
+    
+    py.image.save_as(fig, outfile, format='png')
     return fig
 #terrestrial_habitat_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev\plotting_tables\terrhab_change.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\plotting_tables\terrhab_change.csv")
 #groundwater_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev\plotting_tables\groundwater_sum.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\plotting_tables\groundwater_sum.csv")
@@ -357,7 +363,7 @@ def  airquality(high_folder, med_folder):
 
 
 
-def  scenicvalue_plot(high_folder, med_folder):
+def  scenicvalue_plot(high_folder, med_folder, outfile):
     import pandas as pd
     
     
@@ -378,14 +384,15 @@ def  scenicvalue_plot(high_folder, med_folder):
     medag = med.loc[med['gen_class'] == 'Agriculture']
 
     import plotly.plotly as py
+    
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
     #import plotly.plotly as py
     from plotly import tools
     import plotly.graph_objs as go
     
-#    def max_y_range(table):
-#        c =table.max(axis=0, numeric_only = True)
-#        return round(max(c) +plot_dict[1], plot_dict[2])
+    def max_y_range(table):
+        c =table.max(axis=0, numeric_only = True)
+        return round(max(c) +plot_dict[1], plot_dict[2])
 #        
 #    def min_y_range(table):
 #        c =table.min(axis=0, numeric_only = True)
@@ -439,11 +446,11 @@ def  scenicvalue_plot(high_folder, med_folder):
     }
        
     fig = go.Figure(data=data, layout=layout)
-    plot(fig, filename= 'Flying_M' + '.html')
+    plot(fig, filename= 'scenic' + '.html')
+    py.image.save_as(fig, outfile, format='png')
+    return fig
 
-
-
-def  tconnect_plot(high_folder, med_folder):
+def  tconnect_plot(high_folder, med_folder, outfile):
     import pandas as pd
     
     
@@ -464,6 +471,7 @@ def  tconnect_plot(high_folder, med_folder):
     medag = med.loc[med['movement_potential'] == 'low']
 
     import plotly.plotly as py
+    py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
     #import plotly.plotly as py
     from plotly import tools
@@ -510,31 +518,30 @@ def  tconnect_plot(high_folder, med_folder):
     }
        
     fig = go.Figure(data=data, layout=layout)
-    plot(fig, filename= 'Flying_M' + '.html')
-
-
-
-
-
-
-
+    plot(fig, filename= 'terrcon' + '.html')
+    py.image.save_as(fig, outfile, format='png')
+    return fig
 
 
 #Saved Function Calls
-    
-def make_plots_flyingm():
-<<<<<<< HEAD
-    fig_gw = groundwater_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    fig_ac=airquality(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    fig_sv=scenicvalue_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    fig_th=terrestrial_habitat_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
 
-    return [fig_gw, fig_ac, fig_sv, fig_th]
-=======
-    groundwater_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    airquality(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    scenicvalue_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    terrestrial_habitat_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    wateruse_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    tconnect_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
->>>>>>> ef789f0efb6255cd41c93d4edc2b6fba7291666c
+#    
+def make_plots_flyingm():
+    import os
+    import plotly.plotly as py
+    py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
+    boxpath = 'C:/Users/mtukman/'
+    print (os.path.join(boxpath,'Tool/outputs/FlyingM/FlyingM_HigDev'))
+    fig_gw = groundwater_plot(os.path.join(boxpath,'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Groundwater.png'))
+    fig_aq = airquality_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Air.png'))
+    fig_sv = scenicvalue_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Scenic.png'))
+    fig_th = terrestrial_habitat_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Terrhab.png'))
+    fig_wu = wateruse_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Wateruse.png'))
+    fig_tc = tconnect_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Terrcon.png'))
+    fig_carb = flying_m_reductions(os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev/carbon.csv'), os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev/carbon.csv'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Reductions.png'))
+        
+    
+    return [fig_gw, fig_aq, fig_sv, fig_th, fig_wu, fig_tc]
+
+
+

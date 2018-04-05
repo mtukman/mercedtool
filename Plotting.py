@@ -168,38 +168,7 @@ def mba_chart_3scenario(table, plot_dict, xax = 'holder', yax = 'holder', mba = 
 
 
 
-def mb_panel ():
-    import plotly
-    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
-    
-    from plotly import tools
-    import plotly.graph_objs as go
-    scenarios = ['High Intensity', 'Medium Intensity', 'Low Intensity']
-    terrhab = ['Bird',  'Mammal', 'Reptile', 'T&E']
-    marker=dict( color='rgb(158,202,225)', line=dict( color='rgb(8,48,107)', width=1.5))
-    trace1 = go.Bar(x=scenarios, y=[4, 5, 6], marker = marker)
-    trace2 = go.Bar(x=scenarios, y=[50, 60, 70], marker = marker)
-    trace3 = go.Bar(x=scenarios, y=[600, 700, 800], marker = marker)
-    trace4 = go.Bar(x=scenarios, y=[7000, 8000, 9000], marker = marker)
-    trace5 = go.Bar(x=scenarios, y=[7000, 8000, 9000], marker = marker)
-    trace6 = go.Bar(x =terrhab, y=[15, 56, 10, 2], marker = marker)
-    
-    
-    fig = tools.make_subplots(rows=2, cols=3, subplot_titles=('Groundwater Recharge', 'Ag Land Quality',
-                                                              'Air Quality', 'Scenic Value', 'Scenic Value','Acres Degraded Terrestrial Habitat' ))
-    
-    fig.layout.titlefont.size= 22
-    fig.layout.title = 'Avoided Conversion Benefits - Flying M Ranch'
-    fig.layout.showlegend=False
-    fig.append_trace(trace1, 1, 1)
-    fig.append_trace(trace2, 1, 2)
-    fig.append_trace(trace3, 1, 3)
-    fig.append_trace(trace4, 2, 1)
-    fig.append_trace(trace5, 2, 2)
-    fig.append_trace(trace6, 2, 3)
-    layout =go.Layout(showlegend=False)
-    #fig = go.Figure(data=data, layout=layout)
-    plot(fig, filename='multiple-subplots2.html')
+
     
 
 
