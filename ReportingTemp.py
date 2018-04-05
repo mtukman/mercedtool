@@ -539,19 +539,19 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 
             Helpers.pmes('Water Conservation Reporting: ' + name + ', ' + dev)
             # Calculate the 2014 water use by landcover class
-            tempdf14 = pd.merge(td,wclass, how = 'left', left_on = 'LC2014', right_on = 'landcover')
-            group14 = tempdf14.groupby('LC2014', as_index = False).sum()
-            group14 = group14[['wat_val','LC2014']]
+            tempdf14 = pd.merge(wclass,td, how = 'left', right_on = 'LC2014', left_on = 'landcover')
+            group14 = tempdf14.groupby('landcover', as_index = False).sum()
+            group14 = group14[['wat_val','landcover']]
             group14 = group14.rename(columns={'wat_val':'water14'})
 
             # Calculate the 2030 water use by class
-            tempdf30 = pd.merge(td,wclass, how = 'left', left_on = field, right_on = 'landcover')
-            group30 = tempdf30.groupby(field, as_index = False).sum()
-            group30 = group30[[field,'wat_val']]
+            tempdf30 = pd.merge(wclass,td, how = 'left', right_on = field, left_on = 'landcover')
+            group30 = tempdf30.groupby('landcover', as_index = False).sum()
+            group30 = group30[['landcover','wat_val']]
             group30 = group30.rename(columns={'wat_val':'water30'})
             
             #Merge the dataframes and create a water use change field (2014 - 2030)
-            tempmerge = pd.merge(group14,group30, left_on = 'LC2014', right_on= field, how = 'outer')
+            tempmerge = pd.merge(group14,group30, left_on = 'landcover', right_on= 'landcover', how = 'outer')
             tempmerge['change'] = tempmerge['water30']-tempmerge['water14']
             if name in ['base','trt']:
                 tempmerge = tempmerge[['LC2014', 'change', 'water30']]
@@ -562,13 +562,12 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 
                 #If the scenario is not a development scenario, do this section instead to find the change from 2030 baseline to 2030 treatment BAU
             else:
-                tempdf302 = pd.merge(td,wclass, how = 'left', left_on = 'LC2030_bau', right_on = 'landcover')
-                group302 = tempdf302.groupby(['LC2030_bau'], as_index = False).sum()
-                group302 = group302[['LC2030_bau','wat_val']]
+                tempdf302 = pd.merge(wclass,td, how = 'left', right_on = 'LC2030_bau', left_on = 'landcover')
+                group302 = tempdf302.groupby(['landcover'], as_index = False).sum()
+                group302 = group302[['landcover','wat_val']]
                 group302 = group302.rename(columns={'wat_val':'water302'})
                 
-                group302 = pd.merge(lc,group302, left_on = 'landcover', right_on = 'LC2030_bau', how = 'outer')
-                tempmerge = pd.merge(group302,group30, left_on = 'landcover',right_on = 'LC2030_trt_bau', how = 'outer')
+                tempmerge = pd.merge(group302,group30, left_on = 'landcover',right_on = 'landcover', how = 'outer')
                 
                 #Fill in nulls with 0s
                 tempmerge['water302'].fillna(0, inplace = True)
