@@ -80,7 +80,7 @@ def  flying_m_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outp
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename= 'Flying_M' + '.html')
     
-<<<<<<< HEAD
+
 def riparian_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\carbon.csv'):
     import pandas as pd
     high = pd.read_csv(table_high)
@@ -121,8 +121,8 @@ def riparian_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
       "type": "scatter", 
 
     }
-=======
-<<<<<<< HEAD
+
+
 def groundwater_plot(high_dev, med_dev):
     import pandas as pd
     import plotly.graph_objs as go
@@ -219,13 +219,13 @@ def terrestrial_habitat_plot(high_dev, med_dev):
       "type": "bar"
     }
 
->>>>>>> 5bbd5f73867f540c31c09e2e8afeec9530f688fe
+
     data = go.Data([trace1, trace2])
     layout = {
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": True, 
-<<<<<<< HEAD
+
       "title": "Riparian Restoration - Fully Adopted Countywide", 
       "xaxis": {
         "autorange": True, 
@@ -243,26 +243,7 @@ def terrestrial_habitat_plot(high_dev, med_dev):
            
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename= 'Flying_M' + '.html')
-    
-riparian_reductions()
-=======
-      "title": 'Terrestrial Habitat Impacts', 
-      "titlefont": {
-      "size": 24
-          },
-      "xaxis": {
-        "autorange": True, 
-#        "range": [0, 3], 
-        "title": ['Full Development', 'Partial Development'], 
-        "type": "category"
-      }, 
-      "yaxis": {
-        "autorange": True, 
-#        "range": [0,3], 
-        "title": 'Acres of Habitat Degraded', 
-        "type": "linear"
-      }
-    }
+
    
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename= 'test' + '.html')
@@ -338,6 +319,9 @@ def airquality_plot(high_dev_folder, med_dev_folder): #No difference between med
     import plotly.graph_objs as go
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    
+    
+    
     high = pd.read_csv(high_dev)
     med = pd.read_csv(med_dev)
     
@@ -400,5 +384,4 @@ def airquality_plot(high_dev_folder, med_dev_folder): #No difference between med
 
 #=======
 #flying_m_reductions()
-#>>>>>>> 52bdb8f541bcc4a9aaa9953f39ba2fb0d0bc0005
->>>>>>> 5bbd5f73867f540c31c09e2e8afeec9530f688fe
+
