@@ -123,16 +123,14 @@ def riparian_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
     }
 
 
-def groundwater_plot(high_dev, med_dev):
+def groundwater_plot(high_folder, med_folder):
     import pandas as pd
     import plotly.graph_objs as go
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
-    high = pd.read_csv(high_dev)
-    med = pd.read_csv(med_dev)
-    
-    high2 = high.loc[high['scenario'] == 'ref']
-    med2 = med.loc[med['scenario'] == 'ref']
+
+    high = pd.read_csv(high_folder + '/groundwater.csv')
+    med = pd.read_csv(med_folder + '/groundwater.csv')
 
     def max_y_range(table):
         c =table.max(axis=0, numeric_only = True)
@@ -144,13 +142,13 @@ def groundwater_plot(high_dev, med_dev):
 
     trace1 = {
       "x": ['Full Development'], 
-      "y": high2['Treated'], 
+      "y": high['Treated'], 
       "name": "Full Development", 
       "type": "bar"
     }
     trace2 = {
       "x": ['Partial Development'], 
-      "y": med2['Treated'], 
+      "y": med['Treated'], 
       "name": "Partial Development", 
       "type": "bar"
     }
@@ -182,38 +180,29 @@ def groundwater_plot(high_dev, med_dev):
     plot(fig, filename= 'test' + '.html')
 
 
-def terrestrial_habitat_plot(high_dev, med_dev):
+def terrestrial_habitat_plot(high_folder, med_folder):
     import pandas as pd
     import plotly.graph_objs as go
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
-    high = pd.read_csv(high_dev)
-    med = pd.read_csv(med_dev)
+    high = pd.read_csv(high_folder + '/terrhab.csv')
+    med = pd.read_csv(med_folder + '/terrhab.csv')
     
     high2 = high[['guild','acres_trt_bau']]
     med2 = med[['guild','acres_trt_bau']]
-    
-#    high3 = high2.iloc[0]
-#    med3 = med2.iloc[0]
+
     high3 = high2.loc[high2['guild'].isin(['mammals_avg_deg_acres','birds_avg_deg_acres','amphibians_avg_deg_acres'])]
     med3 = med2.loc[med2['guild'].isin(['mammals_avg_deg_acres','birds_avg_deg_acres','amphibians_avg_deg_acres'])]
-    
-    def max_y_range(table):
-        c =table.max(axis=0, numeric_only = True)
-        return round(max(c) +plot_dict[1], plot_dict[2])
-        
-    def min_y_range(table):
-        c =table.min(axis=0, numeric_only = True)
-        return round(min(c) -plot_dict[1], plot_dict[2])        
+ 
 
     trace1 = {
-      "x": high3['guild'], 
+      "x": ['Mammals','Birds','Amphibians'], 
       "y": high3['acres_trt_bau'], 
       "name": "Full Development", 
       "type": "bar"
     }
     trace2 = {
-      "x": med3['guild'], 
+      "x": ['Mammals','Birds','Amphibians'], 
       "y": med3['acres_trt_bau'], 
       "name": "Partial Development", 
       "type": "bar"
@@ -226,17 +215,16 @@ def terrestrial_habitat_plot(high_dev, med_dev):
       "hovermode": "closest", 
       "showlegend": True, 
 
-      "title": "Riparian Restoration - Fully Adopted Countywide", 
+      "title": "Flying M Ranch - Terrestrial Habitat Degradation", 
       "xaxis": {
-        "autorange": True, 
-        "range": [2000, 2031], 
-        "title": "Year", 
-        "type": "linear"
+        "autorange": True,  
+        "title": ['Mammals','Birds','Amphibians'], 
+        "type": "category"
       }, 
       "yaxis": {
         "autorange": True, 
         "range": [50496576.7792, 55507202.8908], 
-        "title": "Tons Carbon (CO2e)", 
+        "title": "Acres of Degraded Habitat", 
         "type": "linear"
       }
     }
@@ -256,19 +244,9 @@ def fmmp_plot(high_dev, med_dev): #No difference between medium and high develop
     
     high2 = high[['fmmp_class','acres_trt_bau']]
     med2 = med[['fmmp_class','acres_trt_bau']]
-    
-#    high3 = high2.iloc[0]
-#    med3 = med2.iloc[0]
+
     high3 = high2.loc[high2['guild'].isin(['mammals_avg_deg_acres','birds_avg_deg_acres','amphibians_avg_deg_acres'])]
-    med3 = med2.loc[med2['guild'].isin(['mammals_avg_deg_acres','birds_avg_deg_acres','amphibians_avg_deg_acres'])]
-    
-    def max_y_range(table):
-        c =table.max(axis=0, numeric_only = True)
-        return round(max(c) +plot_dict[1], plot_dict[2])
-        
-    def min_y_range(table):
-        c =table.min(axis=0, numeric_only = True)
-        return round(min(c) -plot_dict[1], plot_dict[2])        
+    med3 = med2.loc[med2['guild'].isin(['mammals_avg_deg_acres','birds_avg_deg_acres','amphibians_avg_deg_acres'])]  
 
     trace1 = {
       "x": high3['guild'], 
@@ -330,24 +308,12 @@ def  airquality(high_folder, med_folder):
     med_pm25 = pd.read_csv(med_folder + '/pm2_5_val_airpollute.csv')
     med_pm10 = pd.read_csv(med_folder + '/pm10_val_airpollute.csv')
 
-
-
-
-
-
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
     #import plotly.plotly as py
     from plotly import tools
     import plotly.graph_objs as go
-    
-#    def max_y_range(table):
-#        c =table.max(axis=0, numeric_only = True)
-#        return round(max(c) +plot_dict[1], plot_dict[2])
-#        
-#    def min_y_range(table):
-#        c =table.min(axis=0, numeric_only = True)
-#        return round(min(c) -plot_dict[1], plot_dict[2])   
+ 
 
     xlist = ['CO','O3','PM 10','PM 2.5','NO2']
     
@@ -370,23 +336,8 @@ def  airquality(high_folder, med_folder):
       "type": "bar",
       "name": "Conservation", 
       }
-#    trace4 = {
-#    
-#      "x": xlist, 
-#      "y": [high_pm25['tons_trt_bau'].sum(), med_pm25['tons_trt_bau'].sum(), high_pm25['tons_base_bau'].sum()], 
-#      "type": "bar",
-#      "name": "Partial Development", 
-#      }
-#    trace5 = {
-#      "x": ['Carbon Monoxide','o3','pm10','pm25','no2'], 
-#      "y": [high_pm10['tons_trt_bau'].sum(), med_pm10['tons_trt_bau'].sum(), high_pm10['tons_base_bau'].sum()], 
-#      "type": "bar",
-#      "name": "Partial Development",       
-#      
-#      }
 
-    
-    
+
     data = go.Data([trace1, trace2,trace3])
     layout = {
       "autosize": True, 
@@ -454,7 +405,7 @@ def  scenicvalue_plot(high_folder, med_folder):
 #        c =table.min(axis=0, numeric_only = True)
 #        return round(min(c) -plot_dict[1], plot_dict[2])   
 
-    xlist = ['Natural','Agriculture','Developed']
+    xlist = ['Full Development','Partial Development','Conservation']
     
     
     
@@ -462,20 +413,20 @@ def  scenicvalue_plot(high_folder, med_folder):
       "x": xlist, 
       "y": [highnat['ha_trt_bau'].sum(), mednat['ha_trt_bau'].sum(), highnat['ha_base_bau'].sum()], 
       "type": "bar",
-      "name": "Full Development", 
+      "name": "Natural", 
       
       }
     trace2 = {
       "x": xlist, 
       "y": [highdev['ha_trt_bau'].sum(), meddev['ha_trt_bau'].sum(), highdev['ha_base_bau'].sum()], 
       "type": "bar",
-      "name": "Partial Development", 
+      "name": "Developed", 
       }
     trace3 = {
       "x": xlist, 
-      "y": [highag['ha_trt_bau'].sum(), medag['ha_trt_bau'].sum(), high_no2['ha_base_bau'].sum()], 
+      "y": [highag['ha_trt_bau'].sum(), medag['ha_trt_bau'].sum(), highdev['ha_base_bau'].sum()], 
       "type": "bar",
-      "name": "Conservation", 
+      "name": "Agriculture", 
       }
 #    trace4 = {
 #    
@@ -533,6 +484,8 @@ def  scenicvalue_plot(high_folder, med_folder):
 
 
 #Saved Function Calls
+    
 #Create_Plots_for_Report.airquality(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-
+#Create_Plots_for_Report.scenicvalue_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
+#Create_Plots_for_Report.terrestrial_habitat_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
 
