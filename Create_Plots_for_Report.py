@@ -12,7 +12,7 @@ Created on Wed Apr  4 14:15:37 2018
 #Countywide GHG Reductions from Riparian Restoration
 
 
-def flying_m_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev\carbon.csv', table_medium=r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\carbon.csv'):
+def  flying_m_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev\carbon.csv', table_medium=r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\carbon.csv'):
     import pandas as pd
     high = pd.read_csv(table_high)
     med = pd.read_csv(table_medium)
@@ -37,7 +37,6 @@ def flying_m_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
       "x": ["Full Development", "Partial Development", "Conservation"], 
       "y": [high['trt_bau_total'].sum(), med['trt_bau_total'].sum(), high['carbon_base_max'].sum()], 
       "type": "bar",
-      "text": ['', '', 50]
       }
     
     
@@ -79,8 +78,50 @@ def flying_m_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
     }
        
     fig = go.Figure(data=data, layout=layout)
-    plot(fig, filename= 'TT' + '.html')
+    plot(fig, filename= 'Flying_M' + '.html')
     
+<<<<<<< HEAD
+def riparian_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\carbon.csv'):
+    import pandas as pd
+    high = pd.read_csv(table_high)
+    
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+    
+    trace1 = {
+      "x": ["2001", "2014", "2030"], 
+      "y": ["50793849", high['carbon2014'].sum(), high['trt_bau_total'].sum()], 
+      "connectgaps": False, 
+      "line": {"color": "rgb(26, 100, 26)"}, 
+      "marker": {
+        "color": "rgb(16, 82, 16)", 
+        "size": 7
+      }, 
+      "mode": "lines+markers", 
+      "name": "Tons Carbon RRE", 
+      "type": "scatter", 
+    }
+    trace2 = {
+      "x": ["2001", "2014", "2030"], 
+      "y": ["50793849", high['carbon2014'].sum(), high['carbon_base_bau'].sum()], 
+      "connectgaps": False, 
+      "line": {
+        "color": "rgb(31, 119, 180)", 
+        "width": 2.5
+      }, 
+      "marker": {
+        "color": "rgb(31, 119, 180)", 
+        "size": 7
+      }, 
+      "mode": "lines+markers", 
+      "name": "Tons Carbon Ref", 
+      "type": "scatter", 
+
+    }
+=======
 <<<<<<< HEAD
 def groundwater_plot(high_dev, med_dev):
     import pandas as pd
@@ -178,11 +219,33 @@ def terrestrial_habitat_plot(high_dev, med_dev):
       "type": "bar"
     }
 
+>>>>>>> 5bbd5f73867f540c31c09e2e8afeec9530f688fe
     data = go.Data([trace1, trace2])
     layout = {
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": True, 
+<<<<<<< HEAD
+      "title": "Riparian Restoration - Fully Adopted Countywide", 
+      "xaxis": {
+        "autorange": True, 
+        "range": [2000, 2031], 
+        "title": "Year", 
+        "type": "linear"
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [50496576.7792, 55507202.8908], 
+        "title": "Tons Carbon (CO2e)", 
+        "type": "linear"
+      }
+    }
+           
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'Flying_M' + '.html')
+    
+riparian_reductions()
+=======
       "title": 'Terrestrial Habitat Impacts', 
       "titlefont": {
       "size": 24
@@ -338,3 +401,4 @@ def airquality_plot(high_dev_folder, med_dev_folder): #No difference between med
 #=======
 #flying_m_reductions()
 #>>>>>>> 52bdb8f541bcc4a9aaa9953f39ba2fb0d0bc0005
+>>>>>>> 5bbd5f73867f540c31c09e2e8afeec9530f688fe
