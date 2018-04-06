@@ -2294,7 +2294,6 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         lct = temp.groupby(['LC2014'], as_index = False).sum()
         return lct
     lct = do2014(df, c14)
-    lct.to_csv('E:/Temp/carbon14.csv')
       
     lct = lct[['LC2014', 'carbrate14']]
     lct = lct.rename(columns = {'LC2014':'landcover','carbrate14':'carbon2014'})
