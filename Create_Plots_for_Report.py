@@ -617,7 +617,83 @@ def  tconnect_plot(high_folder, med_folder, outfile):
     py.image.save_as(fig, outfile, format='png')
     return fig
 
+def  riparian_reductions():
+    import pandas as pd
+    import plotly.graph_objs as go
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    folder = r"E:\Box\Box Sync\Merced Project\Tool\outputs\activities"
+    table = 'carbon'
+    
+    
+    
+    cam25 = pd.read_csv(folder + '/compost_amendment_25/' + table + '.csv')
+    cam100 = pd.read_csv(folder + '/compost_amendment_100/' + table + '.csv')
+    ccr25 = pd.read_csv(folder + '/cover_cropping_25/' + table + '.csv')
+    ccr100 = pd.read_csv(folder + '/cover_cropping_100/' + table + '.csv')
+    cag25 = pd.read_csv(folder + '/grass_compost_amendment_25/' + table + '.csv')
+    cag100 = pd.read_csv(folder + '/grass_compost_amendment_100/' + table + '.csv')
+    gra25 = pd.read_csv(folder + '/grassland_resto_25/' + table + '.csv')
+    gra100 = pd.read_csv(folder + '/grassland_resto_100/' + table + '.csv')
+    #hpl25 = pd.read_csv(folder + '/hedgerow_25/' + table + '.csv')
+    #hpl100 = pd.read_csv(folder + '/hedgerow_100/' + table + '.csv')
+    mul25 = pd.read_csv(folder + '/mulching_25/' + table + '.csv')
+    mul100 = pd.read_csv(folder + '/mulching_100/' + table + '.csv')
+    nfm25 = pd.read_csv(folder + '/nfm_25/' + table + '.csv')
+    nfm100 = pd.read_csv(folder + '/nfm_100/' + table + '.csv')
+    rre25 = pd.read_csv(folder + '/RRE_COUNTY_30/' + table + '.csv')
+    rre100 = pd.read_csv(folder + '/RRE_COUNTY_100/' + table + '.csv')
+    oak25 = pd.read_csv(folder + '/oak_25/' + table + '.csv')
+    oak100 = pd.read_csv(folder + '/oak_100/' + table + '.csv') 
+#    urb25 = pd.read_csv(folder + '/urb_25/' + table + '.csv')
+#    urb100 = pd.read_csv(folder + '/urb_100/' + table + '.csv')
+ 
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
 
+
+    trace1 = {
+      #"x": ["Riparian Restoration", 'Improved N Fertilizer Mngmt',"Compost Amendments to Croplands", 'Compost Amendments to Grasslands', #'Cover Cropping', 'Mulching', 'Hedgerow Planting', 'Oak Woodland Restoration', 'Urban Tree Planting']
+      "x": ["Compost Amendments to Croplands", 'Compost Amendments to Grasslands', 'Cover Cropping', 'Mulching',  'Oak Woodland Restoration'], 
+      "y": [cam25['carbon_cam'].sum(), cag25['carbon_cag'].sum(), ccr25['carbon_ccr'].sum(),  mul25['carbon_mul'].sum()], 
+      "type": "bar",
+      }
+    trace2 = {
+      "x": ["Compost Amendments to Croplands", 'Compost Amendments to Grasslands', 'Cover Cropping', 'Mulching',  'Oak Woodland Restoration'], 
+      "y": [cam100['carbon_cam'].sum(), cag100['carbon_cag'].sum(), ccr100['carbon_ccr'].sum(), mul100['carbon_mul'].sum()], 
+      "type": "bar",
+      }
+
+    
+    data = go.Data([trace1, trace2])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": False, 
+      "title": "Reductions from Countywide Light Adoptions and Full Adoptions - All Activities", 
+      "titlefont": {
+      "size": 24
+          },
+      "xaxis": {
+        "autorange": True, 
+        "title": ['highly developed', 'medium developed', 'conserved'], 
+        "type": "category"
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [0, 200000], 
+        #"range": [min_y_range(table), max_y_range(table)], 
+        "title": 'Tons CO2 Equivalents', 
+        "type": "linear"
+      },
+
+      }
+       
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'all_reductions' + '.html')
 #Saved Function Calls
 
 #    
