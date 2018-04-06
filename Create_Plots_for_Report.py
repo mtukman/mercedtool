@@ -317,7 +317,7 @@ def wateruse_plot_AC(high_folder, med_folder, outfile):
     py.image.save_as(fig, outfile, format='png')
     return fig
     
-def terrestrial_habitat_plot_AC(high_folder, med_folder, outfile):
+def terrestrial_habitat_plot_AC(high_folder, med_folder, outfile):   #ADD THREATENED AND ENGANGERED
     import pandas as pd
     import plotly.graph_objs as go
     import plotly.plotly as py
@@ -854,7 +854,7 @@ def cropvalue_plot_RRE(high_folder, outfile):
     return fig
     
     
-def terrestrial_habitat_plot_RRE(high_folder, outfile):
+def terrestrial_habitat_plot_RRE(high_folder, outfile): #ADD THREATENED AND ENGANGERED
     import pandas as pd
     import plotly.graph_objs as go
     import plotly.plotly as py
@@ -864,37 +864,25 @@ def terrestrial_habitat_plot_RRE(high_folder, outfile):
     
     high2 = high[['guild','acres_trt_bau', 'acres_base_bau']]
 
-    high3 = high2.loc[high2['guild'].isin(['mammals_avg_deg_acres','birds_avg_deg_acres','amphibians_avg_deg_acres'])]
-    high4 = high2.loc[high2['guild'].isin(['mammals_avg_imp_acres','birds_avg_imp_acres','amphibians_avg_imp_acres'])]
+#    high3 = high2.loc[high2['guild'].isin(['mammals_avg_deg_acres','birds_avg_deg_acres','amphibians_avg_deg_acres'])]
+#    high4 = high2.loc[high2['guild'].isin(['mammals_avg_imp_acres','birds_avg_imp_acres','amphibians_avg_imp_acres'])]
  
 
     trace1 = {
-      "x": ['Mammal Habitat Degraded','Bird Habitat Degraded','Amphibian Habitat Degraded'], 
-      "y": high3['acres_trt_bau'], 
-      "name": "Riparian Restoration Degraded", 
+      "x": ['Mammals Degraded','Mammals Improved', 'Birds Degraded', 'Birds Improved', 'Amphibians Degraded', 'Amphibians Improved'],    #Add threatened and endangered
+      "y": high2['acres_trt_bau'],  
+      "name": 'Riparian Resoration',
       "type": "bar"
     }
     trace2 = {
-      "x": ['Mammal Habitat Degraded','Bird Habitat Degraded','Amphibian Habitat Degraded'], 
-      "y": high3['acres_base_bau'], 
-      "name": "Reference Degraded", 
-      "type": "bar"
-    }
-    trace3 = {
-      "x": ['Mammal Habitat Improved','Bird Habitat Improved','Amphibian Habitat Improved'], 
-      "y": high4['acres_trt_bau'], 
-      "name": "Riparian Restoration Improved", 
-      "type": "bar"
-    }
-    trace4 = {
-      "x": ['Mammal Habitat Improved','Bird Habitat Improved','Amphibian Habitat Improved'], 
-      "y": high4['acres_base_bau'], 
-      "name": "Reference Improved", 
+      "x": ['Mammals Degraded','Mammals Improved', 'Birds Degraded', 'Birds Improved', 'Amphibians Degraded', 'Amphibians Improved'], 
+      "y": high2['acres_base_bau'], 
+      "name": "Reference",
       "type": "bar"
     }
 
 
-    data = go.Data([trace1,trace2,trace3,trace4])
+    data = go.Data([trace1,trace2])
     layout = {
       "autosize": True, 
       "hovermode": "closest", 
@@ -903,13 +891,11 @@ def terrestrial_habitat_plot_RRE(high_folder, outfile):
       "title": "San Joaquin R. Riparian Restoration - Habitat Quality", 
       "xaxis": {
         "autorange": True,  
-        "title": ['Mammals','Birds','Amphibians'], 
         "type": "category"
       }, 
       "yaxis": {
         "autorange": True, 
-        "range": [50496576.7792, 55507202.8908], 
-        "title": "Average Acres of Degraded Habitat by Guild", 
+        "title": "Average Acres of Degraded and Improved Habitat by Species Guild", 
         "type": "linear"
       }
     }
