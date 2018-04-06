@@ -41,6 +41,7 @@ def  riparian_reductions(folder):
       "x": ["Riparian Restoration", "Reference"], 
       "y": [high['trt_bau_total'].sum(), high['carbon_base_max'].sum()], 
       "type": "bar",
+      "bar"=Marker(color=bupu500,size=22.0,line=Line(color='black',width=2))
       }
     
     
