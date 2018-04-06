@@ -12,7 +12,7 @@ Created on Wed Apr  4 14:15:37 2018
 #Countywide GHG Reductions from Riparian Restoration
 
 
-def  flying_m_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev\carbon.csv', table_medium=r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\carbon.csv'):
+def  case_study_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev\carbon.csv', table_medium=r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\carbon.csv', outfile = 'C:/temp/test.png'):
     import pandas as pd
     high = pd.read_csv(table_high)
     med = pd.read_csv(table_medium)
@@ -83,7 +83,7 @@ def  flying_m_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outp
     return fig
     
 
-def riparian_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\carbon.csv'):
+def countywide_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\carbon.csv', outfile = 'C:/temp/test.png'):
     import pandas as pd
     high = pd.read_csv(table_high)
     
@@ -94,8 +94,8 @@ def riparian_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
     import plotly.graph_objs as go
     
     trace1 = {
-      "x": ["2001", "2014", "2030"], 
-      "y": ["50793849", high['carbon2014'].sum(), high['trt_bau_total'].sum()], 
+      "x": ["2014", "2030"], 
+      "y": ["52406560", high['carbon_base_max'].sum()], 
       "connectgaps": False, 
       "line": {"color": "rgb(26, 100, 26)"}, 
       "marker": {
@@ -103,12 +103,12 @@ def riparian_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
         "size": 7
       }, 
       "mode": "lines+markers", 
-      "name": "Tons Carbon RRE", 
+      "name": "Tons Carbon Max Infill", 
       "type": "scatter", 
     }
     trace2 = {
-      "x": ["2001", "2014", "2030"], 
-      "y": ["50793849", high['carbon2014'].sum(), high['carbon_base_bau'].sum()], 
+      "x": ["2014", "2030"], 
+      "y": ["52406560", high['carbon_base_bau'].sum()], 
       "connectgaps": False, 
       "line": {
         "color": "rgb(31, 119, 180)", 
@@ -119,13 +119,36 @@ def riparian_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
         "size": 7
       }, 
       "mode": "lines+markers", 
-      "name": "Tons Carbon Ref", 
+      "name": "Tons Carbon Reference", 
       "type": "scatter", 
 
     }
-
+    layout = {
+  "autosize": True, 
+  "hovermode": "closest", 
+  "showlegend": True, 
+  "title": "Avoided Conversion - Max Infill v. Reference Scenario", 
+        "titlefont": {
+      "size": 24
+          },
+  "xaxis": {
+    "autorange": True, 
+    "range": [2014, 2031.7864606], 
+    "title": "Year", 
+    "type": "linear"
+  }, 
+  "yaxis": {
+    "autorange": True, 
+    "range": [52406576.7792, 55507202.8908], 
+    "title": "Tons Carbon (CO2e)", 
+    "type": "linear"
+  }
+}
+    
+    data =  go.Data([trace1, trace2])
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename= 'Flying_M_reductions' + '.html')
+    py.image.save_as(fig, outfile, format='png')
     return fig
 
 def groundwater_plot(high_folder, med_folder, outfile):
@@ -171,13 +194,12 @@ def groundwater_plot(high_folder, med_folder, outfile):
     }
    
     fig = go.Figure(data=data, layout=layout)
-<<<<<<< HEAD
+
     plot(fig, filename= 'groundwater_recharge' + '.html')
     py.image.save_as(fig, outfile, format='png')
-=======
+
     plot(fig, filename= 'test' + '.html')
 
->>>>>>> fdec0f66c4894720973fd5b991f9cf2a8c137727
     return fig
 
 
@@ -531,7 +553,7 @@ def  tconnect_plot(high_folder, med_folder, outfile):
 #Saved Function Calls
 
 #    
-def make_plots_flyingm():
+def make_plots_AC():
     import os
     import plotly.plotly as py
     py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
@@ -543,31 +565,9 @@ def make_plots_flyingm():
     fig_th = terrestrial_habitat_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Terrhab.png'))
     fig_wu = wateruse_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Wateruse.png'))
     fig_tc = tconnect_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Terrcon.png'))
-    fig_carb = flying_m_reductions(os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev/carbon.csv'), os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev/carbon.csv'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Reductions.png'))
-        
+    fig_carb = case_study_reductions(os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev/carbon.csv'), os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev/carbon.csv'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Reductions.png'))
+    fig_carb_countywide = countywide_reductions(os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_100/carbon.csv'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Countywide AC Reductions.png'))
     
-    return [fig_gw, fig_aq, fig_sv, fig_th, fig_wu, fig_tc]
+    #return [fig_gw, fig_aq, fig_sv, fig_th, fig_wu, fig_tc, fig_carb, fig_carb_countywide]
 
 
-
-<<<<<<< HEAD
-=======
-#Saved Function Calls
-    
-def make_plots_flyingm():
-
-    fig_gw = groundwater_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    fig_ac=airquality(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    fig_sv=scenicvalue_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    fig_th=terrestrial_habitat_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-
-    return [fig_gw, fig_ac, fig_sv, fig_th]
-
-    groundwater_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    airquality(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    scenicvalue_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    terrestrial_habitat_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    wateruse_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-    tconnect_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev")
-
->>>>>>> fdec0f66c4894720973fd5b991f9cf2a8c137727
