@@ -10,9 +10,10 @@ Created on Wed Apr  4 14:15:37 2018
 #RIPARIAN RESTORATION CHARTS AND GRAPHS
 
 #Countywide GHG Reductions from Riparian Restoration
+carb01 = 50793849
+carb14 = 52406560
 
-
-def  case_study_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev\carbon.csv', table_medium=r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\carbon.csv', outfile = 'C:/temp/test.png'):
+def  flyingm_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev\carbon.csv', table_medium=r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\carbon.csv', outfile = 'C:/temp/test.png'):
     import pandas as pd
     high = pd.read_csv(table_high)
     med = pd.read_csv(table_medium)
@@ -81,9 +82,76 @@ def  case_study_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\ou
     plot(fig, filename= 'Flying_M' + '.html')
     py.image.save_as(fig, outfile, format='png')
     return fig
-    
 
-def countywide_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\carbon.csv', outfile = 'C:/temp/test.png'):
+def countywide_reductions_RRE(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\carbon.csv', outfile = 'C:/temp/test.png'):
+    import pandas as pd
+    high = pd.read_csv(table_high)
+    
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+    
+    trace1 = {
+      "x": ["2001", "2014", "2030"], 
+      "y": [carb01, carb14, high['carbon_base_bau'].sum()], 
+      "connectgaps": False, 
+      "line": {"color": "rgb(25, 25, 112)",
+               "width": 2.5}, 
+      "marker": {
+        "color": "rgb(31, 119, 180)", 
+        "size": 7
+      }, 
+      "mode": "lines+markers", 
+      "name": "Tons Carbon Reference", 
+      "type": "scatter", 
+    }
+    trace2 = {
+      "x": ["2001", "2014", "2030"], 
+      "y": [carb01, carb14, high['trt_bau_total'].sum()], 
+      "connectgaps": False, 
+      "line": {
+        "color": "rgb(34,139,34)"
+      }, 
+      "marker": {
+        "color": "rgb(31, 119, 180)", 
+        "size": 7
+      }, 
+      "mode": "lines+markers", 
+      "name": "Tons Carbon Riparian Restoration", 
+      "type": "scatter", 
+
+    }
+    layout = {
+  "autosize": True, 
+  "hovermode": "closest", 
+  "showlegend": True, 
+  "title": "Carbon Reductions from Countywide Riparian Restoration", 
+        "titlefont": {
+      "size": 24
+          },
+  "xaxis": {
+    "autorange": True, 
+    "range": [2001, 2031.7864606], 
+    "title": "Year", 
+    "type": "linear"
+  }, 
+  "yaxis": {
+    "autorange": True, 
+    "range": [carb01, 55507202.8908], 
+    "title": "Tons Carbon (CO2e)", 
+    "type": "linear"
+  }
+}
+    
+    data =  go.Data([trace2, trace1])
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'Countywide_reductions_rre' + '.html')
+    py.image.save_as(fig, outfile, format='png')
+    return fig
+
+def countywide_reductions_AC(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_100\carbon.csv', outfile = 'C:/temp/test.png'):
     import pandas as pd
     high = pd.read_csv(table_high)
     
@@ -103,7 +171,7 @@ def countywide_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\out
         "size": 7
       }, 
       "mode": "lines+markers", 
-      "name": "Tons Carbon Max Infill", 
+      "name": "Tons Carbon Riparian Restoration", 
       "type": "scatter", 
     }
     trace2 = {
@@ -565,9 +633,14 @@ def make_plots_AC():
     fig_th = terrestrial_habitat_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Terrhab.png'))
     fig_wu = wateruse_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Wateruse.png'))
     fig_tc = tconnect_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Terrcon.png'))
-    fig_carb = case_study_reductions(os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev/carbon.csv'), os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev/carbon.csv'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Reductions.png'))
-    fig_carb_countywide = countywide_reductions(os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_100/carbon.csv'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Countywide AC Reductions.png'))
+    fig_carb = flyingm_reductions(os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev/carbon.csv'), os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev/carbon.csv'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Reductions.png'))
+    fig_carb_countywide = countywide_reductions_AC(os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_100/carbon.csv'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Countywide AC Reductions.png'))
     
     #return [fig_gw, fig_aq, fig_sv, fig_th, fig_wu, fig_tc, fig_carb, fig_carb_countywide]
 
-
+def make_plots_RRE():
+    import os
+    import plotly.plotly as py
+    py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
+    boxpath = 'C:/Users/mtukman/'
+    fig_carb_countywide = countywide_reductions_RRE(os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_100/carbon.csv'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Riparian/Countywide RRE Reductions.png'))
