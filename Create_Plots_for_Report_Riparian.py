@@ -132,7 +132,7 @@ def  riparian_reductions(folder):
 #    return fig
 
 
-def wateruse_plot(high_folder):
+def wateruse_plot_RRE(high_folder):
     import pandas as pd
     import plotly.graph_objs as go
     import plotly.plotly as py
@@ -176,7 +176,7 @@ def wateruse_plot(high_folder):
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename= 'test' + '.html')
     
-def cropvalue_plot(high_folder):
+def cropvalue_plot_RRE(high_folder):
     import pandas as pd
     import plotly.graph_objs as go
     import plotly.plotly as py
@@ -221,7 +221,7 @@ def cropvalue_plot(high_folder):
     plot(fig, filename= 'test' + '.html')
     
     
-def terrestrial_habitat_plot(high_folder):
+def terrestrial_habitat_plot_RRE(high_folder):
     import pandas as pd
     import plotly.graph_objs as go
     import plotly.plotly as py
@@ -288,7 +288,7 @@ def terrestrial_habitat_plot(high_folder):
     
     
     
-def  airquality(high_folder, med_folder):
+def  airquality_plot_RRE(high_folder, med_folder):
     import pandas as pd
     
     
@@ -371,7 +371,7 @@ def  airquality(high_folder, med_folder):
 
 
 
-def  scenicvalue_plot(high_folder):
+def  scenicvalue_plot_RRE(high_folder):
     import pandas as pd
     
     
@@ -446,7 +446,7 @@ def  scenicvalue_plot(high_folder):
 
 
 
-def  tconnect_plot(high_folder):
+def  tconnect_plot_RRE(high_folder):
     import pandas as pd
     
     

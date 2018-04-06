@@ -46,7 +46,7 @@ def  flyingm_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": False, 
-      "title": "Flying M Ranch - Avoided Conversion", 
+      "title": "Flying M Ranch - CO<sub>2</sub>", 
       "titlefont": {
       "size": 24
           },
@@ -127,7 +127,7 @@ def countywide_reductions_RRE(table_high = r'E:\Box\Box Sync\Merced Project\Tool
   "autosize": True, 
   "hovermode": "closest", 
   "showlegend": True, 
-  "title": "Carbon Reductions from Countywide Riparian Restoration", 
+  "title": "Countywide Riparian Restoration - CO<sub>2</sub> Equivalents", 
         "titlefont": {
       "size": 24
           },
@@ -219,7 +219,7 @@ def countywide_reductions_AC(table_high = r'E:\Box\Box Sync\Merced Project\Tool\
     py.image.save_as(fig, outfile, format='png')
     return fig
 
-def groundwater_plot(high_folder, med_folder, outfile):
+def groundwater_plot_AC(high_folder, med_folder, outfile):
     import pandas as pd
     import plotly.graph_objs as go
     import plotly.plotly as py
@@ -233,7 +233,7 @@ def groundwater_plot(high_folder, med_folder, outfile):
     trace1 = {
       "x": ['Full Development','Partial Development'], 
       "y": [high['ac_ft_rec_lst_trt_bau'].sum(), med['ac_ft_rec_lst_trt_bau'].sum()], 
-      "name": "Groundwater Recharge Loss", 
+      "name": "Flying M Ranch - Groundwater Recharge Loss", 
       "type": "bar"
     }
 
@@ -271,7 +271,7 @@ def groundwater_plot(high_folder, med_folder, outfile):
     return fig
 
 
-def wateruse_plot(high_folder, med_folder, outfile):
+def wateruse_plot_AC(high_folder, med_folder, outfile):
     import pandas as pd
     import plotly.graph_objs as go
     import plotly.plotly as py
@@ -284,7 +284,7 @@ def wateruse_plot(high_folder, med_folder, outfile):
     trace1 = {
       "x": ['Full Development','Partial Development', 'Conservation'], 
       "y": [high['ac_ft_change_dev_flagged'].sum(), med['ac_ft_change_dev_flagged'].sum(),med['ac_ft_base_med'].sum()], 
-      "name": "Water Use", 
+      "name": "Flying M Ranch - Water Use", 
       "type": "bar"
     }
 
@@ -317,7 +317,7 @@ def wateruse_plot(high_folder, med_folder, outfile):
     py.image.save_as(fig, outfile, format='png')
     return fig
     
-def terrestrial_habitat_plot(high_folder, med_folder, outfile):
+def terrestrial_habitat_plot_AC(high_folder, med_folder, outfile):
     import pandas as pd
     import plotly.graph_objs as go
     import plotly.plotly as py
@@ -373,7 +373,7 @@ def terrestrial_habitat_plot(high_folder, med_folder, outfile):
     py.image.save_as(fig, outfile, format='png')
     return fig
     
-def  airquality_plot(high_folder, med_folder, outfile):
+def  airquality_plot_AC(high_folder, med_folder, outfile):
     import pandas as pd
     
     
@@ -458,7 +458,7 @@ def  airquality_plot(high_folder, med_folder, outfile):
 
 
 
-def  scenicvalue_plot(high_folder, med_folder, outfile):
+def  scenicvalue_plot_AC(high_folder, med_folder, outfile):
     import pandas as pd
     
     
@@ -545,7 +545,7 @@ def  scenicvalue_plot(high_folder, med_folder, outfile):
     py.image.save_as(fig, outfile, format='png')
     return fig
 
-def  tconnect_plot(high_folder, med_folder, outfile):
+def  tconnect_plot_AC(high_folder, med_folder, outfile):
     import pandas as pd
     
     
@@ -617,7 +617,7 @@ def  tconnect_plot(high_folder, med_folder, outfile):
     py.image.save_as(fig, outfile, format='png')
     return fig
 
-def  riparian_reductions():
+def  reductions_ALL(outfile):
     import pandas as pd
     import plotly.graph_objs as go
     import plotly.plotly as py
@@ -673,7 +673,7 @@ def  riparian_reductions():
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": False, 
-      "title": "Reductions from Countywide Light Adoptions and Full Adoptions - All Activities", 
+      "title": "Greenhouse Gas Reductions from Countywide Activities", 
       "titlefont": {
       "size": 24
           },
@@ -694,29 +694,488 @@ def  riparian_reductions():
        
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename= 'all_reductions' + '.html')
-#Saved Function Calls
+    py.image.save_as(fig, outfile, format='png')
 
-#    
+
+def  reductions_RRE(folder, outfile):
+    import pandas as pd
+    import plotly.graph_objs as go
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+
+    high = pd.read_csv(folder + '/carbon.csv')
+
+    
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+    
+    trace1 = {
+      "x": ["Riparian Restoration", "Reference"], 
+      "y": [high['trt_bau_total'].sum(), high['carbon_base_max'].sum()], 
+      "type": "bar",
+      }
+        
+    data = go.Data([trace1])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": False, 
+      "title": "San Joaquin R. Riparian Restoration - CO<sub>2</sub> Equivalents", 
+      "titlefont": {
+      "size": 24
+          },
+      "xaxis": {
+        "autorange": True, 
+        "type": "category"
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [0, 200000], 
+        #"range": [min_y_range(table), max_y_range(table)], 
+        "title": 'Tons CO<sub>2</sub> Equivalents', 
+        "type": "linear"
+      },
+                                "annotations": [
+      {
+        "xref": "x",
+        "yref": "y",
+        "text":  str(round( high['trt_bau_total'].sum() -high['carbon_base_max'].sum(), 1))  + " tons <br> CO<sub>2</sub>e reductions <br> v. reference",
+        "y": high['carbon_base_max'].sum(),
+        "x": 'Riparian Restoration',
+        "font": {
+          "color": "rgb(252, 252, 252)",
+          "size": 14
+        },
+        "showarrow": False
+      }
+    ]
+
+    }
+       
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'Flying_M' + '.html')
+    py.image.save_as(fig, outfile, format='png')
+    return fig
+    
+
+def wateruse_plot_RRE(high_folder, outfile):
+    import pandas as pd
+    import plotly.graph_objs as go
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+
+    high = pd.read_csv(high_folder + '/watcon.csv')
+
+       
+
+    trace1 = {
+      "x": ["Riparian Restoration", "Reference"], 
+      "y": [high['ac_ft_trt_bau'].sum(),high['ac_ft_base_bau'].sum()], 
+      "name": "San Joaquin River Restoration - Water Use", 
+      "type": "bar"
+    }
+
+
+
+    data = go.Data([trace1])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": False, 
+      "title": 'Water Use', 
+      "titlefont": {
+      "size": 24
+          },
+      "xaxis": {
+        "autorange": True,  
+        "title": ["Riparian Restoration", "Reference"], 
+        "type": "category"
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [0,3], 
+        "title": 'Acre Feet of Water Demand (Annual)', 
+        "type": "linear"
+      }
+    }
+   
+    fig = go.Figure(data=data, layout=layout)
+    py.image.save_as(fig, outfile, format='png')
+    plot(fig, filename= 'test' + '.html')
+    return fig
+    
+def cropvalue_plot_RRE(high_folder, outfile):
+    import pandas as pd
+    import plotly.graph_objs as go
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+
+    high = pd.read_csv(high_folder + '/cropvalue.csv')
+
+       
+
+    trace1 = {
+      "x": ["Riparian Restoration", "Reference"], 
+      "y": [high['usd_trt_bau'].sum(),high['usd_base_bau'].sum()], 
+      "name": "Water Use", 
+      "type": "bar"
+    }
+
+
+
+    data = go.Data([trace1])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": False, 
+      "title": 'San Joaquin R. Riparian Restoration - Crop Value', 
+      "titlefont": {
+      "size": 24
+          },
+      "xaxis": {
+        "autorange": True,  
+        "title": ["Riparian Restoration", "Reference"], 
+        "type": "category"
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [0,3], 
+        "title": 'Crop Value (US Dollars)', 
+        "type": "linear"
+      }
+    }
+   
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'test' + '.html')
+    py.image.save_as(fig, outfile, format='png')
+    return fig
+    
+    
+def terrestrial_habitat_plot_RRE(high_folder, outfile):
+    import pandas as pd
+    import plotly.graph_objs as go
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    high = pd.read_csv(high_folder + '/terrhab.csv')
+
+    
+    high2 = high[['guild','acres_trt_bau', 'acres_base_bau']]
+
+    high3 = high2.loc[high2['guild'].isin(['mammals_avg_deg_acres','birds_avg_deg_acres','amphibians_avg_deg_acres'])]
+    high4 = high2.loc[high2['guild'].isin(['mammals_avg_imp_acres','birds_avg_imp_acres','amphibians_avg_imp_acres'])]
+ 
+
+    trace1 = {
+      "x": ['Mammal Habitat Degraded','Bird Habitat Degraded','Amphibian Habitat Degraded'], 
+      "y": high3['acres_trt_bau'], 
+      "name": "Riparian Restoration Degraded", 
+      "type": "bar"
+    }
+    trace2 = {
+      "x": ['Mammal Habitat Degraded','Bird Habitat Degraded','Amphibian Habitat Degraded'], 
+      "y": high3['acres_base_bau'], 
+      "name": "Reference Degraded", 
+      "type": "bar"
+    }
+    trace3 = {
+      "x": ['Mammal Habitat Improved','Bird Habitat Improved','Amphibian Habitat Improved'], 
+      "y": high4['acres_trt_bau'], 
+      "name": "Riparian Restoration Improved", 
+      "type": "bar"
+    }
+    trace4 = {
+      "x": ['Mammal Habitat Improved','Bird Habitat Improved','Amphibian Habitat Improved'], 
+      "y": high4['acres_base_bau'], 
+      "name": "Reference Improved", 
+      "type": "bar"
+    }
+
+
+    data = go.Data([trace1,trace2,trace3,trace4])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+
+      "title": "San Joaquin R. Riparian Restoration - Habitat Quality", 
+      "xaxis": {
+        "autorange": True,  
+        "title": ['Mammals','Birds','Amphibians'], 
+        "type": "category"
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [50496576.7792, 55507202.8908], 
+        "title": "Average Acres of Degraded Habitat by Guild", 
+        "type": "linear"
+      }
+    }
+
+   
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'test' + '.html')
+    py.image.save_as(fig, outfile, format='png')
+    return fig
+    
+    
+    
+def  airquality_plot_RRE(high_folder, outfile):
+    import pandas as pd
+    
+    #Read O3
+    
+    high_co = pd.read_csv(high_folder + '/co_val_airpollute.csv')
+    high_o3 = pd.read_csv(high_folder + '/o3_val_airpollute.csv')
+    high_no2 = pd.read_csv(high_folder + '/no2_val_airpollute.csv')
+    high_pm25 = pd.read_csv(high_folder + '/pm2_5_val_airpollute.csv')
+    high_pm10 = pd.read_csv(high_folder + '/pm10_val_airpollute.csv')
+    
+
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+ 
+
+    xlist = ['CO','O3','PM 10','PM 2.5','NO2']
+    
+    trace1 = {
+      "x": xlist, 
+      "y": [high_co['tons_trt_bau'].sum(), high_o3['tons_trt_bau'].sum(), high_no2['tons_trt_bau'].sum(),high_pm25['tons_trt_bau'].sum(),high_pm10['tons_trt_bau'].sum()], 
+      "type": "bar",
+      "name": "Riparian Restoration", 
+      
+      }
+    trace2 = {
+      "x": xlist, 
+      "y": [high_co['tons_base_bau'].sum(), high_o3['tons_base_bau'].sum(), high_no2['tons_base_bau'].sum(),high_pm25['tons_base_bau'].sum(),high_pm10['tons_base_bau'].sum()], 
+      "type": "bar",
+      "name": "Reference", 
+      }
+
+    data = go.Data([trace1, trace2])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+      "title": "San Joaquin R. Restoration - Air Pollutant Sequestration", 
+      "titlefont": {
+      "size": 24
+          },
+      "xaxis": {
+        "autorange": True, 
+        "title": ['Riparian Restoration', 'Reference'], 
+        "type": "category"
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [0, 200000], 
+        #"range": [min_y_range(table), max_y_range(table)], 
+        "title": 'Tons of Pollutant Sequestered', 
+        "type": "linear"
+      },
+    }
+       
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'rre_air' + '.html')
+    py.image.save_as(fig, outfile, format='png')
+    return fig
+#terrestrial_habitat_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev\plotting_tables\terrhab_change.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\plotting_tables\terrhab_change.csv")
+#groundwater_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HigDev\plotting_tables\groundwater_sum.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\plotting_tables\groundwater_sum.csv")
+
+#=======
+#flying_m_reductions()
+
+
+
+def  scenicvalue_plot_RRE(high_folder, outfile):
+    import pandas as pd
+    
+    
+    high = pd.read_csv(high_folder + '/scenic.csv')
+
+    highnat = high.loc[high['gen_class'] == 'Natural']
+    highdev = high.loc[high['gen_class'] == 'Developed']
+    highag = high.loc[high['gen_class'] == 'Agriculture']
+
+
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+
+
+    xlist = ['Riparian Restoration','Reference']
+    
+    
+    
+    trace1 = {
+      "x": xlist, 
+      "y": [highnat['ha_trt_bau'].sum(), highnat['ha_base_bau'].sum()], 
+      "type": "bar",
+      "name": "Natural", 
+      
+      }
+    trace2 = {
+      "x": xlist, 
+      "y": [highdev['ha_trt_bau'].sum(), highdev['ha_base_bau'].sum()], 
+      "type": "bar",
+      "name": "Developed", 
+      }
+    trace3 = {
+      "x": xlist, 
+      "y": [highag['ha_trt_bau'].sum(), highag['ha_base_bau'].sum()], 
+      "type": "bar",
+      "name": "Agriculture", 
+      }
+    
+    data = go.Data([trace1, trace2,trace3])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+      "title": "Flying M Ranch - Landcover in Highly Visible Areas", 
+      "titlefont": {
+      "size": 24
+          },
+      "xaxis": {
+        "autorange": True, 
+        "title": ['highly developed', 'medium developed', 'conserved'], 
+        "type": "category"
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [0, 200000], 
+        #"range": [min_y_range(table), max_y_range(table)], 
+        "title": 'Hectares of Land', 
+        "type": "linear"
+      },
+    }
+       
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'Flying_M' + '.html')
+    return fig
+
+
+def  tconnect_plot_RRE(high_folder, outfile):
+    import pandas as pd
+    
+    #Read O3
+    
+    high = pd.read_csv(high_folder + '/countymovement.csv')
+
+
+    highnat = high.loc[high['movement_potential'] == 'high']
+    highdev = high.loc[high['movement_potential'] == 'medium']
+    highag = high.loc[high['movement_potential'] == 'low']
+
+
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+
+
+    xlist = ['Riparian Restoration','Reference']
+
+    trace1 = {
+      "x": xlist, 
+      "y": [highnat['ha_trt_bau'].sum(), highnat['ha_base_bau'].sum()], 
+      "type": "bar",
+      "name": "High Movement <br>Potential", 
+      
+      }
+    trace2 = {
+      "x": xlist, 
+      "y": [highdev['ha_trt_bau'].sum(), highdev['ha_base_bau'].sum()], 
+      "type": "bar",
+      "name": "Medium Movement <br>Potential", 
+      }
+    trace3 = {
+      "x": xlist, 
+      "y": [highag['ha_trt_bau'].sum(), highag['ha_base_bau'].sum()], 
+      "type": "bar",
+      "name": "Low Movement <br>Potential", 
+      }
+    
+    data = go.Data([trace1,trace2,trace3])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+      "title": "San Joaquin River Riparian Restoration - Terrestrial Connectivity", 
+      "titlefont": {
+      "size": 24
+          },
+      "xaxis": {
+        "autorange": True, 
+#        "title": ['highly developed', 'medium developed', 'conserved'], 
+        "type": "category"
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "title": 'Hectares of Terrestrial Movement Resistance Class', 
+        "type": "linear"
+      },
+    }
+       
+    fig = go.Figure(data=data, layout=layout)
+    py.image.save_as(fig, outfile, format='png')
+    plot(fig, filename= 'Flying_M' + '.html')
+    return fig
+
+
+
 def make_plots_AC():
     import os
     import plotly.plotly as py
     py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
-    boxpath = 'C:/Users/mtukman/'
+    boxpath = 'E:/Box/'
     print (os.path.join(boxpath,'Tool/outputs/FlyingM/FlyingM_HigDev'))
-    fig_gw = groundwater_plot(os.path.join(boxpath,'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Groundwater.png'))
-    fig_aq = airquality_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Air.png'))
-    fig_sv = scenicvalue_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Scenic.png'))
-    fig_th = terrestrial_habitat_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Terrhab.png'))
-    fig_wu = wateruse_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Wateruse.png'))
-    fig_tc = tconnect_plot(os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Terrcon.png'))
-    fig_carb = flyingm_reductions(os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev/carbon.csv'), os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev/carbon.csv'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Case Study AC Reductions.png'))
-    fig_carb_countywide = countywide_reductions_AC(os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_100/carbon.csv'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Avoided Conversion/Countywide AC Reductions.png'))
+    groundwater_plot_AC(os.path.join(boxpath,'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Avoided Conversion/Case Study AC Groundwater.png'))
+    airquality_plot_AC(os.path.join(boxpath, 'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Avoided Conversion/Case Study AC Air.png'))
+    scenicvalue_plot_AC(os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, 'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Avoided Conversion/Case Study AC Scenic.png'))
+    terrestrial_habitat_plot_AC(os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Avoided Conversion/Case Study AC Terrhab.png'))
+    wateruse_plot_AC(os.path.join(boxpath, 'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Avoided Conversion/Case Study AC Wateruse.png'))
+    tconnect_plot_AC(os.path.join(boxpath, 'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Avoided Conversion/Case Study AC Terrcon.png'))
+    flyingm_reductions(os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_HigDev/carbon.csv'), os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev/carbon.csv'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Avoided Conversion/Case Study AC Reductions.png'))
+    countywide_reductions_AC(os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_100/carbon.csv'), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Avoided Conversion/Countywide AC Reductions.png'))
     
-    #return [fig_gw, fig_aq, fig_sv, fig_th, fig_wu, fig_tc, fig_carb, fig_carb_countywide]
 
 def make_plots_RRE():
     import os
     import plotly.plotly as py
     py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
-    boxpath = 'C:/Users/mtukman/'
-    fig_carb_countywide = countywide_reductions_RRE(os.path.join(boxpath, r'Box/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_100/carbon.csv'), os.path.join(boxpath, 'Box/Merced Project/Case Studies/Riparian/Countywide RRE Reductions.png'))
+    boxpath = 'E:/Box/'
+    countywide_reductions_RRE(os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_100/carbon.csv'), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Countywide RRE Reductions.png'))
+    reductions_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Reductions.png') )
+    wateruse_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"),  os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Wateruse.png'))
+    terrestrial_habitat_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Terrhab.png'))
+    scenicvalue_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Scenic.png'))
+    tconnect_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Terrcon.png'))
+    cropvalue_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"),os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Cropvalue.png') )
+    airquality_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"),os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Air.png') )
+    
+def make_countywide_reductions_all_activities():
+    import os
+    import plotly.plotly as py
+    py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
+    boxpath = 'E:/Box/'
+    reductions_ALL(os.path.join(boxpath, r'Box Sync/Merced Project/Report_How-To Guide/Tukman Working Material/Countywide Activity Benefits.png'))
+    
+ 
+
+    
+    
+    
+    
+    
+    
+    
+    
