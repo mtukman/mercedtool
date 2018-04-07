@@ -46,7 +46,7 @@ def  flyingm_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": False, 
-      "title": "Flying M Ranch - CO<sub>2</sub>", 
+      "title": "Flying M Ranch - GHG Reductions from Avoided Conversion", 
       "titlefont": {
       "size": 24
           },
@@ -127,7 +127,7 @@ def countywide_reductions_RRE(table_high = r'E:\Box\Box Sync\Merced Project\Tool
   "autosize": True, 
   "hovermode": "closest", 
   "showlegend": True, 
-  "title": "Countywide Riparian Restoration - CO<sub>2</sub> Equivalents", 
+  "title": "Countywide GHG Reductions from Fully Adopted Riparian Restoration", 
         "titlefont": {
       "size": 24
           },
@@ -140,7 +140,7 @@ def countywide_reductions_RRE(table_high = r'E:\Box\Box Sync\Merced Project\Tool
   "yaxis": {
     "autorange": True, 
     "range": [carb01, 55507202.8908], 
-    "title": "Tons Carbon (CO2e)", 
+    "title": "Tons CO<sub>2</sub> Equivalents", 
     "type": "linear"
   }
 }
@@ -218,6 +218,81 @@ def countywide_reductions_AC(table_high = r'E:\Box\Box Sync\Merced Project\Tool\
     plot(fig, filename= 'Flying_M_reductions' + '.html')
     py.image.save_as(fig, outfile, format='png')
     return fig
+
+
+def countywide_reductions_AG(table_hr_high= r'E:/Box/Box Sync/Merced Project/Tool/outputs/activities/hedgerow_100/carbon.csv', table_cc_high = 'E:/Box/Box Sync/Merced Project/Tool/outputs/activities/cover_croppoing_100/carbon.csv', outfile = 'C:/temp/test.png'):
+    import pandas as pd
+    high = pd.read_csv(table_high)
+    
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+    
+    trace1 = {
+      "x": ["2001", "2014", "2030"], 
+      "y": [carb01, carb14, high['carbon_base_max'].sum()], 
+      "connectgaps": False, 
+      "line": {"color": "rgb(26, 100, 26)"}, 
+      "marker": {
+        "color": "rgb(16, 82, 16)", 
+        "size": 7
+      }, 
+      "mode": "lines+markers", 
+      "name": "Hedgerows and Cover Cropping - Fully Adopted", 
+      "type": "scatter", 
+    }
+    trace2 = {
+      "x": ["2001", "2014", "2030"], 
+      "y": [carb01, carb14, high['carbon_base_bau'].sum()], 
+      "connectgaps": False, 
+      "line": {
+        "color": "rgb(31, 119, 180)", 
+        "width": 2.5
+      }, 
+      "marker": {
+        "color": "rgb(31, 119, 180)", 
+        "size": 7
+      }, 
+      "mode": "lines+markers", 
+      "name": "Reference", 
+      "type": "scatter", 
+
+    }
+    layout = {
+  "autosize": True, 
+  "hovermode": "closest", 
+  "showlegend": True, 
+  "title": "Countywide GHG Reductions from Cover Cropping and Hedgrerows", 
+        "titlefont": {
+      "size": 24
+          },
+  "xaxis": {
+    "autorange": True, 
+    "range": [2001, 2031.7864606], 
+    "title": "Year", 
+    "type": "linear"
+  }, 
+  "yaxis": {
+    "autorange": True, 
+    "range": [50706576.7792, 55507202.8908], 
+    "title": "Tons CO<sub>2</sub> Equivalents", 
+    "type": "linear"
+  }
+}
+    
+    data =  go.Data([trace1, trace2])
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= AG Reductions' + '.html')
+    py.image.save_as(fig, outfile, format='png')
+    return fig
+
+
+
+
+
+
 
 def groundwater_plot_AC(high_folder, med_folder, outfile):
     import pandas as pd
@@ -635,18 +710,18 @@ def  reductions_ALL(outfile):
     cag100 = pd.read_csv(folder + '/grass_compost_amendment_100/' + table + '.csv')
     gra25 = pd.read_csv(folder + '/grassland_resto_25/' + table + '.csv')
     gra100 = pd.read_csv(folder + '/grassland_resto_100/' + table + '.csv')
-    #hpl25 = pd.read_csv(folder + '/hedgerow_25/' + table + '.csv')
-    #hpl100 = pd.read_csv(folder + '/hedgerow_100/' + table + '.csv')
+    hpl25 = pd.read_csv(folder + '/hedgerow_25/' + table + '.csv')
+    hpl100 = pd.read_csv(folder + '/hedgerow_100/' + table + '.csv')
     mul25 = pd.read_csv(folder + '/mulching_25/' + table + '.csv')
     mul100 = pd.read_csv(folder + '/mulching_100/' + table + '.csv')
     nfm25 = pd.read_csv(folder + '/nfm_25/' + table + '.csv')
     nfm100 = pd.read_csv(folder + '/nfm_100/' + table + '.csv')
-    rre25 = pd.read_csv(folder + '/RRE_COUNTY_30/' + table + '.csv')
+    rre25 = pd.read_csv(folder + '/RRE_COUNTY_25/' + table + '.csv')
     rre100 = pd.read_csv(folder + '/RRE_COUNTY_100/' + table + '.csv')
     oak25 = pd.read_csv(folder + '/oak_25/' + table + '.csv')
     oak100 = pd.read_csv(folder + '/oak_100/' + table + '.csv') 
-#    urb25 = pd.read_csv(folder + '/urb_25/' + table + '.csv')
-#    urb100 = pd.read_csv(folder + '/urb_100/' + table + '.csv')
+    urb25 = pd.read_csv(folder + '/urb_25/' + table + '.csv')
+    urb100 = pd.read_csv(folder + '/urb_100/' + table + '.csv')
  
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
@@ -657,13 +732,13 @@ def  reductions_ALL(outfile):
 
     trace1 = {
       #"x": ["Riparian Restoration", 'Improved N Fertilizer Mngmt',"Compost Amendments to Croplands", 'Compost Amendments to Grasslands', #'Cover Cropping', 'Mulching', 'Hedgerow Planting', 'Oak Woodland Restoration', 'Urban Tree Planting']
-      "x": ["Compost Amendments to Croplands", 'Compost Amendments to Grasslands', 'Cover Cropping', 'Mulching',  'Oak Woodland Restoration'], 
-      "y": [cam25['carbon_cam'].sum(), cag25['carbon_cag'].sum(), ccr25['carbon_ccr'].sum(),  mul25['carbon_mul'].sum()], 
+      "x": [ 'Improved N Fertilizer Mngmt',"Compost Amendments to Croplands", 'Compost Amendments to Grasslands', 'Cover Cropping', 'Mulching', 'Hedgerow Planting', 'Oak Woodland Restoration', "Riparian Restoration", 'Urban Tree Planting'], 
+      "y": [nfm25['carbon_nfm'].sum(), cam25['carbon_cam'].sum(), cag25['carbon_cag'].sum(), ccr25['carbon_ccr'].sum(),  mul25['carbon_mul'].sum(), hpl25['carbon_hpl'].sum(), oak25['carbon_oak'].sum(), rre25['carbon_rre'].sum(), urb25['carbon_urb'].sum()],
       "type": "bar",
       }
     trace2 = {
-      "x": ["Compost Amendments to Croplands", 'Compost Amendments to Grasslands', 'Cover Cropping', 'Mulching',  'Oak Woodland Restoration'], 
-      "y": [cam100['carbon_cam'].sum(), cag100['carbon_cag'].sum(), ccr100['carbon_ccr'].sum(), mul100['carbon_mul'].sum()], 
+      "x": [ 'Improved N Fertilizer Mngmt',"Compost Amendments to Croplands", 'Compost Amendments to Grasslands', 'Cover Cropping', 'Mulching', 'Hedgerow Planting', 'Oak Woodland Restoration', "Riparian Restoration", 'Urban Tree Planting'], 
+      "y": [nfm100['carbon_nfm'].sum(), cam100['carbon_cam'].sum(), cag100['carbon_cag'].sum(), ccr100['carbon_ccr'].sum(),  mul100['carbon_mul'].sum(), hpl100['carbon_hpl'].sum(), oak100['carbon_oak'].sum(), rre100['carbon_rre'].sum(), urb100['carbon_urb'].sum()],
       "type": "bar",
       }
 
@@ -723,7 +798,7 @@ def  reductions_RRE(folder, outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": False, 
-      "title": "San Joaquin R. Riparian Restoration - CO<sub>2</sub> Equivalents", 
+      "title": "GHG Reductions from Riparian Restoration on San Joaquin River", 
       "titlefont": {
       "size": 24
           },
@@ -1147,6 +1222,13 @@ def make_plots_RRE():
     tconnect_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Terrcon.png'))
     cropvalue_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"),os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Cropvalue.png') )
     airquality_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"),os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Air.png') )
+    
+def make_plots_AG():
+    import os
+    import plotly.plotly as py
+    py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
+    boxpath = 'E:/Box/'
+    countywide_reductions_AG(table_hr_high= os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/hedgerow_100/carbon.csv'), table_hr_low = os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/hedgerow_25/carbon.csv'), table_cc_high = os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/cover_croppoing_100/carbon.csv'), table_cc_low = os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/cover_croppoing_25/carbon.csv'), outfile = 'C:/temp/test.png')
     
 def make_countywide_reductions_all_activities():
     import os

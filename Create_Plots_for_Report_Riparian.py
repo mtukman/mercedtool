@@ -41,7 +41,6 @@ def  riparian_reductions(folder):
       "x": ["Riparian Restoration", "Reference"], 
       "y": [high['trt_bau_total'].sum(), high['carbon_base_max'].sum()], 
       "type": "bar",
-      "bar"=Marker(color=bupu500,size=22.0,line=Line(color='black',width=2))
       }
     
     
@@ -531,12 +530,7 @@ def  tconnect_plot_RRE(high_folder):
 def make_plots_sanjoaquin():
 
 
-    riparian_reductions(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_SCENARIO")
-    wateruse_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_SCENARIO")
-    terrestrial_habitat_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_SCENARIO")
-    scenicvalue_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_SCENARIO")
-    tconnect_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_SCENARIO")
-    cropvalue_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_SCENARIO")
+
     
     
     
