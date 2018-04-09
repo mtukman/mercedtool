@@ -57,7 +57,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         
         
         #Set the query that will define suitability
-        dictact['rre']['query'] =  queryadd #Units are in meters for distance requirements(df['LC2030_trt_bau'].isin(['Grassland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (df['lcchange'] == 1) & ((df['near_rivers'] < 304.8) | ((df['ripstr_dist'] < 30.48) & (df['ripstr_flag'] == 1))) & (df['near_woody'] != 0) &
+        dictact['rre']['query'] =  ((df['LC2030_trt_bau'].isin(['Grassland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren']))|((df['LC2030_trt_bau']== 'Urban') & df['nlcd_val'].isin([21,22,31]))) & (df['lcchange'] == 1) & ((df['near_rivers'] < 304.8) | ((df['ripstr_dist'] < 30.48) & (df['ripstr_flag'] == 1))) & (df['near_woody'] != 0) & queryadd #Units are in meters for distance requirements(df['LC2030_trt_bau'].isin(['Grassland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (df['lcchange'] == 1) & ((df['near_rivers'] < 304.8) | ((df['ripstr_dist'] < 30.48) & (df['ripstr_flag'] == 1))) & (df['near_woody'] != 0) &
         Helpers.CreateSuitFlags('rre',df,dictact,'rre')
         Helpers.CreateEligDict(df, 'rre', dictact,dict_eligibility, 'rre')
         
@@ -75,7 +75,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
             df.loc[df['rreselected'] == 1, 'gridcode30_trt_cust'] = 3
     #Create Oak Suitability and Selection
     if 'oak' in activitylist:
-        dictact['oak']['query'] =((df['LC2030_trt_bau'].isin(['Grassland','Shrubland','Irrigated Pasture','Barren']))|((df['LC2030_trt_bau']== 'Urban') & df['nlcd_val'].isin([21,22,31]))) & (df['lcchange'] == 1) & (df['oakrange_flg'] == 1) & queryadd
+        dictact['oak']['query'] =(df['LC2030_trt_bau'].isin(['Grassland','Shrubland','Irrigated Pasture','Barren'])) & (df['lcchange'] == 1) & (df['oakrange_flg'] == 1) & queryadd
         #Create suitability flags for the oak conversion activity
         Helpers.CreateSuitFlags('oak',df,dictact, 'oak')
         Helpers.CreateEligDict(df, 'oak', dictact,dict_eligibility, 'oak')
@@ -90,6 +90,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         df.loc[df['oakselected'] == 1, 'gridcode30_trt_max'] = 11
         if customdev == 1:
             df.loc[df['oakselected'] == 1, 'LC2030_trt_cust'] = 'Forest'
+            df.loc[df['oakselected'] == 1, 'gridcode30_trt_cust'] = 3
         #Change landcover and gridcode fields for points selected for the activity
 
     

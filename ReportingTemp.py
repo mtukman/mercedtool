@@ -1957,9 +1957,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                                 countdict['b'] = countdict['b'] + 1
                             elif 'a' in i:
                                 countdict['a'] = countdict['a'] + 1
-                            elif 't' in i:
-                                countdict['t'] = countdict['t'] + 1
-                        
+#                            elif 't' in i:
+#                                countdict['t'] = countdict['t'] + 1
+#                                Helpers.pmes ('TE Count: ' + str(countdict['t']))
                         
                         #This section goes through each species in each rid/species combination, finds the suitability based on the landcover, and decides whether the suitability has improved or degraded.
                         if row[gridcode2] in uf_dict14.keys():
@@ -1988,18 +1988,24 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                             dev_dict[i]['degraded'] = dev_dict[i]['degraded'] + row['pointid']
                         
             def summarize(first_letter, guild):
-                if countdict[first_letter] == 0:
-                    pass
-                else:
-                    if guild=='tes':
-                        new_dict = {x: v for x,v in dev_dict.items() if x in list(tespp['species']) }
-                    else:
-                        new_dict = {x: v for x,v in dev_dict.items() if x.startswith(first_letter) }
+
+                if guild=='tes':
                     
+                    new_dict = {x: v for x,v in dev_dict.items() if x in list(tespp['species']) }
+                    Helpers.pmes(new_dict)
+                    tescount = len(new_dict)
+                else:
+                    new_dict = {x: v for x,v in dev_dict.items() if x.startswith(first_letter) }
+                    
+                if guild != 'tes':
                     deg= (pd.DataFrame.from_dict(new_dict, orient = 'index')['degraded'].sum()*900*0.000247105)/countdict[first_letter]
                     imp = (pd.DataFrame.from_dict(new_dict, orient = 'index')['improved'].sum()*900*0.000247105)/countdict[first_letter]
-                    summary_dict[guild + '_avg_deg_acres']=deg
-                    summary_dict[guild + '_avg_imp_acres']=imp
+                else:
+                    deg= (pd.DataFrame.from_dict(new_dict, orient = 'index')['degraded'].sum()*900*0.000247105)/tescount
+                    imp = (pd.DataFrame.from_dict(new_dict, orient = 'index')['improved'].sum()*900*0.000247105)/tescount
+                
+                summary_dict[guild + '_avg_deg_acres']=deg
+                summary_dict[guild + '_avg_imp_acres']=imp
                 
                 
             a = td.groupby(['rid', gridcode, gridcode2], as_index = False).count()
