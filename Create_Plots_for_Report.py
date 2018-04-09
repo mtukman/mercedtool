@@ -220,9 +220,10 @@ def countywide_reductions_AC(table_high = r'E:\Box\Box Sync\Merced Project\Tool\
     return fig
 
 
-def countywide_reductions_AG(table_hr_high= r'E:/Box/Box Sync/Merced Project/Tool/outputs/activities/hedgerow_100/carbon.csv', table_cc_high = 'E:/Box/Box Sync/Merced Project/Tool/outputs/activities/cover_croppoing_100/carbon.csv', outfile = 'C:/temp/test.png'):
+def countywide_reductions_AG(table_hr= r'E:/Box/Box Sync/Merced Project/Tool/outputs/activities/hedgerow_100/carbon.csv', table_cc = 'E:/Box/Box Sync/Merced Project/Tool/outputs/activities/cover_croppoing_100/carbon.csv', outfile = 'C:/temp/test.png'):
     import pandas as pd
-    high = pd.read_csv(table_high)
+    hr = pd.read_csv(table_hr)
+    cc = pd.read_csv(table_cc)
     
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
@@ -232,7 +233,7 @@ def countywide_reductions_AG(table_hr_high= r'E:/Box/Box Sync/Merced Project/Too
     
     trace1 = {
       "x": ["2001", "2014", "2030"], 
-      "y": [carb01, carb14, high['carbon_base_max'].sum()], 
+      "y": [carb01, carb14, hr['trt_bau_total'].sum() + cc['carbon_ccr'].sum() ], 
       "connectgaps": False, 
       "line": {"color": "rgb(26, 100, 26)"}, 
       "marker": {
@@ -245,7 +246,7 @@ def countywide_reductions_AG(table_hr_high= r'E:/Box/Box Sync/Merced Project/Too
     }
     trace2 = {
       "x": ["2001", "2014", "2030"], 
-      "y": [carb01, carb14, high['carbon_base_bau'].sum()], 
+      "y": [carb01, carb14, hr['carbon_base_bau'].sum()], 
       "connectgaps": False, 
       "line": {
         "color": "rgb(31, 119, 180)", 
@@ -264,7 +265,7 @@ def countywide_reductions_AG(table_hr_high= r'E:/Box/Box Sync/Merced Project/Too
   "autosize": True, 
   "hovermode": "closest", 
   "showlegend": True, 
-  "title": "Countywide GHG Reductions from Cover Cropping and Hedgrerows", 
+  "title": "Countywide GHG Reductions from Cover Cropping and Hedgerows", 
         "titlefont": {
       "size": 24
           },
@@ -284,7 +285,7 @@ def countywide_reductions_AG(table_hr_high= r'E:/Box/Box Sync/Merced Project/Too
     
     data =  go.Data([trace1, trace2])
     fig = go.Figure(data=data, layout=layout)
-    plot(fig, filename= AG Reductions' + '.html')
+    plot(fig, filename= 'AG Reductions' + '.html')
     py.image.save_as(fig, outfile, format='png')
     return fig
 
@@ -403,18 +404,18 @@ def terrestrial_habitat_plot_AC(high_folder, med_folder, outfile):   #ADD THREAT
     high2 = high[['guild','acres_trt_bau']]
     med2 = med[['guild','acres_trt_bau']]
 
-    high3 = high2.loc[high2['guild'].isin(['mammals_avg_deg_acres','birds_avg_deg_acres','amphibians_avg_deg_acres'])]
-    med3 = med2.loc[med2['guild'].isin(['mammals_avg_deg_acres','birds_avg_deg_acres','amphibians_avg_deg_acres'])]
+    high3 = high2.loc[high2['guild'].isin(['mammals_avg_deg_acres','birds_avg_deg_acres','amphibians_avg_deg_acres', 'tes_avg_deg_acres'])]
+    med3 = med2.loc[med2['guild'].isin(['mammals_avg_deg_acres','birds_avg_deg_acres','amphibians_avg_deg_acres', 'tes_avg_deg_acres'])]
  
 
     trace1 = {
-      "x": ['Mammals','Birds','Amphibians'], 
+      "x": ['Mammals','Birds','Amphibians', 'Threatened & Endangered'], 
       "y": high3['acres_trt_bau'], 
       "name": "Full Development", 
       "type": "bar"
     }
     trace2 = {
-      "x": ['Mammals','Birds','Amphibians'], 
+      "x": ['Mammals','Birds','Amphibians', 'Threatened & Endangered'], 
       "y": med3['acres_trt_bau'], 
       "name": "Partial Development", 
       "type": "bar"
@@ -732,12 +733,12 @@ def  reductions_ALL(outfile):
 
     trace1 = {
       #"x": ["Riparian Restoration", 'Improved N Fertilizer Mngmt',"Compost Amendments to Croplands", 'Compost Amendments to Grasslands', #'Cover Cropping', 'Mulching', 'Hedgerow Planting', 'Oak Woodland Restoration', 'Urban Tree Planting']
-      "x": [ 'Improved N Fertilizer Mngmt',"Compost Amendments to Croplands", 'Compost Amendments to Grasslands', 'Cover Cropping', 'Mulching', 'Hedgerow Planting', 'Oak Woodland Restoration', "Riparian Restoration", 'Urban Tree Planting'], 
+      "x": [ 'Improved N Fert. Mngmt',"Compost on Croplands", 'Compost on Grasslands', 'Cover Cropping', 'Mulching', 'Hedgerow Planting', 'Oak Woodland Restoration', "Riparian Restoration", 'Urban Tree Planting'], 
       "y": [nfm25['carbon_nfm'].sum(), cam25['carbon_cam'].sum(), cag25['carbon_cag'].sum(), ccr25['carbon_ccr'].sum(),  mul25['carbon_mul'].sum(), hpl25['carbon_hpl'].sum(), oak25['carbon_oak'].sum(), rre25['carbon_rre'].sum(), urb25['carbon_urb'].sum()],
       "type": "bar",
       }
     trace2 = {
-      "x": [ 'Improved N Fertilizer Mngmt',"Compost Amendments to Croplands", 'Compost Amendments to Grasslands', 'Cover Cropping', 'Mulching', 'Hedgerow Planting', 'Oak Woodland Restoration', "Riparian Restoration", 'Urban Tree Planting'], 
+      "x": [ 'Improved N Fert. Mngmt',"Compost on Croplands", 'Compost on Grasslands', 'Cover Cropping', 'Mulching', 'Hedgerow Planting', 'Oak Woodland Restoration', "Riparian Restoration", 'Urban Tree Planting'], 
       "y": [nfm100['carbon_nfm'].sum(), cam100['carbon_cam'].sum(), cag100['carbon_cag'].sum(), ccr100['carbon_ccr'].sum(),  mul100['carbon_mul'].sum(), hpl100['carbon_hpl'].sum(), oak100['carbon_oak'].sum(), rre100['carbon_rre'].sum(), urb100['carbon_urb'].sum()],
       "type": "bar",
       }
@@ -748,21 +749,26 @@ def  reductions_ALL(outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": False, 
-      "title": "Greenhouse Gas Reductions from Countywide Activities", 
+      "title": "GHG Reductions from Countywide Activities", 
       "titlefont": {
       "size": 24
           },
       "xaxis": {
         "autorange": True, 
         "title": ['highly developed', 'medium developed', 'conserved'], 
-        "type": "category"
+        "type": "category",
+        "tickangle":0,
+        "tickfont":{
+            "size":13,
+            "color":'black'
+        },
       }, 
       "yaxis": {
         "autorange": True, 
         "range": [0, 200000], 
         #"range": [min_y_range(table), max_y_range(table)], 
-        "title": 'Tons CO2 Equivalents', 
-        "type": "linear"
+        "title": 'Tons CO<sub>2</sub> Equivalents', 
+        "type": "log"
       },
 
       }
@@ -944,13 +950,13 @@ def terrestrial_habitat_plot_RRE(high_folder, outfile): #ADD THREATENED AND ENGA
  
 
     trace1 = {
-      "x": ['Mammals Degraded','Mammals Improved', 'Birds Degraded', 'Birds Improved', 'Amphibians Degraded', 'Amphibians Improved'],    #Add threatened and endangered
+      "x": ['Mammals Degraded','Mammals Improved', 'Birds Degraded', 'Birds Improved', 'Amphibians Degraded', 'Amphibians Improved', 'Threatened & Endangered Degraded', 'Threatened & Engangered Improved'],    #Add threatened and endangered
       "y": high2['acres_trt_bau'],  
       "name": 'Riparian Resoration',
       "type": "bar"
     }
     trace2 = {
-      "x": ['Mammals Degraded','Mammals Improved', 'Birds Degraded', 'Birds Improved', 'Amphibians Degraded', 'Amphibians Improved'], 
+      "x": ['Mammals Degraded','Mammals Improved', 'Birds Degraded', 'Birds Improved', 'Amphibians Degraded', 'Amphibians Improved', 'Threatened & Endangered Degraded', 'Threatened & Engangered Improved'], 
       "y": high2['acres_base_bau'], 
       "name": "Reference",
       "type": "bar"
@@ -977,7 +983,7 @@ def terrestrial_habitat_plot_RRE(high_folder, outfile): #ADD THREATENED AND ENGA
 
    
     fig = go.Figure(data=data, layout=layout)
-    plot(fig, filename= 'test' + '.html')
+    plot(fig, filename= 'terrhab' + '.html')
     py.image.save_as(fig, outfile, format='png')
     return fig
     
@@ -1228,7 +1234,7 @@ def make_plots_AG():
     import plotly.plotly as py
     py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
     boxpath = 'E:/Box/'
-    countywide_reductions_AG(table_hr_high= os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/hedgerow_100/carbon.csv'), table_hr_low = os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/hedgerow_25/carbon.csv'), table_cc_high = os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/cover_croppoing_100/carbon.csv'), table_cc_low = os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/cover_croppoing_25/carbon.csv'), outfile = 'C:/temp/test.png')
+    countywide_reductions_AG(table_hr= os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/hedgerow_100/carbon.csv'),   table_cc=os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/cover_cropping_100/carbon.csv'), outfile = os.path.join(boxpath, r'Box Sync/Merced/Project/Case Studies/Avoided Conversion/Countywide AG Reductions.png'))
     
 def make_countywide_reductions_all_activities():
     import os
