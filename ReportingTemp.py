@@ -1959,7 +1959,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                                 countdict['a'] = countdict['a'] + 1
                             elif 't' in i:
                                 countdict['t'] = countdict['t'] + 1
-                        
+                                Helpers.pmes ('TE Count: ' + str(countdict['t']))
                         
                         #This section goes through each species in each rid/species combination, finds the suitability based on the landcover, and decides whether the suitability has improved or degraded.
                         if row[gridcode2] in uf_dict14.keys():
@@ -1992,6 +1992,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     pass
                 else:
                     if guild=='tes':
+                        Helpers.pmes('TES Guild:')
                         new_dict = {x: v for x,v in dev_dict.items() if x in list(tespp['species']) }
                     else:
                         new_dict = {x: v for x,v in dev_dict.items() if x.startswith(first_letter) }
@@ -2073,22 +2074,22 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
 
     
     #Run all of the reporting functions
-    fmmp(df,outpath)
-    fema(df,outpath)
-    scenic(df,outpath)
-    wateruse(df,outpath)
-    lcchange(df,outpath)
-    pcalcchange(df,outpath)
-    termovement(df,outpath)
-    cropvalue(df,outpath)
-    groundwater(df,outpath)
-    nitrates(df,outpath)
-    airpol(df,outpath)
-    if cproc == 0:
-        watershedintegrity(df,outpath)
-    else:
-        pass
-    aqua(df,outpath)
+#    fmmp(df,outpath)
+#    fema(df,outpath)
+#    scenic(df,outpath)
+#    wateruse(df,outpath)
+#    lcchange(df,outpath)
+#    pcalcchange(df,outpath)
+#    termovement(df,outpath)
+#    cropvalue(df,outpath)
+#    groundwater(df,outpath)
+#    nitrates(df,outpath)
+#    airpol(df,outpath)
+#    if cproc == 0:
+#        watershedintegrity(df,outpath)
+#    else:
+#        pass
+#    aqua(df,outpath)
     if terflag == 1:
         thab_func(df,outpath, lupath)
     

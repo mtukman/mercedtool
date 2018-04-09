@@ -25,17 +25,15 @@ def twentyfive_percent():
     arcpy.MercedCarbonTool(r"E:\Temp\tooloutputs", r"E:\TGS\projects\Merced Carbon", None, None, "None", None, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "No", 55000, 2014, 5, "No", 40000, 2014, 5, "Yes", 20000, 2014, 5, "No", 1000, 2014, 5, "No", 0.001, 2014, 2030, "No", 80000, 2014, 5, "No", 20000, 2014, 5, "No", 20, 2014, 5, None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, None)
     
     
+import arcpy
+arcpy.ImportToolbox(r'E:\mercedtool\C-CAT.tbx','')
+arcpy.MercedCarbonTool(r"E:\Temp\tooloutputs", r"E:\TGS\projects\Merced Carbon", None, None, "None", None, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "No", 55000, 2014, 5, "No", 40000, 2014, 5, "No", 80000, 2014, 5, "No", 1000, 2014, 5, "No", 0.001, 2014, 2030, "Yes", 20000, 2014, 5, "No", 20000, 2014, 5, "No", 20, 2014, 5, None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, None)
     
-    arcpy.ImportToolbox(r'E:\mercedtool\C-CAT.tbx','')
-    arcpy.MercedCarbonTool(r"E:\Temp\tooloutputs", r"E:\TGS\projects\Merced Carbon", None, None, "None", None, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "No", 55000, 2014, 5, "No", 40000, 2014, 5, "No", 80000, 2014, 5, "No", 1000, 2014, 5, "No", 0.001, 2014, 2030, "Yes", 20000, 2014, 5, "No", 20000, 2014, 5, "No", 20, 2014, 5, None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, None)
+
+arcpy.MercedCarbonTool(r"E:\Temp\tooloutputs", r"E:\TGS\projects\Merced Carbon", None, None, "None", None, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "No", 55000, 2014, 5, "No", 40000, 2014, 5, "No", 80000, 2014, 5, "No", 1000, 2014, 5, "No", 0.001, 2014, 2030, "No", 80000, 2014, 5, "Yes", 5000, 2014, 5, "No", 20, 2014, 5, None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, None)
     
-    
-    arcpy.ImportToolbox(r'E:\mercedtool\C-CAT.tbx','')
-    arcpy.MercedCarbonTool(r"E:\Temp\tooloutputs", r"E:\TGS\projects\Merced Carbon", None, None, "None", None, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "No", 55000, 2014, 5, "No", 40000, 2014, 5, "No", 80000, 2014, 5, "No", 1000, 2014, 5, "No", 0.001, 2014, 2030, "No", 80000, 2014, 5, "Yes", 5000, 2014, 5, "No", 20, 2014, 5, None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, None)
-    
-    
-    arcpy.ImportToolbox(r'E:\mercedtool\C-CAT.tbx','')
-    arcpy.MercedCarbonTool(r"E:\Temp\tooloutputs", r"E:\TGS\projects\Merced Carbon", None, None, "None", None, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "No", 55000, 2014, 5, "No", 40000, 2014, 5, "No", 80000, 2014, 5, "No", 1000, 2014, 5, "No", 0.001, 2014, 2030, "No", 80000, 2014, 5, "No", 20000, 2014, 5, "Yes", 18750, 2014, 5, None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, None)
+
+arcpy.MercedCarbonTool(r"E:\Temp\tooloutputs", r"E:\TGS\projects\Merced Carbon", None, None, "None", None, "No", 1000, 2014, 5, "No", 1000, 2014, 5, "No", 55000, 2014, 5, "No", 40000, 2014, 5, "No", 80000, 2014, 5, "No", 1000, 2014, 5, "No", 0.001, 2014, 2030, "No", 80000, 2014, 5, "No", 20000, 2014, 5, "Yes", 18750, 2014, 5, None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, "None", None, None)
 
 
 

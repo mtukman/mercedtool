@@ -174,12 +174,6 @@ else:
     Helpers.pmes ('No custom processing area')
 
 
-    
-#First check for spatial analyst, arcinfo pfodcut level, and version --> kill tool if not active
-#if Generic.check_extensions('Spatial') ==0:
-#    arcpy.AddMessage("********************The Spatial Analyst Extension is required to run this tool but is not available at this time.*************")
-#    sys.exit()
-#
 #if not arcpy.ProductInfo()=='ArcInfo':
 #    arcpy.AddMessage("********************The Carbon Tool requires a 10.2.2 or later ArcInfo (advanced) license - tool won't work with a standard or basic license.*************")
 #    sys.exit()
@@ -353,7 +347,7 @@ import ReportingTemp
 initout = Initial.DoInitial(mask, cproc, dev, arcpy.GetParameterAsText(5), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, ucc, sflag)
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, rate, logfile)
-#templist[0].to_csv('P:/Temp/Temperino2.csv')
+templist[0].to_csv('P:/Temp/Temperino2.csv')
 ReportingTemp.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
 ReportingTemp.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
 ReportingTemp.report_acres(templist[0],activitylist,outpath)

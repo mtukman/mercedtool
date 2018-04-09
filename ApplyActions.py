@@ -47,7 +47,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, rate = 0, logfile = 'None'):
                 tempix = 0
                 Helpers.pmes('Landcover is: ' + i +', AND Pixels: ' + str(actcount2.at[i,activity+'selected']))
                 pixels = actcount2.at[i,activity+'selected'] #Get the number of selected pixers for the activity/landcover combination
-                
+                Helpers.pmes('Pixels for oak: ' + str(pixels))
                 #If there are selected pixels, do the carbon reduction loop
                 if pixels > 0:
                     anngrowth = pixels/dictact[activity]['years']
