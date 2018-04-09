@@ -67,7 +67,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, rate = 0, logfile = 'None'):
                     Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Full adoption.')
 
                     #For oak and Riparian, carry through 2030 at full capacity
-                    if activity == 'rre' or activity == 'oak' or activity == 'gra':
+                    if activity == 'rre' or activity == 'oak' or activity == 'gra' or activity == 'hpl' or activity == 'urb':
                         while counter2<maxyrs:
                             Helpers.pmes('maxyears: ' + str(maxyrs) + ' and counter: ' + str(counter2))
                             carb1 = carb1 + (pixels*redrate)

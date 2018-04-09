@@ -20,7 +20,7 @@ timestr = time.strftime("%Y%m%d-%H%M%S")
 newdir = os.path.join(output_file_location, timestr) #This creates a directory for the tool's outputs. It will create a new folder with a timestamp in the directory specified in the parameters.
 if not os.path.exists(newdir):
     os.makedirs(newdir)
-
+Generic.set_paths_and_workspaces(rootpath, 'MASTER_DATA/', output_file_location)
 #Create a logfile in the output directory and add information about the tool's input parameter's to it.
 global logfile
 logfile = open(os.path.join(newdir, "logfile.txt"), "w")
@@ -140,11 +140,13 @@ if arcpy.GetParameterAsText(42) == 'Yes':
 #Set the custom development parameters
 if arcpy.GetParameterAsText(4) == 'Custom (Replaces Business as Usual)':
     dev = 1
-    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(5),newdir + '/DevMask.shp' )
+    arcpy.Project_management(arcpy.GetParameterAsText(5), newdir + '/DevMask.shp', Generic.SPATIAL_REFERENCE_TEXT)
+    devmask =  newdir + '/DevMask.shp'
     arcpy.AddMessage('New BAU')
 elif arcpy.GetParameterAsText(4) == 'Custom (Adds on to Business as Usual)':
     dev = 2
-    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(5),newdir + '/DevMask.shp' )
+    arcpy.Project_management(arcpy.GetParameterAsText(5), newdir + '/DevMask.shp', Generic.SPATIAL_REFERENCE_TEXT)
+    devmask =  newdir + '/DevMask.shp'
     arcpy.AddMessage('Adding on to BAU')
 else:
     dev = 0
@@ -159,14 +161,15 @@ if not arcpy.GetParameterAsText(2):
     Helpers.pmes('No cm')
 else:
     cm = 1
-    conmask = arcpy.GetParameterAsText(2)
-    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(2),newdir + '/ConMask.shp' )
+    conmask = newdir + '/ConMask.shp'
+    arcpy.Project_management(arcpy.GetParameterAsText(2), newdir + '/ConMask.shp', Generic.SPATIAL_REFERENCE_TEXT)
+
     Helpers.pmes('Yes cm')
 #Set the custom processing area variables if one has been chosen
 if arcpy.GetParameterAsText(3):
     cproc = 1
-    mask = arcpy.GetParameterAsText(3)
-    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(3),newdir + '/CustProcMask.shp' )
+    mask = newdir + '/CustProcMask.shp'
+    arcpy.Project_management(arcpy.GetParameterAsText(3), newdir + '/CustProcMask.shp', Generic.SPATIAL_REFERENCE_TEXT)
     Helpers.pmes('User has chosen a custom processing area')
 else:
     cproc = 0
@@ -183,7 +186,7 @@ else:
 #    sys.exit()
     
 Helpers.pmes ('Mask is :' + mask)
-Generic.set_paths_and_workspaces(rootpath, mask, 'MASTER_DATA/', output_file_location)
+
 adoptdict = {}
 
 
@@ -308,8 +311,9 @@ cover30 = Generic.lut_cover30
 
 #If a treatment mask has been provided, set the variable
 if arcpy.GetParameterAsText(46):
-    treatmask = arcpy.GetParameterAsText(46)
-    arcpy.CopyFeatures_management(arcpy.GetParameterAsText(46),newdir + '/TreatMask.shp' )
+    treatmask = newdir + '/TreatMask.shp'
+    arcpy.Project_management(arcpy.GetParameterAsText(46), newdir + '/TreatMask.shp', Generic.SPATIAL_REFERENCE_TEXT)
+
 else:
     treatmask = 'None'
     
@@ -344,7 +348,7 @@ import ReportingTemp
 
 
 #Run each module
-initout = Initial.DoInitial(mask, cproc, dev, arcpy.GetParameterAsText(5), Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
+initout = Initial.DoInitial(mask, cproc, dev, devmask, Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, ucc, sflag)
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, rate, logfile)
 templist[0].to_csv('P:/Temp/Temperino2.csv')

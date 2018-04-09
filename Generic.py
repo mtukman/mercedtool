@@ -1,5 +1,5 @@
 from __future__ import unicode_literals #Can Delete This
-def set_paths_and_workspaces(root_data_path = r"E:\TGS\projects\Merced Carbon", mask_fc = 'None', midpath = 'MASTER_DATA', output_file_loc = 'P:/Temp'):
+def set_paths_and_workspaces(root_data_path = r"E:\TGS\projects\Merced Carbon", midpath = 'MASTER_DATA', output_file_loc = 'P:/Temp'):
     """Workspace must be a file .gdb and is the place where all temp files and outputs will be placed.
     root_data_path -->  This path the top level folder for the data files (e.g., D:/CLOUD/Shared/Open Space/)
     midpath -->  This path is the path to the data files from roopath down the tree (e.g., Carbon Framework/GIS Data/SAMPLE_DATA/)
@@ -158,9 +158,9 @@ ccrdict = {'name':'Cover Crops', 'query':'holder', 'ag_modifier':.449,  'grpsize
 hpldict = {'name':'Hedgerow Planting', 'query':'holder', 'ag_modifier':1,  'grpsize':'small', 'suitflag':'hplsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.3}
 urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'urbsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':1}
 acodict = {'name':'Avoid Conversion', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'urbsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':1}
-camdict = {'name':'Compost Amendment', 'query':'holder', 'ag_modifier':0.259797042, 'grpsize':'small', 'suitflag':'camsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2, 'orc_modifier': .25}
-gradict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':'medium', 'suitflag':'oaksuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2}
-cagdict = {'name':'Grassland Compost Amendment', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'camsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2}
+camdict = {'name':'Compost Amendment', 'query':'holder', 'ag_modifier':0.259797042, 'grpsize':'small', 'suitflag':'camsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.05, 'orc_modifier': .25}
+gradict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':'medium', 'suitflag':'oaksuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.05}
+cagdict = {'name':'Grassland Compost Amendment', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'camsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.05}
 
     
 

@@ -1998,45 +1998,47 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     new_dict = {x: v for x,v in dev_dict.items() if x.startswith(first_letter) }
                     
                 if guild != 'tes':
-                    deg= (pd.DataFrame.from_dict(new_dict, orient = 'index')['degraded'].sum()*900*0.000247105)/countdict[first_letter]
-                    imp = (pd.DataFrame.from_dict(new_dict, orient = 'index')['improved'].sum()*900*0.000247105)/countdict[first_letter]
+                    deg= (pd.DataFrame.from_dict(new_dict, orient = 'index')['degraded'].sum()*.09)/countdict[first_letter]
+                    imp = (pd.DataFrame.from_dict(new_dict, orient = 'index')['improved'].sum()*.09)/countdict[first_letter]
                 else:
-                    deg= (pd.DataFrame.from_dict(new_dict, orient = 'index')['degraded'].sum()*900*0.000247105)/tescount
-                    imp = (pd.DataFrame.from_dict(new_dict, orient = 'index')['improved'].sum()*900*0.000247105)/tescount
+                    deg= (pd.DataFrame.from_dict(new_dict, orient = 'index')['degraded'].sum()*.09)/tescount
+                    imp = (pd.DataFrame.from_dict(new_dict, orient = 'index')['improved'].sum()*.09)/tescount
                 
-                summary_dict[guild + '_avg_deg_acres']=deg
-                summary_dict[guild + '_avg_imp_acres']=imp
+                summary_dict[guild + '_avg_deg_ha']=deg
+                summary_dict[guild + '_avg_imp_ha']=imp
                 
                 
             a = td.groupby(['rid', gridcode, gridcode2], as_index = False).count()
-            
-            suit_dict = {}
-            dev_dict = {}
-            uf_dict14 = {}
-            uf_dict30 = {}
-            summary_dict = {}
-            Helpers.pmes ('Initializing 2014')
-            lut_uf14.apply(initialize_uf_lu14, axis=1)
-            Helpers.pmes ('Initializing 2030')
-            lut_uf30.apply(initialize_uf_lu30, axis=1)
-            habsuit.apply(initialize_suit_lu, axis=1)
-            Helpers.pmes ('Applying to df')
-            a.apply(initialize_dict, axis=1)
-            Helpers.pmes ('Tallying the DF')
-            a.apply(tally, axis = 1)
-            summarize('m', 'mammals')
-            summarize('b', 'birds')
-            summarize('a', 'amphibians')
-            summarize('t', 'tes')
-            Helpers.pmes(a.head(10))
-            a = pd.DataFrame.from_dict(summary_dict, orient='index')
-            a.reset_index(inplace=True)
-            Helpers.pmes(a.head(10))
             if a.empty:
-                Helpers.pmes('Dataframe is empty')
+                pass
             else:
-                a.columns=['guild', 'acres_' + name + '_' + dev]
-                thab_dict[name + dev] = a
+                suit_dict = {}
+                dev_dict = {}
+                uf_dict14 = {}
+                uf_dict30 = {}
+                summary_dict = {}
+                Helpers.pmes ('Initializing 2014')
+                lut_uf14.apply(initialize_uf_lu14, axis=1)
+                Helpers.pmes ('Initializing 2030')
+                lut_uf30.apply(initialize_uf_lu30, axis=1)
+                habsuit.apply(initialize_suit_lu, axis=1)
+                Helpers.pmes ('Applying to df')
+                a.apply(initialize_dict, axis=1)
+                Helpers.pmes ('Tallying the DF')
+                a.apply(tally, axis = 1)
+                summarize('m', 'mammals')
+                summarize('b', 'birds')
+                summarize('a', 'amphibians')
+                summarize('t', 'tes')
+                Helpers.pmes(a.head(10))
+                a = pd.DataFrame.from_dict(summary_dict, orient='index')
+                a.reset_index(inplace=True)
+                Helpers.pmes(a.head(10))
+                if a.empty:
+                    Helpers.pmes('Dataframe is empty')
+                else:
+                    a.columns=['guild', 'ha_' + name + '_' + dev]
+                    thab_dict[name + dev] = a
             
             
 
