@@ -736,14 +736,16 @@ def  reductions_ALL(outfile):
 
     trace1 = {
       #"x": ["Riparian Restoration", 'Improved N Fertilizer Mngmt',"Compost Amendments to Croplands", 'Compost Amendments to Grasslands', #'Cover Cropping', 'Mulching', 'Hedgerow Planting', 'Oak Woodland Restoration', 'Urban Tree Planting']
-      "x": [ 'Improved N Fert. Mngmt',"Compost on Croplands", 'Compost on Grasslands', 'Cover Cropping', 'Mulching', 'Hedgerow Planting', 'Oak Woodland Restoration', "Riparian Restoration", 'Urban Tree Planting'], 
+      "x": [ 'Improved N<br> Fertilizer<br> Mngmt',"Compost<br> on<br> Croplands", 'Compost<br> on<br> Grasslands', 'Cover<br> Cropping', 'Mulching', 'Hedgerow<br> Planting', 'Oak<br> Woodland<br> Restoration', "Riparian<br> Restoration", 'Urban<br> Tree<br> Planting'], 
       "y": [nfm25['carbon_nfm'].sum(), cam25['carbon_cam'].sum(), cag25['carbon_cag'].sum(), ccr25['carbon_ccr'].sum(),  mul25['carbon_mul'].sum(), hpl25['carbon_hpl'].sum(), oak25['carbon_oak'].sum(), rre25['carbon_rre'].sum(), urb25['carbon_urb'].sum()],
       "type": "bar",
+      "name":'25% Adoption'
       }
     trace2 = {
-      "x": [ 'Improved N Fert. Mngmt',"Compost on Croplands", 'Compost on Grasslands', 'Cover Cropping', 'Mulching', 'Hedgerow Planting', 'Oak Woodland Restoration', "Riparian Restoration", 'Urban Tree Planting'], 
+      "x": [ 'Improved N<br> Fertilizer<br> Mngmt',"Compost<br> on<br> Croplands", 'Compost<br> on<br> Grasslands', 'Cover<br> Cropping', 'Mulching', 'Hedgerow<br> Planting', 'Oak<br> Woodland<br> Restoration', "Riparian<br> Restoration", 'Urban<br> Tree<br> Planting'], 
       "y": [nfm100['carbon_nfm'].sum(), cam100['carbon_cam'].sum(), cag100['carbon_cag'].sum(), ccr100['carbon_ccr'].sum(),  mul100['carbon_mul'].sum(), hpl100['carbon_hpl'].sum(), oak100['carbon_oak'].sum(), rre100['carbon_rre'].sum(), urb100['carbon_urb'].sum()],
       "type": "bar",
+      "name":'Full Adoption'
       }
 
     
@@ -751,27 +753,33 @@ def  reductions_ALL(outfile):
     layout = {
       "autosize": True, 
       "hovermode": "closest", 
-      "showlegend": False, 
+      "showlegend": True, 
       "title": "GHG Reductions from Countywide Activities", 
       "titlefont": {
-      "size": 24
+      "size": 20
           },
       "xaxis": {
         "autorange": True, 
-        "title": ['highly developed', 'medium developed', 'conserved'], 
+        "title": ['25% Adoption','Full Adoption'], 
         "type": "category",
         "tickangle":0,
         "tickfont":{
-            "size":13,
+            "size":10,
             "color":'black'
         },
       }, 
       "yaxis": {
         "autorange": True, 
         "range": [0, 200000], 
+        "type": 'log',
         #"range": [min_y_range(table), max_y_range(table)], 
         "title": 'Tons CO<sub>2</sub> Equivalents', 
-        "type": "log"
+      "titlefont": {
+      "size": 16
+          },
+        "tickfont":{
+            "color":'black'
+        }
       },
 
       }
@@ -1224,27 +1232,27 @@ def make_plots_RRE():
     py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
     boxpath = 'E:/Box/'
     countywide_reductions_RRE(os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_100/carbon.csv'), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Countywide RRE Reductions.png'))
-    reductions_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Reductions.png') )
-    wateruse_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"),  os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Wateruse.png'))
-    terrestrial_habitat_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Terrhab.png'))
-    scenicvalue_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Scenic.png'))
-    tconnect_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Terrcon.png'))
-    cropvalue_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"),os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Cropvalue.png') )
-    airquality_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_SCENARIO"),os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Air.png') )
+    reductions_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_SCENARIO"), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Reductions.png') )
+    wateruse_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_SCENARIO"),  os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Wateruse.png'))
+    terrestrial_habitat_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_SCENARIO"), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Terrhab.png'))
+    scenicvalue_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_SCENARIO"), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Scenic.png'))
+    tconnect_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_SCENARIO"), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Terrcon.png'))
+    cropvalue_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_SCENARIO"),os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Cropvalue.png') )
+    airquality_plot_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_SCENARIO"),os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Air.png') )
     
 def make_plots_AG():
     import os
     import plotly.plotly as py
     py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
     boxpath = 'E:/Box/'
-    countywide_reductions_AG(table_hr= os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/hedgerow_100/carbon.csv'),   table_cc=os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/cover_cropping_100/carbon.csv'), outfile = os.path.join(boxpath, r'Box Sync/Merced/Project/Case Studies/Avoided Conversion/Countywide AG Reductions.png'))
+    countywide_reductions_AG(table_hr= os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/hedgerow_100/carbon.csv'),   table_cc=os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/cover_cropping_100/carbon.csv'), outfile = os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Avoided Conversion/Countywide AG Reductions.png'))
     
 def make_countywide_reductions_all_activities():
     import os
     import plotly.plotly as py
     py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
     boxpath = 'E:/Box/'
-    reductions_ALL(os.path.join(boxpath, r'Box Sync/Merced Project/Report_How-To Guide/Tukman Working Material/Countywide Activity Benefits.png'))
+    reductions_ALL(os.path.join(boxpath, r'Box Sync/Merced Project/Report_How-To Guide/Tukman Working Material/Countywide GHG Reductions All Activities.png'))
     
  
 
