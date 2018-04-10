@@ -344,7 +344,7 @@ else:
 import Initial
 import ActivityApplication
 import ApplyActions
-import ReportingTemp
+import Reporting
 
 
 #Run each module
@@ -352,7 +352,7 @@ initout = Initial.DoInitial(mask, cproc, dev, devmask, Generic.Carbon2001, Gener
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, ucc, sflag)
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, rate, logfile)
 templist[0].to_csv('P:/Temp/Temperino2.csv')
-ReportingTemp.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
-ReportingTemp.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
-ReportingTemp.report_acres(templist[0],activitylist,outpath)
+Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
+Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
+Reporting.report_acres(templist[0],activitylist,outpath)
 
