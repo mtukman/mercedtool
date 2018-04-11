@@ -12,6 +12,8 @@ Created on Wed Apr  4 14:15:37 2018
 #Countywide GHG Reductions from Riparian Restoration
 carb01 = 50793849
 carb14 = 52406560
+titlefont = 18
+large_x_labs = 14
 
 def  flyingm_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HighDev\carbon.csv', table_medium=r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\carbon.csv', outfile = 'C:/temp/test.png'):
     import pandas as pd
@@ -35,7 +37,7 @@ def  flyingm_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
 
     
     trace1 = {
-      "x": ["Full Development", "Partial Development", "Conservation"], 
+      "x": ["Full<br>Development", "Partial<br>Development", "Conservation"], 
       "y": [high['trt_bau_total'].sum(), med['trt_bau_total'].sum(), high['carbon_base_max'].sum()], 
       "type": "bar",
       }
@@ -46,21 +48,29 @@ def  flyingm_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outpu
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": False, 
-      "title": "Flying M Ranch - GHG Reductions from Avoided Conversion", 
+      "title": "Flying M Ranch - 2030 GHG Reductions from Avoided Conversion", 
       "titlefont": {
-      "size": 24
+      "size": titlefont
           },
       "xaxis": {
         "autorange": True, 
-        "title": ['highly developed', 'medium developed', 'conserved'], 
-        "type": "category"
+        "title": ["Full<br>Development", "Partial<br>Development", "Conservation"], 
+        "type": "category",
+        "tickfont": {
+          "color": "black",
+          "size": large_x_labs
+        }, 
       }, 
       "yaxis": {
         "autorange": False, 
         "range": [0, 200000], 
         #"range": [min_y_range(table), max_y_range(table)], 
         "title": 'Tons CO2 Equivalents', 
-        "type": "linear"
+        "type": "linear",
+        "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        },
       },
                   "annotations": [
       {
@@ -104,7 +114,7 @@ def countywide_reductions_RRE(table_high = r'E:\Box\Box Sync\Merced Project\Tool
         "size": 7
       }, 
       "mode": "lines+markers", 
-      "name": "Tons Carbon Reference", 
+      "name": "Reference", 
       "type": "scatter", 
     }
     trace2 = {
@@ -119,7 +129,7 @@ def countywide_reductions_RRE(table_high = r'E:\Box\Box Sync\Merced Project\Tool
         "size": 7
       }, 
       "mode": "lines+markers", 
-      "name": "Tons Carbon Riparian Restoration", 
+      "name": "Riparian<br>Restoration", 
       "type": "scatter", 
 
     }
@@ -127,9 +137,9 @@ def countywide_reductions_RRE(table_high = r'E:\Box\Box Sync\Merced Project\Tool
   "autosize": True, 
   "hovermode": "closest", 
   "showlegend": True, 
-  "title": "Countywide GHG Reductions from Fully Adopted Riparian Restoration", 
+  "title": "2030 Countywide GHG Reductions from Fully Adopted Riparian Restoration", 
         "titlefont": {
-      "size": 24
+      "size": 18
           },
   "xaxis": {
     "autorange": True, 
@@ -141,7 +151,11 @@ def countywide_reductions_RRE(table_high = r'E:\Box\Box Sync\Merced Project\Tool
     "autorange": True, 
     "range": [carb01, 55507202.8908], 
     "title": "Tons CO<sub>2</sub> Equivalents", 
-    "type": "linear"
+    "type": "linear",
+    "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
   }
 }
     
@@ -171,7 +185,7 @@ def countywide_reductions_AC(table_high = r'E:\Box\Box Sync\Merced Project\Tool\
         "size": 7
       }, 
       "mode": "lines+markers", 
-      "name": "Tons Carbon Riparian Restoration", 
+      "name": "Max<br>Infill", 
       "type": "scatter", 
     }
     trace2 = {
@@ -187,7 +201,7 @@ def countywide_reductions_AC(table_high = r'E:\Box\Box Sync\Merced Project\Tool\
         "size": 7
       }, 
       "mode": "lines+markers", 
-      "name": "Tons Carbon Reference", 
+      "name": "Reference", 
       "type": "scatter", 
 
     }
@@ -195,9 +209,9 @@ def countywide_reductions_AC(table_high = r'E:\Box\Box Sync\Merced Project\Tool\
   "autosize": True, 
   "hovermode": "closest", 
   "showlegend": True, 
-  "title": "Avoided Conversion - Max Infill v. Reference Scenario", 
+  "title": "2030 Avoided Conversion - Max Infill v. Reference Scenario", 
         "titlefont": {
-      "size": 24
+      "size": titlefont
           },
   "xaxis": {
     "autorange": True, 
@@ -208,8 +222,12 @@ def countywide_reductions_AC(table_high = r'E:\Box\Box Sync\Merced Project\Tool\
   "yaxis": {
     "autorange": True, 
     "range": [52406576.7792, 55507202.8908], 
-    "title": "Tons Carbon (CO2e)", 
-    "type": "linear"
+    "title": "Tons CO<sub>2</sub> Equivalents", 
+    "type": "linear",
+    "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
   }
 }
     
@@ -241,7 +259,7 @@ def countywide_reductions_AG(table_hr= r'E:/Box/Box Sync/Merced Project/Tool/out
         "size": 7
       }, 
       "mode": "lines+markers", 
-      "name": "Hedgerows and Cover Cropping - Fully Adopted", 
+      "name": "2030 Hedgerows<br>and Cover Cropping-<br>Fully Adopted", 
       "type": "scatter", 
     }
     trace2 = {
@@ -265,9 +283,9 @@ def countywide_reductions_AG(table_hr= r'E:/Box/Box Sync/Merced Project/Tool/out
   "autosize": True, 
   "hovermode": "closest", 
   "showlegend": True, 
-  "title": "Countywide GHG Reductions from Cover Cropping and Hedgerows", 
+  "title": "2030 Countywide GHG Reductions from Cover Cropping and Hedgerows", 
         "titlefont": {
-      "size": 24
+      "size": titlefont
           },
   "xaxis": {
     "autorange": True, 
@@ -279,7 +297,11 @@ def countywide_reductions_AG(table_hr= r'E:/Box/Box Sync/Merced Project/Tool/out
     "autorange": True, 
     "range": [50706576.7792, 55507202.8908], 
     "title": "Tons CO<sub>2</sub> Equivalents", 
-    "type": "linear"
+    "type": "linear",
+            "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
   }
 }
     
@@ -319,21 +341,25 @@ def groundwater_plot_AC(high_folder, med_folder, outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": True, 
-      "title": 'Groundwater Recharge Loss', 
+      "title": 'Flying M Ranch - 2030 Groundwater Recharge Loss', 
       "titlefont": {
-      "size": 24
+      "size": titlefont
           },
       "xaxis": {
         "autorange": True, 
         "range": [0, 3], 
-        "title": ['Full Development', 'Partial Development'], 
+        "title": ['Full<br>Development', 'Partial<br>Development'], 
         "type": "category"
       }, 
       "yaxis": {
         "autorange": False, 
         "range": [0,3], 
         "title": 'Acre Feet of Groundwater Recharge (Per Year) Lost', 
-        "type": "linear"
+        "type": "linear",
+        "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
       }
     }
    
@@ -360,7 +386,7 @@ def wateruse_plot_AC(high_folder, med_folder, outfile):
     trace1 = {
       "x": ['Full Development','Partial Development', 'Conservation'], 
       "y": [high['ac_ft_change_dev_flagged'].sum(), med['ac_ft_change_dev_flagged'].sum(),med['ac_ft_base_med'].sum()], 
-      "name": "Flying M Ranch - Water Use", 
+      "name": "Flying M Ranch - 2030 Water Use", 
       "type": "bar"
     }
 
@@ -373,18 +399,22 @@ def wateruse_plot_AC(high_folder, med_folder, outfile):
       "showlegend": True, 
       "title": 'Water Use', 
       "titlefont": {
-      "size": 24
+      "size": titlefont
           },
       "xaxis": {
         "autorange": True,  
-        "title": ['Full Development', 'Partial Development', 'Conservation'], 
+        "title": ['Full<br>Development', 'Partial<br>Development', 'Conservation'], 
         "type": "category"
       }, 
       "yaxis": {
         "autorange": True, 
         "range": [0,3], 
         "title": 'Acre Feet of Water Demand (Annual)', 
-        "type": "linear"
+        "type": "linear",
+        "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
       }
     }
    
@@ -409,13 +439,13 @@ def terrestrial_habitat_plot_AC(high_folder, med_folder, outfile):   #ADD THREAT
  
 
     trace1 = {
-      "x": ['Mammals','Birds','Amphibians', 'Threatened & Endangered'], 
+      "x": ['Mammals','Birds','Amphibians', 'Threatened &<br>Endangered'], 
       "y": high3['acres_trt_bau'], 
       "name": "Full Development", 
       "type": "bar"
     }
     trace2 = {
-      "x": ['Mammals','Birds','Amphibians', 'Threatened & Endangered'], 
+      "x": ['Mammals','Birds','Amphibians', 'Threatened &<br>Endangered'], 
       "y": med3['acres_trt_bau'], 
       "name": "Partial Development", 
       "type": "bar"
@@ -428,20 +458,24 @@ def terrestrial_habitat_plot_AC(high_folder, med_folder, outfile):   #ADD THREAT
       "hovermode": "closest", 
       "showlegend": True, 
 
-      "title": "Flying M Ranch - Terrestrial Habitat Degradation", 
+      "title": "Flying M Ranch - 2030 Terrestrial Habitat Degradation", 
             "titlefont": {
-      "size": 20
+      "size": titlefont
           },
       "xaxis": {
         "autorange": True,  
-        "title": ['Mammals','Birds','Amphibians', 'Threatened & Endangered'], 
+        "title": ['Mammals','Birds','Amphibians', 'Threatened &<br>Endangered'], 
         "type": "category"
       }, 
       "yaxis": {
         "autorange": True, 
         "range": [50496576.7792, 55507202.8908], 
         "title": "Acres of Degraded Habitat", 
-        "type": "linear"
+        "type": "linear",
+                "titlefont": {
+          "color": "black",
+          "size": 12
+        }
       }
     }
 
@@ -484,14 +518,14 @@ def  airquality_plot_AC(high_folder, med_folder, outfile):
       "x": xlist, 
       "y": [high_co['tons_trt_bau'].sum(), high_o3['tons_trt_bau'].sum(), high_no2['tons_trt_bau'].sum(),high_pm25['tons_trt_bau'].sum(),high_pm10['tons_trt_bau'].sum()], 
       "type": "bar",
-      "name": "Full Development", 
+      "name": "Full<br>Development", 
       
       }
     trace2 = {
       "x": xlist, 
       "y": [med_co['tons_trt_bau'].sum(), med_o3['tons_trt_bau'].sum(), med_no2['tons_trt_bau'].sum(),med_pm25['tons_trt_bau'].sum(),med_pm10['tons_trt_bau'].sum()], 
       "type": "bar",
-      "name": "Partial Development", 
+      "name": "Partial<br>Development", 
       }
     trace3 = {
       "x": xlist, 
@@ -506,9 +540,9 @@ def  airquality_plot_AC(high_folder, med_folder, outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": True, 
-      "title": "Flying M Ranch - Air Pollutant Sequestration", 
+      "title": "Flying M Ranch - 2030 Air Pollutant Sequestration", 
       "titlefont": {
-      "size": 24
+      "size": titlefont
           },
       "xaxis": {
         "autorange": True, 
@@ -520,7 +554,11 @@ def  airquality_plot_AC(high_folder, med_folder, outfile):
         "range": [0, 200000], 
         #"range": [min_y_range(table), max_y_range(table)], 
         "title": 'Tons of Pollutant Sequestered', 
-        "type": "linear"
+        "type": "linear",
+                "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
       },
     }
        
@@ -572,7 +610,7 @@ def  scenicvalue_plot_AC(high_folder, med_folder, outfile):
 #        c =table.min(axis=0, numeric_only = True)
 #        return round(min(c) -plot_dict[1], plot_dict[2])   
 
-    xlist = ['Full Development','Partial Development','Conservation']
+    xlist = ['Full<br>Development','Partial<br>Development','Conservation']
     
     
     
@@ -601,9 +639,9 @@ def  scenicvalue_plot_AC(high_folder, med_folder, outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": True, 
-      "title": "Flying M Ranch - Landcover in Highly Visible Areas", 
+      "title": "Flying M Ranch - 2030 Landcover in Highly Visible Areas", 
       "titlefont": {
-      "size": 24
+      "size": titlefont
           },
       "xaxis": {
         "autorange": True, 
@@ -615,7 +653,11 @@ def  scenicvalue_plot_AC(high_folder, med_folder, outfile):
         "range": [0, 200000], 
         #"range": [min_y_range(table), max_y_range(table)], 
         "title": 'Hectares of Land', 
-        "type": "linear"
+        "type": "linear",
+                "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
       },
     }
        
@@ -652,7 +694,7 @@ def  tconnect_plot_AC(high_folder, med_folder, outfile):
     import plotly.graph_objs as go
  
 
-    xlist = ['Full Development','Partial Development']
+    xlist = ['Full<br>Development','Partial<br>Development']
     
     
     
@@ -675,9 +717,9 @@ def  tconnect_plot_AC(high_folder, med_folder, outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": True, 
-      "title": "Flying M Ranch - Terrestrial Connectivity", 
+      "title": "Flying M Ranch - 2030 Terrestrial Connectivity", 
       "titlefont": {
-      "size": 24
+      "size": titlefont
           },
       "xaxis": {
         "autorange": True, 
@@ -687,7 +729,11 @@ def  tconnect_plot_AC(high_folder, med_folder, outfile):
       "yaxis": {
         "autorange": True, 
         "title": 'Change in Hectares of Movement Type', 
-        "type": "linear"
+        "type": "linear",
+        "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
       },
     }
        
@@ -754,9 +800,9 @@ def  reductions_ALL(outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": True, 
-      "title": "GHG Reductions from Countywide Activities", 
+      "title": "2030 GHG Reductions from Countywide Activities", 
       "titlefont": {
-      "size": 20
+      "size": titlefont
           },
       "xaxis": {
         "autorange": True, 
@@ -805,7 +851,7 @@ def  reductions_RRE(folder, outfile):
     import plotly.graph_objs as go
     
     trace1 = {
-      "x": ["Riparian Restoration", "Reference"], 
+      "x": ["Riparian<br>Restoration", "Reference"], 
       "y": [high['trt_bau_total'].sum(), high['carbon_base_max'].sum()], 
       "type": "bar",
       }
@@ -815,20 +861,29 @@ def  reductions_RRE(folder, outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": False, 
-      "title": "GHG Reductions from Riparian Restoration on San Joaquin River", 
+      "title": "2030 GHG Reductions from Riparian Restoration on the San Joaquin R.", 
       "titlefont": {
-      "size": 24
+      "size": titlefont
           },
+
       "xaxis": {
         "autorange": True, 
-        "type": "category"
+        "type": "category",
+            "tickfont": {
+          "color": "black",
+          "size": large_x_labs
+        }
       }, 
       "yaxis": {
         "autorange": True, 
         "range": [0, 200000], 
         #"range": [min_y_range(table), max_y_range(table)], 
         "title": 'Tons CO<sub>2</sub> Equivalents', 
-        "type": "linear"
+        "type": "linear",
+        "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
       },
                                 "annotations": [
       {
@@ -836,7 +891,7 @@ def  reductions_RRE(folder, outfile):
         "yref": "y",
         "text":  str(round( high['trt_bau_total'].sum() -high['carbon_base_max'].sum(), 1))  + " tons <br> CO<sub>2</sub>e reductions <br> v. reference",
         "y": high['carbon_base_max'].sum(),
-        "x": 'Riparian Restoration',
+        "x": 'Riparian<br>Restoration',
         "font": {
           "color": "rgb(252, 252, 252)",
           "size": 14
@@ -877,20 +932,28 @@ def wateruse_plot_RRE(high_folder, outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": False, 
-      "title": 'Water Use', 
+      "title": 'San Joaquin R. Restoration - 2030 Water Use', 
       "titlefont": {
-      "size": 24
+      "size": titlefont
           },
       "xaxis": {
         "autorange": True,  
         "title": ["Riparian Restoration", "Reference"], 
-        "type": "category"
+        "type": "category",
+        "tickfont": {
+          "color": "black",
+          "size": large_x_labs
+        },
       }, 
       "yaxis": {
         "autorange": True, 
         "range": [0,3], 
         "title": 'Acre Feet of Water Demand (Annual)', 
-        "type": "linear"
+        "type": "linear",
+        "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
       }
     }
    
@@ -923,20 +986,28 @@ def cropvalue_plot_RRE(high_folder, outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": False, 
-      "title": 'San Joaquin R. Riparian Restoration - Crop Value', 
+      "title": 'San Joaquin R. Riparian Restoration - 2030 Crop Value', 
       "titlefont": {
-      "size": 24
+      "size": titlefont
           },
       "xaxis": {
         "autorange": True,  
         "title": ["Riparian Restoration", "Reference"], 
-        "type": "category"
+        "type": "category",
+        "tickfont": {
+          "color": "black",
+          "size": large_x_labs
+        }
       }, 
       "yaxis": {
         "autorange": True, 
         "range": [0,3], 
         "title": 'Crop Value (US Dollars)', 
-        "type": "linear"
+        "type": "linear", 
+        "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
       }
     }
    
@@ -961,13 +1032,13 @@ def terrestrial_habitat_plot_RRE(high_folder, outfile): #ADD THREATENED AND ENGA
  
 
     trace1 = {
-      "x": ['Mammals Degraded','Mammals Improved', 'Birds Degraded', 'Birds Improved', 'Amphibians Degraded', 'Amphibians Improved', 'Threatened & Endangered Degraded', 'Threatened & Engangered Improved'],    #Add threatened and endangered
+      "x": ['Mammals<br>Degraded','Mammals<br>Improved', 'Birds<br>Degraded', 'Birds<br>Improved', 'Amphibs<br>Degraded', 'Amphibs<br>Improved', 'Threatened/<br>Endangered<br>Degraded', 'Threatened/<br>Engangered<br>Improved'],    #Add threatened and endangered
       "y": high2['ha_trt_bau'],  
-      "name": 'Riparian Resoration',
+      "name": 'Riparian<br>Restoration',
       "type": "bar"
     }
     trace2 = {
-      "x": ['Mammals Degraded','Mammals Improved', 'Birds Degraded', 'Birds Improved', 'Amphibians Degraded', 'Amphibians Improved', 'Threatened & Endangered Degraded', 'Threatened & Engangered Improved'], 
+      "x": ['Mammals<br>Degraded','Mammals<br>Improved', 'Birds<br>Degraded', 'Birds<br>Improved', 'Amphibs<br>Degraded', 'Amphibs<br>Improved', 'Threatened/<br>Endangered<br>Degraded', 'Threatened/<br>Engangered<br>Improved'], 
       "y": high2['ha_base_bau'], 
       "name": "Reference",
       "type": "bar"
@@ -980,15 +1051,24 @@ def terrestrial_habitat_plot_RRE(high_folder, outfile): #ADD THREATENED AND ENGA
       "hovermode": "closest", 
       "showlegend": True, 
 
-      "title": "San Joaquin R. Riparian Restoration - Habitat Quality", 
+      "title": "San Joaquin R. Riparian Restoration - 2030 Habitat Quality", 
       "xaxis": {
         "autorange": True,  
-        "type": "category"
+        "type": "category",
+        "tickangle":0,
+        "tickfont":{
+            "size":10,
+            "color":'black'
+        },
       }, 
       "yaxis": {
         "autorange": True, 
         "title": "Average Hectares of Degraded and Improved Habitat by Species Guild", 
-        "type": "linear"
+        "type": "linear",
+        "titlefont":{
+            "size":12,
+            "color":'black'
+        }
       }
     }
 
@@ -1025,7 +1105,7 @@ def  airquality_plot_RRE(high_folder, outfile):
       "x": xlist, 
       "y": [high_co['tons_trt_bau'].sum(), high_o3['tons_trt_bau'].sum(), high_no2['tons_trt_bau'].sum(),high_pm25['tons_trt_bau'].sum(),high_pm10['tons_trt_bau'].sum()], 
       "type": "bar",
-      "name": "Riparian Restoration", 
+      "name": "Riparian<br>Restoration", 
       
       }
     trace2 = {
@@ -1040,13 +1120,13 @@ def  airquality_plot_RRE(high_folder, outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": True, 
-      "title": "San Joaquin R. Restoration - Air Pollutant Sequestration", 
+      "title": "San Joaquin R. Restoration - 2030 Air Pollutant Sequestration", 
       "titlefont": {
-      "size": 24
+      "size": titlefont
           },
       "xaxis": {
         "autorange": True, 
-        "title": ['Riparian Restoration', 'Reference'], 
+        "title": ['Riparian<br>Restoration', 'Reference'], 
         "type": "category"
       }, 
       "yaxis": {
@@ -1054,7 +1134,11 @@ def  airquality_plot_RRE(high_folder, outfile):
         "range": [0, 200000], 
         #"range": [min_y_range(table), max_y_range(table)], 
         "title": 'Tons of Pollutant Sequestered', 
-        "type": "linear"
+        "type": "linear",
+                "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
       },
     }
        
@@ -1088,7 +1172,7 @@ def  scenicvalue_plot_RRE(high_folder, outfile):
     import plotly.graph_objs as go
 
 
-    xlist = ['Riparian Restoration','Reference']
+    xlist = ['Riparian<br>Restoration','Reference']
     
     
     
@@ -1117,21 +1201,29 @@ def  scenicvalue_plot_RRE(high_folder, outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": True, 
-      "title": "Flying M Ranch - Landcover in Highly Visible Areas", 
+      "title": "San Joaquin R. Restoration - 2030 Landcover in Highly Visible Areas", 
       "titlefont": {
-      "size": 24
+      "size": titlefont
           },
       "xaxis": {
         "autorange": True, 
         "title": ['highly developed', 'medium developed', 'conserved'], 
-        "type": "category"
+        "type": "category",
+        "tickfont": {
+          "color": "black",
+          "size": large_x_labs
+        }
       }, 
       "yaxis": {
         "autorange": True, 
         "range": [0, 200000], 
         #"range": [min_y_range(table), max_y_range(table)], 
         "title": 'Hectares of Land', 
-        "type": "linear"
+        "type": "linear",
+        "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
       },
     }
        
@@ -1160,7 +1252,7 @@ def  tconnect_plot_RRE(high_folder, outfile):
     import plotly.graph_objs as go
 
 
-    xlist = ['Riparian Restoration','Reference']
+    xlist = ['Riparian<br>Restoration','Reference']
 
     trace1 = {
       "x": xlist, 
@@ -1187,19 +1279,27 @@ def  tconnect_plot_RRE(high_folder, outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": True, 
-      "title": "San Joaquin River Riparian Restoration - Terrestrial Connectivity", 
+      "title": "San Joaquin River Riparian Restoration - 2030 Terrestrial Connectivity", 
       "titlefont": {
-      "size": 24
+      "size": titlefont
           },
       "xaxis": {
         "autorange": True, 
 #        "title": ['highly developed', 'medium developed', 'conserved'], 
-        "type": "category"
+        "type": "category",
+        "tickfont": {
+          "color": "black",
+          "size": large_x_labs
+        }
       }, 
       "yaxis": {
         "autorange": True, 
         "title": 'Hectares of Terrestrial Movement Resistance Class', 
-        "type": "linear"
+        "type": "linear", 
+        "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
       },
     }
        
@@ -1245,7 +1345,7 @@ def make_plots_AG():
     import plotly.plotly as py
     py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
     boxpath = 'E:/Box/'
-    countywide_reductions_AG(table_hr= os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/hedgerow_100/carbon.csv'),   table_cc=os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/cover_cropping_100/carbon.csv'), outfile = os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Avoided Conversion/Countywide AG Reductions.png'))
+    countywide_reductions_AG(table_hr= os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/hedgerow_100/carbon.csv'),   table_cc=os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/cover_cropping_100/carbon.csv'), outfile = os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Burroughs/Countywide AG Reductions.png'))
     
 def make_countywide_reductions_all_activities():
     import os
