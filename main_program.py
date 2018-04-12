@@ -354,7 +354,7 @@ initout = Initial.DoInitial(mask, cproc, dev, devmask, Generic.Carbon2001, Gener
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, ucc, sflag)
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, rate, logfile)
 #Comment out the export of this CSV unless you are debugging
-Helpers.pes('Exporting CSV')
+Helpers.pes('Exporting full dataframe to CSV for debugging - this takes a while...')
 templist[0].to_csv('P:/Temp/Temperino2.csv')
 Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
 Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
