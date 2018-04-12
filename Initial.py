@@ -27,9 +27,11 @@ def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb,
     import pandas as pd
     import Helpers
     #Load Tables into Dataframes
+    Helpers.pmes('Loading CSV Value Tables - this takes a few minutes...')
     jointables = Helpers.LoadCSVs(joins)
     value_df = Helpers.MergeMultiDF('pointid', jointables)
 
+    Helpers.pmes('Loading CSV Near Tables - this takes a few more minutes...')
     neartables = Helpers.LoadCSVs(nears)
     near_df = Helpers.MergeMultiDF('pointid', neartables)
     
