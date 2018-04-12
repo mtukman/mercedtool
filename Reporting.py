@@ -1489,7 +1489,12 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 if x in ['base', 'trt']:
                     # 
                     
-                    if 'urb' in td.columns:
+                    if 'hplselected' in td:
+                        if 'urb' in td.columns:
+                            td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'urbselected', 'hplselected']]
+                        else:
+                            td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'hplselected']]
+                    elif 'urb' in td.columns:
                         td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'urbselected']]
                         
                         
@@ -1507,10 +1512,17 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
 
                     td = pd.merge(td,cover14, how = 'left', left_on = 'gridcode14', right_on = 'gridcode14')
                     td = pd.merge(td,cover30, how = 'left', left_on = gridcode, right_on = 'gridcode30')
+                    if 'hplselected' in td:
+                        td.loc[td['hplselected'] == 1, 'cover30'] = 'cover30' + .20
                     td = td.rename (columns = {'cover30':'cover2', 'cover14':'cover1'})
                 else:
-                    if 'urb' in td.columns:
-                       td = td[['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau', 'urbselected']]
+                    if 'hplselected' in td:
+                        if 'urb' in td.columns:
+                            td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'urbselected', 'hplselected']]
+                        else:
+                            td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'hplselected']]
+                    elif 'urb' in td.columns:
+                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'urbselected']]
                        
                        
                     else:
@@ -1534,8 +1546,12 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
                     
                     td = pd.merge(td,cover30, how = 'left', left_on = 'gridcode30_trt_bau', right_on = 'gridcode30')
+                    if 'hplselected' in td:
+                        td.loc[td['hplselected'] == 1, 'cover30'] = 'cover30' + .20
                     td = td.rename (columns = {'cover30':'cover2'})
                     td = pd.merge(td,cover30, how = 'left', left_on = gridcode, right_on = 'gridcode30')
+                    if 'hplselected' in td:
+                        td.loc[td['hplselected'] == 1, 'cover30'] = 'cover30' + .20
                     td = td.rename (columns = {'cover30':'cover1'})
 
                 Helpers.pmes('Air Pollution Reporting: ' + y + ',' + name + ', ' + dev)

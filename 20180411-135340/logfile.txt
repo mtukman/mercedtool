@@ -1,0 +1,18 @@
+Tool Started at: 20180411-135340 
+
+Output Folder: 
+Data Rootpath: 
+Conservation Mask: 
+Custom Processing Area: 
+Development Scenario: 
+Custom Development Mask: 
+Treatment Mask: 
+Oak Woodland Conversion: 
+Cover Cropping: 
+Mulching: 
+Nitrogen Fertilizer Management: 
+Hedgerow Planting: 
+Compost Amendment: 
+Grassland Restoration: 
+Grassland Compost Amendment: 
+Urban Forestry: 

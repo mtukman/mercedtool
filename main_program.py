@@ -319,8 +319,10 @@ else:
     
 if arcpy.GetParameterAsText(65):
     terflag = 1
+    Helpers.add_to_logfile(logfile,'Tool will do terrestrial habitat reporting')
 else:
     terflag = 0
+    Helpers.add_to_logfile(logfile,'Tool will NOT do terrestrial habitat reporting')
 
 if arcpy.GetParameterAsText(65):
     sflag = 1

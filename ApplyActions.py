@@ -136,10 +136,13 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, rate = 0, logfile = 'None'):
             count = count + 1
             tot = ((count * pix)* carbon) + tot
         tempdf['urb' +'_carbred'] = 0
-        rater = tot/numb
-
-        tempdf['urb' +'_carbred'] = tempdf['urb'+'selected']*(rater)
-        Helpers.add_to_logfile(logfile,'Activity is : ' + 'urb' + ', Pixels are : ' + str(numb) + ' AND carbon rate is : ' + str(tot/numb))
+        if numb != 0:
+            rater = tot/numb
+    
+            tempdf['urb' +'_carbred'] = tempdf['urb'+'selected']*(rater)
+            Helpers.add_to_logfile(logfile,'Activity is : ' + 'urb' + ', Pixels are : ' + str(numb) + ' AND carbon rate is : ' + str(tot/numb))
+        else: 
+            Helpers.add_to_logfile(logfile,'No Urban in Processing Area!')
         
         
             
