@@ -340,7 +340,7 @@ def groundwater_plot_AC(high_folder, med_folder, outfile):
     layout = {
       "autosize": True, 
       "hovermode": "closest", 
-      "showlegend": True, 
+      "showlegend": False, 
       "title": 'Flying M Ranch - 2030 Groundwater Recharge Loss', 
       "titlefont": {
       "size": titlefont
@@ -396,8 +396,8 @@ def wateruse_plot_AC(high_folder, med_folder, outfile):
     layout = {
       "autosize": True, 
       "hovermode": "closest", 
-      "showlegend": True, 
-      "title": 'Water Use', 
+      "showlegend": False, 
+      "title": 'Flying M Ranch - 2030 Water Use', 
       "titlefont": {
       "size": titlefont
           },
@@ -441,13 +441,13 @@ def terrestrial_habitat_plot_AC(high_folder, med_folder, outfile):   #ADD THREAT
     trace1 = {
       "x": ['Mammals','Birds','Amphibians', 'Threatened &<br>Endangered'], 
       "y": high3['acres_trt_bau'], 
-      "name": "Full Development", 
+      "name": "Full<br>Development", 
       "type": "bar"
     }
     trace2 = {
       "x": ['Mammals','Birds','Amphibians', 'Threatened &<br>Endangered'], 
       "y": med3['acres_trt_bau'], 
-      "name": "Partial Development", 
+      "name": "Partial<br>Development", 
       "type": "bar"
     }
 
@@ -702,14 +702,14 @@ def  tconnect_plot_AC(high_folder, med_folder, outfile):
       "x": xlist, 
       "y": [highnat['ha_change_trt_bau'].sum(), mednat['ha_change_trt_bau'].sum()], 
       "type": "bar",
-      "name": "High Movement Potential", 
+      "name": "High<br>Movement<br>Potential", 
       
       }
     trace3 = {
       "x": xlist, 
       "y": [highag['ha_change_trt_bau'].sum(), medag['ha_change_trt_bau'].sum()], 
       "type": "bar",
-      "name": "Low Movement Potential", 
+      "name": "Low<br>Movement<br>Potential", 
       }
     
     data = go.Data([trace1,trace3])
