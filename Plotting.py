@@ -1,8 +1,9 @@
 
 folder = r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\\"
 outpath2 = r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\plotting_tables\\"
-mba_title_font = 24
+mba_title_font = 18
 plot_dict = {}
+axis_lab_font = 16
 
 flist = ['_base_bau','_base_med','_base_max','_trt_bau','_trt_med','_trt_max']
 
@@ -110,35 +111,110 @@ def mba_plot_tables_rows(csv=r"E:\Temp\tooloutputs\RRE_FULL\cropvalue.csv", outp
 
 
 
-def mba_chart_3scenario(table, plot_dict, xax = 'holder', yax = 'holder', mba = 'temp'):
+def mba_chart_onetrace(table, plot_dict, xax = 'holder', yax = 'holder', mba = 'temp'):
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
     #import plotly.plotly as py
     from plotly import tools
     import plotly.graph_objs as go
+    import pandas as pd
+    table = pd.read_csv(table)
     
     def max_y_range(table):
         c =table.max(axis=0, numeric_only = True)
-        return round(max(c) +plot_dict[1], plot_dict[2])
+        print ('maxy' + str(round(max(c) +plot_dict[mba]['changemax'], plot_dict[mba]['changemin'])))
+        #print ('maxy' + str(max(c) +plot_dict[mba]['changemax']))
+        return round(max(c) +plot_dict[mba]['changemax'], plot_dict[mba]['changemin'])
+        
         
     def min_y_range(table):
         c =table.min(axis=0, numeric_only = True)
-        return round(min(c) -plot_dict[1], plot_dict[2])        
+        print ('minc' + str(min(c)))
+        print ('miny' + str(round(min(c) -plot_dict[mba]['changemax'], plot_dict[mba]['changemin'])))   
+        return round(min(c) -plot_dict[mba]['changemax'], plot_dict[mba]['changemin'])        
 
     trace1 = {
       "x": table['scenario'], 
       "y": table['Untreated'], 
-      "name": "Untreated", 
-      "type": "bar"
-    }
-    trace2 = {
-      "x": table['scenario'], 
-      "y": table['Treated'], 
-      "name": "Treated", 
-      "type": "bar"
+      "type":"bar"
     }
 
-    data = go.Data([trace1, trace2])
+    data = go.Data([trace1])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": False, 
+      "title": plot_dict[mba]['title'], 
+      "titlefont": {
+      "size": mba_title_font
+          },
+      "xaxis": {
+        "autorange": True, 
+        "type": "category",
+        "tickfont": {
+      "size": axis_lab_font
+          }
+      }, 
+      "yaxis": {
+        "autorange": False, 
+        "range": [min_y_range(table), max_y_range(table)], 
+        "title": plot_dict[mba]['ytitle'], 
+        "type": "linear",
+        "titlefont": {
+                "size": axis_lab_font
+          }
+      }
+    }
+   
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= plot_dict[mba]['title'] + '.html')
+    
+    
+
+def mba_chart_threetrace(table, plot_dict, xax = 'holder', yax = 'holder', mba = 'temp'):
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+    import pandas as pd
+    table = pd.read_csv(table)
+    
+    def max_y_range(table):
+        c =table.max(axis=0, numeric_only = True)
+        print ('maxy' + str(round(max(c) +plot_dict[mba]['changemax'], plot_dict[mba]['changemin'])))
+        #print ('maxy' + str(max(c) +plot_dict[mba]['changemax']))
+        return round(max(c) +plot_dict[mba]['changemax'], plot_dict[mba]['changemin'])
+        
+        
+    def min_y_range(table):
+        c =table.min(axis=0, numeric_only = True)
+        print ('minc' + str(min(c)))
+        print ('miny' + str(round(min(c) -plot_dict[mba]['changemax'], plot_dict[mba]['changemin'])))   
+        return round(min(c) -plot_dict[mba]['changemax'], plot_dict[mba]['changemin'])        
+
+    trace1 = {
+      "x": table[plot_dict[mba]['rfield']], 
+      "y": table['ha_change_base_bau'], 
+      "type":"bar",
+      "name":"Reference<br>Scenario"
+    }
+    
+    trace2 = {
+      "x": table[plot_dict[mba]['rfield']], 
+      "y": table['ha_change_base_med'], 
+      "type":"bar",
+       "name":"Medium<br>Infill"
+    }
+    trace3 = {
+      "x": table[plot_dict[mba]['rfield']], 
+      "y": table['ha_change_base_max'], 
+"type":"bar",
+ "name":"Max<br>Infill"
+    }
+
+
+    data = go.Data([trace1, trace2, trace3])
     layout = {
       "autosize": True, 
       "hovermode": "closest", 
@@ -149,45 +225,54 @@ def mba_chart_3scenario(table, plot_dict, xax = 'holder', yax = 'holder', mba = 
           },
       "xaxis": {
         "autorange": True, 
-        "range": [-0.5, 2.5], 
-        "title": plot_dict[mba]['xtitle'], 
-        "type": "category"
+        "type": "category",
+        "tickfont": {
+      "size": axis_lab_font
+          }
       }, 
       "yaxis": {
         "autorange": False, 
         "range": [min_y_range(table), max_y_range(table)], 
         "title": plot_dict[mba]['ytitle'], 
-        "type": "linear"
+        "type": "linear",
+        "titlefont": {
+                "size": axis_lab_font
+          }
       }
     }
    
     fig = go.Figure(data=data, layout=layout)
-    plot(fig, filename= plot_dict[0] + '.html')
+    plot(fig, filename= plot_dict[mba]['title'] + '.html')
 
-
-
-
-
-
-    
 
 
 
 
 #Dictionary entries
-plot_dict['groundwater'] ={'title':"2014-2030 Projected Loss of Groundwater Recharge",'changemax': 1,'changemin' :-1,'ytitle': "Loss of Recharge (Acre Feet per Year)", 'changefield':'ac_ft_rec_lst', 'totfield':  'None','rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
-
-plot_dict['cropvalue'] ={'title':"2014-2030 Projected Change in Crop Value by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Crop Value (Millions of Dollars)", 'changefield':'usd_change', 'totfield':  'usd', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
-
-plot_dict['aquatic'] ={'title':"2014-2030 Projected Change in Landcover in Watersheds With High Aquatic Habitat Value by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares of Landcover", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'gen_class', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
-
-plot_dict['co_val_airpollute'] ={'title':"2014-2030 Projected Change in Carbon Monoxide Sequestration by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of CO", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
+plot_dict['cropvalue'] ={'title':"2030 Projected Crop Value by Development Scenario",'changemax': 10000000,'changemin' :-7,'ytitle': "Crop Value (Millions of Dollars)", 'changefield':'usd_change', 'totfield':  'usd', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
 plot_dict['county_movement'] ={'title':"2014-2030 Projected Countywide Change in Terrestrial Movement Resistance by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'movement_potential', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['ecamovement'] ={'title':"2014-2030 Projected Change in Terrestrial Movement Resistance by Development Scenario in Essential Connectivity Areas",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'movement_potential', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
+plot_dict['ecamovement'] ={'title':"2014-2030 Projected Change in Terrestrial Movement Resistance by Development Scenario in Essential Connectivity Areas",'changemax': 500,'changemin' :-3,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'movement_potential', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
-plot_dict['flood100'] ={'title':"2014-2030 Projected Change in 100 Year Floodplain Landcover by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'gen_class', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
+plot_dict['flood100'] ={'title':"2014-2030 Projected Change in 100 Year Floodplain Landcover by Development Scenario",'changemax': 200,'changemin' :-3,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'gen_class', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
+
+
+
+plot_dict['aquatic'] ={'title':"2014-2030 Projected Change in Landcover in Watersheds With High Aquatic Habitat Value by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares of Landcover", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'gen_class', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
+
+plot_dict['groundwater'] ={'title':"2014-2030 Projected Loss of Groundwater Recharge",'changemax': 1,'changemin' :-1,'ytitle': "Loss of Recharge (Acre Feet per Year)", 'changefield':'ac_ft_rec_lst', 'totfield':  'None','rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
+
+
+
+
+
+plot_dict['co_val_airpollute'] ={'title':"2014-2030 Projected Change in Carbon Monoxide Sequestration by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Tons of CO", 'changefield':'tons_change', 'totfield':  'tons', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
+
+
+
+
+
 
 plot_dict['flood500'] ={'title':"2014-2030 Projected Change in 500 Year Floodplain Landcover by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'gen_class', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
