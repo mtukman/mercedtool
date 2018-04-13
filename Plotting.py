@@ -1154,7 +1154,7 @@ def mba_chart_lc_twotrace(table, table2,plot_dict, xax = 'holder', yax = 'holder
       "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
       "y": [table.iat[4,1],table2.iat[4,1]],
       "type":"bar",
-      "name":"Forest"
+      "name":"Woody Riparian"
     }
     trace4 = {
       "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
@@ -1231,14 +1231,167 @@ def mba_chart_lc_twotrace(table, table2,plot_dict, xax = 'holder', yax = 'holder
 
 
 
+def mba_chart_oak_twotrace(table, table2,plot_dict, xax = 'holder', yax = 'holder', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', xlist = ['Riparian Restoration 25% Adoption','Riparian Restoration 100% Adoption'], mba = 'rre', sce = 'Riparian Restoration'):
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+    import pandas as pd
+    table = pd.read_csv(table)
+    table = table.loc[:, ~table.columns.str.contains('^Unnamed')]
+    table = table[['landcover','ha_change_' + mba]]
+    
+    table2 = pd.read_csv(table2)
+    table2 = table2.loc[:, ~table2.columns.str.contains('^Unnamed')]
+    table2 = table2[['landcover','ha_change_' + mba]]
+
+        
+    if remzeros == 1:
+        table.set_index(['landcover'], inplace = True)
+        
+        table = table[table.values.sum(axis=1) != 0]
+        table.reset_index(inplace = True)
+        
+    
+    trace1 = {
+      "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
+      "y": [table.iat[1,1],table2.iat[1,1]],
+      "type":"bar",
+      "name":"Barren"
+    }
+    trace2 = {
+      "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
+      "y": [table.iat[4,1],table2.iat[4,1]],
+      "type":"bar",
+      "name":"Oak Conversion"
+    }
+    trace3 = {
+      "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
+      "y": [table.iat[5,1],table2.iat[5,1]],
+      "type":"bar",
+      "name":"Grassland"
+    }
+    trace4 = {
+      "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
+      "y": [table.iat[6,1],table2.iat[6,1]],
+      "type":"bar",
+      "name":"Irrigated Pasture"
+    }
+    trace5 = {
+      "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
+      "y": [table.iat[9,1],table2.iat[9,1]],
+      "type":"bar",
+      "name":"Shrubland"
+    }
+
+
+    
+    data = go.Data([trace1,trace2,trace3,trace4,trace5])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+      "title": 'Landcover Change from ' + sce + ' Activity Treatment', 
+      "titlefont": {
+      "size": mba_title_font
+          },
+      "xaxis": {
+        "autorange": True, 
+        "type": "category",
+        "tickfont": {
+      "size": 20
+          }
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [0,1], 
+        "title": 'Hectares', 
+        "type": "linear",
+        "titlefont": {
+                "size": 20
+          }
+      },
+#        "annotations": [plot_dict[mba]['ann']
+#      
+#    ]
+    }
+   
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'temp.html')
 
 
 
 
 
 
+def terrestrial_habitat_plot_RRE(high_folder, high_folder2, outfile, title, name1, name2): #ADD THREATENED AND ENGANGERED
+    import pandas as pd
+    import plotly.graph_objs as go
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    high = pd.read_csv(high_folder + '/terrhab.csv')
+    high2 = pd.read_csv(high_folder2 + '/terrhab.csv')
+    
+    high = high[['guild','acres_trt_bau', 'acres_base_bau']]
+    high2 = high2[['guild','ha_trt_bau', 'ha_base_bau']]
+
+#    high3 = high2.loc[high2['guild'].isin(['mammals_avg_deg_acres','birds_avg_deg_acres','amphibians_avg_deg_acres'])]
+#    high4 = high2.loc[high2['guild'].isin(['mammals_avg_imp_acres','birds_avg_imp_acres','amphibians_avg_imp_acres'])]
+ 
+
+    trace1 = {
+      "x": ['Mammals<br>Degraded','Mammals<br>Improved', 'Birds<br>Degraded', 'Birds<br>Improved', 'Amphibs<br>Degraded', 'Amphibs<br>Improved', 'Threatened/<br>Endangered<br>Degraded', 'Threatened/<br>Engangered<br>Improved'],    #Add threatened and endangered
+      "y": high['ha_base_bau'],  
+      "name": name1,
+      "type": "bar"
+    }
+    trace2 = {
+      "x": ['Mammals<br>Degraded','Mammals<br>Improved', 'Birds<br>Degraded', 'Birds<br>Improved', 'Amphibs<br>Degraded', 'Amphibs<br>Improved', 'Threatened/<br>Endangered<br>Degraded', 'Threatened/<br>Engangered<br>Improved'], 
+      "y": high['ha_trt_bau'], 
+      "name": "Reference",
+      "type": "bar"
+    }
+    trace3 = {
+      "x": ['Mammals<br>Degraded','Mammals<br>Improved', 'Birds<br>Degraded', 'Birds<br>Improved', 'Amphibs<br>Degraded', 'Amphibs<br>Improved', 'Threatened/<br>Endangered<br>Degraded', 'Threatened/<br>Engangered<br>Improved'],    #Add threatened and endangered
+      "y": high2['ha_trt_bau'],  
+      "name": name2,
+      "type": "bar"
+    }
 
 
+    data = go.Data([trace2,trace1,trace3])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+
+      "title": title, 
+      "xaxis": {
+        "autorange": True,  
+        "type": "category",
+        "tickangle":0,
+        "tickfont":{
+            "size":10,
+            "color":'black'
+        },
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "title": "Average Hectares of Degraded and Improved Habitat by Species Guild", 
+        "type": "linear",
+        "titlefont":{
+            "size":12,
+            "color":'black'
+        }
+      }
+    }
+
+   
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'terrhab' + '.html')
+#    py.image.save_as(fig, outfile, format='png')
+    return fig
 
 
 

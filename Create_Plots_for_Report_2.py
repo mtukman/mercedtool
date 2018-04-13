@@ -99,18 +99,29 @@ def callplots():
     
     #Natural Habitat Area
     Plotting.mba_chart_onetrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\lcchange.csv", xax = 'Landcover - 2014', yax = 'Hectares', x = 'landcover',y = 'ha_2014', yrange = [0,1], remzeros= 1)
-    
-    Plotting.mba_chart_ter_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\lcchange.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25\lcchange.csv", Plotting.plot_dict, xax = 'holder', yax = 'holder', mba = 'flood100', pre = 'ha_change', remzeros = 1, xlist = ['Riparian Restoration 25% Adoption','Riparian Restoration 100% Adoption'])
-    
-    
-    Plotting.mba_chart_lc_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\lcchange.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25\lcchange.csv",Plotting.plot_dict, xax = 'holder', yax = 'holder', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', xlist = ['Riparian Restoration 25% Adoption','Riparian Restoration 100% Adoption'], mba = 'rre', sce = 'Riparian Restoration')
+
     
     
+    Plotting.mba_chart_lc_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25\lcchange.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\lcchange.csv",Plotting.plot_dict, xax = 'holder', yax = 'holder', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', xlist = ['Riparian Restoration 25% Adoption','Riparian Restoration 100% Adoption'], mba = 'rre', sce = 'Riparian Restoration')
+    
+    
+    Plotting.mba_chart_oak_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_25\lcchange.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_100\lcchange.csv",Plotting.plot_dict, xax = 'holder', yax = 'holder', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', xlist = ['Oak Conversion 25% Adoption','Oak Conversion 100% Adoption'], mba = 'oak', sce = 'Oak Conversion')
+    
+    
+    #New forest in PCA
+    Plotting.mba_chart_onetrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\pca_cover_change.csv", xax = 'Landcover - 2014', yax = 'Hectares', x = 'landcover',y = 'ha_2014', yrange = [0,1], remzeros= 1)
+
+    
+    
+    Plotting.mba_chart_lc_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25\pca_cover_change.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\lcchange.csv",Plotting.plot_dict, xax = 'holder', yax = 'holder', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', xlist = ['Riparian Restoration 25% Adoption','Riparian Restoration 100% Adoption'], mba = 'rre', sce = 'Riparian Restoration')
+    
+    
+    Plotting.mba_chart_oak_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_25\pca_cover_change.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_100\lcchange.csv",Plotting.plot_dict, xax = 'holder', yax = 'holder', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', xlist = ['Oak Conversion 25% Adoption','Oak Conversion 100% Adoption'], mba = 'oak', sce = 'Oak Conversion')
     
     
     
-    
-    
+    #Terrestrial Habitat
+    Plotting.terrestrial_habitat_plot_RRE(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100", 'temp', 'tile here', 'Riparian Restoration<br> 25% Adoption', 'Riparian Restoration <br>100% Adoption')
     
     
     

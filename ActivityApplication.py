@@ -246,7 +246,8 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     for i in blist:
         if i in df.columns:
             clist.append(i)
-    df = df.drop(columns = clist)
+#    df = df.drop(columns = clist)
+    df.drop([clist], axis = 1, inplace = True)       
     
     
     
