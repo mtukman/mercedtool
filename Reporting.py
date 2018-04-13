@@ -1365,9 +1365,23 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 """
                 
                 #Create the initial dataframes
+                
+                
                 if x in ['base', 'trt']:
-                    td = df[['LC2014','pointid', field]]
+                    if 'nfmselected' in df:
+                            if  x == 'trt':
+                                df.loc[df['nfmselected'] == 1, field] = 'Shrubland'
+                                td = df[['LC2014','pointid', field]]
+                            else:
+                                td = df[['LC2014','pointid', field]]
+                    else:
+                        td = df[['LC2014','pointid', field]]
                 else:
+                    if 'nfmselected' in df:
+                        df.loc[df['nfmselected'] == 1, field] = 'Shrubland'
+                        td = df[['LC2014','pointid', field, 'LC2030_bau']]
+                    else:
+                        td = df[['LC2014','pointid', field, 'LC2030_bau']]
                     td = df[['LC2014','pointid', field, 'LC2030_bau']]
                     td.loc[(td['LC2030_bau'] == 'Young Forest'), 'LC2030_bau'] = 'Forest'
                     td.loc[(td['LC2030_bau'] == 'Young Shrubland'), 'LC2030_bau'] = 'Shrubland'
@@ -1383,7 +1397,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 # Create 2014 nitrate reporting dataframe
                 group14 = td.groupby('LC2014', as_index = False).count()
                 tempdf14 = pd.merge(nclass,group14, how = 'outer', left_on = 'landcover', right_on = 'LC2014')
-                tempdf14[y+'2'] = tempdf14[y]*tempdf14['pointid']
+                tempdf14[y+'2'] = (tempdf14[y]*tempdf14['pointid'])/1000
                 group14 = tempdf14[[y+'2','landcover']]
                 group14 = group14.rename(columns={y+'2':y + '14'})
 
@@ -1394,7 +1408,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 group30 = tempdf30[[y+'2','landcover']]
                 group30 = group30.rename(columns={y+'2':y + '30'})
                 tempmerge = pd.merge(group14,group30, on = 'landcover', how = 'outer')
-                tempmerge['change'] = (tempmerge[y+'30']-tempmerge[y+'14'])/1000
+                tempmerge['change'] = (tempmerge[y+'30']-tempmerge[y+'14'])
                 
                 # Merge the dataframes and create a change field for the report
                 if name in ['base','trt']:
@@ -2101,24 +2115,24 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
 
     
     #Run all of the reporting functions
-    fmmp(df,outpath)
-    fema(df,outpath)
-    scenic(df,outpath)
-    wateruse(df,outpath)
-    lcchange(df,outpath)
-    pcalcchange(df,outpath)
-    termovement(df,outpath)
-    cropvalue(df,outpath)
-    groundwater(df,outpath)
+#    fmmp(df,outpath)
+#    fema(df,outpath)
+#    scenic(df,outpath)
+#    wateruse(df,outpath)
+#    lcchange(df,outpath)
+#    pcalcchange(df,outpath)
+#    termovement(df,outpath)
+#    cropvalue(df,outpath)
+#    groundwater(df,outpath)
     nitrates(df,outpath)
-    airpol(df,outpath)
-    if cproc == 0:
-        watershedintegrity(df,outpath)
-    else:
-        pass
-    aqua(df,outpath)
-    if terflag == 1:
-        thab_func(df,outpath, lupath)
+#    airpol(df,outpath)
+#    if cproc == 0:
+#        watershedintegrity(df,outpath)
+#    else:
+#        pass
+#    aqua(df,outpath)
+#    if terflag == 1:
+#        thab_func(df,outpath, lupath)
     
     
 def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 , cm = 0, ucc = 0):

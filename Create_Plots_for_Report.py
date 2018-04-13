@@ -497,6 +497,7 @@ def  airquality_plot_AC(high_folder, med_folder, outfile):
     high_no2 = pd.read_csv(high_folder + '/no2_val_airpollute.csv')
     high_pm25 = pd.read_csv(high_folder + '/pm2_5_val_airpollute.csv')
     high_pm10 = pd.read_csv(high_folder + '/pm10_val_airpollute.csv')
+    high_so2 = pd.read_csv(high_folder + '/so2_val_airpollute.csv')
     
     
     med_co = pd.read_csv(med_folder + '/co_val_airpollute.csv')
@@ -504,6 +505,7 @@ def  airquality_plot_AC(high_folder, med_folder, outfile):
     med_no2 = pd.read_csv(med_folder + '/no2_val_airpollute.csv')
     med_pm25 = pd.read_csv(med_folder + '/pm2_5_val_airpollute.csv')
     med_pm10 = pd.read_csv(med_folder + '/pm10_val_airpollute.csv')
+    med_so2 = pd.read_csv(high_folder + '/so2_val_airpollute.csv')
 
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
@@ -512,24 +514,24 @@ def  airquality_plot_AC(high_folder, med_folder, outfile):
     import plotly.graph_objs as go
  
 
-    xlist = ['CO','O3','PM 10','PM 2.5','NO2']
+    xlist = ['CO','O3','PM 10','PM 2.5','NO2', 'SO2']
     
     trace1 = {
       "x": xlist, 
-      "y": [high_co['tons_trt_bau'].sum(), high_o3['tons_trt_bau'].sum(), high_no2['tons_trt_bau'].sum(),high_pm25['tons_trt_bau'].sum(),high_pm10['tons_trt_bau'].sum()], 
+      "y": [high_co['tons_trt_bau'].sum(), high_o3['tons_trt_bau'].sum(), high_no2['tons_trt_bau'].sum(),high_pm25['tons_trt_bau'].sum(),high_pm10['tons_trt_bau'].sum(),high_so2['tons_trt_bau'].sum() ], 
       "type": "bar",
       "name": "Full<br>Development", 
       
       }
     trace2 = {
       "x": xlist, 
-      "y": [med_co['tons_trt_bau'].sum(), med_o3['tons_trt_bau'].sum(), med_no2['tons_trt_bau'].sum(),med_pm25['tons_trt_bau'].sum(),med_pm10['tons_trt_bau'].sum()], 
+      "y": [med_co['tons_trt_bau'].sum(), med_o3['tons_trt_bau'].sum(), med_no2['tons_trt_bau'].sum(),med_pm25['tons_trt_bau'].sum(),med_pm10['tons_trt_bau'].sum(),med_so2['tons_trt_bau'].sum() ], 
       "type": "bar",
       "name": "Partial<br>Development", 
       }
     trace3 = {
       "x": xlist, 
-      "y": [high_co['tons_base_bau'].sum(), high_o3['tons_base_bau'].sum(), high_no2['tons_base_bau'].sum(),high_pm25['tons_base_bau'].sum(),high_pm10['tons_base_bau'].sum()], 
+      "y": [high_co['tons_base_bau'].sum(), high_o3['tons_base_bau'].sum(), high_no2['tons_base_bau'].sum(),high_pm25['tons_base_bau'].sum(),high_pm10['tons_base_bau'].sum(),high_so2['tons_base_bau'].sum() ], 
       "type": "bar",
       "name": "Conservation", 
       }
@@ -1314,7 +1316,7 @@ def make_plots_AC():
     import os
     import plotly.plotly as py
     py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
-    boxpath = 'E:/Box/'
+    boxpath = 'E:/BoxSync/'
     print (os.path.join(boxpath,'Tool/outputs/FlyingM/FlyingM_HighDev'))
     groundwater_plot_AC(os.path.join(boxpath,'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_HighDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Avoided Conversion/Case Study AC Groundwater.png'))
     airquality_plot_AC(os.path.join(boxpath, 'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_HighDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Avoided Conversion/Case Study AC Air.png'))
