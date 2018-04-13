@@ -351,7 +351,13 @@ import Reporting
 initout = Initial.DoInitial(mask, cproc, dev, devmask, Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, ucc, sflag)
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, rate, logfile)
+<<<<<<< HEAD
 #templist[0].to_csv('P:/Temp/Temperino2.csv')
+=======
+#Comment out the export of this CSV unless you are debugging
+Helpers.pes('Exporting full dataframe to CSV for debugging - this takes a while...')
+templist[0].to_csv('P:/Temp/Temperino2.csv')
+>>>>>>> daa32f6d04d3ffa1695db46d96835dd37d0d316d
 Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
 Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
 Reporting.report_acres(templist[0],activitylist,outpath)

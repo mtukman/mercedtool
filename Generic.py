@@ -125,11 +125,11 @@ def set_paths_and_workspaces(root_data_path = r"E:\TGS\projects\Merced Carbon", 
     #parse CVA_list
 
     #send error if any of the above layers don't exist on their specified path
-#    for layer in all_layers:
-#        if not arcpy.Exists(layer):
-#            print("Layer or dataset: " + layer + " doesn't exist")
-#            arcpy.AddMessage("Layer or dataset: " + layer + " doesn't exist")
-#            sys.exit()
+    for layer in all_layers:
+        if not arcpy.Exists(layer):
+            print("Layer or dataset: " + layer + " doesn't exist")
+            arcpy.AddMessage("Layer or dataset: " + layer + " doesn't exist")
+            sys.exit()
 
 
 
@@ -147,6 +147,9 @@ aca - AVOIDED CONVERSION TO AG
 acu - AVOIDED CONVERSION TO URBAN
 hpl - HEDGEROW PLANTING
 urb - URBAN FORESTRY
+cam - COMPOST AMENDMENTS TO CROPLANDS
+cag - COMPOST AMENDMENTS TO GRASSLANDS
+gra - NATIVE GRASS RESTORATION
 '''
 global dict_activity
 
