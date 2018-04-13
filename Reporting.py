@@ -206,7 +206,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         temp.fillna(0,inplace=True)
         
         #Export to output folder
-        temp.to_csv(outpath + 'fmmp.csv')
+        temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        temp.to_csv(outpath + 'fmmp.csv', index = False)
 
     
     def fema(df, outpath):
@@ -358,7 +359,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 count = count + 1
             temp.fillna(0,inplace = False)
             #Export dataframe to output folder
-            temp.to_csv(outpath + 'flood' + str(z) + '.csv')
+            temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+            temp.to_csv(outpath + 'flood' + str(z) + '.csv', index = False)
                     
     
     def scenic(df, outpath):
@@ -494,7 +496,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             count = count + 1
         #Fill nulls and export the merged dataframes as a csv
         temp = temp.fillna(0)
-        temp.to_csv(outpath + 'scenic' + '.csv')
+        temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        temp.to_csv(outpath + 'scenic' + '.csv', index = False)
 
     
 
@@ -620,10 +623,11 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
             count = count + 1
         temp = temp.fillna(0)
+        temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
         temp = temp.loc[temp['landcover'] != 0]
         
         #Export the merged dataframe
-        temp.to_csv(outpath+'watcon.csv')
+        temp.to_csv(outpath+'watcon.csv', index = False)
         
     def lcchange(df, outpath):
         """
@@ -732,9 +736,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
             count = count + 1
         temp.fillna(0, inplace = True)
-        
+        temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
         #Export Dataframe to csv
-        temp.to_csv(outpath+'lcchange.csv')    
+        temp.to_csv(outpath+'lcchange.csv', index = False)    
     
     def pcalcchange(df, outpath):
         """
@@ -849,9 +853,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
             count = count + 1
         temp.fillna(0, inplace = True)
-        
+        temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
         #Export the reporting dataframe to a csv
-        temp.to_csv(outpath+'pca_cover_change.csv')       
+        temp.to_csv(outpath+'pca_cover_change.csv', index = False)       
         
     def aqua(df, outpath):
         """
@@ -988,9 +992,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             temp = pd.merge(temp,tlist[count],on = 'gen_class', how = 'outer' )
             count = count + 1
         temp.fillna(0, inplace = True)
-        
+        temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
         #Export the merged dataframe as a csv
-        temp.to_csv(outpath + 'aquatic.csv')
+        temp.to_csv(outpath + 'aquatic.csv', index = False)
         
         
     def termovement(df, outpath):
@@ -1131,9 +1135,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 temp = pd.merge(temp,tlist[count],on = 'movement_potential', how = 'outer' )
                 count = count + 1
             temp.fillna(0, inplace = True)
-            
+            temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
             #Export the merged reporting dataframe to a csv
-            temp.to_csv(outpath+y+'movement.csv')   
+            temp.to_csv(outpath+y+'movement.csv', index = False)   
     
     
     def cropvalue(df, outpath):
@@ -1239,9 +1243,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             count = count + 1
         temp.fillna(0, inplace = True)
         temp = temp.loc[temp['landcover'].isin(['Annual Cropland','Rice','Orchard','Vineyard','Irrigated Pasture'])]
-        
+        temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
         #Export the reporting dataframe to a csv
-        temp.to_csv(outpath+'cropvalue.csv')              
+        temp.to_csv(outpath+'cropvalue.csv', index = False)              
             
     
     def groundwater(df, outpath):
@@ -1337,9 +1341,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
             count = count + 1
         temp.fillna(0,inplace = True)
-        
+        temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
         #Export the combined dataframes to a csv
-        temp.to_csv(outpath+'groundwater.csv')       
+        temp.to_csv(outpath+'groundwater.csv', index = False)       
 
     def nitrates(df, outpath):
         """
@@ -1457,9 +1461,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
                 count = count + 1
             temp.fillna(0, inplace = True)
-            
+            temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
             #Export the merged reporting dataframe to a csv
-            temp.to_csv(outpath+y+'_nitrates.csv')                       
+            temp.to_csv(outpath+y+'_nitrates.csv', index = False)                       
  
     
     def airpol(df, outpath):
@@ -1513,16 +1517,16 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     td = pd.merge(td,cover14, how = 'left', left_on = 'gridcode14', right_on = 'gridcode14')
                     td = pd.merge(td,cover30, how = 'left', left_on = gridcode, right_on = 'gridcode30')
                     if 'hplselected' in td:
-                        td.loc[td['hplselected'] == 1, 'cover30'] = 'cover30' + .20
+                        td.loc[td['hplselected'] == 1, 'cover30'] = td['cover30'] + .20
                     td = td.rename (columns = {'cover30':'cover2', 'cover14':'cover1'})
                 else:
                     if 'hplselected' in td:
                         if 'urb' in td.columns:
-                            td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'urbselected', 'hplselected']]
+                            td = td[['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau', 'urbselected', 'hplselected']]
                         else:
-                            td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'hplselected']]
+                            td = td[['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau', 'hplselected']]
                     elif 'urb' in td.columns:
-                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'urbselected']]
+                        td = td[['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau', 'urbselected']]
                        
                        
                     else:
@@ -1547,11 +1551,11 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     
                     td = pd.merge(td,cover30, how = 'left', left_on = 'gridcode30_trt_bau', right_on = 'gridcode30')
                     if 'hplselected' in td:
-                        td.loc[td['hplselected'] == 1, 'cover30'] = 'cover30' + .20
+                        td.loc[td['hplselected'] == 1, 'cover30'] = td['cover30'] + .20
                     td = td.rename (columns = {'cover30':'cover2'})
                     td = pd.merge(td,cover30, how = 'left', left_on = gridcode, right_on = 'gridcode30')
                     if 'hplselected' in td:
-                        td.loc[td['hplselected'] == 1, 'cover30'] = 'cover30' + .20
+                        td.loc[td['hplselected'] == 1, 'cover30'] = td['cover30'] + .20
                     td = td.rename (columns = {'cover30':'cover1'})
 
                 Helpers.pmes('Air Pollution Reporting: ' + y + ',' + name + ', ' + dev)
@@ -1643,9 +1647,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
                 count = count + 1
             temp.fillna(0, inplace = True)
-            
+            temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
             #Export the merged reporting dataframe to a csv
-            temp.to_csv(outpath+y+'_airpollute.csv')
+            temp.to_csv(outpath+y+'_airpollute.csv', index = False)
     
 
     def watershedintegrity(df, outpath):
@@ -1870,9 +1874,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             temp = pd.merge(temp,tlist[count],on = 'Integrity_Class', how = 'outer' )
             count = count + 1
         temp.fillna(0, inplace = True)
-        
+        temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
         #Export merged dataframe to a csv
-        temp.to_csv(outpath+'watint.csv')      
+        temp.to_csv(outpath+'watint.csv', index = False)      
     def thab_func(df, outpath, lupath):
         """
         This function reports on terrestrial habitat quality. Each pixel is evaluated for the species which can utilize that landcover, and depending on lancover change, a pixel is categorized as improved, degraded or unchanged.
@@ -2089,9 +2093,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 temp = pd.merge(temp,tlist[count],on = 'guild', how = 'outer' )
                 count = count + 1
             temp.fillna(0, inplace = True)
-            
+            temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
             #Export the merged reporting dataframe to a csv
-            temp.to_csv(outpath+'terrhab.csv')    
+            temp.to_csv(outpath+'terrhab.csv', index = False)    
         else:
             Helpers.pmes('DF List is Empty')
 
@@ -2312,16 +2316,16 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     c14 = pd.read_csv(carb14)
     
     #Calculate the 2014 carbon total
-    def do2014(df, c14):
-        td = df[['LC2014', 'gridcode14']]
-        temp = pd.merge(td,c14, how = 'left', on = 'gridcode14')
-        lct = temp.groupby(['LC2014'], as_index = False).sum()
-        return lct
-    lct = do2014(df, c14)
-      
-    lct = lct[['LC2014', 'carbrate14']]
-    lct = lct.rename(columns = {'LC2014':'landcover','carbrate14':'carbon2014'})
-    intdict['Carbon2014'] = lct
+#    def do2014(df, c14):
+#        td = df[['LC2014', 'gridcode14']]
+#        temp = pd.merge(td,c14, how = 'left', on = 'gridcode14')
+#        lct = temp.groupby(['LC2014'], as_index = False).sum()
+#        return lct
+#    lct = do2014(df, c14)
+#      
+#    lct = lct[['LC2014', 'carbrate14']]
+#    lct = lct.rename(columns = {'LC2014':'landcover','carbrate14':'carbon2014'})
+#    intdict['Carbon2014'] = lct
 
     tlist = list(intdict.values())
     l = len(tlist)
@@ -2348,9 +2352,9 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         temp['trt_med_total'] = temp[i] + temp['trt_med_total']
         temp['trt_max_total'] = temp[i] + temp['trt_max_total']
         temp['trt_bau_total'] = temp[i] + temp['trt_bau_total']
-
+    temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
     #Export the dataframe to a csv
-    temp.to_csv(outpath+'carbon.csv')  
+    temp.to_csv(outpath+'carbon.csv', index = False)  
     
     
     
@@ -2385,8 +2389,8 @@ def report_acres(df, activitylist, outpath):
         
         Helpers.pmes('Combining Dataframes')
         result = pd.concat(tlist, axis=1)
-
-        result.to_csv(outpath+'act_acres.csv')  
+        result = result.loc[:, ~result.columns.str.contains('^Unnamed')]    
+        result.to_csv(outpath+'act_acres.csv', index = False)  
     
     
     

@@ -8,6 +8,26 @@ axis_lab_font = 16
 flist = ['_base_bau','_base_med','_base_max','_trt_bau','_trt_med','_trt_max']
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def mba_cropvalue_plot_tables(csv='D:/TGS/projects/64 - Merced Carbon/Reports/Draft Reports/cropvalue.csv', outpath='D:/TGS/projects/64 - Merced Carbon/Reports/Draft Reports/plot_tables/'):
     import os
     import pandas as pd 
@@ -111,7 +131,7 @@ def mba_plot_tables_rows(csv=r"E:\Temp\tooloutputs\RRE_FULL\cropvalue.csv", outp
 
 
 
-def mba_chart_onetrace(table, plot_dict, xax = 'holder', yax = 'holder', mba = 'temp'):
+def mba_chart_onetrace(table, xax = 'holder', yax = 'holder', mba = 'temp', x = 'None',y = 'None', yrange = [0,1], qu = 'None', remzeros = 0):
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
     #import plotly.plotly as py
@@ -119,6 +139,13 @@ def mba_chart_onetrace(table, plot_dict, xax = 'holder', yax = 'holder', mba = '
     import plotly.graph_objs as go
     import pandas as pd
     table = pd.read_csv(table)
+    
+    if qu != 'None':
+        qu
+    if remzeros == 1:
+        table.loc[~(table==0).all(axis=1)]
+    
+    
     
     def max_y_range(table):
         c =table.max(axis=0, numeric_only = True)
@@ -134,8 +161,8 @@ def mba_chart_onetrace(table, plot_dict, xax = 'holder', yax = 'holder', mba = '
         return round(min(c) -plot_dict[mba]['changemax'], plot_dict[mba]['changemin'])        
 
     trace1 = {
-      "x": table['scenario'], 
-      "y": table['Untreated'], 
+      "x": table[x], 
+      "y": table[y], 
       "type":"bar"
     }
 
@@ -144,7 +171,7 @@ def mba_chart_onetrace(table, plot_dict, xax = 'holder', yax = 'holder', mba = '
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": False, 
-      "title": plot_dict[mba]['title'], 
+      "title": xax, 
       "titlefont": {
       "size": mba_title_font
           },
@@ -156,9 +183,9 @@ def mba_chart_onetrace(table, plot_dict, xax = 'holder', yax = 'holder', mba = '
           }
       }, 
       "yaxis": {
-        "autorange": False, 
-        "range": [min_y_range(table), max_y_range(table)], 
-        "title": plot_dict[mba]['ytitle'], 
+        "autorange": True, 
+        "range": yrange, 
+        "title": yax, 
         "type": "linear",
         "titlefont": {
                 "size": axis_lab_font
@@ -171,7 +198,7 @@ def mba_chart_onetrace(table, plot_dict, xax = 'holder', yax = 'holder', mba = '
     
     
 
-def mba_chart_threetrace(table, plot_dict, xax = 'holder', yax = 'holder', mba = 'temp'):
+def mba_chart_threetrace(table, plot_dict, xax = 'holder', yax = 'holder', mba = 'temp', pre = 'ha_change', qu = 'None', remzeros = 0):
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
     #import plotly.plotly as py
@@ -179,6 +206,11 @@ def mba_chart_threetrace(table, plot_dict, xax = 'holder', yax = 'holder', mba =
     import plotly.graph_objs as go
     import pandas as pd
     table = pd.read_csv(table)
+    
+    if qu != 'None':
+        qu
+    if remzeros == 1:
+        table.loc[~(table==0).all(axis=1)]
     
     def max_y_range(table):
         c =table.max(axis=0, numeric_only = True)
@@ -195,20 +227,20 @@ def mba_chart_threetrace(table, plot_dict, xax = 'holder', yax = 'holder', mba =
 
     trace1 = {
       "x": table[plot_dict[mba]['rfield']], 
-      "y": table['ha_change_base_bau'], 
+      "y": table[pre + '_base_bau'], 
       "type":"bar",
       "name":"Reference<br>Scenario"
     }
     
     trace2 = {
       "x": table[plot_dict[mba]['rfield']], 
-      "y": table['ha_change_base_med'], 
+      "y": table[pre + '_base_med'], 
       "type":"bar",
        "name":"Medium<br>Infill"
     }
     trace3 = {
       "x": table[plot_dict[mba]['rfield']], 
-      "y": table['ha_change_base_max'], 
+      "y": table[pre + '_base_max'], 
 "type":"bar",
  "name":"Max<br>Infill"
     }
@@ -231,14 +263,17 @@ def mba_chart_threetrace(table, plot_dict, xax = 'holder', yax = 'holder', mba =
           }
       }, 
       "yaxis": {
-        "autorange": False, 
+        "autorange": True, 
         "range": [min_y_range(table), max_y_range(table)], 
         "title": plot_dict[mba]['ytitle'], 
         "type": "linear",
         "titlefont": {
                 "size": axis_lab_font
           }
-      }
+      },
+        "annotations": [plot_dict[mba]['ann']
+      
+    ]
     }
    
     fig = go.Figure(data=data, layout=layout)
@@ -249,7 +284,18 @@ def mba_chart_threetrace(table, plot_dict, xax = 'holder', yax = 'holder', mba =
 
 
 #Dictionary entries
-plot_dict['cropvalue'] ={'title':"2030 Projected Crop Value by Development Scenario",'changemax': 10000000,'changemin' :-7,'ytitle': "Crop Value (Millions of Dollars)", 'changefield':'usd_change', 'totfield':  'usd', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
+plot_dict['cropvalue'] ={'title':"2030 Projected Crop Value by Development Scenario",'changemax': 10000000,'changemin' :-7,'ytitle': "Crop Value (Millions of Dollars)", 'changefield':'usd_change', 'totfield':  'usd', 'rfield' : 'landcover', 'sum': 1,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7,'ann':{
+        "xref": "x",
+        "yref": "y",
+        "text":  'Reference Scenario Total Value: ' + 'holder' +'<br>Medium Infill Total Value: ' + 'holder',
+        "y": 200000000,
+        "x": 'Annual Cropland',
+        "font": {
+          "color": "rgb(0, 0, 0)",
+          "size": 12
+        },
+        "showarrow": False
+      }}
 
 plot_dict['county_movement'] ={'title':"2014-2030 Projected Countywide Change in Terrestrial Movement Resistance by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'movement_potential', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
@@ -305,34 +351,34 @@ plot_dict['watcon'] ={'title':"2014-2030 Projected Change in Water Usage by Deve
 plot_dict['watint'] ={'title':"2014-2030 Projected Change of Watershed Integrity by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'Integrity_Class', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7}
 
 
-flist = ['_base_bau','_base_med','_base_max','_trt_bau','_trt_med','_trt_max']
-
-
-
-
-mbalist = ['aquatic','co_val_airpollute','county_movement','ecamovement','flood100','flood500','fmmp','groundwater','lcchange','leach_nitrates','no2_val_airpollute','o3_val_airpollute','pca_cover_change','pm2_5_val_airpollute','pm10_val_airpollute','runoff_nitrates','scenic','so2_val_airpollute','terrhab','watcon','watint','cropvalue'] #,'cropvalue'
-
-import glob
-
-csvlist = glob.glob(folder + '*.csv')
-combined = '\t'.join(csvlist)
-
-print (mbalist)
-print (combined)
-
-for i in mbalist:
-    if i in combined:
-        print (folder + '/' + i + '.csv')
-        if plot_dict[i]['sum'] == 1:
-            print ('Doing sum for ' + i)
-            dftest = mba_plot_tables_sum(folder + '/' + i + '.csv', outpath = outpath2, csvname = i + '_' + 'sum' + '.csv', changefield = plot_dict[i]['changefield'])
-        if plot_dict[i]['totfield'] != 'None':
-            print ('Doing tot for ' + i)
-            dftest = mba_plot_tables_rows(folder + '/' + i + '.csv', outpath=outpath2,csvname = i + '_' + 'total' + '.csv', fieldname = plot_dict[i]['totfield'],  rfield = plot_dict[i]['rfield'])
-            
-        if plot_dict[i]['changefield'] != 'None':
-            print ('Doing change for ' + i)
-            dftest = mba_plot_tables_rows(folder + '/' + i + '.csv', outpath=outpath2,csvname = i + '_' + 'change' + '.csv', fieldname = plot_dict[i]['changefield'],  rfield = plot_dict[i]['rfield'])
+#flist = ['_base_bau','_base_med','_base_max','_trt_bau','_trt_med','_trt_max']
+#
+#
+#
+#
+#mbalist = ['aquatic','co_val_airpollute','county_movement','ecamovement','flood100','flood500','fmmp','groundwater','lcchange','leach_nitrates','no2_val_airpollute','o3_val_airpollute','pca_cover_change','pm2_5_val_airpollute','pm10_val_airpollute','runoff_nitrates','scenic','so2_val_airpollute','terrhab','watcon','watint','cropvalue'] #,'cropvalue'
+#
+#import glob
+#
+#csvlist = glob.glob(folder + '*.csv')
+#combined = '\t'.join(csvlist)
+#
+#print (mbalist)
+#print (combined)
+#
+#for i in mbalist:
+#    if i in combined:
+#        print (folder + '/' + i + '.csv')
+#        if plot_dict[i]['sum'] == 1:
+#            print ('Doing sum for ' + i)
+#            dftest = mba_plot_tables_sum(folder + '/' + i + '.csv', outpath = outpath2, csvname = i + '_' + 'sum' + '.csv', changefield = plot_dict[i]['changefield'])
+#        if plot_dict[i]['totfield'] != 'None':
+#            print ('Doing tot for ' + i)
+#            dftest = mba_plot_tables_rows(folder + '/' + i + '.csv', outpath=outpath2,csvname = i + '_' + 'total' + '.csv', fieldname = plot_dict[i]['totfield'],  rfield = plot_dict[i]['rfield'])
+#            
+#        if plot_dict[i]['changefield'] != 'None':
+#            print ('Doing change for ' + i)
+#            dftest = mba_plot_tables_rows(folder + '/' + i + '.csv', outpath=outpath2,csvname = i + '_' + 'change' + '.csv', fieldname = plot_dict[i]['changefield'],  rfield = plot_dict[i]['rfield'])
         
 
 

@@ -582,5 +582,25 @@ def carbon30(df):
     return newdf4
 
 
+def remove_unnamed(folder):
+    import os
+    import pandas as pd
+
+    import glob
+    folders = os.listdir(folder)
+    print (folders)
+    for i in folders:
+        print (i)
+        csvlist = glob.glob(folder + '/' + i + '/*.csv')
+        print (csvlist)
+        for i in csvlist:
+            df = pd.read_csv(i)
+            df = df.loc[:, ~df.columns.str.contains('^Unnamed')]   
+            print (df.head(10))
+            df.to_csv(i, index = False)
     
+    
+    
+    
+     
         

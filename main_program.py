@@ -319,10 +319,8 @@ else:
     
 if arcpy.GetParameterAsText(65):
     terflag = 1
-    Helpers.add_to_logfile(logfile,'Tool will do terrestrial habitat reporting')
 else:
     terflag = 0
-    Helpers.add_to_logfile(logfile,'Tool will NOT do terrestrial habitat reporting')
 
 if arcpy.GetParameterAsText(65):
     sflag = 1
@@ -353,8 +351,9 @@ import Reporting
 initout = Initial.DoInitial(mask, cproc, dev, devmask, Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, ucc, sflag)
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, rate, logfile)
-templist[0].to_csv('P:/Temp/Temperino2.csv')
+#templist[0].to_csv('P:/Temp/Temperino2.csv')
 Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
 Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
 Reporting.report_acres(templist[0],activitylist,outpath)
+
 
