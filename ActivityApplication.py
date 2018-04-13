@@ -247,7 +247,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         if i in df.columns:
             clist.append(i)
 #    df = df.drop(columns = clist)
-    df.drop([clist], axis = 1, inplace = True)       
+    df.drop(clist, axis = 1, inplace = True)       
     
     
     
