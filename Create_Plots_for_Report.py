@@ -514,7 +514,7 @@ def  airquality_plot_AC(high_folder, med_folder, outfile):
     import plotly.graph_objs as go
  
 
-    xlist = ['CO','O3','PM 10','PM 2.5','NO2', 'SO2']
+    xlist = ['CO','O<sub>3</sub>','PM 10','PM 2.5','NO<sub>2</sub>', 'SO<sub>2</sub>']
     
     trace1 = {
       "x": xlist, 
@@ -784,19 +784,19 @@ def  reductions_ALL(outfile):
 
     trace1 = {
       #"x": ["Riparian Restoration", 'Improved N Fertilizer Mngmt',"Compost Amendments to Croplands", 'Compost Amendments to Grasslands', #'Cover Cropping', 'Mulching', 'Hedgerow Planting', 'Oak Woodland Restoration', 'Urban Tree Planting']
-      "x": [ 'Improved N<br> Fertilizer<br> Mngmt',"Compost<br> on<br> Croplands", 'Compost<br> on<br> Grasslands', 'Cover<br> Cropping', 'Mulching', 'Hedgerow<br> Planting', 'Oak<br> Woodland<br> Restoration', "Riparian<br> Restoration", 'Urban<br> Tree<br> Planting'], 
-      "y": [nfm25['carbon_nfm'].sum(), cam25['carbon_cam'].sum(), cag25['carbon_cag'].sum(), ccr25['carbon_ccr'].sum(),  mul25['carbon_mul'].sum(), hpl25['carbon_hpl'].sum(), oak25['carbon_oak'].sum(), rre25['carbon_rre'].sum(), urb25['carbon_urb'].sum()],
+      "x": [ 'Improved N<br> Fertilizer<br> Mngmt',"Compost<br>on<br>Croplands", 'Compost<br> on<br> Grasslands', 'Mulching','Cover<br>Cropping',  "Riparian<br>Restoration",'Hedgerow<br>Planting', 'Oak<br> Woodland<br>Restoration',  'Urban<br>Tree<br>Planting'], 
+      "y": [nfm25['carbon_nfm'].sum(), cam25['carbon_cam'].sum(), cag25['carbon_cag'].sum(), mul25['carbon_mul'].sum(), ccr25['carbon_ccr'].sum(), rre25['carbon_rre'].sum(),  hpl25['carbon_hpl'].sum(), oak25['carbon_oak'].sum(),  urb25['carbon_urb'].sum()],
       "type": "bar",
       "name":'25% Adoption'
       }
     trace2 = {
-      "x": [ 'Improved N<br> Fertilizer<br> Mngmt',"Compost<br> on<br> Croplands", 'Compost<br> on<br> Grasslands', 'Cover<br> Cropping', 'Mulching', 'Hedgerow<br> Planting', 'Oak<br> Woodland<br> Restoration', "Riparian<br> Restoration", 'Urban<br> Tree<br> Planting'], 
-      "y": [nfm100['carbon_nfm'].sum(), cam100['carbon_cam'].sum(), cag100['carbon_cag'].sum(), ccr100['carbon_ccr'].sum(),  mul100['carbon_mul'].sum(), hpl100['carbon_hpl'].sum(), oak100['carbon_oak'].sum(), rre100['carbon_rre'].sum(), urb100['carbon_urb'].sum()],
+      "x": [ 'Improved N<br> Fertilizer<br> Mngmt',"Compost<br>on<br>Croplands", 'Compost<br> on<br> Grasslands', 'Mulching','Cover<br>Cropping',  "Riparian<br>Restoration",'Hedgerow<br>Planting', 'Oak<br> Woodland<br>Restoration',  'Urban<br>Tree<br>Planting'], 
+      "y": [nfm100['carbon_nfm'].sum(), cam100['carbon_cam'].sum(), cag100['carbon_cag'].sum(), mul100['carbon_mul'].sum(), ccr100['carbon_ccr'].sum(),  rre100['carbon_rre'].sum(), hpl100['carbon_hpl'].sum(), oak100['carbon_oak'].sum(),  urb100['carbon_urb'].sum()],
       "type": "bar",
       "name":'Full Adoption'
       }
 
-    
+    print (str(rre25['carbon_rre'].sum()))
     data = go.Data([trace1, trace2])
     layout = {
       "autosize": True, 
@@ -819,7 +819,7 @@ def  reductions_ALL(outfile):
       "yaxis": {
         "autorange": True, 
         "range": [0, 200000], 
-        "type": 'log',
+        "type": 'linear',
         #"range": [min_y_range(table), max_y_range(table)], 
         "title": 'Tons CO<sub>2</sub> Equivalents', 
       "titlefont": {
@@ -1092,7 +1092,7 @@ def  airquality_plot_RRE(high_folder, outfile):
     high_no2 = pd.read_csv(high_folder + '/no2_val_airpollute.csv')
     high_pm25 = pd.read_csv(high_folder + '/pm2_5_val_airpollute.csv')
     high_pm10 = pd.read_csv(high_folder + '/pm10_val_airpollute.csv')
-    
+    high_so2 = pd.read_csv(high_folder + '/so2_val_airpollute.csv')
 
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
@@ -1101,18 +1101,18 @@ def  airquality_plot_RRE(high_folder, outfile):
     import plotly.graph_objs as go
  
 
-    xlist = ['CO','O3','PM 10','PM 2.5','NO2']
+    xlist = ['CO','O<sub>3</sub>','PM 10','PM 2.5','NO<sub>2</sub>', 'SO<sub>2</sub>']
     
     trace1 = {
       "x": xlist, 
-      "y": [high_co['tons_trt_bau'].sum(), high_o3['tons_trt_bau'].sum(), high_no2['tons_trt_bau'].sum(),high_pm25['tons_trt_bau'].sum(),high_pm10['tons_trt_bau'].sum()], 
+      "y": [high_co['tons_trt_bau'].sum(), high_o3['tons_trt_bau'].sum(), high_no2['tons_trt_bau'].sum(),high_pm25['tons_trt_bau'].sum(),high_pm10['tons_trt_bau'].sum(), high_so2['tons_trt_bau'].sum()], 
       "type": "bar",
       "name": "Riparian<br>Restoration", 
       
       }
     trace2 = {
       "x": xlist, 
-      "y": [high_co['tons_base_bau'].sum(), high_o3['tons_base_bau'].sum(), high_no2['tons_base_bau'].sum(),high_pm25['tons_base_bau'].sum(),high_pm10['tons_base_bau'].sum()], 
+      "y": [high_co['tons_base_bau'].sum(), high_o3['tons_base_bau'].sum(), high_no2['tons_base_bau'].sum(),high_pm25['tons_base_bau'].sum(),high_pm10['tons_base_bau'].sum(), high_so2['tons_base_bau'].sum()], 
       "type": "bar",
       "name": "Reference", 
       }
@@ -1316,7 +1316,7 @@ def make_plots_AC():
     import os
     import plotly.plotly as py
     py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
-    boxpath = 'E:/BoxSync/'
+    boxpath = 'E:/Box/'
     print (os.path.join(boxpath,'Tool/outputs/FlyingM/FlyingM_HighDev'))
     groundwater_plot_AC(os.path.join(boxpath,'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_HighDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Avoided Conversion/Case Study AC Groundwater.png'))
     airquality_plot_AC(os.path.join(boxpath, 'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_HighDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Avoided Conversion/Case Study AC Air.png'))
