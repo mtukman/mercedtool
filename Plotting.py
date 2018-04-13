@@ -3,7 +3,7 @@ folder = r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDe
 outpath2 = r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\plotting_tables\\"
 mba_title_font = 18
 plot_dict = {}
-axis_lab_font = 16
+axis_lab_font = 2
 
 flist = ['_base_bau','_base_med','_base_max','_trt_bau','_trt_med','_trt_max']
 
@@ -131,7 +131,7 @@ def mba_plot_tables_rows(csv=r"E:\Temp\tooloutputs\RRE_FULL\cropvalue.csv", outp
 
 
 
-def mba_chart_onetrace(table, xax = 'holder', yax = 'holder', mba = 'temp', x = 'None',y = 'None', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None'):
+def mba_chart_onetrace(table, xax = 'holder', yax = 'holder', x = 'None',y = 'None', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None'):
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
     #import plotly.plotly as py
@@ -145,21 +145,7 @@ def mba_chart_onetrace(table, xax = 'holder', yax = 'holder', mba = 'temp', x = 
     if remzeros == 1:
         table.set_index(x, inplace = True)
         table = table[table.values.sum(axis=1) != 0]
-        table.reset_index(inplace = True)
-    
-    
-    def max_y_range(table):
-        c =table.max(axis=0, numeric_only = True)
-        print ('maxy' + str(round(max(c) +plot_dict[mba]['changemax'], plot_dict[mba]['changemin'])))
-        #print ('maxy' + str(max(c) +plot_dict[mba]['changemax']))
-        return round(max(c) +plot_dict[mba]['changemax'], plot_dict[mba]['changemin'])
-        
-        
-    def min_y_range(table):
-        c =table.min(axis=0, numeric_only = True)
-        print ('minc' + str(min(c)))
-        print ('miny' + str(round(min(c) -plot_dict[mba]['changemax'], plot_dict[mba]['changemin'])))   
-        return round(min(c) -plot_dict[mba]['changemax'], plot_dict[mba]['changemin'])        
+        table.reset_index(inplace = True)       
 
     trace1 = {
       "x": table[x], 
@@ -195,7 +181,7 @@ def mba_chart_onetrace(table, xax = 'holder', yax = 'holder', mba = 'temp', x = 
     }
    
     fig = go.Figure(data=data, layout=layout)
-    plot(fig, filename= plot_dict[mba]['title'] + '.html')
+    plot(fig, filename= 'temp.html')
     
     
 
@@ -900,7 +886,7 @@ def  airquality_plot_2014(high_folder, outfile):
     high_pm10 = pd.read_csv(high_folder + '/pm10_val_airpollute.csv')
     high_so2 = pd.read_csv(high_folder + '/so2_val_airpollute.csv')
     
-
+    
 
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
@@ -943,7 +929,7 @@ def  airquality_plot_2014(high_folder, outfile):
         "type": "linear",
                 "titlefont": {
           "color": "black",
-          "size": 16
+          "size": 2
         }
       },
     }
@@ -953,7 +939,7 @@ def  airquality_plot_2014(high_folder, outfile):
 
 
 
-def  airquality_plot_act(high_folder, med_folder, outfile):
+def  airquality_plot_act(high_folder, med_folder, outfile, scenario = 'Riparian Restoration', title = 'Temp'):
     import pandas as pd
     
     
@@ -965,6 +951,15 @@ def  airquality_plot_act(high_folder, med_folder, outfile):
     high_pm25 = pd.read_csv(high_folder + '/pm2_5_val_airpollute.csv')
     high_pm10 = pd.read_csv(high_folder + '/pm10_val_airpollute.csv')
     high_so2 = pd.read_csv(high_folder + '/so2_val_airpollute.csv')
+
+
+    med_co = pd.read_csv(med_folder + '/co_val_airpollute.csv')
+    med_o3 = pd.read_csv(med_folder + '/o3_val_airpollute.csv')
+    med_no2 = pd.read_csv(med_folder + '/no2_val_airpollute.csv')
+    med_pm25 = pd.read_csv(med_folder + '/pm2_5_val_airpollute.csv')
+    med_pm10 = pd.read_csv(med_folder + '/pm10_val_airpollute.csv')
+    med_so2 = pd.read_csv(high_folder + '/so2_val_airpollute.csv')
+
 
     import plotly.plotly as py
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
@@ -986,15 +981,15 @@ def  airquality_plot_act(high_folder, med_folder, outfile):
       }
     trace2 = {
       "x": xlist, 
-      "y": [high_co['tons_change_base_med'].sum(), high_o3['tons_change_base_med'].sum(), high_no2['tons_change_base_med'].sum(),high_pm25['tons_change_base_med'].sum(),high_pm10['tons_change_base_med'].sum(),high_so2['tons_change_base_med'].sum() ], 
+      "y": [high_co['tons_change_trt_bau'].sum(), high_o3['tons_change_trt_bau'].sum(), high_no2['tons_change_trt_bau'].sum(),high_pm25['tons_change_trt_bau'].sum(),high_pm10['tons_change_trt_bau'].sum(),high_so2['tons_change_trt_bau'].sum() ], 
       "type": "bar",
-      "name": "Medium<br>Infill", 
+      "name": scenario + ' 25% Adoption', 
       }
     trace3 = {
       "x": xlist, 
-      "y": [high_co['tons_change_base_max'].sum(), high_o3['tons_change_base_max'].sum(), high_no2['tons_change_base_max'].sum(),high_pm25['tons_change_base_max'].sum(),high_pm10['tons_change_base_max'].sum(),high_so2['tons_change_base_max'].sum() ], 
+      "y": [med_co['tons_change_trt_bau'].sum(), med_o3['tons_change_trt_bau'].sum(), med_no2['tons_change_trt_bau'].sum(),med_pm25['tons_change_trt_bau'].sum(),med_pm10['tons_change_trt_bau'].sum(),med_so2['tons_change_trt_bau'].sum() ], 
       "type": "bar",
-      "name": "Max<br>Infill", 
+      "name": scenario + ' 100% Adoption', 
       }
 
 
@@ -1003,7 +998,7 @@ def  airquality_plot_act(high_folder, med_folder, outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": True, 
-      "title": "2030 Baseline Development Scenarios <br> Air Pollutant Sequestration", 
+      "title": title, 
       "titlefont": {
       "size": 24
           },
@@ -1015,7 +1010,6 @@ def  airquality_plot_act(high_folder, med_folder, outfile):
       "yaxis": {
         "autorange": True, 
         "range": [0, 200000], 
-        #"range": [min_y_range(table), max_y_range(table)], 
         "title": 'Tons of Pollutant Sequestered', 
         "type": "linear",
                 "titlefont": {
@@ -1036,6 +1030,84 @@ def  airquality_plot_act(high_folder, med_folder, outfile):
 
 
 
+def mba_chart_ter_twotrace(table, table2,plot_dict, xax = 'holder', yax = 'holder', mba = 'temp', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', sce = 'base', xlist = ['Reference', 'Medium Infill','Max Infill']):
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+    import pandas as pd
+    table = pd.read_csv(table)
+    table = table.loc[:, ~table.columns.str.contains('^Unnamed')]
+    
+    table2 = pd.read_csv(table2)
+    table2 = table2.loc[:, ~table2.columns.str.contains('^Unnamed')]
+    
+    if qu != 'None':
+        table = table.loc[table[qu] != qu2]
+        table2 = table2.loc[table2[qu] != qu2]
+        
+    if remzeros == 1:
+        table.set_index([plot_dict[mba]['rfield']], inplace = True)
+        
+        table = table[table.values.sum(axis=1) != 0]
+        table.reset_index(inplace = True)
+        
+    
+    trace1 = {
+      "x": xlist, 
+      "y": [table.iat[1,1],table2.iat[1,3],table.iat[1,5]], 
+      "type":"bar",
+      "name":"Low"
+    }
+    
+    trace2 = {
+      "x": xlist, 
+      "y": [table.iat[2,1],table2.iat[2,3],table.iat[2,5]], 
+      "type":"bar",
+      "name":"Medium"
+    }
+    
+    trace3 = {
+      "x": xlist, 
+      "y": [table.iat[0,1],table2.iat[0,3],table.iat[0,5]], 
+      "type":"bar",
+       "name":"High"
+    }
+
+
+    data = go.Data([trace1,trace2,trace3])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+      "title": 'Terrestrial Movement Landcover Change, 2014-2030', 
+      "titlefont": {
+      "size": mba_title_font
+          },
+      "xaxis": {
+        "autorange": True, 
+        "type": "category",
+        "tickfont": {
+      "size": axis_lab_font
+          }
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [0,1], 
+        "title": 'Hectares', 
+        "type": "linear",
+        "titlefont": {
+                "size": axis_lab_font
+          }
+      },
+        "annotations": [plot_dict[mba]['ann']
+      
+    ]
+    }
+   
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= plot_dict[mba]['title'] + '.html')
 
 
 
@@ -1043,7 +1115,117 @@ def  airquality_plot_act(high_folder, med_folder, outfile):
 
 
 
+def mba_chart_lc_twotrace(table, table2,plot_dict, xax = 'holder', yax = 'holder', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', xlist = ['Riparian Restoration 25% Adoption','Riparian Restoration 100% Adoption'], mba = 'rre', sce = 'Riparian Restoration'):
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+    import pandas as pd
+    table = pd.read_csv(table)
+    table = table.loc[:, ~table.columns.str.contains('^Unnamed')]
+    table = table[['landcover','ha_change_' + mba]]
+    
+    table2 = pd.read_csv(table2)
+    table2 = table2.loc[:, ~table2.columns.str.contains('^Unnamed')]
+    table2 = table2[['landcover','ha_change_' + mba]]
 
+        
+    if remzeros == 1:
+        table.set_index(['landcover'], inplace = True)
+        
+        table = table[table.values.sum(axis=1) != 0]
+        table.reset_index(inplace = True)
+        
+    
+    trace1 = {
+      "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
+      "y": [table.iat[0,1],table2.iat[0,1]],
+      "type":"bar",
+      "name":"Annual Cropland"
+    }
+    trace2 = {
+      "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
+      "y": [table.iat[1,1],table2.iat[1,1]],
+      "type":"bar",
+      "name":"Barren"
+    }
+    trace3 = {
+      "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
+      "y": [table.iat[4,1],table2.iat[4,1]],
+      "type":"bar",
+      "name":"Forest"
+    }
+    trace4 = {
+      "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
+      "y": [table.iat[5,1],table2.iat[5,1]],
+      "type":"bar",
+      "name":"Grassland"
+    }
+    trace5 = {
+      "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
+      "y": [table.iat[6,1],table2.iat[6,1]],
+      "type":"bar",
+      "name":"Irrigated Pasture"
+    }
+    trace6 = {
+      "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
+      "y": [table.iat[7,1],table2.iat[7,1]],
+      "type":"bar",
+      "name":"Orchard"
+    }
+    trace7 = {
+      "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
+      "y": [table.iat[8,1],table2.iat[8,1]],
+      "type":"bar",
+      "name":"Rice"
+    }
+    trace8 = {
+      "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
+      "y": [table.iat[11,1],table2.iat[11,1]],
+      "type":"bar",
+      "name":"Vineyard"
+    }
+    trace9 = {
+      "x": ["Riparian Restoration 25% Adoption", "Riparian Restoration 100% Adoption"], 
+      "y": [table.iat[13,1],table2.iat[13,1]],
+      "type":"bar",
+      "name":"Wetland"
+    }
+
+    
+    data = go.Data([trace1,trace2,trace3,trace4,trace5,trace6,trace7,trace8,trace9])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+      "title": 'Landcover Change from ' + sce + ' Activity Treatment', 
+      "titlefont": {
+      "size": mba_title_font
+          },
+      "xaxis": {
+        "autorange": True, 
+        "type": "category",
+        "tickfont": {
+      "size": 20
+          }
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [0,1], 
+        "title": 'Hectares', 
+        "type": "linear",
+        "titlefont": {
+                "size": 20
+          }
+      },
+#        "annotations": [plot_dict[mba]['ann']
+#      
+#    ]
+    }
+   
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'temp.html')
 
 
 
