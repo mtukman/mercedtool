@@ -95,7 +95,7 @@ def set_paths_and_workspaces(root_data_path = r"E:\TGS\projects\Merced Carbon", 
 
     #Vectors
     global Points
-    Points = os.path.joinos.path.join(root_data_path,midpath,'Vectors.gdb/Just_PointID')
+    Points = os.path.join(root_data_path,midpath,'Vectors.gdb/Just_PointID')
     all_layers.append(Points)
 
 
