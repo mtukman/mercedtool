@@ -1404,7 +1404,83 @@ def terrestrial_habitat_plot_RRE(high_folder, high_folder2, outfile, title, name
 
 
 
+def  aquatic_plot_act(high_folder, med_folder, outfile, scenario = 'Riparian Restoration', title = 'Temp'):
+    import pandas as pd
+    
+    
+    #Read O3
+    
+    table = pd.read_csv(high_folder + '/co_val_airpollute.csv')
 
+
+
+    table2 = pd.read_csv(med_folder + '/co_val_airpollute.csv')
+
+
+
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+ 
+
+    xlist = ['Reference', 'Riparian 25%', 'Riparian 100']
+    
+    
+    
+    trace1 = {
+      "x": xlist, 
+      "y": [table.iat[0,1],table.iat[0,1],table2.iat[0,1]], 
+      "type": "bar",
+      "name": "Reference", 
+      
+      }
+    trace2 = {
+      "x": xlist, 
+      "y": [table.iat[0,1],table.iat[0,1],table2.iat[0,1]], 
+      "type": "bar",
+      "name": scenario + ' 25% Adoption', 
+      }
+    trace3 = {
+      "x": xlist, 
+      "y": [table.iat[0,1],table.iat[0,1],table2.iat[0,1]], 
+      "type": "bar",
+      "name": scenario + ' 100% Adoption', 
+      }
+
+
+    data = go.Data([trace1, trace2,trace3])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+      "title": title, 
+      "titlefont": {
+      "size": 24
+          },
+      "xaxis": {
+        "autorange": True, 
+        "title": ['highly developed', 'medium developed', 'conserved'], 
+        "type": "category"
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [0, 200000], 
+        "title": 'Tons of Pollutant Sequestered', 
+        "type": "linear",
+                "titlefont": {
+          "color": "black",
+          "size": 14
+        }
+      },
+    }
+       
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'airpoll' + '.html')
+
+#    py.image.save_as(fig, outfile, format='png')
+    return fig
 
 
 

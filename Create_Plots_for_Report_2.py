@@ -128,6 +128,12 @@ def callplots():
     
     
     
+    #Aquatic Habitat
+    Plotting.mba_chart_onetrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\aquatic.csv", xax = 'General Landcover in Important Watersheds - 2014', yax = 'Hectares', x = 'gen_class',y = 'ha_2014', yrange = [0,1], remzeros= 1)
+    
+    Plotting.mba_chart_flood_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100\aquatic.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100\aquatic.csv", Plotting.plot_dict, xax = 'holder', yax = 'holder', mba = 'flood100', pre = 'ha_change', remzeros = 0, qu = 'gen_class', qu2 = 'na')
+    
+    
     
     
     

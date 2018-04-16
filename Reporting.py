@@ -1019,7 +1019,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
 
             
             if x in ['base', 'dev','cons', 'trt']:
-                if 'hpl' in df.columns:
+                if 'hplselected' in df:
                     flist = ['LC2014','pointid','eca_val', field,'hplselected']
                 else: 
                     flist =  ['LC2014','pointid','eca_val', field]
@@ -1032,7 +1032,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     if 'hpl' in flist:
                         td.loc[(td['hplselected'] == 1), field] = 'Shrubland'
             else:
-                if 'hpl' in df.columns:
+                if 'hplselected' in df:
                     td = df[['LC2014','pointid','eca_val', field, 'LC2030_bau','hplselected']]
                 else:
                     td = df[['LC2014','pointid','eca_val', field, 'LC2030_bau']]
@@ -1044,7 +1044,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 td.loc[(td['LC2030_bau'] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td['LC2030_bau'] == 'Woody Riparian'), field] = 'Forest'
                 td.loc[(td['LC2030_bau'] == 'Oak Conversion'), field] = 'Forest'
-                if 'hpl' in td:
+                if 'hplselected' in td:
                     td.loc[(td['hplselected'] == 1), field] = 'Shrubland'
             if area == 'eca':
                 td = td.loc[td['eca_val'] == 1]
@@ -1519,11 +1519,11 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     # 
                     
                     if 'hplselected' in td:
-                        if 'urb' in td.columns:
+                        if 'urb' in td:
                             td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'urbselected', 'hplselected']]
                         else:
                             td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'hplselected']]
-                    elif 'urb' in td.columns:
+                    elif 'urb' in td:
                         td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'urbselected']]
                         
                         
@@ -1546,11 +1546,11 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     td = td.rename (columns = {'cover30':'cover2', 'cover14':'cover1'})
                 else:
                     if 'hplselected' in td:
-                        if 'urb' in td.columns:
+                        if 'urb' in td:
                             td = td[['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau', 'urbselected', 'hplselected']]
                         else:
                             td = td[['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau', 'hplselected']]
-                    elif 'urb' in td.columns:
+                    elif 'urb' in td:
                         td = td[['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau', 'urbselected']]
                        
                        
