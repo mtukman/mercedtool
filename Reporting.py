@@ -11,7 +11,7 @@ Created on Thu Feb 22 08:58:23 2018
 
 
 #def report(outpath, df):
-def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0, gra = 0, cproc = 0, terflag = 0, ucc = 0):
+def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0, gra = 0, cproc = 0, terflag = 0, ucc = 0, ug = 0):
     
     """
     This function reports on the multi-benefits. 
@@ -92,9 +92,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         df2 = df.loc[(df['dev_flag'] == 1)]
         dfdict['dev_flagged'] = df2
         Helpers.pmes('Developed Added to Reporting List')
-    if 'urbselected' in df.columns:
-        dfdict['urb'] = df.loc[(df['urbselected'] == 1)]
-    if 'hplselected' in df.columns:
+    if 'urbselected' in df:
+        dfdict['urb'] = df.loc[(df['urb2selected'] == 1)]
+    if 'hplselected' in df:
         dfdict['hpl'] = df.loc[(df['hplselected'] == 1)]
     #Create avoided conversion dataframes if they were selected
     if acdict != 'None':
@@ -207,6 +207,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         
         #Export to output folder
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        Helpers.pmes('Exporting .csv to : ' + outpath + 'fmmp.csv')
         temp.to_csv(outpath + 'fmmp.csv', index = False)
 
     
@@ -359,7 +360,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 count = count + 1
             temp.fillna(0,inplace = False)
             #Export dataframe to output folder
-            temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+            temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]   
+            Helpers.pmes('Exporting .csv to : ' + outpath + 'flood' + str(z) + '.csv')
             temp.to_csv(outpath + 'flood' + str(z) + '.csv', index = False)
                     
     
@@ -379,20 +381,20 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             #Change the landcovers to reporting landcovers
   
             if x in ['base', 'dev','cons', 'trt']:
-                if 'hpl' in df.columns:
-                    flist = ['LC2014','pointid','scenic_val', field,'hplselected']
+                if 'hplselected' in df:
+                    td = df[['LC2014','pointid','scenic_val', field,'hplselected']]
+                    
                 else: 
-                    flist =  ['LC2014','pointid','scenic_val', field]
-                td = df[flist]
+                    td = df[ ['LC2014','pointid','scenic_val', field]]
                 td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
                 td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
                 td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
                 if 'trt' in field:
-                    if 'hpl' in flist:
+                    if 'hplselected' in td:
                         td.loc[(td['hplselected'] == 1), field] = 'Forest'
             else:
-                if 'hpl' in df.columns:
+                if 'hplselected' in df:
                     td = df[['LC2014','pointid','scenic_val', field, 'LC2030_bau','hplselected']]
                 else:
                     td = df[['LC2014','pointid','scenic_val', field, 'LC2030_bau']]
@@ -404,7 +406,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 td.loc[(td['LC2030_bau'] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td['LC2030_bau'] == 'Woody Riparian'), field] = 'Forest'
                 td.loc[(td['LC2030_bau'] == 'Oak Conversion'), field] = 'Forest'
-                if 'hpl' in td:
+                if 'hplselected' in td:
                     td.loc[(td['hplselected'] == 1), field] = 'Forest'
             
             Helpers.pmes('Scenic Reporting: ' + name + ', ' + dev)
@@ -496,7 +498,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             count = count + 1
         #Fill nulls and export the merged dataframes as a csv
         temp = temp.fillna(0)
-        temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]   
+        Helpers.pmes('Exporting .csv to : ' + outpath + 'scenic' + '.csv')
         temp.to_csv(outpath + 'scenic' + '.csv', index = False)
 
     
@@ -625,7 +628,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         temp = temp.fillna(0)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
         temp = temp.loc[temp['landcover'] != 0]
-        
+        Helpers.pmes('Exporting .csv to : ' + outpath + 'watcon' + '.csv')
         #Export the merged dataframe
         temp.to_csv(outpath+'watcon.csv', index = False)
         
@@ -738,6 +741,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         temp.fillna(0, inplace = True)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
         #Export Dataframe to csv
+        Helpers.pmes('Exporting .csv to : ' + outpath + 'lcchange' + '.csv')
         temp.to_csv(outpath+'lcchange.csv', index = False)    
     
     def pcalcchange(df, outpath):
@@ -855,6 +859,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         temp.fillna(0, inplace = True)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
         #Export the reporting dataframe to a csv
+        Helpers.pmes('Exporting .csv to : ' + outpath + 'pca_cover_change' + '.csv')
         temp.to_csv(outpath+'pca_cover_change.csv', index = False)       
         
     def aqua(df, outpath):
@@ -1020,16 +1025,15 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             
             if x in ['base', 'dev','cons', 'trt']:
                 if 'hplselected' in df:
-                    flist = ['LC2014','pointid','eca_val', field,'hplselected']
+                    td = df[['LC2014','pointid','eca_val', field,'hplselected']]
                 else: 
-                    flist =  ['LC2014','pointid','eca_val', field]
-                td = df[flist]
+                    td = df[['LC2014','pointid','eca_val', field]]
                 td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
                 td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
                 td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
                 if 'trt' in field:
-                    if 'hpl' in flist:
+                    if 'hplselected' in td:
                         td.loc[(td['hplselected'] == 1), field] = 'Shrubland'
             else:
                 if 'hplselected' in df:
@@ -1074,7 +1078,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 tempmerge = tempmerge[['res_val', 'change','count30']]
                 tempmerge = tempmerge.rename(columns = {'count30':'ha_' + name +'_'+ dev})
                 tempmerge['ha_' + name +'_'+ dev] = tempmerge['ha_' + name +'_'+ dev]*.09 #Convert to hectares
-                tempmerge = tempmerge.rename(columns = {'res_val':'movement_potential','change':'ha_change_' + name +'_'+ dev})
+                tempmerge = tempmerge.rename(columns = {'res_val':'resistance_class','change':'ha_change_' + name +'_'+ dev})
                 
             #For other scenarios and activities, do this section
             else:
@@ -1090,7 +1094,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 tempmerge['change'] = tempmerge['count30']-tempmerge['count302']
                 tempmerge['change'] = tempmerge['change']*.09 #Convert to hectares
                 tempmerge = tempmerge[['change', 'res_val']]
-                tempmerge = tempmerge.rename(columns = {'res_val':'movement_potential','change':'ha_change_' + name})
+                tempmerge = tempmerge.rename(columns = {'res_val':'resistance_class','change':'ha_change_' + name})
                 
             #Add the reporting dataframe to the dictionary of dataframes
             movedict[name + dev] = tempmerge
@@ -1122,7 +1126,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             group14 = tempdf14.groupby('res_val').count()
             group14['index1'] = group14.index
             group14 = group14[['pointid','index1']]
-            group14 = group14.rename(columns={'pointid':'ha_2014','index1':'movement_potential'})
+            group14 = group14.rename(columns={'pointid':'ha_2014','index1':'resistance_class'})
             group14['ha_2014'] = group14['ha_2014']*.09 #Convert to hectares
             movedict['Base_2014'] = group14
             
@@ -1133,7 +1137,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             group14 = tempdf14.groupby('res_val').count()
             group14['index1'] = group14.index
             group14 = group14[['pointid','index1']]
-            group14 = group14.rename(columns={'pointid':'ha__eca_2014','index1':'movement_potential'})
+            group14 = group14.rename(columns={'pointid':'ha__eca_2014','index1':'resistance_class'})
             group14['ha__eca_2014'] = group14['ha__eca_2014']*.09 #Convert to hectares
             movedict['ECA_2014'] = group14
             
@@ -1143,7 +1147,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             count = 1
             temp = tlist[0]
             while count < l:
-                temp = pd.merge(temp,tlist[count],on = 'movement_potential', how = 'outer' )
+                temp = pd.merge(temp,tlist[count],on = 'resistance_class', how = 'outer' )
                 count = count + 1
             temp.fillna(0, inplace = True)
             temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
@@ -1518,17 +1522,16 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 if x in ['base', 'trt']:
                     # 
                     
+                    flist = ['LC2014','pointid', field, 'gridcode14', gridcode]
+                    
                     if 'hplselected' in td:
-                        if 'urb' in td:
-                            td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'urbselected', 'hplselected']]
-                        else:
-                            td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'hplselected']]
-                    elif 'urb' in td:
-                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'urbselected']]
-                        
-                        
-                    else:
-                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode]]
+                        flist.append('hplselected')
+
+                    if 'urb2selected' in td:
+                        flist.append('urb2selected')
+                        Helpers.pmes('Urb is in the df')
+                            
+                    td = td[flist]
                     td.loc[(td[field] == 'Oak Conversion'), gridcode] = 3
                     td.loc[(td[field] == 'Young Forest'), gridcode] = 3
                     td.loc[(td[field] == 'Woody Riparian'), gridcode] = 3
@@ -1539,40 +1542,37 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
                     td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
                     if 'hplselected' in td:
-                        td.loc[td['hplselected'] == 1, 'gridcode14'] = 16
+                        td.loc[td['hplselected'] == 1, gridcode] = 16
+                        
                     td = pd.merge(td,cover14, how = 'left', left_on = 'gridcode14', right_on = 'gridcode14')
                     td = pd.merge(td,cover30, how = 'left', left_on = gridcode, right_on = 'gridcode30')
                     
                     td = td.rename (columns = {'cover30':'cover2', 'cover14':'cover1'})
                 else:
+                    flist = ['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau']
                     if 'hplselected' in td:
-                        if 'urb' in td:
-                            td = td[['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau', 'urbselected', 'hplselected']]
-                        else:
-                            td = td[['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau', 'hplselected']]
-                    elif 'urb' in td:
-                        td = td[['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau', 'urbselected']]
-                       
-                       
-                    else:
-                        td = td[['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau']]
+                        flist.append('hplselected')
+
+                    if 'urb2selected' in td:
+                        flist.append('urb2selected')
+                        Helpers.pmes('Urb is in the df')
+
+                    td = td[flist]
                     td.loc[(td[field] == 'Oak Conversion'), gridcode] = 3
                     td.loc[(td[field] == 'Young Forest'), gridcode] = 3
                     td.loc[(td[field] == 'Woody Riparian'), gridcode] = 3
                     td.loc[(td[field] == 'Young Shrubland'), gridcode] = 5
-                    td.loc[(td['LC2030_bau'] == 'Oak Conversion'), 'gridcode30_bau'] = 3
                     td.loc[(td['LC2030_bau'] == 'Young Forest'), 'gridcode30_bau'] = 3
-                    td.loc[(td['LC2030_bau'] == 'Woody Riparian'), 'gridcode30_bau'] = 3
                     td.loc[(td['LC2030_bau'] == 'Young Shrubland'), 'gridcode30_bau'] = 5
                     
                     td.loc[(td['LC2030_bau'] == 'Young Forest'), 'LC2030_bau'] = 'Forest'
                     td.loc[(td['LC2030_bau'] == 'Young Shrubland'), 'LC2030_bau'] = 'Shrubland'
-                    td.loc[(td['LC2030_bau'] == 'Woody Riparian'), 'LC2030_bau'] = 'Forest'
-                    td.loc[(td['LC2030_bau'] == 'Oak Conversion'), 'LC2030_bau'] = 'Forest'
                     td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
                     td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                     td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
                     td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
+                    
+                    
                     if 'hplselected' in td:
                         td.loc[td['hplselected'] == 1, gridcode] = 16
                     td = pd.merge(td,cover30, how = 'left', left_on = 'gridcode30_bau', right_on = 'gridcode30')
@@ -1593,8 +1593,11 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
 
                 # Create 2030 nitrate reporting dataframe
                 tempdf30 = pd.merge(td,aclass, how = 'left', left_on = field, right_on = 'landcover')
-                tempdf30.loc[tempdf30[field].isin(['Developed','Urban','Developed Roads']), 'cover2'] = ucc
                 
+                if name == 'base':
+                    tempdf30.loc[tempdf30[field].isin(['Developed','Urban','Developed Roads']), 'cover2'] = .102
+                else:
+                    tempdf30.loc[tempdf30[field].isin(['Developed','Urban','Developed Roads']), 'cover2'] = ucc
                 tempdf30[y+'2'] = (tempdf30[y]*tempdf30['cover2'])/1000000 #Convert grams tons
                 group30 = tempdf30.groupby('landcover', as_index = False).sum()
                 group30 = group30[[y+'2','landcover']]
@@ -1693,7 +1696,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             
             #Create the initial dataframes
             
-            if 'hplselected' in df.columns:            
+            if 'hplselected' in df:            
                 td = df[['LC2014','pointid', 'HUC_12', 'near_rivers','near_streams', field, 'hplselected']]
                 td.loc[(td['hplselected'] == 1), field] = 'Forest'
             else:
@@ -2124,27 +2127,27 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
 
     
     #Run all of the reporting functions
-#    fmmp(df,outpath)
-#    fema(df,outpath)
-#    scenic(df,outpath)
-#    wateruse(df,outpath)
-#    lcchange(df,outpath)
-#    pcalcchange(df,outpath)
+    fmmp(df,outpath)
+    fema(df,outpath)
+    scenic(df,outpath)
+    wateruse(df,outpath)
+    lcchange(df,outpath)
+    pcalcchange(df,outpath)
     termovement(df,outpath)
-#    cropvalue(df,outpath)
-#    groundwater(df,outpath)
-#    nitrates(df,outpath)
+    cropvalue(df,outpath)
+    groundwater(df,outpath)
+    nitrates(df,outpath)
     airpol(df,outpath)
-#    if cproc == 0:
-#        watershedintegrity(df,outpath)
-#    else:
-#        pass
-#    aqua(df,outpath)
+    if cproc == 0:
+        watershedintegrity(df,outpath)
+    else:
+        pass
+    aqua(df,outpath)
 #    if terflag == 1:
 #        thab_func(df,outpath, lupath)
 #    
     
-def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 , cm = 0, ucc = 0):
+def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 , cm = 0):
     """
     This function reporting on carbon totals and carbon changes for the development scenarios and activities
     
@@ -2194,8 +2197,12 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         devlist = ['bau','med','max']
     Helpers.pmes(activitylist)
     for i in activitylist:
-        df9 = df.loc[(df[i+'selected'] == 1)]
-        dfdict[i] = df9
+        if i != 'urb':
+            df9 = df.loc[(df[i+'selected'] == 1)]
+            dfdict[i] = df9
+        elif i == 'urb':
+            df9 = df.loc[(df[i+'2selected'] == 1)]
+            dfdict[i] = df9
 
 
     

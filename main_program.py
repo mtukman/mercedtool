@@ -291,9 +291,12 @@ if 'urb' in activitylist:
     Generic.dict_activity['urb']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
     Generic.dict_activity['urb']['years'] = float(arcpy.GetParameterAsText(x + 3))        
     Generic.dict_activity['urb']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2)) 
-    Helpers.add_to_logfile(logfile,'Urban Forestry Growth Rate' + ': ' + arcpy.GetParameterAsText(x + 1))
-    Helpers.add_to_logfile(logfile,'Urban Forestry Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
-    Helpers.add_to_logfile(logfile,'Urban Forestry Ending Year' + ': ' + arcpy.GetParameterAsText(x + 3))
+    Generic.dict_activity['urb2']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
+    Generic.dict_activity['urb2']['years'] = float(arcpy.GetParameterAsText(x + 3))        
+    Generic.dict_activity['urb2']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2)) 
+    Helpers.add_to_logfile(logfile,'Urban Tree Planting Growth Rate' + ': ' + arcpy.GetParameterAsText(x + 1))
+    Helpers.add_to_logfile(logfile,'Urban Tree Planting Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
+    Helpers.add_to_logfile(logfile,'Urban Tree Planting Ending Year' + ': ' + arcpy.GetParameterAsText(x + 3))
 
 
 trt = Generic.trt_reductions
@@ -333,6 +336,8 @@ if arcpy.GetParameterAsText(30) == 'Yes':
     rate = float(arcpy.GetParameterAsText(31))
     if ug > 0:
         ucc = 0.102 + ug
+        
+        Helpers.pmes ('Final Urban Canopy %: ' + str(ucc))
     else: 
         ucc = 0.102
 else:
@@ -348,17 +353,47 @@ import Reporting
 
 
 #Run each module
+Helpers.pmes('Entering Initialization Module.')
 initout = Initial.DoInitial(mask, cproc, dev, devmask, Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
+Helpers.pmes('Initialization Module complete, entering Activity Application Module.')
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, ucc, sflag)
+Helpers.pmes('Activity Application Module complete. Entering the Carbon Accounting Module.')
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, rate, logfile)
 
 #templist[0].to_csv('P:/Temp/Temperino2.csv')
-
+Helpers.pmes('Carbon Accounting Module complete. Entering the Multi-Benefit Reporting Module.')
 #Comment out the export of this CSV unless you are debugging
-Helpers.pes('Exporting full dataframe to CSV for debugging - this takes a while...')
-templist[0].to_csv('P:/Temp/Temperino2.csv')
-Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
+#Helpers.pes('Exporting full dataframe to CSV for debugging - this takes a while...')
+#templist[0].to_csv('P:/Temp/Temperino2.csv')
+
+
+
+
+
+
+Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc, ug)
+Helpers.pmes('Multi-Benefit Module complete. Entering the Carbon Reporting Module.')
 Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
 Reporting.report_acres(templist[0],activitylist,outpath)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

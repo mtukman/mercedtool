@@ -33,7 +33,6 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
 
 
     #Create an query addon that is based on whether a custom development or treatment mask has been provided by the user.
-    Helpers.pmes (activitylist)
     queryadd =  ((df['pref_dev_flag'] == 0) & (df['dcode_maxinfill'] == 0))
     if customdev == 1:
         
@@ -73,6 +72,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         if customdev == 1:
             df.loc[df['rreselected'] == 1, 'LC2030_trt_cust'] = 'Forest'
             df.loc[df['rreselected'] == 1, 'gridcode30_trt_cust'] = 3
+            
     #Create Oak Suitability and Selection
     if 'oak' in activitylist:
         dictact['oak']['query'] =(df['LC2030_trt_bau'].isin(['Grassland','Shrubland','Irrigated Pasture','Barren'])) & (df['lcchange'] == 1) & (df['oakrange_flg'] == 1) & queryadd
@@ -104,7 +104,6 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     
     #Loop through the keys in the acdict dictionary, created in the main program. For each avoided conversion activity found, perform suitability, eligibility and selection functions.    
     keylist = [*acdict]
-    Helpers.pmes(keylist)
     for i in keylist:
         df.loc[(df['LC2030_trt_bau'] == df['LC2030_bau']), 'lcchange'] = 1   
         if i == 'ac_wet_arc':
@@ -164,8 +163,6 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
             t = 'Orchard'
             g = 9
             #Do the suitability, eligibility and selection functions for an avoided conversion activity
-        Helpers.pmes(acdict[i])
-        Helpers.pmes(i)
         dictact['aco']['adoption'] = acdict[i]
         
         Helpers.CreateSuitFlags('aco',df,dictact, i)
@@ -188,7 +185,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     dictact['nfm']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland', 'Orchard', 'Vineyard', 'Rice'])) & (df['lcchange'] == 1) & queryadd
     dictact['hpl']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1) & queryadd
     dictact['cam']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & queryadd
-    dictact['urb']['query'] = (df['LC2030_trt_bau'].isin(['Urban'])) & (df['lcchange'] == 1) & queryadd
+    dictact['urb']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['lcchange'] == 1) & queryadd
     dictact['cag']['query'] = (df['LC2030_trt_bau'].isin(['Grassland'])) & (df['lcchange'] == 1) & (df['slope_val'] < 15) & ((df['near_rivers'] > 304.8) | (df['near_streams'] > 30.48)) & queryadd
     dictact['gra']['query'] = (df['LC2030_trt_bau'].isin(['Grassland'])) & (df['lcchange'] == 1) & queryadd #Units are in meters for distance requirements
 
@@ -197,7 +194,6 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         Helpers.CreateSuitFlags(activity,df,dictact, activity)
         Helpers.CreateEligDict(df, activity, dictact,dict_eligibility, activity)
         Helpers.selectionfunc (dict_eligibility,df,activity,dictact, activity, logfile)
-    Helpers.pmes(dict_eligibility)
     #GHG Suitability Flag and Selection for CCR
     if 'ccr' in activitylist:
         ghg_selection (df,'ccr',dict_eligibility,dictact)
@@ -216,7 +212,9 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     if ug != 0:
         temp = df.loc[(df['LC2030_trt_bau'].isin(['Urban', 'Developed','Developed Roads'])) & (df['lcchange'] == 1) & queryadd]
         numb = len(temp.index)
+        Helpers.pmes ('Suitable Pixels for Urban: ' + str(numb))
         dictact['urb']['adoption'] = numb/4.49555
+        Helpers.pmes ('Suitable Acres for Urban: ' + str(dictact['urb2']['adoption']))
         ghg_selection (df,'urb',dict_eligibility,dictact)
         
         
@@ -224,22 +222,11 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         temp = df.loc[(df['LC2030_trt_bau'].isin(['Urban', 'Developed','Developed Roads'])) & (df['lcchange'] == 1) & queryadd]
         numb = len(temp.index)
         dictact['urb2']['adoption'] = numb/4.49555
-        dictact['urb2']['adoption'] = dictact['urb2']['adoption']*ucc
+        dictact['urb2']['adoption'] = dictact['urb2']['adoption']*ug
+        Helpers.pmes ('Adoption Goal Acres for Urban2: ' + str(dictact['urb2']['adoption']))
+        
         ghg_selection (df,'urb2',dict_eligibility,dictact)
         
-    import pandas as pd
-    
-#    rlist = ['sagbi_class','hydrovuln_flag', 'biodiversity_rank', 'clim_rank','terrhabrank']
-#
-#
-#    df = df.loc[(df['gridcode30_trt_bau'].isin(1,2,3,4,5,7,8,9,10,11,14,15,16)) & (df['gridcode30_trt_med'].isin(6,12,13))]
-#    length = len(df.index)
-#    temp = pd.DataFrame( columns=')
-#    
-#    
-#    df = df.loc[(df['gridcode30_trt_bau'].isin(1,2,3,4,5,7,8,9,10,11,14,15,16)) & (df['gridcode30_trt_max'].isin(6,12,13))]
-#    
-#    
     blist = ['ccrsuitflag','mulsuitflag','nfmsuitflag','hplsuitflag','camsuitflag','cagsuitflag','grasuitflag','urbsuitflag','urb2suitflag','oaksuitflag','rresuitflag','ac_wet_arc','ac_gra_arc','ac_irr_arc','ac_orc_arc','ac_arc_urb','ac_gra_urb','ac_irr_urb','ac_orc_urb','ac_arc_orc','ac_gra_orc','ac_irr_orc','ac_vin_orc','ac_arc_irr','ac_orc_irr','gp_code','LC2001','hydrovuln_flag','huc12_val','slope_val','medgroup_val','smallgroup_val','gridcode01','pref_dev_flag','near_nwi','near_roads','pref_dev_type','woodyrip_class','near_woody', 'biodiversity_rank','clim_rank','terrhabrank']
     
     clist = []
