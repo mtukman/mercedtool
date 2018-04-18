@@ -2150,8 +2150,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
     else:
         pass
     aqua(df,outpath)
-#    if terflag == 1:
-#        thab_func(df,outpath, lupath)
+    if terflag == 1:
+        thab_func(df,outpath, lupath)
 #    
     
 def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 , cm = 0, ug = 0):
@@ -2209,7 +2209,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
             dfdict[i] = df9
         elif i == 'urb':
             df9 = df.loc[(df[i+'selected'] == 1)]
-            Helpers.pmes(df9.head(50))
+            Helpers.pmes(str(df9['urb_carbred'].sum))
             dfdict[i] = df9
 
 
@@ -2284,8 +2284,6 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
             lct = lct[['LC2030_trt_'+ dev, 'carbrate30']]
             lct = lct.rename(columns = {'LC2030_trt_'+ dev:'landcover','carbrate30':'carbon_' + name +'_'+ dev})
             intdict[name +'_'+ dev] = lct
-
-
 
         elif name in activitylist:
             if (name + '_carbred') in df:

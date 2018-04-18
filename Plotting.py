@@ -931,7 +931,7 @@ def  airquality_plot(high_folder, outfile, title = 'temp', xlist = []):
     return fig
 
 
-def  airquality_plot_2014(high_folder, outfile, title = 'temp'):
+def  airquality_plot_2014(high_folder, outfile, title = 'temp', fieldname = 'tons_14'):
     import pandas as pd
     
     
@@ -957,7 +957,7 @@ def  airquality_plot_2014(high_folder, outfile, title = 'temp'):
     
     trace1 = {
       "x": xlist, 
-      "y": [high_co['tons_14'].sum(), high_o3['tons_14'].sum(), high_no2['tons_14'].sum(),high_pm25['tons_14'].sum(),high_pm10['tons_14'].sum(),high_so2['tons_14'].sum()], 
+      "y": [high_co[fieldname].sum(), high_o3[fieldname].sum(), high_no2[fieldname].sum(),high_pm25[fieldname].sum(),high_pm10[fieldname].sum(),high_so2[fieldname].sum()], 
       "type": "bar",
       "name": "2014<br>Baseline", 
       
@@ -1115,7 +1115,7 @@ def mba_chart_ter_twotrace(table, table2,plot_dict, xax = 'holder', yax = 'holde
     
     trace1 = {
       "x": xlist, 
-      "y": [table.iat[1,1],table2.iat[1,7],table.iat[1,7]], 
+      "y": [table.iat[0,1],table2.iat[0,7],table.iat[0,7]], 
       "type":"bar",
       "name":"High<br>Resistance"
     }
@@ -1129,7 +1129,7 @@ def mba_chart_ter_twotrace(table, table2,plot_dict, xax = 'holder', yax = 'holde
     
     trace3 = {
       "x": xlist, 
-      "y": [table.iat[0,1],table2.iat[0,7],table.iat[0,7]], 
+      "y": [table.iat[1,1],table2.iat[1,7],table.iat[1,7]], 
       "type":"bar",
        "name":"Low<br>Resistance"
     }
@@ -1729,9 +1729,9 @@ def callplots():
     mba_chart_flood_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100\flood100.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100\flood100.csv", plot_dict, xax = 'holder', yax = 'holder', mba = 'flood100', pre = 'ha_change', remzeros = 0, qu = 'gen_class', qu2 = 'na', outfile = outpath + "2030 Flood Risk Reduction.png", title = '2014-2030 Change in Landcover in 100 Year Floodplain')
 
     #Air Pollution
-    airquality_plot_2014(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100",  outfile = outpath + "2014 Air Quality.png", title = '2014 Air Pollutant Sequestration')
+    airquality_plot_2014(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100",  outfile = outpath + "2014 Air Quality.png", title = '2014 Air Pollutant Sequestration', fieldname = 'tons_14')
     
-    airquality_plot(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100", outfile = outpath + "2030 Air Quality Total.png", title = '2030 Air Pollutant Sequestration')
+    airquality_plot_2014(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100", outfile = outpath + "2030 Air Quality Total.png", title = '2030 Air Pollutant Sequestration', fieldname = 'tons_base_bau')
     
     airquality_plot_act(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100", outfile = outpath + "2030 Air Quality Change RRE.png", scenario = 'Riparian <br>Restoration', title = "Air Pollutant Sequestration for 2030 with Riparian Restoration")
     
@@ -1791,7 +1791,7 @@ def callplots():
     terrestrial_habitat_plot_RRE(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_25",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_100", '2014-2030 Change in Terrestrial Habitat<br>for Oak Conservation Scenarios', 'Oak<br>Conversion<br>25% Adoption', 'Oak<br>Conversion<br>100% Adoption', outfile = outpath + "2030 Terrestrial Habitat Value OAK.png")
     
     #Aquatic Habitat
-    mba_chart_onetrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\aquatic.csv", xax = '2014 Landcover in Watersheds with Important Aquatic Habitat', yax = 'Hectares', x = 'gen_class',y = 'ha_2014', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Aquatic Biodiversity.png")
+    mba_chart_onetrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\aquatic.csv", xax = '2014 Landcover in Watersheds <br>with Important Aquatic Habitat', yax = 'Hectares', x = 'gen_class',y = 'ha_2014', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Aquatic Biodiversity.png")
     
     mba_chart_aquatic_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25\aquatic.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\aquatic.csv", plot_dict, xax = 'holder', yax = 'holder', mba = 'flood100', pre = 'ha_change', remzeros = 0, qu = 'gen_class', qu2 = 'na', outfile = outpath + "2030 Aquatic Biodiversity RRE.png", title = '2014-2030 Landcover Change in Watersheds with Important Aquatic Habitat by Development Scenario')
 
