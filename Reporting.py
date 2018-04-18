@@ -93,7 +93,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         dfdict['dev_flagged'] = df2
         Helpers.pmes('Developed Added to Reporting List')
     if 'urbselected' in df:
-        dfdict['urb'] = df.loc[(df['urb2selected'] == 1)]
+        dfdict['urb'] = df.loc[(df['urbselected'] == 1)]
     if 'hplselected' in df:
         dfdict['hpl'] = df.loc[(df['hplselected'] == 1)]
     #Create avoided conversion dataframes if they were selected
@@ -1514,19 +1514,22 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 y: Which field to report on, either runoff or leaching
                 """
                 td = df
-                #Create the initial dataframes
-#                if 'trt' in field:
+#                Create the initial dataframes
+                if 'trt' in field:
+                    if 'hplselected' in td:
+                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'hplselected']]
+                        td.loc[td['hplselected'] == 1, gridcode] = 16
+                        td.loc[td['hplselected'] == 1, field] = 'Shrubland'
+                        
+                    else: 
+                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode]]
 #                    
-#                    td.loc[(td['urb2selected'] == 1), field] = 'Forest'
 
                 if x in ['base', 'trt']:
                     # 
 
                     
-                    if 'hplselected' in td:
-                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'hplselected']]
-                    else: 
-                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode]]
+                    
                     td.loc[(td[field] == 'Oak Conversion'), gridcode] = 3
                     td.loc[(td[field] == 'Young Forest'), gridcode] = 3
                     td.loc[(td[field] == 'Woody Riparian'), gridcode] = 3
@@ -1536,14 +1539,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                     td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
                     td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
-                    if 'hplselected' in td:
-                        td.loc[td['hplselected'] == 1, gridcode] = 16
-                        td.loc[td['hplselected'] == 1, field] = 'Shrubland'
                         
                     td = pd.merge(td,cover14, how = 'left', left_on = 'gridcode14', right_on = 'gridcode14')
                     td = pd.merge(td,cover30, how = 'left', left_on = gridcode, right_on = 'gridcode30')
-                    if 'hplselected' in td:
-                        td.loc[td['hplselected'] == 1, 'cover30'] = 50
                     td = td.rename (columns = {'cover30':'cover2', 'cover14':'cover1'})
                 else:
                     if 'hplselected' in td:
@@ -1563,18 +1561,12 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                     td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
                     td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
-                    
-                    
-                    if 'hplselected' in td:
-                        td.loc[td['hplselected'] == 1, gridcode] = 16
-                        td.loc[td['hplselected'] == 1, field] = 'Shrubland'
+
                     td = pd.merge(td,cover30, how = 'left', left_on = 'gridcode30_bau', right_on = 'gridcode30')
                     
                     td = td.rename (columns = {'cover30':'cover2'})
                     td = pd.merge(td,cover30, how = 'left', left_on = gridcode, right_on = 'gridcode30')
                     td = td.rename (columns = {'cover30':'cover1'})
-                    if 'hplselected' in td:
-                        td.loc[td['hplselected'] == 1, 'cover1'] = 50
                         
                 Helpers.pmes('Air Pollution Reporting: ' + y + ',' + name + ', ' + dev)
                 
@@ -2196,7 +2188,8 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
             df9 = df.loc[(df[i+'selected'] == 1)]
             dfdict[i] = df9
         elif i == 'urb':
-            df9 = df.loc[(df[i+'2selected'] == 1)]
+            df9 = df.loc[(df[i+'selected'] == 1)]
+            Helpers.pmes(df9.head(50))
             dfdict[i] = df9
 
 
@@ -2353,6 +2346,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
 #    intdict['Carbon2014'] = lct
 
     tlist = list(intdict.values())
+    Helpers.pmes(tlist)
     l = len(tlist)
     count = 1
     temp = tlist[0]

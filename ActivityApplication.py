@@ -209,23 +209,23 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         ghg_selection (df,'cag',dict_eligibility,dictact)
     if 'gra' in activitylist:
         ghg_selection (df,'gra',dict_eligibility,dictact)
+#    if ug != 0:
+#        temp = df.loc[(df['LC2030_trt_bau'].isin(['Urban', 'Developed','Developed Roads'])) & (df['lcchange'] == 1) & queryadd]
+#        numb = len(temp.index)
+#        Helpers.pmes ('Suitable Pixels for Urban: ' + str(numb))
+#        dictact['urb']['adoption'] = numb/4.49555
+#        Helpers.pmes ('Suitable Acres for Urban: ' + str(dictact['urb2']['adoption']))
+#        ghg_selection (df,'urb',dict_eligibility,dictact)
+        
+        
     if ug != 0:
         temp = df.loc[(df['LC2030_trt_bau'].isin(['Urban', 'Developed','Developed Roads'])) & (df['lcchange'] == 1) & queryadd]
         numb = len(temp.index)
-        Helpers.pmes ('Suitable Pixels for Urban: ' + str(numb))
         dictact['urb']['adoption'] = numb/4.49555
-        Helpers.pmes ('Suitable Acres for Urban: ' + str(dictact['urb2']['adoption']))
+        dictact['urb']['adoption'] = dictact['urb']['adoption']*ug
+        Helpers.pmes ('Adoption Goal Acres for Urban2: ' + str(dictact['urb']['adoption']))
+        
         ghg_selection (df,'urb',dict_eligibility,dictact)
-        
-        
-    if ug != 0:
-        temp = df.loc[(df['LC2030_trt_bau'].isin(['Urban', 'Developed','Developed Roads'])) & (df['lcchange'] == 1) & queryadd]
-        numb = len(temp.index)
-        dictact['urb2']['adoption'] = numb/4.49555
-        dictact['urb2']['adoption'] = dictact['urb2']['adoption']*ug
-        Helpers.pmes ('Adoption Goal Acres for Urban2: ' + str(dictact['urb2']['adoption']))
-        
-        ghg_selection (df,'urb2',dict_eligibility,dictact)
         
     blist = ['ccrsuitflag','mulsuitflag','nfmsuitflag','hplsuitflag','camsuitflag','cagsuitflag','grasuitflag','urbsuitflag','urb2suitflag','oaksuitflag','rresuitflag','ac_wet_arc','ac_gra_arc','ac_irr_arc','ac_orc_arc','ac_arc_urb','ac_gra_urb','ac_irr_urb','ac_orc_urb','ac_arc_orc','ac_gra_orc','ac_irr_orc','ac_vin_orc','ac_arc_irr','ac_orc_irr','gp_code','LC2001','hydrovuln_flag','huc12_val','slope_val','medgroup_val','smallgroup_val','gridcode01','pref_dev_flag','near_nwi','near_roads','pref_dev_type','woodyrip_class','near_woody', 'biodiversity_rank','clim_rank','terrhabrank']
     
