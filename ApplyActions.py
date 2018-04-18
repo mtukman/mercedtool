@@ -113,12 +113,12 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, rate = 0, logfile = 'None'):
         
     if ug != 0 :
         years = float(dictact['urb']['years']) - float(dictact['urb']['adoptyear'])
-        carbon =  328.98 * .09 #Convert tons/ha to tons/pixel
+        carbon =  29.6082 #Convert tons/ha to tons/pixel
         count = 0
         tot = 0
         temp = tempdf.loc[tempdf['urbselected'] == 1]
         numb = len(temp.index)
-        pix = rate * numb
+        pix = numb/years
         tot = 0
         while count < years:
             count = count + 1
@@ -131,10 +131,6 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, rate = 0, logfile = 'None'):
             Helpers.add_to_logfile(logfile,'Activity is : ' + 'urb' + ', Pixels are : ' + str(numb) + ' AND carbon rate is : ' + str(tot/numb))
         else: 
             Helpers.add_to_logfile(logfile,'No Urban in Processing Area!')
-        
-        
-            
-        
         
 
         
