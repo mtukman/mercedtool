@@ -41,7 +41,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
     aclass = pd.read_csv(alu) #nitrate look up
     cover14 = pd.read_csv(cov14)
     cover30 =  pd.read_csv(cov30)
-    ucc = ucc
+
     #create an empty dataframe with only landcovers, used for outer joins in functions
     lc = pd.DataFrame({'landcover':lclist})
     
@@ -1384,7 +1384,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 
                 if name in ['base', 'trt']:
                     if 'nfmselected' in df:
-                            if  x == 'trt':
+                            if  name == 'trt':
                                 td = df[['LC2014','pointid', field, 'nfmselected']]
                             else:
                                 td = df[['LC2014','pointid', field]]
@@ -1395,7 +1395,6 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                         td = df[['LC2014','pointid', field, 'LC2030_bau','nfmselected']]
                     else:
                         td = df[['LC2014','pointid', field, 'LC2030_bau']]
-                    td = df[['LC2014','pointid', field, 'LC2030_bau']]
                     td.loc[(td['LC2030_bau'] == 'Young Forest'), 'LC2030_bau'] = 'Forest'
                     td.loc[(td['LC2030_bau'] == 'Young Shrubland'), 'LC2030_bau'] = 'Shrubland'
                     td.loc[(td['LC2030_bau'] == 'Woody Riparian'), 'LC2030_bau'] = 'Forest'
@@ -1415,23 +1414,30 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 group14 = group14.rename(columns={y+'2':y + '14'})
 
                 # Create 2030 nitrate reporting dataframe
-                group30 = td.groupby(field, as_index = False).count()
-                tempdf30 = pd.merge(nclass,group30, how = 'outer', left_on = 'landcover', right_on = field)
-                tempdf30[y+'2'] = (tempdf30[y]*tempdf30['pointid'])/1000
+#                group30 = td.groupby(field, as_index = False).count()
+                tempdf30 = pd.merge(nclass,td, how = 'outer', left_on = 'landcover', right_on = field)
                 if name in ['base','trt']:
                     if name == 'trt':
                         if 'nfmselected' in tempdf30:
-                            tempdf30.loc[tempdf30['nfmselected'] == 1, y+'2'] = tempdf30[y+'2']* .66
+                            Helpers.pmes('Reducing Fertilizer Input')
+                            tempdf30.loc[tempdf30['nfmselected'] == 1, y] = (tempdf30[y] * .66)
                 else: 
                     if 'nfmselected' in tempdf30:
-                            tempdf30.loc[tempdf30['nfmselected'] == 1, y+'2'] = tempdf30[y+'2']* .66
+                        Helpers.pmes('Reducing Fertilizer Input')
+                        tempdf30.loc[tempdf30['nfmselected'] == 1, y] = (tempdf30[y] * .66)
+                tempdf30 = tempdf30.groupby('landcover', as_index = False).sum()
+                        
+                tempdf30[y+'2'] = tempdf30[y]/1000
+                
+                
                 group30 = tempdf30[[y+'2','landcover']]
                 group30 = group30.rename(columns={y+'2':y + '30'})
-                tempmerge = pd.merge(group14,group30, on = 'landcover', how = 'outer')
-                tempmerge['change'] = (tempmerge[y+'30']-tempmerge[y+'14'])
+                
                 
                 # Merge the dataframes and create a change field for the report
                 if name in ['base','trt']:
+                    tempmerge = pd.merge(group14,group30, on = 'landcover', how = 'outer')
+                    tempmerge['change'] = (tempmerge[y+'30']-tempmerge[y+'14'])
                     tempmerge = tempmerge[['landcover', 'change',y+'30']]
                     tempmerge = tempmerge.rename(columns = {y + '30':'tons_no3_' + name +'_' + dev })
                     tempmerge = tempmerge.rename(columns = {'change':'tons_no3_change_' + name + '_' + dev})
@@ -1440,7 +1446,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 else:
                     group302 = td.groupby('LC2030_bau', as_index = False).count()
                     tempdf302 = pd.merge(nclass,group302, how = 'outer', left_on = 'landcover', right_on = 'LC2030_bau')
-                    tempdf302[y+'2'] = tempdf302[y]*tempdf302['pointid']
+                    tempdf302[y+'2'] = (tempdf302[y]*tempdf302['pointid'])/1000
                     group302 = tempdf302[[y+'2','landcover']]
                     group302 = group302.rename(columns={y+'2':y + '302'})
                     tempmerge = pd.merge(group30,group302, on = 'landcover', how = 'outer')
@@ -1448,7 +1454,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     #Merge the 2030 dataframes to create a change field
                     tempmerge[y + '302'].fillna(0, inplace = True)
                     tempmerge[y + '30'].fillna(0, inplace = True)
-                    tempmerge['change'] = (tempmerge[y+'30']-tempmerge[y+'302'])/1000
+                    tempmerge['change'] = tempmerge[y+'30']-tempmerge[y+'302']
                     tempmerge = tempmerge[['change', 'landcover']]
                     tempmerge = tempmerge.rename(columns = {'change':'tons_no3_change_' + name})
                 
@@ -1602,11 +1608,12 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 group30 = tempdf30.groupby('landcover', as_index = False).sum()
                 group30 = group30[[y+'2','landcover']]
                 group30 = group30.rename(columns={y+'2':y + '30'})
-                tempmerge = pd.merge(group14,group30, on = 'landcover', how = 'outer')
-                tempmerge['change'] = tempmerge[y+'30']-tempmerge[y+'14']
+                
                 
                 # Merge the dataframes and create a change field for the report
                 if name in ['base','trt']:
+                    tempmerge = pd.merge(group14,group30, on = 'landcover', how = 'outer')
+                    tempmerge['change'] = tempmerge[y+'30']-tempmerge[y+'14']
                     tempmerge = tempmerge[['landcover', 'change',y+'30']]
                     tempmerge = tempmerge.rename(columns = {y + '30':'tons_' + name +'_' + dev })
                     tempmerge = tempmerge.rename(columns = {'change':'tons_change_' + name + '_' + dev})
