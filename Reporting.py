@@ -1382,19 +1382,17 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 #Create the initial dataframes
                 
                 
-                if x in ['base', 'trt']:
+                if name in ['base', 'trt']:
                     if 'nfmselected' in df:
                             if  x == 'trt':
-                                df.loc[df['nfmselected'] == 1, field] = 'Shrubland'
-                                td = df[['LC2014','pointid', field]]
+                                td = df[['LC2014','pointid', field, 'nfmselected']]
                             else:
                                 td = df[['LC2014','pointid', field]]
                     else:
                         td = df[['LC2014','pointid', field]]
                 else:
                     if 'nfmselected' in df:
-                        df.loc[df['nfmselected'] == 1, field] = 'Shrubland'
-                        td = df[['LC2014','pointid', field, 'LC2030_bau']]
+                        td = df[['LC2014','pointid', field, 'LC2030_bau','nfmselected']]
                     else:
                         td = df[['LC2014','pointid', field, 'LC2030_bau']]
                     td = df[['LC2014','pointid', field, 'LC2030_bau']]
@@ -1420,6 +1418,13 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 group30 = td.groupby(field, as_index = False).count()
                 tempdf30 = pd.merge(nclass,group30, how = 'outer', left_on = 'landcover', right_on = field)
                 tempdf30[y+'2'] = (tempdf30[y]*tempdf30['pointid'])/1000
+                if name in ['base','trt']:
+                    if name == 'trt':
+                        if 'nfmselected' in tempdf30:
+                            tempdf30.loc[tempdf30['nfmselected'] == 1, y+'2'] = tempdf30[y+'2']* .66
+                else: 
+                    if 'nfmselected' in tempdf30:
+                            tempdf30.loc[tempdf30['nfmselected'] == 1, y+'2'] = tempdf30[y+'2']* .66
                 group30 = tempdf30[[y+'2','landcover']]
                 group30 = group30.rename(columns={y+'2':y + '30'})
                 tempmerge = pd.merge(group14,group30, on = 'landcover', how = 'outer')
@@ -1515,19 +1520,19 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 """
                 td = df
 #                Create the initial dataframes
-                if 'trt' in field:
-                    if 'hplselected' in td:
-                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'hplselected']]
-                        td.loc[td['hplselected'] == 1, gridcode] = 16
-                        td.loc[td['hplselected'] == 1, field] = 'Shrubland'
-                        
-                    else: 
-                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode]]
 #                    
 
-                if x in ['base', 'trt']:
+                if name in ['base', 'trt']:
                     # 
-
+                    if name in ['trt']:
+                        if 'hplselected' in td:
+                            td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'hplselected']]
+                            td.loc[td['hplselected'] == 1, gridcode] = 16
+                            
+                        else: 
+                            td = td[['LC2014','pointid', field, 'gridcode14', gridcode]]
+                    else:
+                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode]]
                     
                     
                     td.loc[(td[field] == 'Oak Conversion'), gridcode] = 3
@@ -1546,6 +1551,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 else:
                     if 'hplselected' in td:
                         td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'hplselected','gridcode30_bau','LC2030_bau']]
+                        td.loc[td['hplselected'] == 1, gridcode] = 16
                     else: 
                         td = td[['LC2014','pointid', field, 'gridcode14', gridcode,'gridcode30_bau','LC2030_bau']]
                     td.loc[(td[field] == 'Oak Conversion'), gridcode] = 3
@@ -1564,9 +1570,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
 
                     td = pd.merge(td,cover30, how = 'left', left_on = 'gridcode30_bau', right_on = 'gridcode30')
                     
-                    td = td.rename (columns = {'cover30':'cover2'})
-                    td = pd.merge(td,cover30, how = 'left', left_on = gridcode, right_on = 'gridcode30')
                     td = td.rename (columns = {'cover30':'cover1'})
+                    td = pd.merge(td,cover30, how = 'left', left_on = gridcode, right_on = 'gridcode30')
+                    td = td.rename (columns = {'cover30':'cover2'})
                         
                 Helpers.pmes('Air Pollution Reporting: ' + y + ',' + name + ', ' + dev)
                 
@@ -1581,10 +1587,17 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 # Create 2030 nitrate reporting dataframe
                 tempdf30 = pd.merge(td,aclass, how = 'left', left_on = field, right_on = 'landcover')
                 
-                if name == 'base':
-                    tempdf30.loc[tempdf30[field].isin(['Developed','Urban','Developed Roads']), 'cover2'] = .102
+                if name in ['base', 'trt']:
+                    if name == 'base':
+                        tempdf30.loc[tempdf30[field].isin(['Developed','Urban','Developed Roads']), 'cover2'] = .102
+                    else:
+                        tempdf30.loc[tempdf30[field].isin(['Developed','Urban','Developed Roads']), 'cover2'] = ucc
                 else:
                     tempdf30.loc[tempdf30[field].isin(['Developed','Urban','Developed Roads']), 'cover2'] = ucc
+                    
+                    
+                    
+                    
                 tempdf30[y+'2'] = (tempdf30[y]*tempdf30['cover2'])/1000000 #Convert grams tons
                 group30 = tempdf30.groupby('landcover', as_index = False).sum()
                 group30 = group30[[y+'2','landcover']]
@@ -1602,8 +1615,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 else:
 
                     tempdf302 = pd.merge(td,aclass, how = 'left', left_on = 'LC2030_bau', right_on = 'landcover')
-                    tempdf302.loc[tempdf302['LC2030_bau'].isin(['Developed','Urban','Developed Roads']), 'cover2'] = ucc
-                    tempdf302[y+'2'] = (tempdf302[y]*tempdf302['cover2'])/1000000 #Convert grams tons
+                    tempdf302.loc[tempdf302['LC2030_bau'].isin(['Developed','Urban','Developed Roads']), 'cover1'] = .102
+                    tempdf302[y+'2'] = (tempdf302[y]*tempdf302['cover1'])/1000000 #Convert grams tons
                     group302 = tempdf302.groupby('landcover', as_index = False).sum()
                     group302 = group302[[y+'2','landcover']]
                     group302 = group302.rename(columns={y+'2':y + '302'})

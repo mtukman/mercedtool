@@ -336,8 +336,10 @@ if arcpy.GetParameterAsText(30) == 'Yes':
     rate = float(arcpy.GetParameterAsText(31))
     if ug > 0:
         ucc = 0.102 + ug
+        Helpers.pmes ('Final urban cover is : ' + str(ucc))
     else: 
         ucc = 0.102
+        Helpers.pmes ('Ug is 0, final urban cover is : ' + str(ucc))
 else:
     ug = 0
     ucc = 0.102
@@ -352,10 +354,13 @@ import Reporting
 
 #Run each module
 initout = Initial.DoInitial(mask, cproc, dev, devmask, Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
+Helpers.pmes('Finished with Initialization Module, entering Activity Application Module')
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, ucc, sflag)
+Helpers.pmes('Finished with Activity Application Module, entering Carbon Accounting Module')
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, rate, logfile)
-
+Helpers.pmes('Finished with Carbon Account Module, entering MBA Reporting Module')
 Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
+Helpers.pmes('Finished with MBA Reporting Module, entering Carbon Reporting Module')
 Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
 Reporting.report_acres(templist[0],activitylist,outpath)
 
