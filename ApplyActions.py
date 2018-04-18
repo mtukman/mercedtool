@@ -136,6 +136,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, rate = 0, logfile = 'None'):
             
         
         
+
         
     return (tempdf,carb,carb2)
 

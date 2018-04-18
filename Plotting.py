@@ -852,7 +852,7 @@ plot_dict['watint'] ={'title':"2014-2030 Projected Change of Watershed Integrity
 
 
 
-def  airquality_plot(high_folder, outfile, title = 'temp'):
+def  airquality_plot(high_folder, outfile, title = 'temp', xlist = []):
     import pandas as pd
     
     
@@ -877,7 +877,7 @@ def  airquality_plot(high_folder, outfile, title = 'temp'):
     
     
     trace1 = {
-      "x": xlist, 
+      "x": ['Reference<br>Scenario','Medium<br>Infill','Max<br>Infill'], 
       "y": [high_co['tons_change_base_bau'].sum(), high_o3['tons_change_base_bau'].sum(), high_no2['tons_change_base_bau'].sum(),high_pm25['tons_change_base_bau'].sum(),high_pm10['tons_change_base_bau'].sum(),high_so2['tons_change_base_bau'].sum() ], 
       "type": "bar",
       "name": "Reference", 
@@ -1702,16 +1702,16 @@ def callplots():
     
     mba_chart_watint_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\watint.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25\watint.csv", plot_dict, xax = 'holder', yax = 'holder', mba = 'watint', pre = 'ha_change', remzeros = 0, qu = 'Integrity_Class', qu2 = 'na', outfile = outpath + "2030 Watershed Integrity Riparian.png", title = '2014-2030 Change in Watershed Integrity for Riparian Restoration Scenario',xtit = 'Watershed Classification')
     
-    mba_chart_watint_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100\watint.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100\watint.csv", plot_dict, xax = 'holder', yax = 'holder', mba = 'watint', pre = 'ha_change', remzeros = 0, qu = 'Integrity_Class', qu2 = 'na', outfile = outpath + "2030 Watershed Integrity Hedgerows.png", title = '2014-2030 Change in Watershed Integrity for Hedgerow Planting Scenario',xtit = 'Watershed Classification') #No Change from hpl activity
+    mba_chart_watint_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100\watint.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100\watint.csv", plot_dict, xax = 'holder', yax = 'holder', mba = 'watint', pre = 'ha_change', remzeros = 0, qu = 'Integrity_Class', qu2 = 'na', outfile = outpath + "2030 Watershed Integrity Hedgerows.png", title = '2014-2030 Change in Watershed Integrity for Hedgerow Planting Scenarios',xtit = 'Watershed Classification') #No Change from hpl activity
     
     
     #Water Quality - Runoff
     mba_chart_onetrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\runoff_nitrates.csv", xax = '2014 Nitrate Runoff', yax = 'Tons of Nitrate Runoff', mba = 'runoff_nitrates', x = 'landcover',y = 'tons_no3_14', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Water Quality - Nitrate Runoff.png")
     
     
-    mba_chart_onetrace_custom2(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\nfm_25\runoff_nitrates.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\nfm_100\runoff_nitrates.csv", xax = '2014-2030 Change in NO<sub>3</sub> Runoff With Nitrogen Fertilizer Management Scenario', yax = 'Tons of Nitrate Runoff', mba = 'runoff_nitrates', x = ['Reference - No Nitrogen<br> Fertilizer Management', '25% Nitrogen <br>Fertilizer Management','100% Nitrogen Fertilizer <br>Management'],y = 'None', yrange = [0,1], qu = 'None', remzeros = 0, y1 = 'tons_no3_change_base_bau', y2 = 'tons_no3_change_trt_bau', y3 = 'tons_no3_change_trt_bau', qu2 = 'none', outfile = outpath + "2030 Water Quality - Nitrate Runoff NFM.png")
+    mba_chart_onetrace_custom2(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\nfm_25\runoff_nitrates.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\nfm_100\runoff_nitrates.csv", xax = '2014-2030 Change in NO<sub>3</sub> Runoff With Nitrogen Fertilizer Management Scenarios', yax = 'Tons of Nitrate Runoff', mba = 'runoff_nitrates', x = ['Reference - No Nitrogen<br> Fertilizer Management', '25% Nitrogen <br>Fertilizer Management','100% Nitrogen Fertilizer <br>Management'],y = 'None', yrange = [0,1], qu = 'None', remzeros = 0, y1 = 'tons_no3_change_base_bau', y2 = 'tons_no3_change_trt_bau', y3 = 'tons_no3_change_trt_bau', qu2 = 'none', outfile = outpath + "2030 Water Quality - Nitrate Runoff NFM.png")
     
-    mba_chart_onetrace_custom2(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_25\runoff_nitrates.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\runoff_nitrates.csv", xax = '2014-2030 Change in NO<sub>3</sub> Runoff With Riparian Restoration Scenario', yax = 'Tons of Nitrate Runoff', mba = 'runoff_nitrates', x = ['Reference - No <br>Riparian Restoration', '25% Riparian<br> Restoration Adoption','100% Riparian<br> Restoration Adoption'],y = 'None', yrange = [0,1], qu = 'None', remzeros = 0, y1 = 'tons_no3_change_base_bau', y2 = 'tons_no3_change_trt_bau', y3 = 'tons_no3_change_trt_bau', qu2 = 'none', outfile = outpath + "2030 Water Quality - Nitrate Runoff RRE.png")
+    mba_chart_onetrace_custom2(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\Riparian\RRE_COUNTY_25\runoff_nitrates.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\runoff_nitrates.csv", xax = '2014-2030 Change in NO<sub>3</sub> Runoff With Riparian Restoration Scenarios', yax = 'Tons of Nitrate Runoff', mba = 'runoff_nitrates', x = ['Reference - No <br>Riparian Restoration', '25% Riparian<br> Restoration Adoption','100% Riparian<br> Restoration Adoption'],y = 'None', yrange = [0,1], qu = 'None', remzeros = 0, y1 = 'tons_no3_change_base_bau', y2 = 'tons_no3_change_trt_bau', y3 = 'tons_no3_change_trt_bau', qu2 = 'none', outfile = outpath + "2030 Water Quality - Nitrate Runoff RRE.png")
     
     
         #Water Quality - Leaching
@@ -1738,6 +1738,7 @@ def callplots():
     airquality_plot_act(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_25", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100", outfile = outpath + "2030 Air Quality Change HPL.png", scenario = 'Hedgerow <br>Planting', title = "Air Pollutant Sequestration for 2030 with Hedgerow Planting") # Hedgerow planting is not workingin tool
     
     airquality_plot_act(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\urb_25", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\urb_100", outfile = outpath + "2030 Air Quality Change URB.png", scenario = 'Urban <br>Tree Planting', title = "Air Pollutant Sequestration for 2030 with Urban Tree Planting")
+    
     airquality_plot_act(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_25", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_100", outfile = outpath + "2030 Air Quality Change OAK.png", scenario = 'Oak <br>Conversion', title = "Air Pollutant Sequestration for 2030 with Oak Conversion")
     
     
@@ -1754,32 +1755,32 @@ def callplots():
     mba_chart_onetrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\ecamovement.csv", xax = '2014 Resistance to Species Movement in <br>Essential Connectivity Areas', yax = 'Hectares', x = 'movement_potential',y = 'ha_2014', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 ECA Terrestrial Connectivity.png", xtit = 'Resistance to Movement')
     
     
-    mba_chart_ter_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100\countymovement.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_25\countymovement.csv", plot_dict, xax = 'holder', yax = 'holder', mba = 'flood100', pre = 'ha_change', remzeros = 0, qu = 'None', qu2 = 'na', outfile = outpath + "2030 Terrestrial Connectivity HPL.png", xlist = ['No<br>Activity', '25% Hedgerow<br>Adoption','100% Hedgerow<br>Adoption'], title = '2014-2030 Change in Resistance to Species Movement for Hedgerow Scenario')
+    mba_chart_ter_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100\countymovement.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_25\countymovement.csv", plot_dict, xax = 'holder', yax = 'holder', mba = 'flood100', pre = 'ha_change', remzeros = 0, qu = 'None', qu2 = 'na', outfile = outpath + "2030 Terrestrial Connectivity HPL.png", xlist = ['No<br>Activity', '25% Hedgerow<br>Adoption','100% Hedgerow<br>Adoption'], title = '2014-2030 Change in Resistance to Species Movement for Hedgerow Scenarios')
     
-    mba_chart_ter_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\countymovement.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25\countymovement.csv", plot_dict, xax = 'holder', yax = 'holder', mba = 'flood100', pre = 'ha_change', remzeros = 0, qu = 'None', qu2 = 'na', outfile = outpath + "2030 Terrestrial Connectivity RRE.png", xlist = ['No<br>Activity', '25% Riparian<br>Adoption','100% Riparian<br>Adoption'], title = '2014-2030 Change in Resistance to Species Movement for Riparian Scenario')
+    mba_chart_ter_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\countymovement.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25\countymovement.csv", plot_dict, xax = 'holder', yax = 'holder', mba = 'flood100', pre = 'ha_change', remzeros = 0, qu = 'None', qu2 = 'na', outfile = outpath + "2030 Terrestrial Connectivity RRE.png", xlist = ['No<br>Activity', '25% Riparian<br>Adoption','100% Riparian<br>Adoption'], title = '2014-2030 Change in Resistance to Species Movement for Riparian Scenarios')
     
-    mba_chart_ter_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100\ecamovement.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_25\ecamovement.csv", plot_dict, xax = 'holder', yax = 'holder', mba = 'flood100', pre = 'ha_change', remzeros = 0, qu = 'None', qu2 = 'na', outfile = outpath + "2030 ECA Terrestrial Connectivity HPL.png", xlist = ['No<br>Activity', '25% Hedgerow<br>Adoption','100% Hedgerow<br>Adoption'], title = '2014-2030 Change in Resistance to Species Movement for<br>Hedgerow Scenario in Essential Connectivity Areas')
+    mba_chart_ter_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_100\ecamovement.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\hedgerow_25\ecamovement.csv", plot_dict, xax = 'holder', yax = 'holder', mba = 'flood100', pre = 'ha_change', remzeros = 0, qu = 'None', qu2 = 'na', outfile = outpath + "2030 ECA Terrestrial Connectivity HPL.png", xlist = ['No<br>Activity', '25% Hedgerow<br>Adoption','100% Hedgerow<br>Adoption'], title = '2014-2030 Change in Resistance to Species Movement for<br>Hedgerow Scenarios in Essential Connectivity Areas')
     
-    mba_chart_ter_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\ecamovement.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25\ecamovement.csv", plot_dict, xax = 'holder', yax = 'holder', mba = 'flood100', pre = 'ha_change', remzeros = 0, qu = 'None', qu2 = 'na', outfile = outpath + "2030 ECA Terrestrial Connectivity RRE.png", xlist = ['No<br>Activity', '25% Riparian<br>Adoption','100% Riparian<br>Adoption'], title = '2014-2030 Change in Resistance to Species Movement for<br>Riparian Scenario in Essential Connectivity Areas')
+    mba_chart_ter_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\ecamovement.csv",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25\ecamovement.csv", plot_dict, xax = 'holder', yax = 'holder', mba = 'flood100', pre = 'ha_change', remzeros = 0, qu = 'None', qu2 = 'na', outfile = outpath + "2030 ECA Terrestrial Connectivity RRE.png", xlist = ['No<br>Activity', '25% Riparian<br>Adoption','100% Riparian<br>Adoption'], title = '2014-2030 Change in Resistance to Species Movement for<br>Riparian Scenarios in Essential Connectivity Areas')
     
     
     #Natural Habitat Area
     mba_chart_onetrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\lcchange.csv", xax = '2014 Landcover', yax = 'Hectares', x = 'landcover',y = 'ha_2014', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Natural Habitat Area.png")
 
     
-    mba_chart_lc_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25\lcchange.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\lcchange.csv",plot_dict, xax = 'holder', yax = 'holder', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', xlist = ['Riparian Restoration 25% Adoption','Riparian Restoration 100% Adoption'], mba = 'rre', sce = 'Riparian Restoration', outfile = outpath + "2030 Natural Habitat Area RRE.png", title = '2014-2030 Change in Landcover for Riparian Scenario')
+    mba_chart_lc_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25\lcchange.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\lcchange.csv",plot_dict, xax = 'holder', yax = 'holder', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', xlist = ['Riparian Restoration 25% Adoption','Riparian Restoration 100% Adoption'], mba = 'rre', sce = 'Riparian Restoration', outfile = outpath + "2030 Natural Habitat Area RRE.png", title = '2014-2030 Change in Landcover for Riparian Scenarios')
     
     
-    mba_chart_oak_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_25\lcchange.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_100\lcchange.csv",plot_dict, xax = 'holder', yax = 'holder', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', xlist = ['Oak Conversion 25% Adoption','Oak Conversion 100% Adoption'], mba = 'oak', sce = 'Oak Conversion', outfile = outpath + "2030 Natural Habitat Area OAK.png", title = '2014-2030 Change in Landcover for Oak Conversion Scenario')
+    mba_chart_oak_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_25\lcchange.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_100\lcchange.csv",plot_dict, xax = 'holder', yax = 'holder', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', xlist = ['Oak Conversion 25% Adoption','Oak Conversion 100% Adoption'], mba = 'oak', sce = 'Oak Conversion', outfile = outpath + "2030 Natural Habitat Area OAK.png", title = '2014-2030 Change in Landcover for Oak Conversion Scenarios')
 
     #New forest in PCA
     mba_chart_onetrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\pca_cover_change.csv", xax = '2014 Landcover in Priority Conservation Areas', yax = 'Hectares', x = 'landcover',y = 'ha_2014', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Priority Conservation Areas.png")
 
     
-    mba_chart_lc_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25\pca_cover_change.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\pca_cover_change.csv",plot_dict, xax = 'holder', yax = 'holder', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', xlist = ['Riparian Restoration 25% Adoption','Riparian Restoration 100% Adoption'], mba = 'rre', sce = 'Riparian Restoration', outfile = outpath + "2030 Priority Conservation Areas RRE.png", title = '2014-2030 Change in Landcover in Priority<br>Conservation Areas for Riparian Scenario')
+    mba_chart_lc_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25\pca_cover_change.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\pca_cover_change.csv",plot_dict, xax = 'holder', yax = 'holder', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', xlist = ['Riparian Restoration 25% Adoption','Riparian Restoration 100% Adoption'], mba = 'rre', sce = 'Riparian Restoration', outfile = outpath + "2030 Priority Conservation Areas RRE.png", title = '2014-2030 Change in Landcover in Priority<br>Conservation Areas for Riparian Scenarios')
     
     
-    mba_chart_oak_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_25\pca_cover_change.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_100\pca_cover_change.csv",plot_dict, xax = 'holder', yax = 'holder', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', xlist = ['Oak Conversion 25% Adoption','Oak Conversion 100% Adoption'], mba = 'oak', sce = 'Oak Conversion', outfile = outpath + "2030 Priority Conservation Areas OAK.png", title = '2014-2030 Change in Landcover in Priority<br>Conservation Areas for Oak Conversion Scenario')
+    mba_chart_oak_twotrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_25\pca_cover_change.csv", r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_100\pca_cover_change.csv",plot_dict, xax = 'holder', yax = 'holder', pre = 'ha_change', qu = 'None', remzeros = 0, qu2 = 'None', xlist = ['Oak Conversion 25% Adoption','Oak Conversion 100% Adoption'], mba = 'oak', sce = 'Oak Conversion', outfile = outpath + "2030 Priority Conservation Areas OAK.png", title = '2014-2030 Change in Landcover in Priority<br>Conservation Areas for Oak Conversion Scenarios')
     
 
 
@@ -1787,7 +1788,7 @@ def callplots():
         #Terrestrial Habitat
     terrestrial_habitat_plot_RRE(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_25",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100", '2014-2030 Change in Terrestrial Habitat for Riparian Restoration Scenarios', 'Riparian<br>Restoration<br>25% Adoption', 'Riparian<br>Restoration<br>100% Adoption', outfile = outpath + "2030 Terrestrial Habitat Value RRE.png")
     
-    terrestrial_habitat_plot_RRE(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_25",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_100", '2014-2030 Change in Terrestrial Habitat for Riparian Restoration Scenarios', 'Oak<br>Conversion<br>25% Adoption', 'Oak<br>Conversion<br>100% Adoption', outfile = outpath + "2030 Terrestrial Habitat Value OAK.png")
+    terrestrial_habitat_plot_RRE(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_25",r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\oak_100", '2014-2030 Change in Terrestrial Habitat<br>for Oak Conservation Scenarios', 'Oak<br>Conversion<br>25% Adoption', 'Oak<br>Conversion<br>100% Adoption', outfile = outpath + "2030 Terrestrial Habitat Value OAK.png")
     
     #Aquatic Habitat
     mba_chart_onetrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\RRE_COUNTY_100\aquatic.csv", xax = '2014 Landcover in Watersheds with Important Aquatic Habitat', yax = 'Hectares', x = 'gen_class',y = 'ha_2014', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Aquatic Biodiversity.png")

@@ -1521,17 +1521,12 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
 
                 if x in ['base', 'trt']:
                     # 
-                    
-                    flist = ['LC2014','pointid', field, 'gridcode14', gridcode]
+
                     
                     if 'hplselected' in td:
-                        flist.append('hplselected')
-
-                    if 'urb2selected' in td:
-                        flist.append('urb2selected')
-                        Helpers.pmes('Urb is in the df')
-                            
-                    td = td[flist]
+                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'hplselected']]
+                    else: 
+                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode]]
                     td.loc[(td[field] == 'Oak Conversion'), gridcode] = 3
                     td.loc[(td[field] == 'Young Forest'), gridcode] = 3
                     td.loc[(td[field] == 'Woody Riparian'), gridcode] = 3
@@ -1543,21 +1538,18 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
                     if 'hplselected' in td:
                         td.loc[td['hplselected'] == 1, gridcode] = 16
+                        td.loc[td['hplselected'] == 1, field] = 'Shrubland'
                         
                     td = pd.merge(td,cover14, how = 'left', left_on = 'gridcode14', right_on = 'gridcode14')
                     td = pd.merge(td,cover30, how = 'left', left_on = gridcode, right_on = 'gridcode30')
-                    
+                    if 'hplselected' in td:
+                        td.loc[td['hplselected'] == 1, 'cover30'] = 50
                     td = td.rename (columns = {'cover30':'cover2', 'cover14':'cover1'})
                 else:
-                    flist = ['LC2014','pointid', field, 'LC2030_bau', gridcode, 'gridcode30_bau']
                     if 'hplselected' in td:
-                        flist.append('hplselected')
-
-                    if 'urb2selected' in td:
-                        flist.append('urb2selected')
-                        Helpers.pmes('Urb is in the df')
-
-                    td = td[flist]
+                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode, 'hplselected','gridcode30_bau','LC2030_bau']]
+                    else: 
+                        td = td[['LC2014','pointid', field, 'gridcode14', gridcode,'gridcode30_bau','LC2030_bau']]
                     td.loc[(td[field] == 'Oak Conversion'), gridcode] = 3
                     td.loc[(td[field] == 'Young Forest'), gridcode] = 3
                     td.loc[(td[field] == 'Woody Riparian'), gridcode] = 3
@@ -1575,12 +1567,15 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     
                     if 'hplselected' in td:
                         td.loc[td['hplselected'] == 1, gridcode] = 16
+                        td.loc[td['hplselected'] == 1, field] = 'Shrubland'
                     td = pd.merge(td,cover30, how = 'left', left_on = 'gridcode30_bau', right_on = 'gridcode30')
                     
                     td = td.rename (columns = {'cover30':'cover2'})
                     td = pd.merge(td,cover30, how = 'left', left_on = gridcode, right_on = 'gridcode30')
                     td = td.rename (columns = {'cover30':'cover1'})
-
+                    if 'hplselected' in td:
+                        td.loc[td['hplselected'] == 1, 'cover1'] = 50
+                        
                 Helpers.pmes('Air Pollution Reporting: ' + y + ',' + name + ', ' + dev)
                 
                 # Create 2014 nitrate reporting dataframe
@@ -2147,7 +2142,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
 #        thab_func(df,outpath, lupath)
 #    
     
-def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 , cm = 0):
+def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 , cm = 0, ug = 0):
     """
     This function reporting on carbon totals and carbon changes for the development scenarios and activities
     

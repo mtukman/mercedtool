@@ -340,6 +340,7 @@ if arcpy.GetParameterAsText(30) == 'Yes':
         Helpers.pmes ('Final Urban Canopy %: ' + str(ucc))
     else: 
         ucc = 0.102
+        Helpers.pmes ('Error with Urban Growth')
 else:
     ug = 0
     ucc = 0.102
@@ -360,11 +361,9 @@ outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_a
 Helpers.pmes('Activity Application Module complete. Entering the Carbon Accounting Module.')
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, rate, logfile)
 
-#templist[0].to_csv('P:/Temp/Temperino2.csv')
+
 Helpers.pmes('Carbon Accounting Module complete. Entering the Multi-Benefit Reporting Module.')
-#Comment out the export of this CSV unless you are debugging
-#Helpers.pes('Exporting full dataframe to CSV for debugging - this takes a while...')
-#templist[0].to_csv('P:/Temp/Temperino2.csv')
+
 
 
 
