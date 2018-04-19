@@ -11,7 +11,7 @@ Created on Thu Feb 22 08:58:23 2018
 
 
 #def report(outpath, df):
-def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0, gra = 0, cproc = 0, terflag = 0, ucc = 0, ug = 0):
+def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0, gra = 0, cproc = 0, terflag = 0, ug = 0, ucc = 0):
     
     """
     This function reports on the multi-benefits. 
@@ -2134,24 +2134,24 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
 
     
     #Run all of the reporting functions
-    fmmp(df,outpath)
-    fema(df,outpath)
-    scenic(df,outpath)
-    wateruse(df,outpath)
-    lcchange(df,outpath)
-    pcalcchange(df,outpath)
-    termovement(df,outpath)
-    cropvalue(df,outpath)
-    groundwater(df,outpath)
-    nitrates(df,outpath)
+#    fmmp(df,outpath)
+#    fema(df,outpath)
+#    scenic(df,outpath)
+#    wateruse(df,outpath)
+#    lcchange(df,outpath)
+#    pcalcchange(df,outpath)
+#    termovement(df,outpath)
+#    cropvalue(df,outpath)
+#    groundwater(df,outpath)
+#    nitrates(df,outpath)
     airpol(df,outpath)
-    if cproc == 0:
-        watershedintegrity(df,outpath)
-    else:
-        pass
-    aqua(df,outpath)
-    if terflag == 1:
-        thab_func(df,outpath, lupath)
+#    if cproc == 0:
+#        watershedintegrity(df,outpath)
+#    else:
+#        pass
+#    aqua(df,outpath)
+#    if terflag == 1:
+#        thab_func(df,outpath, lupath)
 #    
     
 def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 , cm = 0, ug = 0):

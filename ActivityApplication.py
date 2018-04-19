@@ -5,7 +5,7 @@ import Helpers
 global dict_eligibility
 
 
-def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',customdev = 0, ug = 0, ucc = 0, sflag = 0):
+def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',customdev = 0, ug = 0, sflag = 0):
     ''' This function takes the activities selected by the user, finds suitable pixels and randomly selects pixels for the activity based on spatial attributes until the desired amount of pixels have been selected.
     
     df: The dataframe fom the initial module
@@ -209,17 +209,11 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         ghg_selection (df,'cag',dict_eligibility,dictact)
     if 'gra' in activitylist:
         ghg_selection (df,'gra',dict_eligibility,dictact)
-#    if ug != 0:
-#        temp = df.loc[(df['LC2030_trt_bau'].isin(['Urban', 'Developed','Developed Roads'])) & (df['lcchange'] == 1) & queryadd]
-#        numb = len(temp.index)
-#        Helpers.pmes ('Suitable Pixels for Urban: ' + str(numb))
-#        dictact['urb']['adoption'] = numb/4.49555
-#        Helpers.pmes ('Suitable Acres for Urban: ' + str(dictact['urb2']['adoption']))
-#        ghg_selection (df,'urb',dict_eligibility,dictact)
+
         
         
     if ug != 0:
-        temp = df.loc[(df['LC2030_trt_bau'].isin(['Urban', 'Developed','Developed Roads'])) & (df['lcchange'] == 1) & queryadd]
+        temp = df.loc[(df['LC2030_trt_bau'].isin(['Urban', 'Developed','Developed Roads'])) & (df['lcchange'] == 1)]
         numb = len(temp.index)
         dictact['urb']['adoption'] = numb/4.49555
         dictact['urb']['adoption'] = dictact['urb']['adoption']*ug
@@ -233,7 +227,6 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     for i in blist:
         if i in df.columns:
             clist.append(i)
-#    df = df.drop(columns = clist)
     df.drop(clist, axis = 1, inplace = True)       
     
     

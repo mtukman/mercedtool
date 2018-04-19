@@ -18,7 +18,7 @@ import pandas as pd
 import Helpers
 global _eligibility
 
-def ApplyGHG(df,activitylist, dictact, trt, ug = 0, rate = 0, logfile = 'None'):
+def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None'):
 
     tempdf = df.sort_values(['pointid'])
     carb = {}
@@ -112,25 +112,11 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, rate = 0, logfile = 'None'):
         
         
     if ug != 0 :
-        years = float(dictact['urb']['years']) - float(dictact['urb']['adoptyear'])
+
         carbon =  29.6082 #Convert tons/ha to tons/pixel
-        count = 0
-        tot = 0
-        temp = tempdf.loc[tempdf['urbselected'] == 1]
-        numb = len(temp.index)
-        pix = numb/years
-        tot = 0
-        while count < years:
-            count = count + 1
-            tot = ((count * pix)* carbon) + tot
+        
         tempdf['urb' +'_carbred'] = 0
-        if numb != 0:
-            rater = tot/numb
-    
-            tempdf['urb' +'_carbred'] = tempdf['urbselected']*(rater)
-            Helpers.add_to_logfile(logfile,'Activity is : ' + 'urb' + ', Pixels are : ' + str(numb) + ' AND carbon rate is : ' + str(tot/numb))
-        else: 
-            Helpers.add_to_logfile(logfile,'No Urban in Processing Area!')
+        tempdf.loc[tempdf['urbselected'] == 1, 'urb_carbred'] = carbon
         
 
         
