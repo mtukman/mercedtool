@@ -41,7 +41,7 @@ devmask = arcpy.GetParameterAsText(5)
 
 #Look through the Avoided Conversion parameters and see if any avoided conversion parameters have been set. If they have, add them to the avoided conversion activity dictionary.
 acdict = {}
-aclist2 = [47,49,51,53,55,57,59,61,63]
+aclist2 = [45,47,49,51,53,55,57,59,61]
 for i in aclist2:
     if arcpy.GetParameterAsText(i) == 'Wetland to Annual Cropland':
         acdict['ac_wet_arc'] = arcpy.GetParameterAsText(i + 1)
@@ -126,13 +126,13 @@ if arcpy.GetParameterAsText(26) == 'Yes':
 if arcpy.GetParameterAsText(30) == 'Yes':
     activitylist.append('urb')
     arcpy.AddMessage('added urb to activity list')
-if arcpy.GetParameterAsText(34) == 'Yes':
+if arcpy.GetParameterAsText(32) == 'Yes':
     activitylist.append('gra')
     arcpy.AddMessage('added gra to activity list')
-if arcpy.GetParameterAsText(38) == 'Yes':
+if arcpy.GetParameterAsText(36) == 'Yes':
     activitylist.append('cam')
     arcpy.AddMessage('added cam to activity list')
-if arcpy.GetParameterAsText(42) == 'Yes':
+if arcpy.GetParameterAsText(40) == 'Yes':
     activitylist.append('cag')
     arcpy.AddMessage('added cag to activity list')
     
@@ -255,7 +255,7 @@ if 'hpl' in activitylist:
     
 Helpers.add_to_logfile(logfile,'Compost Amendment' + ': ' + arcpy.GetParameterAsText(34))   
 if 'cam' in activitylist:
-    x = 38
+    x = 36
     Generic.dict_activity['cam']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
     Generic.dict_activity['cam']['years'] = float(arcpy.GetParameterAsText(x + 3))        
     Generic.dict_activity['cam']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2))   
@@ -266,7 +266,7 @@ if 'cam' in activitylist:
 Helpers.add_to_logfile(logfile,'Grassland Restoration' + ': ' + arcpy.GetParameterAsText(38))   
 if 'gra' in activitylist:
     gra = 1
-    x = 34
+    x = 32
     Generic.dict_activity['gra']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
     Generic.dict_activity['gra']['years'] = float(arcpy.GetParameterAsText(x + 3))        
     Generic.dict_activity['gra']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2))   
@@ -277,7 +277,7 @@ else:
     gra = 0
 Helpers.add_to_logfile(logfile,'Grassland Compost Amendment' + ': ' + arcpy.GetParameterAsText(42))   
 if 'cag' in activitylist:
-    x = 42
+    x = 40
     Generic.dict_activity['cag']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
     Generic.dict_activity['cag']['years'] = float(arcpy.GetParameterAsText(x + 3))        
     Generic.dict_activity['cag']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2))   
@@ -289,14 +289,9 @@ Helpers.add_to_logfile(logfile,'Urban Forestry' + ': ' + arcpy.GetParameterAsTex
 if 'urb' in activitylist:
     x = 30
     Generic.dict_activity['urb']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
-    Generic.dict_activity['urb']['years'] = float(arcpy.GetParameterAsText(x + 3))        
-    Generic.dict_activity['urb']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2))
-    Generic.dict_activity['urb2']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
-    Generic.dict_activity['urb2']['years'] = float(arcpy.GetParameterAsText(x + 3))        
-    Generic.dict_activity['urb2']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2))
-    Helpers.add_to_logfile(logfile,'Urban Forestry Growth Rate' + ': ' + arcpy.GetParameterAsText(x + 1))
-    Helpers.add_to_logfile(logfile,'Urban Forestry Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
-    Helpers.add_to_logfile(logfile,'Urban Forestry Ending Year' + ': ' + arcpy.GetParameterAsText(x + 3))
+
+    Helpers.add_to_logfile(logfile,'Urban Forestry Growth' + ': ' + arcpy.GetParameterAsText(x + 1))
+
 
 
 trt = Generic.trt_reductions
@@ -313,37 +308,32 @@ cover30 = Generic.lut_cover30
 
 
 #If a treatment mask has been provided, set the variable
-if arcpy.GetParameterAsText(46):
+if arcpy.GetParameterAsText(44):
     treatmask = newdir + '/TreatMask.shp'
-    arcpy.Project_management(arcpy.GetParameterAsText(46), newdir + '/TreatMask.shp', Generic.SPATIAL_REFERENCE_TEXT)
+    arcpy.Project_management(arcpy.GetParameterAsText(44), newdir + '/TreatMask.shp', Generic.SPATIAL_REFERENCE_TEXT)
 
 else:
     treatmask = 'None'
     
-if arcpy.GetParameterAsText(65):
+if arcpy.GetParameterAsText(63):
     terflag = 1
 else:
     terflag = 0
 
-if arcpy.GetParameterAsText(65):
+if arcpy.GetParameterAsText(63):
     sflag = 1
 else:
     sflag = 0
 
 
 if arcpy.GetParameterAsText(30) == 'Yes':
-    ug = ((float(arcpy.GetParameterAsText(33))-float(arcpy.GetParameterAsText(32)))*float(arcpy.GetParameterAsText(31)))
-    rate = float(arcpy.GetParameterAsText(31))
-    if ug > 0:
-        ucc = 0.102 + ug
-        Helpers.pmes ('Final urban cover is : ' + str(ucc))
-    else: 
-        ucc = 0.102
-        Helpers.pmes ('Ug is 0, final urban cover is : ' + str(ucc))
+    ug = float(arcpy.GetParameterAsText(31))
+    
+    ucc = .102 + ug
+
 else:
     ug = 0
-    ucc = 0.102
-    rate = 0
+    ucc = 0
 
 #Import the modules
 import Initial
@@ -354,29 +344,21 @@ import Reporting
 
 #Run each module
 initout = Initial.DoInitial(mask, cproc, dev, devmask, Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
-<<<<<<< HEAD
-Helpers.pes("**APPLYING ACTIVITIES...**")
-=======
+
+
 Helpers.pmes('Finished with Initialization Module, entering Activity Application Module')
->>>>>>> 5d9766b8917fec94e9fe25abedeaf0cf7bdd9444
-outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, ucc, sflag)
+
+outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, sflag)
 Helpers.pmes('Finished with Activity Application Module, entering Carbon Accounting Module')
-templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, rate, logfile)
-<<<<<<< HEAD
+templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, logfile)
 
-#templist[0].to_csv('P:/Temp/Temperino2.csv')
 
-#Comment out the export of this CSV unless you are debugging
-Helpers.pes('Exporting full dataframe to CSV for debugging - this takes a while...')
-templist[0].to_csv('P:/Temp/Temperino2.csv')
-Helpers.pes("**CREATING MULTIBENEFIT REPORTS...**")
-Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
-Helpers.pes("**CREATING CARBON REPORTS...**")
-=======
-Helpers.pmes('Finished with Carbon Account Module, entering MBA Reporting Module')
-Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
-Helpers.pmes('Finished with MBA Reporting Module, entering Carbon Reporting Module')
->>>>>>> 5d9766b8917fec94e9fe25abedeaf0cf7bdd9444
+Helpers.pmes("**CREATING MULTIBENEFIT REPORTS...**")
+Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc)
+Helpers.pmes("**CREATING CARBON REPORTS...**")
+
+
+
 Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
 Reporting.report_acres(templist[0],activitylist,outpath)
 

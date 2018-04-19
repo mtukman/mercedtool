@@ -7,9 +7,9 @@ axis_lab_font = 16
 
 flist = ['_base_bau','_base_med','_base_max','_trt_bau','_trt_med','_trt_max']
 
-import plotly
+import plotly.plotly as py
 
-
+py.sign_in('mtukman', 'zJmj3j1JFaPq3NBSaXVj')
 outpath = r"E:\BoxSync\Box Sync\Merced Project\Report_How-To Guide\Tukman Working Material\pngs\\"
 
 #Titles
@@ -818,34 +818,7 @@ plot_dict['watcon'] ={'title':"2014-2030 Projected Change in Water Usage by Deve
 plot_dict['watint'] ={'title':"2014-2030 Projected Change of Watershed Integrity by Development Scenario",'changemax': 5000000,'changemin' :-7,'ytitle': "Hectares", 'changefield':'ha_change', 'totfield':  'ha', 'rfield' : 'Integrity_Class', 'sum': 0,'totmax': 5000000,'totmin' :-7,'summax': 5000000,'summin' :-7,'ann':{}}
 
 
-#flist = ['_base_bau','_base_med','_base_max','_trt_bau','_trt_med','_trt_max']
-#
-#
-#
-#
-#mbalist = ['aquatic','co_val_airpollute','county_movement','ecamovement','flood100','flood500','fmmp','groundwater','lcchange','leach_nitrates','no2_val_airpollute','o3_val_airpollute','pca_cover_change','pm2_5_val_airpollute','pm10_val_airpollute','runoff_nitrates','scenic','so2_val_airpollute','terrhab','watcon','watint','cropvalue'] #,'cropvalue'
-#
-#import glob
-#
-#csvlist = glob.glob(folder + '*.csv')
-#combined = '\t'.join(csvlist)
-#
-#print (mbalist)
-#print (combined)
-#
-#for i in mbalist:
-#    if i in combined:
-#        print (folder + '/' + i + '.csv')
-#        if plot_dict[i]['sum'] == 1:
-#            print ('Doing sum for ' + i)
-#            dftest = mba_plot_tables_sum(folder + '/' + i + '.csv', outpath = outpath2, csvname = i + '_' + 'sum' + '.csv', changefield = plot_dict[i]['changefield'])
-#        if plot_dict[i]['totfield'] != 'None':
-#            print ('Doing tot for ' + i)
-#            dftest = mba_plot_tables_rows(folder + '/' + i + '.csv', outpath=outpath2,csvname = i + '_' + 'total' + '.csv', fieldname = plot_dict[i]['totfield'],  rfield = plot_dict[i]['rfield'])
-#            
-#        if plot_dict[i]['changefield'] != 'None':
-#            print ('Doing change for ' + i)
-#            dftest = mba_plot_tables_rows(folder + '/' + i + '.csv', outpath=outpath2,csvname = i + '_' + 'change' + '.csv', fieldname = plot_dict[i]['changefield'],  rfield = plot_dict[i]['rfield'])
+
         
 
 
