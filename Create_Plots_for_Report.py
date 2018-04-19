@@ -137,9 +137,9 @@ def countywide_reductions_RRE(table_high = r'E:\Box\Box Sync\Merced Project\Tool
   "autosize": True, 
   "hovermode": "closest", 
   "showlegend": True, 
-  "title": "2030 Countywide GHG Reductions from Fully Adopted Riparian Restoration", 
+  "title": "2014-2030 Countywide GHG Reductions from Fully Adopted Riparian Restoration", 
         "titlefont": {
-      "size": 18
+      "size": 16
           },
   "xaxis": {
     "autorange": True, 
@@ -283,9 +283,9 @@ def countywide_reductions_AG(table_hr= r'E:/Box/Box Sync/Merced Project/Tool/out
   "autosize": True, 
   "hovermode": "closest", 
   "showlegend": True, 
-  "title": "2030 Countywide GHG Reductions from Cover Cropping and Hedgerows", 
+  "title": "2014-2030 Countywide GHG Reductions from Cover Cropping and Hedgerow Planting", 
         "titlefont": {
-      "size": titlefont
+      "size": 16
           },
   "xaxis": {
     "autorange": True, 
@@ -784,14 +784,14 @@ def  reductions_ALL(outfile):
 
     trace1 = {
       #"x": ["Riparian Restoration", 'Improved N Fertilizer Mngmt',"Compost Amendments to Croplands", 'Compost Amendments to Grasslands', #'Cover Cropping', 'Mulching', 'Hedgerow Planting', 'Oak Woodland Restoration', 'Urban Tree Planting']
-      "x": [ 'Improved N<br> Fertilizer<br> Mngmt',"Compost<br>on<br>Croplands", 'Compost<br> on<br> Grasslands', 'Mulching','Cover<br>Cropping',  "Riparian<br>Restoration",'Hedgerow<br>Planting', 'Oak<br> Woodland<br>Restoration',  'Urban<br>Tree<br>Planting'], 
-      "y": [nfm25['carbon_nfm'].sum(), cam25['carbon_cam'].sum(), cag25['carbon_cag'].sum(), mul25['carbon_mul'].sum(), ccr25['carbon_ccr'].sum(), rre25['carbon_rre'].sum(),  hpl25['carbon_hpl'].sum(), oak25['carbon_oak'].sum(),  urb25['carbon_urb'].sum()],
+      "x": [ 'Improved N<br> Fertilizer<br> Mngmt',"Compost<br>on<br>Croplands", 'Compost<br> on<br> Grasslands', 'Mulching','Cover<br>Cropping',  "Riparian<br>Restoration",  'Urban<br>Tree<br>Planting','Hedgerow<br>Planting', 'Oak<br> Woodland<br>Restoration'], 
+      "y": [nfm25['carbon_nfm'].sum(), cam25['carbon_cam'].sum(), cag25['carbon_cag'].sum(), mul25['carbon_mul'].sum(), ccr25['carbon_ccr'].sum(), rre25['carbon_rre'].sum(),  urb25['carbon_urb'].sum(),  hpl25['carbon_hpl'].sum(), oak25['carbon_oak'].sum()],
       "type": "bar",
       "name":'25% Adoption'
       }
     trace2 = {
-      "x": [ 'Improved N<br> Fertilizer<br> Mngmt',"Compost<br>on<br>Croplands", 'Compost<br> on<br> Grasslands', 'Mulching','Cover<br>Cropping',  "Riparian<br>Restoration",'Hedgerow<br>Planting', 'Oak<br> Woodland<br>Restoration',  'Urban<br>Tree<br>Planting'], 
-      "y": [nfm100['carbon_nfm'].sum(), cam100['carbon_cam'].sum(), cag100['carbon_cag'].sum(), mul100['carbon_mul'].sum(), ccr100['carbon_ccr'].sum(),  rre100['carbon_rre'].sum(), hpl100['carbon_hpl'].sum(), oak100['carbon_oak'].sum(),  urb100['carbon_urb'].sum()],
+      "x": [ 'Improved N<br> Fertilizer<br> Mngmt',"Compost<br>on<br>Croplands", 'Compost<br> on<br> Grasslands', 'Mulching','Cover<br>Cropping',  "Riparian<br>Restoration",  'Urban<br>Tree<br>Planting','Hedgerow<br>Planting', 'Oak<br> Woodland<br>Restoration'], 
+      "y": [nfm100['carbon_nfm'].sum(), cam100['carbon_cam'].sum(), cag100['carbon_cag'].sum(), mul100['carbon_mul'].sum(), ccr100['carbon_ccr'].sum(),  rre100['carbon_rre'].sum(),  urb100['carbon_urb'].sum(), hpl100['carbon_hpl'].sum(), oak100['carbon_oak'].sum()],
       "type": "bar",
       "name":'Full Adoption'
       }
@@ -802,7 +802,7 @@ def  reductions_ALL(outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": True, 
-      "title": "2030 GHG Reductions from Countywide Activities", 
+      "title": "2014-2030 GHG Reductions from Countywide Activities", 
       "titlefont": {
       "size": titlefont
           },
@@ -863,9 +863,9 @@ def  reductions_RRE(folder, outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": False, 
-      "title": "2030 GHG Reductions from Riparian Restoration on the San Joaquin R.", 
+      "title": "2014-2030 GHG Reductions from Riparian Restoration on the San Joaquin R.", 
       "titlefont": {
-      "size": titlefont
+      "size": 16
           },
 
       "xaxis": {
@@ -1310,12 +1310,225 @@ def  tconnect_plot_RRE(high_folder, outfile):
     plot(fig, filename= 'Flying_M' + '.html')
     return fig
 
+def  tconnect_plot_AG(high_folder, outfile):
+    import pandas as pd
 
+    
+    high = pd.read_csv(high_folder + '/countymovement.csv')
+
+
+    highnat = high.loc[high['movement_potential'] == 'high']
+    highdev = high.loc[high['movement_potential'] == 'medium']
+    highag = high.loc[high['movement_potential'] == 'low']
+
+
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+
+
+    xlist = ['Riparian<br>Restoration','Reference']
+
+    trace1 = {
+      "x": xlist, 
+      "y": [highnat['ha_trt_bau'].sum(), highnat['ha_base_bau'].sum()], 
+      "type": "bar",
+      "name": "High Movement <br>Potential", 
+      
+      }
+    trace2 = {
+      "x": xlist, 
+      "y": [highdev['ha_trt_bau'].sum(), highdev['ha_base_bau'].sum()], 
+      "type": "bar",
+      "name": "Medium Movement <br>Potential", 
+      }
+    trace3 = {
+      "x": xlist, 
+      "y": [highag['ha_trt_bau'].sum(), highag['ha_base_bau'].sum()], 
+      "type": "bar",
+      "name": "Low Movement <br>Potential", 
+      }
+    
+    data = go.Data([trace1,trace2,trace3])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+      "title": "Burrroughs Family Farms - 2030 Terrestrial Connectivity", 
+      "titlefont": {
+      "size": titlefont
+          },
+      "xaxis": {
+        "autorange": True, 
+#        "title": ['highly developed', 'medium developed', 'conserved'], 
+        "type": "category",
+        "tickfont": {
+          "color": "black",
+          "size": large_x_labs
+        }
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "title": 'Hectares of Terrestrial Movement Resistance Class', 
+        "type": "linear", 
+        "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
+      },
+    }
+       
+    fig = go.Figure(data=data, layout=layout)
+    py.image.save_as(fig, outfile, format='png')
+    plot(fig, filename= 'Flying_M' + '.html')
+    return fig
+
+def  airquality_plot_AG(high_folder, outfile):
+    import pandas as pd
+    
+    #Read O3
+    
+    high_co = pd.read_csv(high_folder + '/co_val_airpollute.csv')
+    high_o3 = pd.read_csv(high_folder + '/o3_val_airpollute.csv')
+    high_no2 = pd.read_csv(high_folder + '/no2_val_airpollute.csv')
+    high_pm25 = pd.read_csv(high_folder + '/pm2_5_val_airpollute.csv')
+    high_pm10 = pd.read_csv(high_folder + '/pm10_val_airpollute.csv')
+    high_so2 = pd.read_csv(high_folder + '/so2_val_airpollute.csv')
+
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+ 
+
+    xlist = ['CO','O<sub>3</sub>','PM 10','PM 2.5','NO<sub>2</sub>', 'SO<sub>2</sub>']
+    
+    trace1 = {
+      "x": xlist, 
+      "y": [high_co['tons_trt_bau'].sum(), high_o3['tons_trt_bau'].sum(), high_no2['tons_trt_bau'].sum(),high_pm25['tons_trt_bau'].sum(),high_pm10['tons_trt_bau'].sum(), high_so2['tons_trt_bau'].sum()], 
+      "type": "bar",
+      "name": "Riparian<br>Restoration", 
+      
+      }
+    trace2 = {
+      "x": xlist, 
+      "y": [high_co['tons_base_bau'].sum(), high_o3['tons_base_bau'].sum(), high_no2['tons_base_bau'].sum(),high_pm25['tons_base_bau'].sum(),high_pm10['tons_base_bau'].sum(), high_so2['tons_base_bau'].sum()], 
+      "type": "bar",
+      "name": "Reference", 
+      }
+
+    data = go.Data([trace1, trace2])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+      "title": "Burroughs Family Farms - 2030 Air Pollutant Sequestration", 
+      "titlefont": {
+      "size": titlefont
+          },
+      "xaxis": {
+        "autorange": True, 
+        "title": ['Riparian<br>Restoration', 'Reference'], 
+        "type": "category"
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [0, 200000], 
+        #"range": [min_y_range(table), max_y_range(table)], 
+        "title": 'Tons of Pollutant Sequestered', 
+        "type": "linear",
+                "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
+      },
+    }
+       
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'rre_air' + '.html')
+    py.image.save_as(fig, outfile, format='png')
+    return fig
+
+def  reductions_AG(carbon_table, outfile):
+    import pandas as pd
+    import plotly.graph_objs as go
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+
+    high = pd.read_csv(carbon_table)
+
+    
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+    
+    trace1 = {
+      "x": ["Riparian<br>Restoration", "Reference"], 
+      "y": [high['trt_bau_total'].sum(), high['carbon_base_bau'].sum()], 
+      "type": "bar",
+      }
+        
+    data = go.Data([trace1])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": False, 
+      "title": "2014-2030 GHG Reductions from Ag Activites at Burroughs Family Farms", 
+      "titlefont": {
+      "size": 16
+          },
+
+      "xaxis": {
+        "autorange": True, 
+        "type": "category",
+            "tickfont": {
+          "color": "black",
+          "size": large_x_labs
+        }
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [0, 200000], 
+        #"range": [min_y_range(table), max_y_range(table)], 
+        "title": 'Tons CO<sub>2</sub> Equivalents', 
+        "type": "linear",
+        "titlefont": {
+          "color": "black",
+          "size": large_x_labs
+        }
+      },
+                                "annotations": [
+      {
+        "xref": "x",
+        "yref": "y",
+        "text":  str(round( high['trt_bau_total'].sum() -high['carbon_base_max'].sum(), 1))  + " tons <br> CO<sub>2</sub>e reductions <br> v. reference",
+        "y": high['carbon_base_max'].sum(),
+        "x": 'Riparian<br>Restoration',
+        "font": {
+          "color": "rgb(252, 252, 252)",
+          "size": 14
+        },
+        "showarrow": False
+      }
+    ]
+
+    }
+       
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename= 'Flying_M' + '.html')
+    py.image.save_as(fig, outfile, format='png')
+    return fig
+    
 
 def make_plots_AC():
     import os
     import plotly.plotly as py
-    py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
+    py.sign_in('mtukman', 'jVJrzWkFoqVCZtX33ufz')
     boxpath = 'E:/Box/'
     print (os.path.join(boxpath,'Tool/outputs/FlyingM/FlyingM_HighDev'))
     groundwater_plot_AC(os.path.join(boxpath,'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_HighDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Avoided Conversion/Case Study AC Groundwater.png'))
@@ -1331,7 +1544,7 @@ def make_plots_AC():
 def make_plots_RRE():
     import os
     import plotly.plotly as py
-    py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
+    py.sign_in('mtukman', 'jVJrzWkFoqVCZtX33ufz')
     boxpath = 'E:/Box/'
     countywide_reductions_RRE(os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_100/carbon.csv'), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Countywide RRE Reductions.png'))
     reductions_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_SCENARIO"), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Reductions.png') )
@@ -1345,14 +1558,15 @@ def make_plots_RRE():
 def make_plots_AG():
     import os
     import plotly.plotly as py
-    py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
+    py.sign_in('mtukman', 'jVJrzWkFoqVCZtX33ufz')
     boxpath = 'E:/Box/'
     countywide_reductions_AG(table_hr= os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/hedgerow_100/carbon.csv'),   table_cc=os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/cover_cropping_100/carbon.csv'), outfile = os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Burroughs/Countywide AG Reductions.png'))
+    reductions_AG(os.path.join(boxpath, r'Box Sync/Merced Project/Tool/Outputs/Burroughs/hpl_ccr_carbon.csv'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Burroughs/Case Study AG Reductions.png') )
     
 def make_countywide_reductions_all_activities():
     import os
     import plotly.plotly as py
-    py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
+    py.sign_in('mtukman', 'jVJrzWkFoqVCZtX33ufz')
     boxpath = 'E:/Box/'
     reductions_ALL(os.path.join(boxpath, r'Box Sync/Merced Project/Report_How-To Guide/Tukman Working Material/Countywide GHG Reductions All Activities.png'))
     
