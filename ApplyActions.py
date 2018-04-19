@@ -47,7 +47,6 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, rate = 0, logfile = 'None'):
                 tempix = 0
                 Helpers.pmes('Landcover is: ' + i +', AND Pixels: ' + str(actcount2.at[i,activity+'selected']))
                 pixels = actcount2.at[i,activity+'selected'] #Get the number of selected pixers for the activity/landcover combination
-                Helpers.pmes('Pixels for oak: ' + str(pixels))
                 #If there are selected pixels, do the carbon reduction loop
                 if pixels > 0:
                     anngrowth = pixels/dictact[activity]['years']
@@ -60,39 +59,28 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, rate = 0, logfile = 'None'):
                         
                         carb1 = carb1 + (((counter2 + 1)*anngrowth)*redrate)
                         
-                        Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Year: ' + str(counter2 + 1))
-                        
                         counter2 = counter2 + 1
                     fullcount = 0
-                    Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Full adoption.')
 
                     #For oak and Riparian, carry through 2030 at full capacity
                     if activity == 'rre' or activity == 'oak' or activity == 'gra' or activity == 'hpl' or activity == 'urb':
                         while counter2<maxyrs:
-                            Helpers.pmes('maxyears: ' + str(maxyrs) + ' and counter: ' + str(counter2))
                             carb1 = carb1 + (pixels*redrate)
-                            Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Year: ' + str(counter2 + 1))
-                            counter2 = counter2 + 1
-                        Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Finishing rre/oak.')        
+                            counter2 = counter2 + 1   
                         
                     else: #If not oak or riparian, do the middle years are full adoption
                         while counter2<maxyrs and fullcount < fulladoptyrs:
-                            Helpers.pmes('maxyears: ' + str(maxyrs) + ' and counter: ' + str(counter2))
                             carb1 = carb1 + (pixels*redrate)
-                            Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Year: ' + str(counter2 + 1))
                             counter2 = counter2 + 1
                             fullcount = fullcount + 1
-                        Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Full adoption end.')
                         
                     endcount = dictact[activity]['years'] - 1
                         
                     #Count down the tail end of the adoption period until it its 2030
                     while counter2<maxyrs and endcount>0:
                         carb1 = carb1 + (((endcount)*anngrowth)*redrate)
-                        Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Year: ' + str(counter2 + 1))
                         counter2 = counter2 + 1
                         endcount = endcount - 1       
-                    Helpers.pmes('Carbon for ' + i + ' in ' + activity + ': ' + str(carb1) + '. Declining adoption.')    
                     
                     carb[activity+i+'_co2'] = carb1
                     tempix = tempix + pixels
@@ -125,12 +113,12 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, rate = 0, logfile = 'None'):
         
     if ug != 0 :
         years = float(dictact['urb']['years']) - float(dictact['urb']['adoptyear'])
-        carbon =  328.98 * .09 #Convert tons/ha to tons/pixel
+        carbon =  29.6082 #Convert tons/ha to tons/pixel
         count = 0
         tot = 0
-        temp = tempdf.loc[(dictact['urb']['query'])]
+        temp = tempdf.loc[tempdf['urbselected'] == 1]
         numb = len(temp.index)
-        pix = rate * numb
+        pix = numb/years
         tot = 0
         while count < years:
             count = count + 1
@@ -139,15 +127,12 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, rate = 0, logfile = 'None'):
         if numb != 0:
             rater = tot/numb
     
-            tempdf['urb' +'_carbred'] = tempdf['urb'+'selected']*(rater)
+            tempdf['urb' +'_carbred'] = tempdf['urbselected']*(rater)
             Helpers.add_to_logfile(logfile,'Activity is : ' + 'urb' + ', Pixels are : ' + str(numb) + ' AND carbon rate is : ' + str(tot/numb))
         else: 
             Helpers.add_to_logfile(logfile,'No Urban in Processing Area!')
         
-        
-            
-        
-        
+
         
     return (tempdf,carb,carb2)
 
