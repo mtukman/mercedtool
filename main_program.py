@@ -354,13 +354,29 @@ import Reporting
 
 #Run each module
 initout = Initial.DoInitial(mask, cproc, dev, devmask, Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
+<<<<<<< HEAD
+Helpers.pes("**APPLYING ACTIVITIES...**")
+=======
 Helpers.pmes('Finished with Initialization Module, entering Activity Application Module')
+>>>>>>> 5d9766b8917fec94e9fe25abedeaf0cf7bdd9444
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, ucc, sflag)
 Helpers.pmes('Finished with Activity Application Module, entering Carbon Accounting Module')
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, rate, logfile)
+<<<<<<< HEAD
+
+#templist[0].to_csv('P:/Temp/Temperino2.csv')
+
+#Comment out the export of this CSV unless you are debugging
+Helpers.pes('Exporting full dataframe to CSV for debugging - this takes a while...')
+templist[0].to_csv('P:/Temp/Temperino2.csv')
+Helpers.pes("**CREATING MULTIBENEFIT REPORTS...**")
+Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
+Helpers.pes("**CREATING CARBON REPORTS...**")
+=======
 Helpers.pmes('Finished with Carbon Account Module, entering MBA Reporting Module')
 Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ucc)
 Helpers.pmes('Finished with MBA Reporting Module, entering Carbon Reporting Module')
+>>>>>>> 5d9766b8917fec94e9fe25abedeaf0cf7bdd9444
 Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
 Reporting.report_acres(templist[0],activitylist,outpath)
 
