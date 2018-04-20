@@ -67,9 +67,6 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
     
     #Add up the points to get a total number of eligible points
     for i in klist:
-        pmes (i)
-        pmes (goal)
-        pmes (tempdict2[i])
         goal = goal + tempdict2[i]
     pmes ('Suitable pixels: ' + str(goal))
     

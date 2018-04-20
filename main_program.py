@@ -20,7 +20,7 @@ timestr = time.strftime("%Y%m%d-%H%M%S")
 newdir = os.path.join(output_file_location, timestr) #This creates a directory for the tool's outputs. It will create a new folder with a timestamp in the directory specified in the parameters.
 if not os.path.exists(newdir):
     os.makedirs(newdir)
-Generic.set_paths_and_workspaces(rootpath, 'MASTER_DATA/', output_file_location)
+Generic.set_paths_and_workspaces(rootpath, output_file_location)
 #Create a logfile in the output directory and add information about the tool's input parameter's to it.
 global logfile
 logfile = open(os.path.join(newdir, "logfile.txt"), "w")

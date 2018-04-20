@@ -1,5 +1,5 @@
 from __future__ import unicode_literals #Can Delete This
-def set_paths_and_workspaces(root_data_path = r"E:\TGS\projects\Merced Carbon", midpath = 'MASTER_DATA', output_file_loc = 'P:/Temp'):
+def set_paths_and_workspaces(root_data_path = r"E:\TGS\projects\Merced Carbon\MASTER_DATA", output_file_loc = 'P:/Temp'):
     """Workspace must be a file .gdb and is the place where all temp files and outputs will be placed.
     root_data_path -->  This path the top level folder for the data files (e.g., D:/CLOUD/Shared/Open Space/)
     midpath -->  This path is the path to the data files from roopath down the tree (e.g., Carbon Framework/GIS Data/SAMPLE_DATA/)
@@ -35,44 +35,34 @@ def set_paths_and_workspaces(root_data_path = r"E:\TGS\projects\Merced Carbon", 
     global RDP
     RDP = root_data_path
 
-    global MP
-    MP = midpath
-
-    global Root_Mid_Path
-    Root_Mid_Path = os.path.join(RDP, MP)
-
     global scratch
-    scratch = os.path.join(root_data_path,midpath,'Scratch')
+    scratch = os.path.join(root_data_path,'Scratch')
 
     global tempgdb
-    tempgdb = os.path.join(root_data_path,midpath,'Scratch','Scratch.gdb')
-    
+    tempgdb = os.path.join(root_data_path,'Scratch','Scratch.gdb')
     
 
     global MBTABS
-    MBTABS = os.path.join(root_data_path,midpath,'Tables/MBATables')
+    MBTABS = os.path.join(root_data_path,'Tables/MBATables')
 
     global neartabs
-    neartabs = os.path.join(root_data_path,midpath,'Tables/NearTables')
+    neartabs = os.path.join(root_data_path,'Tables/NearTables')
 
     global vects
-    vects = os.path.join(root_data_path,midpath,'Vectors.gdb')
+    vects = os.path.join(root_data_path,'Vectors.gdb')
 
     global lutables
-    lutables = os.path.join(root_data_path,midpath,'Tables/LUTables')
+    lutables = os.path.join(root_data_path,'Tables/LUTables')
 
     global valuetables
-    valuetables = os.path.join(root_data_path,midpath,'Tables/ValueTables')
+    valuetables = os.path.join(root_data_path,'Tables/ValueTables')
 
 
     global rids
-    rids = os.path.join(root_data_path,midpath,'Tables/LUTables/env_rids.csv')
+    rids = os.path.join(root_data_path,'Tables/LUTables/env_rids.csv')
 
     #Look up tables for reporting functions
-    
-    
-    
-    
+
     
     global lut_cover14
     lut_cover14 = os.path.join(lutables,'lut_cover14.csv')
@@ -91,26 +81,26 @@ def set_paths_and_workspaces(root_data_path = r"E:\TGS\projects\Merced Carbon", 
     global lut_nitrates
     lut_nitrates = os.path.join(lutables,'lut_nitrates.csv')
     global trt_reductions
-    trt_reductions = os.path.join(root_data_path,midpath,'Tables/trt/trt_reductions.csv')
+    trt_reductions = os.path.join(root_data_path,'Tables/trt/trt_reductions.csv')
 
     #Vectors
     global Points
-    Points = os.path.join(root_data_path,midpath,'Vectors.gdb/Just_PointID')
+    Points = os.path.join(root_data_path,'Vectors.gdb/Just_PointID')
     all_layers.append(Points)
 
 
 #    
 #    
     global Carbon2001
-    Carbon2001 = os.path.join(root_data_path, midpath, 'Tables/CarbonTables/Carb01.csv')
+    Carbon2001 = os.path.join(root_data_path, 'Tables/CarbonTables/Carb01.csv')
     all_layers.append(Carbon2001)
 
     global Carbon2014
-    Carbon2014 = os.path.join(root_data_path, midpath, 'Tables/CarbonTables/Carb14.csv')
+    Carbon2014 = os.path.join(root_data_path, 'Tables/CarbonTables/Carb14.csv')
     all_layers.append(Carbon2014)
 
     global Carbon2030
-    Carbon2030 = os.path.join(root_data_path, midpath, 'Tables/CarbonTables/Carb30.csv')
+    Carbon2030 = os.path.join(root_data_path, 'Tables/CarbonTables/Carb30.csv')
     all_layers.append(Carbon2030)
 
 
@@ -160,8 +150,6 @@ nfmdict = {'name':'Nirtrogen Fertilizer Management','query' : 'holder', 'ag_modi
 ccrdict = {'name':'Cover Crops', 'query':'holder', 'ag_modifier':.449,  'grpsize':'small', 'suitflag':'ccrsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2}
 hpldict = {'name':'Hedgerow Planting', 'query':'holder', 'ag_modifier':1,  'grpsize':'small', 'suitflag':'hplsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.3}
 urbdict = {'name':'Urban Forestry', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'urbsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':1}
-
-
 acodict = {'name':'Avoid Conversion', 'query':'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'urbsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':1}
 camdict = {'name':'Compost Amendment', 'query':'holder', 'ag_modifier':0.259797042, 'grpsize':'small', 'suitflag':'camsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.05, 'orc_modifier': .25}
 gradict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':'medium', 'suitflag':'oaksuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.05}
