@@ -41,11 +41,9 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None'):
         # Loop through landcovers for the activity and calculate and sum up carbon
         tempix = 0
         for i in dfList:
-            Helpers.pmes('maxyears: ' + str(maxyrs) + ' and full adoptyears : ' + str(fulladoptyrs))
             if i in actcount:
                 carb1 = 0
                 tempix = 0
-                Helpers.pmes('Landcover is: ' + i +', AND Pixels: ' + str(actcount2.at[i,activity+'selected']))
                 pixels = actcount2.at[i,activity+'selected'] #Get the number of selected pixers for the activity/landcover combination
                 #If there are selected pixels, do the carbon reduction loop
                 if pixels > 0:
@@ -88,8 +86,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None'):
                     carb2[activity +i+ '_sel'] = tempix
                     
                     
-            counter1 = counter1 + 1
-            Helpers.pmes('tempix: ' + str(tempix))   
+            counter1 = counter1 + 1 
             if tempix > 0:
                 tempdf[activity +'_carbred'] = tempdf[activity+'selected']*(carb1/pixels)
             

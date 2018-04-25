@@ -60,7 +60,6 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
     goal = 0
     tempdict = dict_eligibility[act]
     tempdict2 = tempdict[act + 'suitflag']
-    pmes(tempdict2)
     
     #Create a list of the landcovers for the activity
     klist = list(tempdict2.keys())
@@ -88,7 +87,6 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
     initflag =  act + 'suitflag'
     selflag = act + 'selected'
     df[selflag] = 0
-    pmes ('group size is :' + str(dictact[activity]['grpsize']))
     
     def select(groupsize, count):
         #Group pixels by their medium group value (medium grid)
@@ -111,7 +109,6 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
             else:
                 pass
     
-        pmes (str(count))
         add_to_logfile(logfile,activity + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
         query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
         add_to_logfile(logfile,activity + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))

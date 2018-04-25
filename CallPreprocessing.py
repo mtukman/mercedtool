@@ -90,12 +90,12 @@ Generic.set_paths_and_workspaces()
 #Helpers.FCtoCSV(r'E:\Temp\CellPoints.gdb\LFC_Points_Merged',r'E:\Temp\LFC_Points_Merged.csv')
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/vernalpools','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/vernalpools.csv')
 #Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/preferred_dev','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/preferred_dev.csv')
-Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/species_biodiversity_ecoregion','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/species_biodiversity_ecoregion.csv')
-Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/climate_change_resilience','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/climate_change_resilience.csv')
-Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/significant_habitat_rank','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/significant_habitat_rank.csv')
-
-
-
+#Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/species_biodiversity_ecoregion','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/species_biodiversity_ecoregion.csv')
+#Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/climate_change_resilience','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/climate_change_resilience.csv')
+#Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/significant_habitat_rank','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/significant_habitat_rank.csv')
+#Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/sagbi_unmod','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/sagbi_unmod.csv')
+#Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/clim_conn','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/clim_conn.csv')
+Helpers.FCtoCSV('D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Vector/Extractions.gdb/climate_refugia','D:/TGS/projects/64 - Merced Carbon/MBA/ToolData/Tables/Other/climate_refugia.csv')
 
 
 

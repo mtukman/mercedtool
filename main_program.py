@@ -36,6 +36,9 @@ Helpers.add_to_logfile(logfile,'Development Scenario' + ': ' + arcpy.GetParamete
 Helpers.add_to_logfile(logfile,'Custom Development Mask' + ': ' + arcpy.GetParameterAsText(5))
 Helpers.add_to_logfile(logfile,'Treatment Mask' + ': ' + arcpy.GetParameterAsText(46))
 
+
+
+
 #Set the development mask variable, if a development mask is provided, this will point to the polygon feature class
 devmask = arcpy.GetParameterAsText(5)
 
@@ -158,7 +161,7 @@ Helpers.pmes('Dev Scenario is : ' + str(dev))
 if not arcpy.GetParameterAsText(2):
     cm = 0
     conmask = 'None'
-    Helpers.pmes('No cm')
+    Helpers.pmes('No Conservation Mask')
 else:
     cm = 1
     conmask = newdir + '/ConMask.shp'
@@ -185,7 +188,7 @@ else:
 #    arcpy.AddMessage("********************The Carbon Tool requires an version 10.2.2 or later of ArcGIS.*************")
 #    sys.exit()
     
-Helpers.pmes ('Mask is :' + mask)
+Helpers.pmes ('Custom Provessing Mask is :' + mask)
 
 adoptdict = {}
 
