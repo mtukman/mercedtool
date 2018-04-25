@@ -1468,7 +1468,7 @@ def  reductions_AG(carbon_table, outfile):
     import plotly.graph_objs as go
     
     trace1 = {
-      "x": ["Riparian<br>Restoration", "Reference"], 
+      "x": ['Hedgerow Planting<br>and Cover Cropping', "Reference"], 
       "y": [high['trt_bau_total'].sum(), high['carbon_base_bau'].sum()], 
       "type": "bar",
       }
@@ -1507,8 +1507,8 @@ def  reductions_AG(carbon_table, outfile):
         "xref": "x",
         "yref": "y",
         "text":  str(round( high['trt_bau_total'].sum() -high['carbon_base_max'].sum(), 1))  + " tons <br> CO<sub>2</sub>e reductions <br> v. reference",
-        "y": high['carbon_base_max'].sum(),
-        "x": 'Riparian<br>Restoration',
+        "y": high['carbon_base_max'].sum()-25000,
+        "x": 'Hedgerow Planting<br>and Cover Cropping',
         "font": {
           "color": "rgb(252, 252, 252)",
           "size": 14
@@ -1528,11 +1528,10 @@ def  reductions_AG(carbon_table, outfile):
 def make_plots_AC():
     import os
     import plotly.plotly as py
-<<<<<<< HEAD
-    py.sign_in('mtukman', 'jVJrzWkFoqVCZtX33ufz')
-=======
+
+
     py.sign_in('mtukman', 'FbUYCv4tcjCPF2ZdfzKo')
->>>>>>> b6e0bd6259c8c249c2ec7887e2966613d03e749c
+
     boxpath = 'E:/Box/'
     print (os.path.join(boxpath,'Tool/outputs/FlyingM/FlyingM_HighDev'))
     groundwater_plot_AC(os.path.join(boxpath,'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_HighDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/FlyingM/FlyingM_MedDev'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Avoided Conversion/Case Study AC Groundwater.png'))
@@ -1548,11 +1547,9 @@ def make_plots_AC():
 def make_plots_RRE():
     import os
     import plotly.plotly as py
-<<<<<<< HEAD
-    py.sign_in('mtukman', 'jVJrzWkFoqVCZtX33ufz')
-=======
+
     py.sign_in('mtukman', 'FbUYCv4tcjCPF2ZdfzKo')
->>>>>>> b6e0bd6259c8c249c2ec7887e2966613d03e749c
+
     boxpath = 'E:/Box/'
     countywide_reductions_RRE(os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_100/carbon.csv'), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Countywide RRE Reductions.png'))
     reductions_RRE(os.path.join(boxpath, r"Box Sync/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_SCENARIO"), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Case Study RRE Reductions.png') )
@@ -1566,11 +1563,9 @@ def make_plots_RRE():
 def make_plots_AG():
     import os
     import plotly.plotly as py
-<<<<<<< HEAD
-    py.sign_in('mtukman', 'jVJrzWkFoqVCZtX33ufz')
-=======
+
     py.sign_in('mtukman', 'FbUYCv4tcjCPF2ZdfzKo')
->>>>>>> b6e0bd6259c8c249c2ec7887e2966613d03e749c
+
     boxpath = 'E:/Box/'
     countywide_reductions_AG(table_hr= os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/hedgerow_100/carbon.csv'),   table_cc=os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/cover_cropping_100/carbon.csv'), outfile = os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Burroughs/Countywide AG Reductions.png'))
     reductions_AG(os.path.join(boxpath, r'Box Sync/Merced Project/Tool/Outputs/Burroughs/hpl_ccr_carbon.csv'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Burroughs/Case Study AG Reductions.png') )
@@ -1578,11 +1573,9 @@ def make_plots_AG():
 def make_countywide_reductions_all_activities():
     import os
     import plotly.plotly as py
-<<<<<<< HEAD
-    py.sign_in('mtukman', 'jVJrzWkFoqVCZtX33ufz')
-=======
+
     py.sign_in('mtukman', 'FbUYCv4tcjCPF2ZdfzKo')
->>>>>>> b6e0bd6259c8c249c2ec7887e2966613d03e749c
+
     boxpath = 'E:/Box/'
     reductions_ALL(os.path.join(boxpath, r'Box Sync/Merced Project/Report_How-To Guide/Tukman Working Material/Countywide GHG Reductions All Activities.png'))
     
