@@ -90,7 +90,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None'):
             if tempix > 0:
                 tempdf[activity +'_carbred'] = tempdf[activity+'selected']*(carb1/pixels)
             
-        Helpers.add_to_logfile(logfile,'Activity is: ' + activity + ', Number of Pixels Treated is: ' + str(pixels) + ' AND reduction rate per pixel is: ' + str(carb1/pixels) + ' Tons of CO2e')
+#        Helpers.add_to_logfile(logfile,'Activity is: ' + activity + ', Number of Pixels Treated is: ' + str(pixels) + ' AND reduction rate per pixel is: ' + str(carb1/pixels) + ' Tons of CO2e')
     # Run the above functionf or every activity selected
     for i in activitylist:
         if i != 'urb':
@@ -107,7 +107,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None'):
             tempdf.loc[(tempdf['LC2030_trt_'+i] ==  x),'gridcode30_trt_' + i] = gcdict[x]
         
         
-        
+    #Calculate urban tree planting carbon
     if ug != 0 :
 
         carbon =  29.6082 #Convert tons/ha to tons/pixel

@@ -1509,7 +1509,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
     
     def groundwater(df, outpath):
         """
-        This function reports on changes in groundwater recharge.
+        This function reports on changes in groundwater recharge volume.
         
         """
         
@@ -1590,6 +1590,15 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     pass
                 else:
                     gwfunct(x, 'LC2030_bau', 'bau', dfdict[x])
+        td = df[['LC2014','pointid', 'bcm_val']]
+        td = td.loc[td['LC2014'].isin(['Orchard','Annual Cropland','Vineyard', 'Rice', 'Irrigated Pasture','Forest', 'Shrubland', 'Wetland', 'Barren', 'Water', 'Grassland'])]
+        
+        group14 = td.groupby('LC2014', as_index = False).sum()
+        group14 = group14[['bcm_val','LC2014']]
+        group14 = group14.rename(columns={'bcm_val':'ac_ft_rec_2014', 'LC2014':'landcover'})
+        gwdict['Base_2014'] = group14
+        
+        
         tlist = list(gwdict.values())
         l = len(tlist)
         count = 1
@@ -1957,8 +1966,10 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
                 td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
-                
-                
+            
+            if 'base' in field:
+                td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
+                td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                 
             import pandas as pd
             tdf = pd.DataFrame()
@@ -2254,9 +2265,6 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                                 countdict['b'] = countdict['b'] + 1
                             elif 'a' in i:
                                 countdict['a'] = countdict['a'] + 1
-#                            elif 't' in i:
-#                                countdict['t'] = countdict['t'] + 1
-#                                Helpers.pmes ('TE Count: ' + str(countdict['t']))
                         
                         #This section goes through each species in each rid/species combination, finds the suitability based on the landcover, and decides whether the suitability has improved or degraded.
                         if row[gridcode2] in uf_dict14.keys():
@@ -2285,11 +2293,12 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                             dev_dict[i]['degraded'] = dev_dict[i]['degraded'] + row['pointid']
                         
             def summarize(first_letter, guild):
-
+                """
+                This function takes the processed data and summarizes it for 
+                """
                 if guild=='tes':
                     
                     new_dict = {x: v for x,v in dev_dict.items() if x in list(tespp['species']) }
-                    Helpers.pmes(new_dict)
                     tescount = len(new_dict)
                 else:
                     new_dict = {x: v for x,v in dev_dict.items() if x.startswith(first_letter) }
@@ -2309,6 +2318,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             if a.empty:
                 pass
             else:
+                #This section runs all of the upper functions
                 suit_dict = {}
                 dev_dict = {}
                 uf_dict14 = {}
@@ -2323,14 +2333,15 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 a.apply(initialize_dict, axis=1)
                 Helpers.pmes ('Tallying the DF')
                 a.apply(tally, axis = 1)
+                Helpers.pmes ('Summarizing the Results')
                 summarize('m', 'mammals')
                 summarize('b', 'birds')
                 summarize('a', 'amphibians')
                 summarize('t', 'tes')
-                Helpers.pmes(a.head(10))
+
                 a = pd.DataFrame.from_dict(summary_dict, orient='index')
                 a.reset_index(inplace=True)
-                Helpers.pmes(a.head(10))
+
                 if a.empty:
                     Helpers.pmes('Dataframe is empty')
                 else:
@@ -2378,26 +2389,26 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
 
     
     #Run all of the reporting functions
-#    socresilience(df,outpath)
-#    eco_res(df,outpath)
-#    fmmp(df,outpath)
-#    fema(df,outpath)
-#    scenic(df,outpath)
-#    wateruse(df,outpath)
-#    lcchange(df,outpath)
-#    pcalcchange(df,outpath)
-#    termovement(df,outpath)
-#    cropvalue(df,outpath)
-#    groundwater(df,outpath)
-#    nitrates(df,outpath)
-#    airpol(df,outpath)
+    socresilience(df,outpath)
+    eco_res(df,outpath)
+    fmmp(df,outpath)
+    fema(df,outpath)
+    scenic(df,outpath)
+    wateruse(df,outpath)
+    lcchange(df,outpath)
+    pcalcchange(df,outpath)
+    termovement(df,outpath)
+    cropvalue(df,outpath)
+    groundwater(df,outpath)
+    nitrates(df,outpath)
+    airpol(df,outpath)
     if cproc == 0:
         watershedintegrity(df,outpath)
-#    else:
-#        pass
-#    aqua(df,outpath)
-#    if terflag == 1:
-#        thab_func(df,outpath, lupath)
+    else:
+        pass
+    aqua(df,outpath)
+    if terflag == 1:
+        thab_func(df,outpath, lupath)
 #    
     
 def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 , cm = 0, ug = 0):
@@ -2524,13 +2535,15 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
             lct = lct.rename(columns = {'LC2030_'+ dev:'landcover','carbrate30':'carbon_' + name +'_'+ dev})
             intdict[name +'_'+ dev] = lct
             
+        #Calculate carbon for treatments
         elif name == 'trt':
             temp = pd.merge(td,c30, how = 'left', left_on = 'gridcode30_trt_'+ dev, right_on ='gridcode30' )
             lct = temp.groupby(['LC2030_trt_'+ dev], as_index = False).sum()
             lct = lct[['LC2030_trt_'+ dev, 'carbrate30']]
             lct = lct.rename(columns = {'LC2030_trt_'+ dev:'landcover','carbrate30':'carbon_' + name +'_'+ dev})
             intdict[name +'_'+ dev] = lct
-
+            
+        #Calculate carbon for activities
         elif name in activitylist:
             if (name + '_carbred') in df:
                 lct = td.groupby(['LC2030_trt_bau'], as_index = False).sum()
@@ -2540,6 +2553,8 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
                 intdict[name] = lct
             else:
                 Helpers.pmes('Activity Carbon Rates not in Dataframe')
+                
+        #Calculate carbon for conservation mask area
         elif name in ['con']:
             temp14 = pd.merge(td,c14, how = 'left', left_on = 'gridcode14', right_on = 'gridcode14')
             temp30 = pd.merge(td,c30, how = 'left', left_on = 'gridcode30_trt_bau', right_on = 'gridcode30')

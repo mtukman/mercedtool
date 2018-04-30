@@ -27,7 +27,10 @@ logfile = open(os.path.join(newdir, "logfile.txt"), "w")
 logfile.close()
 logfile = os.path.join((newdir), "logfile.txt")
 Helpers.add_to_logfile(logfile,'Tool Started at: ' + time.strftime("%Y%m%d-%H%M%S") + ' \n')
+Helpers.add_to_logfile2(logfile, '')
 
+
+Helpers.add_to_logfile2(logfile, 'Writing out the tool parameter inputs','----------------------------------------------------------------------------------')
 Helpers.add_to_logfile(logfile,'Output Folder' + ': ' + arcpy.GetParameterAsText(0))
 Helpers.add_to_logfile(logfile,'Data Rootpath' + ': ' + arcpy.GetParameterAsText(1))
 Helpers.add_to_logfile(logfile,'Conservation Mask' + ': ' + arcpy.GetParameterAsText(2))
@@ -45,65 +48,109 @@ devmask = arcpy.GetParameterAsText(5)
 #Look through the Avoided Conversion parameters and see if any avoided conversion parameters have been set. If they have, add them to the avoided conversion activity dictionary.
 acdict = {}
 aclist2 = [45,47,49,51,53,55,57,59,61]
+Helpers.add_to_logfile2(logfile, '')
+Helpers.add_to_logfile2(logfile, 'Checking for Avoided Conversion parameters:')
 for i in aclist2:
     if arcpy.GetParameterAsText(i) == 'Wetland to Annual Cropland':
-        acdict['ac_wet_arc'] = arcpy.GetParameterAsText(i + 1)
-        Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
-        
+        if arcpy.GetParameterAsText(i + 1) != '':
+            acdict['ac_wet_arc'] = arcpy.GetParameterAsText(i + 1)
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+        else:
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected, but no acreage has been specified')
+            
     elif arcpy.GetParameterAsText(i) == 'Grassland to Annual Cropland':
-        acdict['ac_gra_arc'] = arcpy.GetParameterAsText(i + 1)
-        Helpers.add_to_logfile(logfile,'Avoided Conversion - Grassland to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
-        
+        if arcpy.GetParameterAsText(i + 1) != '':
+            acdict['ac_gra_arc'] = arcpy.GetParameterAsText(i + 1)
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Grassland to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+        else:
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected, but no acreage has been specified')
+               
     elif arcpy.GetParameterAsText(i) == 'Irrigated Pasture to Annual Cropland':
-        acdict['ac_irr_arc'] = arcpy.GetParameterAsText(i + 1)
-        Helpers.add_to_logfile(logfile,'Avoided Conversion - Irrigated Pasture to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
-        
+        if arcpy.GetParameterAsText(i + 1) != '':
+            acdict['ac_irr_arc'] = arcpy.GetParameterAsText(i + 1)
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Irrigated Pasture to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+        else:
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected, but no acreage has been specified')
+               
     elif arcpy.GetParameterAsText(i) == 'Orchard to Annual Cropland':
-        acdict['ac_orc_arc'] = arcpy.GetParameterAsText(i + 1)
-        Helpers.add_to_logfile(logfile,'Avoided Conversion - Orchard to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
-        
+        if arcpy.GetParameterAsText(i + 1) != '':
+            acdict['ac_orc_arc'] = arcpy.GetParameterAsText(i + 1)
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Orchard to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+        else:
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected, but no acreage has been specified')
+               
     elif arcpy.GetParameterAsText(i) == 'Annual Cropland to Urban':
-        acdict['ac_arc_urb'] = arcpy.GetParameterAsText(i + 1)
-        Helpers.add_to_logfile(logfile,'Avoided Conversion - Annual Cropland to Urban has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
-        
+        if arcpy.GetParameterAsText(i + 1) != '':
+            acdict['ac_arc_urb'] = arcpy.GetParameterAsText(i + 1)
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Annual Cropland to Urban has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+        else:
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected, but no acreage has been specified')
+               
     elif arcpy.GetParameterAsText(i) == 'Grassland to Urban':
-        acdict['ac_gra_urb'] = arcpy.GetParameterAsText(i + 1)
-        Helpers.add_to_logfile(logfile,'Avoided Conversion - Grassland to Urban has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
-        
+        if arcpy.GetParameterAsText(i + 1) != '':
+            acdict['ac_gra_urb'] = arcpy.GetParameterAsText(i + 1)
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Grassland to Urban has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+        else:
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected, but no acreage has been specified')
+               
     elif arcpy.GetParameterAsText(i) == 'Irrigated Pasture to Urban':
-        acdict['ac_irr_urb'] = arcpy.GetParameterAsText(i + 1)
-        Helpers.add_to_logfile(logfile,'Avoided Conversion - Irrigated Pasture to Urban has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
-        
+        if arcpy.GetParameterAsText(i + 1) != '':
+            acdict['ac_irr_urb'] = arcpy.GetParameterAsText(i + 1)
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Irrigated Pasture to Urban has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+        else:
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected, but no acreage has been specified')
+               
     elif arcpy.GetParameterAsText(i) == 'Orchard to Urban':
-        acdict['ac_orc_urb'] = arcpy.GetParameterAsText(i + 1)
-        Helpers.add_to_logfile(logfile,'Avoided Conversion - Orchard to Urban has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
-        
+        if arcpy.GetParameterAsText(i + 1) != '':
+            acdict['ac_orc_urb'] = arcpy.GetParameterAsText(i + 1)
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Orchard to Urban has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+        else:
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected, but no acreage has been specified')
+               
     elif arcpy.GetParameterAsText(i) == 'Annual Cropland to Orchard':
-        acdict['ac_arc_orc'] = arcpy.GetParameterAsText(i + 1)
-        Helpers.add_to_logfile(logfile,'Avoided Conversion - Annual Cropland to Orchard has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
-        
+        if arcpy.GetParameterAsText(i + 1) != '':
+            acdict['ac_arc_orc'] = arcpy.GetParameterAsText(i + 1)
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Annual Cropland to Orchard has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+        else:
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected, but no acreage has been specified')
+               
     elif arcpy.GetParameterAsText(i) == 'Grassland to Orchard':
-        acdict['ac_gra_orc'] = arcpy.GetParameterAsText(i + 1)
-        Helpers.add_to_logfile(logfile,'Avoided Conversion - Grassland to Orchard has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
-        
+        if arcpy.GetParameterAsText(i + 1) != '':
+            acdict['ac_gra_orc'] = arcpy.GetParameterAsText(i + 1)
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Grassland to Orchard has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+        else:
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected, but no acreage has been specified')
+               
     elif arcpy.GetParameterAsText(i) == 'Irrigated Pasture to Orchard':
-        acdict['ac_irr_orc'] = arcpy.GetParameterAsText(i + 1)
-        Helpers.add_to_logfile(logfile,'Avoided Conversion - Irrigated Pasture to Orchard has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
-        
+        if arcpy.GetParameterAsText(i + 1) != '':
+            acdict['ac_irr_orc'] = arcpy.GetParameterAsText(i + 1)
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Irrigated Pasture to Orchard has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+        else:
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected, but no acreage has been specified')
+               
     elif arcpy.GetParameterAsText(i) == 'Vineyard to Orchard':
-        acdict['ac_vin_orc'] = arcpy.GetParameterAsText(i + 1)
-        Helpers.add_to_logfile(logfile,'Avoided Conversion - Vineyard to Orchard has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
-        
+        if arcpy.GetParameterAsText(i + 1) != '':
+            acdict['ac_vin_orc'] = arcpy.GetParameterAsText(i + 1)
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Vineyard to Orchard has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+        else:
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected, but no acreage has been specified')
+               
     elif arcpy.GetParameterAsText(i) == 'Annual Cropland to Irrigated Pasture':
-        acdict['ac_arc_irr'] = arcpy.GetParameterAsText(i + 1)
-        Helpers.add_to_logfile(logfile,'Avoided Conversion - Annual Cropland to Irrigated Pasture has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
-        
+        if arcpy.GetParameterAsText(i + 1) != '':
+            acdict['ac_arc_irr'] = arcpy.GetParameterAsText(i + 1)
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Annual Cropland to Irrigated Pasture has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+        else:
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected, but no acreage has been specified')
+               
     elif arcpy.GetParameterAsText(i) == 'Orchard to Irrigated Pasture':
-        acdict['ac_orc_irr'] = arcpy.GetParameterAsText(i + 1)
-        Helpers.add_to_logfile(logfile,'Avoided Conversion - Orchard to Irrigated Pasture has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
-        
+        if arcpy.GetParameterAsText(i + 1) != '':
+            acdict['ac_orc_irr'] = arcpy.GetParameterAsText(i + 1)
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Orchard to Irrigated Pasture has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+        else:
+            Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected, but no acreage has been specified')
+               
     elif arcpy.GetParameterAsText(i) == 'None':
-        Helpers.add_to_logfile(logfile,'Avoided Conversion set to None')
+        pass
         
 
 outpath = newdir +  '/'
@@ -192,7 +239,8 @@ Helpers.pmes ('Custom Provessing Mask is :' + mask)
 
 adoptdict = {}
 
-
+Helpers.add_to_logfile2(logfile, '')
+Helpers.add_to_logfile2(logfile, 'Writing out the Activity Parameters for selected Treatments','----------------------------------------------------------------------------------------')
 #Check to see what activities have been selected. For each activity that has been selected, add the relevant variables into the activity dictionary and send a message to the console.
 if 'rre' in activitylist:
     rre = 1

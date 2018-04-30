@@ -25,6 +25,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     hpl - HEDGEROW PLANTING
     urb - URBAN FORESTRY
     '''
+    Helpers.add_to_logfile2(logfile, 'Now selecting points for activities and avoided conversion','------------------------------------------------------------------------------------')
     #Create a dictionary of eligibility,this will inform the tool as to how many points need to be selected and will be populated as the tool progresses
     dict_eligibility = {}
 

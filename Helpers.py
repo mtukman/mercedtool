@@ -15,6 +15,18 @@ def add_to_logfile(logfile,string_to_add):
     lf.close()
     arcpy.AddMessage(string_to_add)
     print (string_to_add)
+    
+def add_to_logfile2(logfile,string_to_add, string2 = ' '):
+    """
+    This function writes to a logfile.
+    """
+    lf = open(logfile, "a")
+    lf.write(string_to_add + "\n")
+    lf.write(string2 + "\n")
+    lf.close()
+    
+    
+    
 def pmes(message):
     """
     Takes a string and prints it as an arcpy msg and as a python print statement
