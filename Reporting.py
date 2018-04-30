@@ -11,7 +11,7 @@ Created on Thu Feb 22 08:58:23 2018
 
 
 #def report(outpath, df):
-def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0, gra = 0, cproc = 0, terflag = 0, ug = 0, ucc = 0):
+def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0, gra = 0, cproc = 0, terflag = 0, ug = 0, ucc = 0):
     
     """
     This function reports on the multi-benefits. 
@@ -19,12 +19,26 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
     
     Arguments:
     df: The dataframe from main program
+    outpath: The folder path where the reporting csvs are exported to
+    glu: general class look up table
+    wlu: water use look up table
+    rlu: resistance look up table
+    clu: crop value look up table
+    nlu: nitrate look up table
+    alu: air pollution look up table
+    cov14: Vegetation cover table for 2014
+    cov30:  Vegetation cover table for 2030
+    lupath: Path to look-up tables folder
     acdict: avoided conversion dictionary, only created if avoided conversion activities are selected
     oak: 1 or 0 flag for oak conversion activity
     rre: 1 or 0 flag for riparian restoration activity
     cd: 0, 1 or 2 flag for if a custom development mask was used
     cm: 1 or 0 flag for if a consermation mask was used 
-    
+    gra: 0 or 1 flag for whether grassland restoration was chosen as an activity
+    cproc = 0 or 1 flag for whether a custom processing mask was used
+    terflag: 0 or 1 flag for whether terrestrial habitat reporting was chosen
+    ug: Urban forestry canopy cover % increase
+    ucc: Urban forestry canopy cover % total
     """
     
     #Create a full list of all basic landcovers (not young shrubland, young forest, oak conversion or riparian restoration)
@@ -38,7 +52,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
     rclass = pd.read_csv(rlu) #resistance look up
     cclass = pd.read_csv(clu) #crop value look up
     nclass = pd.read_csv(nlu) #nitrate look up
-    aclass = pd.read_csv(alu) #nitrate look up
+    aclass = pd.read_csv(alu) #air pollution look up
     cover14 = pd.read_csv(cov14)
     cover30 =  pd.read_csv(cov30)
 
@@ -2424,6 +2438,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     acdict: If avoided conversion activities were selected, this dictionary holds them
     cd: Custom Development flag
     cm: Conservation Mask flag
+    ug: Urban forestry canopy cover % increase
     """
     
     import pandas as pd

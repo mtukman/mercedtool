@@ -145,12 +145,6 @@ def CreateSuitFlags(activity,df,dictact, act):
     df[initflag] = 0
     df.loc[dictact[activity]['query'], initflag] = 1
 
-    
-    
-"""
-Initialization
-"""
-
 
 
 #PREPROCESSING FUNCTIONS
@@ -423,8 +417,7 @@ def Carbon2030calc():
     df1 = pd.DataFrame(np.nan, index=[], columns=[])
     
     for i in temp:
-        
-        total = result3.loc[result3['Landcover_Class'] == i]
+
         temp1 = result4.loc[result4['Landcover_Class'] == i]
         carbsum = temp1['Sumco'].sum()
         temp1['share'] = 0
@@ -482,22 +475,14 @@ def create_processing_table(InPoints,inmask, tempgdb, scratch):
     return temppts
         
         
-        
 
-        
-        
-        
-        
         
 def lc_mod(flagfield, label, labelfield, dataframe):
     """
     This function just simplifies the query that calculates a field"""
     dataframe.loc[(dataframe[flagfield] == 1), labelfield] = label
         
-    
-    
 
-    
 
 def devscen (td):
     """
@@ -589,6 +574,9 @@ def carbon30(df):
 
 
 def remove_unnamed(folder):
+    """
+    This function removes the unnamed index field from any csv in the provided folder
+    """
     import os
     import pandas as pd
 
