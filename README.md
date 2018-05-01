@@ -33,7 +33,7 @@ To use the tool on your local computer, first make sure that you meet the follow
 
 ## Installing Tool in ArcMap
 Installation steps are as follows:
-1.	Download and the supporting data from goo.gl/A1H6BB.  Extract the contents of “mercedtool-master.zip” (which contains a folder called mercedtool-master) to a folder on your hard drive.  The extracted folder contains a number of python modules and an ArcGIS toolbox called MC-CAT.
+1.	Download the supporting data from goo.gl/A1H6BB.  Extract the contents of “mercedtool-master.zip” (which contains a folder called mercedtool-master) to a folder on your hard drive.  The extracted folder contains a number of python modules and an ArcGIS toolbox called MC-CAT.
 2.	Add the Merced Conservation Carbon Accounting Tool to the ArcMap Toolbox window within ArcMap.  To do this, right-click the Arc Toolbox folder and click Add Toolbox.  Browse to the location containing the toolbox that you extracted above in step 1 and select the “ Merced Conservation Carbon Accounting” toolbox.
 
 Once your .mxd is saved, the contents of the Arc Toolbox window are also saved within the map document. The next time you open the document, the Toolbox window will be the same as when you saved the document.
