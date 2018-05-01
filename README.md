@@ -13,16 +13,16 @@
 4.  Run the toolbox
 
 
-Installation Instructions for MC_CAT
+## Installation Instructions for MC_CAT
 
-Downloading Data & MC_CAT
 The MC-CAT and its supporting data are available at:
-MC-CAT Python Scripts and Toolbox:
-https://github.com/mtukman/mercedtool
-MC-CAT Supporting Data:
+•	MC-CAT Python Scripts and Toolbox:
+	https://github.com/mtukman/mercedtool
+
+•	MC-CAT Supporting Data:
 	goo.gl/A1H6BB
   
-System Requirements
+## System Requirements
 To use the tool on your local computer, first make sure that you meet the following system requirements:
 •	ArcGIS, version 10.2.2 or greater OR ArcPro
 •	16 GB Memory
