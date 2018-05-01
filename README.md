@@ -27,9 +27,9 @@ The MC-CAT and its supporting data are available at:
   
 ## System Requirements
 To use the tool on your local computer, first make sure that you meet the following system requirements:
-•	ArcGIS, version 10.2.2 or greater OR ArcPro
-•	16 GB Memory
-•	5 GB hard drive Space
+* ArcGIS, version 10.2.2 or greater OR ArcPro
+* 16 GB Memory
+* 5 GB hard drive Space
 
 ## Installing Tool in ArcMap
 Installation steps are as follows:
