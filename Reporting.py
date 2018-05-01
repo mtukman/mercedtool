@@ -2405,24 +2405,24 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
     #Run all of the reporting functions
     socresilience(df,outpath)
     eco_res(df,outpath)
-    fmmp(df,outpath)
-    fema(df,outpath)
-    scenic(df,outpath)
-    wateruse(df,outpath)
-    lcchange(df,outpath)
-    pcalcchange(df,outpath)
-    termovement(df,outpath)
-    cropvalue(df,outpath)
-    groundwater(df,outpath)
-    nitrates(df,outpath)
-    airpol(df,outpath)
-    if cproc == 0:
-        watershedintegrity(df,outpath)
-    else:
-        pass
-    aqua(df,outpath)
-    if terflag == 1:
-        thab_func(df,outpath, lupath)
+#    fmmp(df,outpath)
+#    fema(df,outpath)
+#    scenic(df,outpath)
+#    wateruse(df,outpath)
+#    lcchange(df,outpath)
+#    pcalcchange(df,outpath)
+#    termovement(df,outpath)
+#    cropvalue(df,outpath)
+#    groundwater(df,outpath)
+#    nitrates(df,outpath)
+#    airpol(df,outpath)
+#    if cproc == 0:
+#        watershedintegrity(df,outpath)
+#    else:
+#        pass
+#    aqua(df,outpath)
+#    if terflag == 1:
+#        thab_func(df,outpath, lupath)
 #    
     
 def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 , cm = 0, ug = 0):
@@ -2628,16 +2628,16 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     c14 = pd.read_csv(carb14)
     
     #Calculate the 2014 carbon total
-#    def do2014(df, c14):
-#        td = df[['LC2014', 'gridcode14']]
-#        temp = pd.merge(td,c14, how = 'left', on = 'gridcode14')
-#        lct = temp.groupby(['LC2014'], as_index = False).sum()
-#        return lct
-#    lct = do2014(df, c14)
-#      
-#    lct = lct[['LC2014', 'carbrate14']]
-#    lct = lct.rename(columns = {'LC2014':'landcover','carbrate14':'carbon2014'})
-#    intdict['Carbon2014'] = lct
+    def do2014(df, c14):
+        td = df[['LC2014', 'gridcode14']]
+        temp = pd.merge(td,c14, how = 'left', on = 'gridcode14')
+        lct = temp.groupby(['LC2014'], as_index = False).sum()
+        return lct
+    lct = do2014(df, c14)
+      
+    lct = lct[['LC2014', 'carbrate14']]
+    lct = lct.rename(columns = {'LC2014':'landcover','carbrate14':'carbon2014'})
+    intdict['Carbon2014'] = lct
 
     tlist = list(intdict.values())
     l = len(tlist)
@@ -2653,27 +2653,31 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     temp.fillna(0, inplace = True)
     
     
-    temp['trt_bau_total'] = 0
-    temp['trt_med_total'] = 0
-    temp['trt_max_total'] = 0
-    temp['trt_bau_total'] = temp['carbon_trt_bau'] + temp['trt_bau_total']
-    temp['trt_med_total'] = temp['carbon_trt_med'] + temp['trt_med_total']
-    temp['trt_max_total'] = temp['carbon_trt_max'] + temp['trt_max_total']
+
+    temp['trt_bau_total'] = temp['carbon_trt_bau']
+    temp['trt_med_total'] = temp['carbon_trt_med']
+    temp['trt_max_total'] = temp['carbon_trt_max']
+    if cd == 1:
+        temp['trt_cust_total'] = temp['carbon_trt_cust']
+    
     
     for i in collist:
         temp['trt_med_total'] = temp[i] + temp['trt_med_total']
         temp['trt_max_total'] = temp[i] + temp['trt_max_total']
         temp['trt_bau_total'] = temp[i] + temp['trt_bau_total']
+        temp['trt_cust_total'] = temp[i] + temp['trt_cust_total']
     temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
     #Export the dataframe to a csv
     temp.to_csv(outpath+'carbon.csv', index = False)  
     
     
     
-def report_acres(df, activitylist, outpath):
+def report_acres(df, activitylist, outpath, acdict = 'None'):
     """
     This function reports the number of acres adopted for each activity.
-    
+    df: The dataframe, passed from the main program
+    outpath: The folder to which reporting csvs will be exported
+    activitylist: List of activities selected from the main program module
     
     """
     
@@ -2681,7 +2685,7 @@ def report_acres(df, activitylist, outpath):
     import pandas as pd
     acredict= {}
     
-    
+    #Go through each activity selected and calculate acres adopted.
     if activitylist:
         for i in activitylist:
             temp = df.loc[df[i + 'selected'] == 1]
@@ -2693,7 +2697,16 @@ def report_acres(df, activitylist, outpath):
             
             acredict[i] = temp
             
-        
+        if acdict != 'None':
+            aclist = [*acdict]
+            for i in aclist:
+                temp = df.loc[df[i + 'selected'] == 1]
+                temp = temp.groupby([i + 'selected'], as_index = False).count()
+                temp = temp [[i + 'selected', 'pointid']]
+                temp['pointid'] = temp['pointid'] * 0.222395
+                temp = temp[['pointid']]
+                temp = temp.rename(columns = {'pointid':i + '_acres'})
+                acredict[i] = temp
         tlist = list(acredict.values())
 
         temp = tlist[0]

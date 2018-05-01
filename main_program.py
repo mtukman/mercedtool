@@ -366,7 +366,7 @@ if arcpy.GetParameterAsText(44):
 else:
     treatmask = 'None'
     
-if arcpy.GetParameterAsText(63):
+if arcpy.GetParameterAsText(63) != '':
     terflag = 1
 else:
     terflag = 0
@@ -411,6 +411,6 @@ Helpers.pmes("**CREATING CARBON REPORTS...**")
 
 
 Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
-Reporting.report_acres(templist[0],activitylist,outpath)
+Reporting.report_acres(templist[0],activitylist,outpath, acdict)
 
 
