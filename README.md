@@ -1,9 +1,4 @@
-# mercedtool
-
-## Requirments for the Merced Carbon Tool
-1.  16 GB of RAM and 10 GB of free disk space
-2.  ArcGIS Pro 2.1 (later versions will run on ArcMap)
-
+# Merced Conservation and Carbon Accounting Tool
 
 ## Instructions for installing and running the Merced Carbon tool
 
