@@ -16,10 +16,13 @@
 ## Installation Instructions for MC_CAT
 
 The MC-CAT and its supporting data are available at:
+
 •	MC-CAT Python Scripts and Toolbox:
+
 	https://github.com/mtukman/mercedtool
 
 •	MC-CAT Supporting Data:
+
 	goo.gl/A1H6BB
   
 ## System Requirements
