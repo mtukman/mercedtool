@@ -17,11 +17,11 @@
 
 The MC-CAT and its supporting data are available at:
 
-•	MC-CAT Python Scripts and Toolbox:
+* MC-CAT Python Scripts and Toolbox:
 
 	https://github.com/mtukman/mercedtool
 
-•	MC-CAT Supporting Data:
+* MC-CAT Supporting Data:
 
 	goo.gl/A1H6BB
   
