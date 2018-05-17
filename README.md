@@ -4,7 +4,7 @@
 
 1.  Clone this repo
 2.  Add the python toolbox contained in the repo to ArcGIS Pro version 2.1
-3.  Download the 'MASTER_DATA' folder at .... and save it to a folder on your PC
+3.  Download the 'MASTER_DATA' folder at goo.gl/A1H6BB and save it to a folder on your PC
 4.  Run the toolbox
 
 
