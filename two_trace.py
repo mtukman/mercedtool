@@ -1,6 +1,6 @@
 
 runfolder = r"E:\Temp\20180515-110310\\"
-mba_title_font = 18
+mba_title_font = 20
 plot_dict = {}
 axis_lab_font = 16
 import plotly.plotly as py
@@ -89,7 +89,7 @@ def simp(afolder = ''):
         df = pd.read_csv(afolder + r'\watint.csv')
         df2 = df2[['Integrity_Class','ha_change_base_bau']]
         df2 = df2.rename(columns = {'Integrity_Class': 'Watershed Class','ha_change_base_bau':'Reference Scenario'})
-        df = df[['Integrity_Class','ha_change_trt_bau','ha_change_trt_max']]
+        df = df[['Integrity_Class','ha_change_trt_bau']]
         df = df.rename(columns = {'Integrity_Class': 'Watershed Class', 'ha_change_trt_bau':'Treatment Scenario'})
     
         temp = pd.merge(df2, df, on = 'Watershed Class', how = 'left')
@@ -208,7 +208,7 @@ def simp(afolder = ''):
         df = pd.read_csv(afolder + r'\countymovement.csv')
         df2 = df2[['resistance_class','ha_change_base_bau']]
         df2 = df2.rename(columns = {'resistance_class': 'Resistance to Movement','ha_change_base_bau':'Reference Scenario'})
-        df = df[['resistance_class','ha_change_trt_bau','ha_change_trt_max']]
+        df = df[['resistance_class','ha_change_trt_bau']]
         df = df.rename(columns = {'resistance_class': 'Resistance to Movement', 'ha_change_trt_bau':'Treatment Scenario'})
         
         
@@ -233,7 +233,7 @@ def simp(afolder = ''):
         df = pd.read_csv(afolder + r'\ecamovement.csv')
         df2 = df2[['resistance_class','ha_change_base_bau']]
         df2 = df2.rename(columns = {'resistance_class': 'Resistance to Movement','ha_change_base_bau':'Reference Scenario'})
-        df = df[['resistance_class','ha_change_trt_bau','ha_change_trt_max']]
+        df = df[['resistance_class','ha_change_trt_bau']]
         df = df.rename(columns = {'resistance_class': 'Resistance to Movement', 'ha_change_trt_bau':'Treatment Scenario'})
         
         
@@ -258,7 +258,7 @@ def simp(afolder = ''):
         df = pd.read_csv(afolder + r'\lcchange.csv')
         df2 = df2[['landcover','ha_change_base_bau']]
         df2 = df2.rename(columns = {'landcover': 'Landcover','ha_change_base_bau':'Reference Scenario'})
-        df = df[['landcover','ha_change_trt_bau','ha_change_trt_max']]
+        df = df[['landcover','ha_change_trt_bau']]
         df = df.rename(columns = {'landcover': 'Landcover', 'ha_change_trt_bau':'Treatment Scenario'})
         
         
@@ -271,7 +271,7 @@ def simp(afolder = ''):
         df = pd.read_csv(afolder + r'\pca_cover_change.csv')
         df2 = df2[['landcover','ha_change_base_bau']]
         df2 = df2.rename(columns = {'landcover': 'Landcover','ha_change_base_bau':'Reference Scenario'})
-        df = df[['landcover','ha_change_trt_bau','ha_change_trt_max']]
+        df = df[['landcover','ha_change_trt_bau']]
         df = df.rename(columns = {'landcover': 'Landcover', 'ha_change_trt_bau':'Treatment Scenario'})
         
         
@@ -286,7 +286,7 @@ def simp(afolder = ''):
             df = pd.read_csv(afolder + r'\terrhab.csv')
             df2 = df2[['guild','ha_base_bau']]
             df2 = df2.rename(columns = {'guild': 'Guild','ha_base_bau':'Reference Scenario'})
-            df = df[['guild','ha_trt_bau','ha_trt_max']]
+            df = df[['guild','ha_trt_bau']]
             df = df.rename(columns = {'guild': 'Guild', 'ha_trt_bau':'Treatment Scenario'})
             
             
@@ -310,7 +310,7 @@ def simp(afolder = ''):
         df = pd.read_csv(afolder + r'\aquatic.csv')
         df2 = df2[['gen_class','ha_change_base_bau']]
         df2 = df2.rename(columns = {'gen_class': 'Landcover','ha_change_base_bau':'Reference Scenario'})
-        df = df[['gen_class','ha_change_trt_bau','ha_change_trt_max']]
+        df = df[['gen_class','ha_change_trt_bau']]
         df = df.rename(columns = {'gen_class': 'Landcover', 'ha_change_trt_bau':'Treatment Scenario'})
         
         
@@ -322,7 +322,7 @@ def simp(afolder = ''):
     
     def eco_resi():
         df = pd.read_csv(afolder + r'\aquatic.csv')
-        df = df[['gen_class','ha_change_base_bau','ha_change_trt_bau','ha_change_trt_max']]
+        df = df[['gen_class','ha_change_base_bau','ha_change_trt_bau']]
         df = df.rename(columns = {'gen_class': 'Landcover', 'ha_change_base_bau':'Reference Scenario', 'ha_change_trt_bau':'Treatment Scenario'})
         temp = df
         temp.set_index(['Landcover'], inplace = True)
@@ -332,7 +332,7 @@ def simp(afolder = ''):
         temp.to_csv(outfolder+'2030 ecoresilience_table.csv', index = False)   
     def soc_resi():
         df = pd.read_csv(afolder + r'\aquatic.csv')
-        df = df[['gen_class','ha_change_base_bau','ha_change_trt_bau','ha_change_trt_max']]
+        df = df[['gen_class','ha_change_base_bau','ha_change_trt_bau']]
         df = df.rename(columns = {'gen_class': 'Landcover', 'ha_change_base_bau':'Reference Scenario', 'ha_change_trt_bau':'Treatment Scenario'})
         temp = df
         temp.set_index(['Landcover'], inplace = True)
@@ -449,10 +449,13 @@ def mba_twotrace(table, title = 'Nothing' , xax = 'holder', yax = 'holder',  yti
 
     data = go.Data([trace1, trace2])
     layout = {
-      "autosize": True, 
+      "autosize": False, 
       "hovermode": "closest", 
-      "showlegend": True, 
-      "title": title, 
+      "showlegend": True,
+      "legend": {"font": {"size": 14}},
+      "height": 1024,
+      "width": 1280,  
+      "title": title,
       "titlefont": {
       "size": mba_title_font
           },
@@ -470,7 +473,7 @@ def mba_twotrace(table, title = 'Nothing' , xax = 'holder', yax = 'holder',  yti
         "title": ytitle, 
         "type": "linear",
         "titlefont": {
-                "size": axis_lab_font
+                "size": 17
           }
       },
 #        "annotations": [plot_dict[mba]['ann']
@@ -507,10 +510,12 @@ def mba_chart_onetrace(table, xax = 'holder', yax = 'holder', x = 'None',y = 'No
 
     data = go.Data([trace1])
     layout = {
-      "autosize": True, 
+      "autosize": False, 
       "hovermode": "closest", 
-      "showlegend": False, 
-      "title": xax, 
+      "showlegend": False,
+      "title": xax,
+      "width": 1280,
+      "height": 1024,
       "titlefont": {
       "size": mba_title_font
           },
@@ -532,6 +537,7 @@ def mba_chart_onetrace(table, xax = 'holder', yax = 'holder', x = 'None',y = 'No
           }
       }
     }
+
    
     fig = go.Figure(data=data, layout=layout)
 #    plot(fig, filename= plot_dict[mba]['title'] + '.html')
@@ -543,7 +549,7 @@ def custom_plots(afolder):
     outpath = afolder + 'plots_twotrace/'
 
 
-    mba_twotrace(tables + "/2030 Ag Land Quality.csv", '2014-2030 Farmland Loss', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Farmland Class', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Farmland Loss.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 12)
+    mba_twotrace(tables + "/2030 Ag Land Quality.csv", '2014-2030 Farmland Loss', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Farmland Class', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Farmland Loss.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 14)
     
 
     mba_twotrace(tables + "/2030 Crop Value.csv", '2014-2030 Change in Crop Value', xax = 'holder', yax = 'holder',   ytitle = 'US Dollars', x1 = 'Crop Type', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Crop Value.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
@@ -565,16 +571,16 @@ def custom_plots(afolder):
     mba_twotrace(tables + "/2030 Flood Risk Reduction.csv", '2014-2030 Change in Landcover in Highly Visible Areas', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'General Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Scenic Value.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
 
 
-    mba_twotrace(tables + "/2030 ECA Terrestrial Connectivity.csv", '2014-2030 Change in Resistance to Species Movement<br>in Essential Connectivity Areas', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Resistance to Movement', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 ECA Terrestrial Connectivity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', xtit = 'Resistance to Movement',a_font = 12)
+    mba_twotrace(tables + "/2030 ECA Terrestrial Connectivity.csv", '2014-2030 Change in Resistance to Species Movement<br>in Essential Connectivity Areas', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Resistance to Movement', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 ECA Terrestrial Connectivity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', xtit = 'Resistance to Movement',a_font = 14)
 
-    mba_twotrace(tables + "/2030 Terrestrial Connectivity.csv", '2014-2030 Change in Resistance to <br>Species Movement', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Resistance to Movement', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Terrestrial Connectivity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', xtit = 'Resistance to Movement', a_font = 12)
+    mba_twotrace(tables + "/2030 Terrestrial Connectivity.csv", '2014-2030 Change in Resistance to <br>Species Movement', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Resistance to Movement', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Terrestrial Connectivity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', xtit = 'Resistance to Movement', a_font = 14)
     
 
     mba_twotrace(tables + "/2030 Priority Conservation Areas.csv", '2014-2030 Change in Landcover in Priority Conservation Areas', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Priority Conservation Areas.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
 
     mba_twotrace(tables + "/2030 Natural Habitat Area.csv", '2014-2030 Change in Landcover', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Natural Habitat Area.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
 
-    mba_twotrace(tables + "/2030 Terrestrial Habitat Value.csv", '2014-2030 Change in Terrestrial Habitat Value', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Guild', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Terrestrial Habitat Value.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 11)
+    mba_twotrace(tables + "/2030 Terrestrial Habitat Value.csv", '2014-2030 Change in Terrestrial Habitat Value', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Guild', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Terrestrial Habitat Value.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 13)
     
 
     mba_twotrace(tables + "/2030 Aquatic Biodiversity.csv", '2014-2030 Landcover Change in Watersheds with <br>Important Aquatic Habitat', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Aquatic Biodiversity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
@@ -584,15 +590,15 @@ def custom_plots(afolder):
 
     mba_twotrace(tables + "/2030 ecoresilience_table.csv", '2014-2030 Landcover Change in Areas Important <br>For Social Resilience', xax = 'holder', yax = 'holder', ytitle = 'Hectares', x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Social Resilience.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
 
-    mba_chart_onetrace(tables + "/Carbon Reductions.csv", '2030 Carbon Reductions from Activities/Treatments', yax = 'Tons of CO2e', x = 'Activity',y = 'Tons of CO2e Reduced', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions.png", xtit = '', xfont = 12)
+    mba_chart_onetrace(tables + "/Carbon Reductions.csv", '2030 Carbon Reductions from Activities', yax = 'Tons of CO2e', x = 'Activity',y = 'Tons of CO2e Reduced', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions.png", xtit = '', xfont = 14)
     
     mba_chart_onetrace(tables + "/Carbon Reductions Compare.csv", '2014-2030 Carbon Reduction Change', yax = 'Tons of CO2e', x = 'Scenario',y = 'Tons of CO2e', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions Compare.png", xtit = '', xfont = 14)
     
-    mba_chart_onetrace(tables + "/act_acres.csv", 'Activities and Acres', yax = 'Acres Selected', x = 'Activity',y = 'Acres', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "Activity Acres Selected.png", xtit = '', xfont = 11)
+    mba_chart_onetrace(tables + "/act_acres.csv", 'Activities and Acres', yax = 'Acres Selected', x = 'Activity',y = 'Acres', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "Activity Acres Selected.png", xtit = '', xfont = 14)
     
     mba_twotrace(tables + "/2030 Water Quality - Nitrate Runoff.csv", '2014-2030 Change in Nitrate Runoff', xax = 'holder', yax = 'holder',   ytitle = 'Tons of Nitrate', x1 = 'Scenario', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Water Quality - Nitrate Runoff.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
     
-    mba_twotrace(tables + "/2030 Water Quality - Nitrate Leaching.csv", '2014-2030 Change in Nitrate Leaching', xax = 'holder', yax = 'holder',   ytitle = 'Tons of Nitrate', x1 = 'Scenario', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Water Quality - Nitrate Leaching.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 12)
+    mba_twotrace(tables + "/2030 Water Quality - Nitrate Leaching.csv", '2014-2030 Change in Nitrate Leaching', xax = 'holder', yax = 'holder',   ytitle = 'Tons of Nitrate', x1 = 'Scenario', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Water Quality - Nitrate Leaching.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 14)
 
 simp(runfolder)
 custom_plots(runfolder)
