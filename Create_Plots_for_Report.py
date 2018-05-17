@@ -14,7 +14,8 @@ carb01 = 50793849
 carb14 = 52406560
 titlefont = 18
 large_x_labs = 14
-
+import plotly.plotly as py
+py.sign_in('mtukman', 'FbUYCv4tcjCPF2ZdfzKo')
 def  flyingm_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HighDev\carbon.csv', table_medium=r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\carbon.csv', outfile = 'C:/temp/test.png'):
     import pandas as pd
     high = pd.read_csv(table_high)
@@ -1524,6 +1525,67 @@ def  reductions_AG(carbon_table, outfile):
     py.image.save_as(fig, outfile, format='png')
     return fig
     
+def mba_threetrace(table, title = 'Nothing' , xax = 'holder', yax = 'holder', mba = 'temp', pre = 'ha_change', ytitle = 'None', x1 = 'None', x3 = 'None',x4 = '', outfile = 'temp',y2 = 'none',y3 = 'none', xtit = '', x_font = 14):
+    import plotly.plotly as py
+    from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+    #import plotly.plotly as py
+    from plotly import tools
+    import plotly.graph_objs as go
+    import pandas as pd
+    table = pd.read_csv(table)
+    table = table.loc[:, ~table.columns.str.contains('^Unnamed')]
+
+        
+
+    trace2 = {
+      "x": table[x1], 
+      "y": table[x3],  
+      "type":"bar",
+       "name":y2
+    }
+    trace3 = {
+      "x": table[x1], 
+      "y": table[x4], 
+"type":"bar",
+ "name":y3
+    }
+
+
+    data = go.Data([trace2, trace3])
+    layout = {
+      "autosize": True, 
+      "hovermode": "closest", 
+      "showlegend": True, 
+      "title": title, 
+      "titlefont": {
+      "size": 16
+          },
+      "xaxis": {
+        "autorange": True, 
+        "type": "category",
+        "title": xtit,
+        "tickfont": {
+      "size": x_font
+          }
+      }, 
+      "yaxis": {
+        "autorange": True, 
+        "range": [0,1], 
+        "title": ytitle, 
+        "type": "linear",
+        "titlefont": {
+                "size": 14
+          }
+      },
+#        "annotations": [plot_dict[mba]['ann']
+#      
+#    ]
+    }
+   
+    fig = go.Figure(data=data, layout=layout)
+#    plot(fig, filename= plot_dict[mba]['title'] + '.html')
+    py.image.save_as(fig, outfile, format='png')
+    return fig
 
 def make_plots_AC():
     import os
@@ -1579,13 +1641,40 @@ def make_countywide_reductions_all_activities():
     boxpath = 'E:/Box/'
     reductions_ALL(os.path.join(boxpath, r'Box Sync/Merced Project/Report_How-To Guide/Tukman Working Material/Countywide GHG Reductions All Activities.png'))
     
- 
+import os
+boxpath = 'E:/Box/'
+mba_threetrace(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HighDev\resilience_table.csv", '2014-2030 Change in Landcover in Areas<br>Valuable for Natural Resilience', xax = 'holder', yax = 'holder', mba = 'temp', pre = 'ha_change', ytitle = 'Hectares', x1 = 'Landcover', x3 = 'Medium Development',x4 = 'Intense Development',outfile = r"E:\BoxSync\Box Sync\Merced Project\Case Studies\Avoided Conversion\Case Study AC Eco Resil.png", y2 = 'Partial<br>Development',y3 = 'Full<br>Development', x_font = 12)
 
     
     
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   

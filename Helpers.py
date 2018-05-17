@@ -61,7 +61,7 @@ def CreateEligDict(df, activity, dictact, dict_eligibility, act):
     dict_eligibility[act] = eli_dict_element
     
 
-def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
+def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'None'):
     """
     This function takes a dictionary, a dataframe and an activity.
     It takes a user input to determine how many pixels to select for the activity.
@@ -120,12 +120,16 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
                 
             else:
                 pass
-    
-        add_to_logfile(logfile,activity + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
-        query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
-        add_to_logfile(logfile,activity + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
-        df.loc[query,selflag] = 1  
-        
+        if aco != 'None':
+            add_to_logfile(logfile,aco + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
+            query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
+            add_to_logfile(logfile,aco + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
+            df.loc[query,selflag] = 1  
+        else:
+            add_to_logfile(logfile,activity + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
+            query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
+            add_to_logfile(logfile,activity + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
+            df.loc[query,selflag] = 1  
     #Run the select function using either small or large groups of points
     if dictact[activity]['grpsize'] == 'medium':
         select('medgroup_val', count)
@@ -144,7 +148,8 @@ def CreateSuitFlags(activity,df,dictact, act):
     pmes ('Calculating Suitability for : ' + initflag)
     df[initflag] = 0
     df.loc[dictact[activity]['query'], initflag] = 1
-
+    temp = df.head(20)
+    temp.to_csv('P:/Temp/test2.csv')
 
 
 #PREPROCESSING FUNCTIONS

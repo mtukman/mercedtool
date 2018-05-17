@@ -110,7 +110,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None'):
     #Calculate urban tree planting carbon
     if ug != 0 :
 
-        carbon =  29.6082 #Convert tons/ha to tons/pixel
+        carbon =  29.6082 #Convert tons/ha to tons/pixel 
         
         tempdf['urb' +'_carbred'] = 0
         tempdf.loc[tempdf['urbselected'] == 1, 'urb_carbred'] = carbon

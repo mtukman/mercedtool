@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 """
 Created on Tue Apr 24 12:10:25 2018
@@ -10,7 +11,9 @@ afolder = r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\\"
 outfolder = r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\simp_tables\\"
 import pandas as pd
 import functools
+import plotly.plotly as py
 
+py.sign_in('mtukman', 'FbUYCv4tcjCPF2ZdfzKo')
 
 
 def fmmp2014():
@@ -924,52 +927,88 @@ def aqua2030_rre():
     temp.to_csv(outfolder+'2030 Aquatic Biodiversity RRE.csv', index = False)   
 
 
+def eco_resi():
+    df = pd.read_csv(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\urb_25\eco_resil.csv")
+    df = df[['gen_class','ha_change_base_bau','ha_change_base_med','ha_change_base_max']]
+    df = df.rename(columns = {'gen_class': 'Landcover', 'ha_change_base_bau':'Reference', 'ha_change_base_med':'Medium Infill','ha_change_base_max':'Max Infill'})
+    temp = df
+    temp.set_index(['Landcover'], inplace = True)
+    temp = temp[temp.values.sum(axis=1) != 0]
+    temp.reset_index(inplace = True)
+    
+    temp.to_csv(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\simp_tables\ecoresilience_table.csv", index = False)   
+def soc_resi():
+    df = pd.read_csv(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\urb_25\soc_res.csv")
+    df = df[['gen_class','ha_change_base_bau','ha_change_base_med','ha_change_base_max']]
+    df = df.rename(columns = {'gen_class': 'Landcover', 'ha_change_base_bau':'Reference', 'ha_change_base_med':'Medium Infill','ha_change_base_max':'Max Infill'})
+    temp = df
+    temp.set_index(['Landcover'], inplace = True)
+    temp = temp[temp.values.sum(axis=1) != 0]
+    temp.reset_index(inplace = True)
+    
+    temp.to_csv(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\simp_tables\socresilience_table.csv", index = False)   
+       
+    
+def soc_resi14():
+    df = pd.read_csv(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\urb_25\soc_res.csv")
+    df = df[['gen_class','ha_2014']]
+    df = df.loc[df['ha_2014'] > 0]
+    df = df.rename(columns = {'gen_class': 'Landcover', 'ha_2014':'Hectares'})
+    df.to_csv(outfolder+'2014 Social Resilience.csv', index = False)        
+    
+def eco_resi14():
+    df = pd.read_csv(r"E:\BoxSync\Box Sync\Merced Project\Tool\outputs\activities\urb_25\eco_resil.csv")
+    df = df[['gen_class','ha_2014']]
+    df = df.loc[df['ha_2014'] > 0]
+    df = df.rename(columns = {'gen_class': 'Landcover', 'ha_2014':'Hectares'})
+    df.to_csv(outfolder+'2014 Ecological Resilience.csv', index = False)        
 
-
-fmmp2014()
-fmmp2030()
-crop2014()
-crop2030()
-watcon2030()
-watcon2014()
-watint2014()
-watint2030_rre()
-groundwater2014()
-nitrun2014()
-nitleach2014()
-nitrun2030_rre()
-nitrun2030_nfm()
-nitleach2030_rre()
-nitleach2030_nfm()
-flood2014()
-flood2030()
-test = air2014()
-test = air2030()
-test = air2030_rre()
-test = air2030_HPL()
-test = air2030_URB()
-test = air2030_OAK()
-scenic2014()
-scenic2030()
-move2014()
-move2030_rre()
-move2030_hpl()
-move2014_eca()
-move2030_rre_eca()
-move2030_hpl_eca()
-lcc2014()
-lcc2030_rre()
-lcc2030_oak()
-pcalcc2014()
-pcalcc2030_rre()
-pcalcc2030_oak()
-terrhab2030_rre()
-terrhab2030_oak()
-aqua2014()
-aqua2030_rre()
-
-
-
+    
+#fmmp2014()
+#fmmp2030()
+#crop2014()
+#crop2030()
+#watcon2030()
+#watcon2014()
+#watint2014()
+#watint2030_rre()
+#groundwater2014()
+#nitrun2014()
+#nitleach2014()
+#nitrun2030_rre()
+#nitrun2030_nfm()
+#nitleach2030_rre()
+#nitleach2030_nfm()
+#flood2014()
+#flood2030()
+#test = air2014()
+#test = air2030()
+#test = air2030_rre()
+#test = air2030_HPL()
+#test = air2030_URB()
+#test = air2030_OAK()
+#scenic2014()
+#scenic2030()
+#move2014()
+#move2030_rre()
+#move2030_hpl()
+#move2014_eca()
+#move2030_rre_eca()
+#move2030_hpl_eca()
+#lcc2014()
+#lcc2030_rre()
+#lcc2030_oak()
+#pcalcc2014()
+#pcalcc2030_rre()
+#pcalcc2030_oak()
+#terrhab2030_rre()
+#terrhab2030_oak()
+#aqua2014()
+#aqua2030_rre()
+eco_resi()
+soc_resi()
+eco_resi14()
+soc_resi14()
 
 
 

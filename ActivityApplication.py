@@ -35,6 +35,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
 
     #Create an query addon that is based on whether a custom development or treatment mask has been provided by the user.
     queryadd =  ((df['pref_dev_flag'] == 0) & (df['dcode_maxinfill'] == 0))
+    queryadd2 = (df['trt_flag'] == 1)
     if customdev == 1:
         
         if treatmask != 'None':
@@ -105,83 +106,158 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     
     #Loop through the keys in the acdict dictionary, created in the main program. For each avoided conversion activity found, perform suitability, eligibility and selection functions.    
     keylist = [*acdict]
-    for i in keylist:
-        df.loc[(df['LC2030_trt_bau'] == df['LC2030_bau']), 'lcchange'] = 1   
-        if i == 'ac_wet_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Wetland') & (df['LC2030_bau'].isin(['Annual Cropland']))
-            t = 'Wetland'
-            g = 0
-        if i == 'ac_gra_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Grassland') & (df['LC2030_bau'].isin(['Annual Cropland']))
-            t = 'Grassland'
-            g = 2
-        if i == 'ac_irr_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Irrigated Pasture') & (df['LC2030_bau'].isin(['Annual Cropland']))
-            t = 'Irrigated Pasture'
-            g = 11
-        if i == 'ac_orc_arc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Orchard') & (df['LC2030_bau'].isin(['Annual Cropland']))
-            t = 'Orchard'
-            g = 9
-        if i == 'ac_arc_urb':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Annual Cropland') & (df['LC2030_bau'].isin(['Urban', 'Developed', 'Developed Roads']))
-            t = 'Annual Cropland'
-            g = 7
-        if i == 'ac_gra_urb':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Grassland') & (df['LC2030_bau'].isin(['Urban', 'Developed', 'Developed Roads']))
-            t = 'Grassland'
-            g = 2
-        if i == 'ac_irr_urb':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Irrigated Pasture') & (df['LC2030_bau'].isin(['Urban', 'Developed', 'Developed Roads']))
-            t = 'Irrigated Pasture'
-            g = 11
-        if i == 'ac_orc_urb':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Orchard') & (df['LC2030_bau'].isin(['Urban', 'Developed', 'Developed Roads']))
-            t = 'Orchard'
-            g = 9
-        if i == 'ac_arc_orc':
-            dictact['aco']['query'] = (df['LC2014'] == 'Annual Cropland') & (df['lcchange'] == 1) & (df['LC2030_trt_bau'].isin(['Orchard']))
-            t = 'Annual Cropland'
-            g = 7
-        if i == 'ac_gra_orc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard'])) & (df['LC2014'] == 'Grassland') & (df['LC2030_bau'].isin(['Orchard']))
-            t = 'Grassland'
-            g = 2
-        if i == 'ac_irr_orc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard'])) & (df['LC2014'] == 'Irrigated Pasture') & (df['LC2030_bau'].isin(['Orchard']))
-            t = 'Irrigated Pasture'
-            g = 11
-        if i == 'ac_vin_orc':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard'])) & (df['LC2014'] == 'Vineyard') & (df['LC2030_bau'].isin(['Orchard']))
-            t = 'Orchard'
-            g = 9
-        if i == 'ac_arc_irr':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Irrigated Pasture'])) & (df['LC2014'] == 'Annual Cropland') & (df['LC2030_bau'].isin(['Irrigated Pasture']))
-            t = 'Annual Cropland'
-            g = 7
-        if i == 'ac_orc_irr':
-            dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Irrigated Pasture'])) & (df['LC2014'] == 'Orchard') & (df['LC2030_bau'].isin(['Irrigated Pasture']))
-            t = 'Orchard'
-            g = 9
-            #Do the suitability, eligibility and selection functions for an avoided conversion activity
-        dictact['aco']['adoption'] = acdict[i]
+    Helpers.pmes(keylist)
+    Helpers.pmes ('treatment mask: ' + treatmask)
+    if treatmask != 'None':
+        for i in keylist:
+            Helpers.pmes('Doing Selection for: ' + i)
+            df.loc[(df['LC2030_trt_bau'] == df['LC2030_bau']), 'lcchange'] = 1   
+            if i == 'ac_wet_arc':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Wetland') & (df['LC2030_bau'].isin(['Annual Cropland'])) & queryadd2
+                t = 'Wetland'
+                g = 0
+            if i == 'ac_gra_arc':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Grassland') & (df['LC2030_bau'].isin(['Annual Cropland'])) & queryadd2
+                t = 'Grassland'
+                g = 2
+            if i == 'ac_irr_arc':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Irrigated Pasture') & (df['LC2030_bau'].isin(['Annual Cropland'])) & queryadd2
+                t = 'Irrigated Pasture'
+                g = 11
+            if i == 'ac_orc_arc':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Orchard') & (df['LC2030_bau'].isin(['Annual Cropland'])) & queryadd2
+                t = 'Orchard'
+                g = 9
+            if i == 'ac_arc_urb':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Annual Cropland') & (df['LC2030_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & queryadd2
+                t = 'Annual Cropland'
+                g = 7
+            if i == 'ac_gra_urb':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Grassland') & (df['LC2030_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & queryadd2
+                t = 'Grassland'
+                g = 2
+            if i == 'ac_irr_urb':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Irrigated Pasture') & (df['LC2030_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & queryadd2
+                t = 'Irrigated Pasture'
+                g = 11
+            if i == 'ac_orc_urb':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Orchard') & (df['LC2030_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & queryadd2
+                t = 'Orchard'
+                g = 9
+            if i == 'ac_arc_orc':
+                dictact['aco']['query'] = (df['LC2014'] == 'Annual Cropland') & (df['lcchange'] == 1) & (df['LC2030_trt_bau'].isin(['Orchard'])) & queryadd2
+                t = 'Annual Cropland'
+                g = 7
+            if i == 'ac_gra_orc':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard'])) & (df['LC2014'] == 'Grassland') & (df['LC2030_bau'].isin(['Orchard'])) & queryadd2
+                t = 'Grassland'
+                g = 2
+            if i == 'ac_irr_orc':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard'])) & (df['LC2014'] == 'Irrigated Pasture') & (df['LC2030_bau'].isin(['Orchard'])) & queryadd2
+                t = 'Irrigated Pasture'
+                g = 11
+            if i == 'ac_vin_orc':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard'])) & (df['LC2014'] == 'Vineyard') & (df['LC2030_bau'].isin(['Orchard'])) & queryadd2
+                t = 'Orchard'
+                g = 9
+            if i == 'ac_arc_irr':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Irrigated Pasture'])) & (df['LC2014'] == 'Annual Cropland') & (df['LC2030_bau'].isin(['Irrigated Pasture'])) & queryadd2
+                t = 'Annual Cropland'
+                g = 7
+            if i == 'ac_orc_irr':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Irrigated Pasture'])) & (df['LC2014'] == 'Orchard') & (df['LC2030_bau'].isin(['Irrigated Pasture'])) & queryadd2
+                t = 'Orchard'
+                g = 9
+                #Do the suitability, eligibility and selection functions for an avoided conversion activity
+            dictact['aco']['adoption'] = acdict[i]
+            
+            Helpers.CreateSuitFlags('aco',df,dictact, i)
+            Helpers.CreateEligDict(df, 'aco', dictact,dict_eligibility, i)
+            Helpers.selectionfunc (dict_eligibility,df,'aco',dictact, i, logfile, i)
         
-        Helpers.CreateSuitFlags('aco',df,dictact, i)
-        Helpers.CreateEligDict(df, 'aco', dictact,dict_eligibility, i)
-        Helpers.selectionfunc (dict_eligibility,df,'aco',dictact, i, logfile)
+            #Change the gridcode and landcover label in the treatment bau
+            Helpers.lc_mod(i+'selected',t, 'LC2030_trt_bau', df)
     
-        #Change the gridcode and landcover label in the treatment bau
-        Helpers.lc_mod(i+'selected',t, 'LC2030_trt_bau', df)
-
-        Helpers.lc_mod(i+'selected',g, 'gridcode30_trt_bau', df)
+            Helpers.lc_mod(i+'selected',g, 'gridcode30_trt_bau', df)
+    else:
+        for i in keylist:
+            Helpers.pmes('Doing Selection for: ' + i)
+            df.loc[(df['LC2030_trt_bau'] == df['LC2030_bau']), 'lcchange'] = 1   
+            if i == 'ac_wet_arc':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Wetland') & (df['LC2030_bau'].isin(['Annual Cropland']))
+                t = 'Wetland'
+                g = 0
+            if i == 'ac_gra_arc':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Grassland') & (df['LC2030_bau'].isin(['Annual Cropland']))
+                t = 'Grassland'
+                g = 2
+            if i == 'ac_irr_arc':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Irrigated Pasture') & (df['LC2030_bau'].isin(['Annual Cropland']))
+                t = 'Irrigated Pasture'
+                g = 11
+            if i == 'ac_orc_arc':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland'])) & (df['LC2014'] == 'Orchard') & (df['LC2030_bau'].isin(['Annual Cropland']))
+                t = 'Orchard'
+                g = 9
+            if i == 'ac_arc_urb':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Annual Cropland') & (df['LC2030_bau'].isin(['Urban', 'Developed', 'Developed Roads']))
+                t = 'Annual Cropland'
+                g = 7
+            if i == 'ac_gra_urb':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Grassland') & (df['LC2030_bau'].isin(['Urban', 'Developed', 'Developed Roads']))
+                t = 'Grassland'
+                g = 2
+            if i == 'ac_irr_urb':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Irrigated Pasture') & (df['LC2030_bau'].isin(['Urban', 'Developed', 'Developed Roads']))
+                t = 'Irrigated Pasture'
+                g = 11
+            if i == 'ac_orc_urb':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['LC2014'] == 'Orchard') & (df['LC2030_bau'].isin(['Urban', 'Developed', 'Developed Roads']))
+                t = 'Orchard'
+                g = 9
+            if i == 'ac_arc_orc':
+                dictact['aco']['query'] = (df['LC2014'] == 'Annual Cropland') & (df['lcchange'] == 1) & (df['LC2030_trt_bau'].isin(['Orchard']))
+                t = 'Annual Cropland'
+                g = 7
+            if i == 'ac_gra_orc':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard'])) & (df['LC2014'] == 'Grassland') & (df['LC2030_bau'].isin(['Orchard']))
+                t = 'Grassland'
+                g = 2
+            if i == 'ac_irr_orc':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard'])) & (df['LC2014'] == 'Irrigated Pasture') & (df['LC2030_bau'].isin(['Orchard']))
+                t = 'Irrigated Pasture'
+                g = 11
+            if i == 'ac_vin_orc':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Orchard'])) & (df['LC2014'] == 'Vineyard') & (df['LC2030_bau'].isin(['Orchard']))
+                t = 'Orchard'
+                g = 9
+            if i == 'ac_arc_irr':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Irrigated Pasture'])) & (df['LC2014'] == 'Annual Cropland') & (df['LC2030_bau'].isin(['Irrigated Pasture']))
+                t = 'Annual Cropland'
+                g = 7
+            if i == 'ac_orc_irr':
+                dictact['aco']['query'] = (df['LC2030_trt_bau'].isin(['Irrigated Pasture'])) & (df['LC2014'] == 'Orchard') & (df['LC2030_bau'].isin(['Irrigated Pasture']))
+                t = 'Orchard'
+                g = 9
+                #Do the suitability, eligibility and selection functions for an avoided conversion activity
+            dictact['aco']['adoption'] = acdict[i]
+            
+            Helpers.CreateSuitFlags('aco',df,dictact, i)
+            Helpers.CreateEligDict(df, 'aco', dictact,dict_eligibility, i)
+            Helpers.selectionfunc (dict_eligibility,df,'aco',dictact, i, logfile, i)
         
+            #Change the gridcode and landcover label in the treatment bau
+            Helpers.lc_mod(i+'selected',t, 'LC2030_trt_bau', df)
+            Helpers.lc_mod(i+'selected',g, 'gridcode30_trt_bau', df)
+    temp = df.head(20)
+    temp.to_csv('P:/Temp/test1.csv')
     #Create GHG dictionary entries for suitability, these queries will be used for the ag activity suitability function
     df['lcchange'] = 0
     
     #This next line of code updates the land cover change flag, which removes pixels selected for those activities from consideration for ag activity suitability
     df.loc[(df['LC2030_trt_bau'] == df['LC2014']), 'lcchange'] = 1        
         
-    dictact['ccr']['query'] = queryadd # (df['LC2030_trt_bau'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) &
+    dictact['ccr']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & queryadd 
     dictact['mul']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland','Rice'])) & (df['lcchange'] == 1) & queryadd
     dictact['nfm']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland', 'Orchard', 'Vineyard', 'Rice'])) & (df['lcchange'] == 1) & queryadd
     dictact['hpl']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1) & queryadd #

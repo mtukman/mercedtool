@@ -37,7 +37,7 @@ Helpers.add_to_logfile(logfile,'Conservation Mask' + ': ' + arcpy.GetParameterAs
 Helpers.add_to_logfile(logfile,'Custom Processing Area' + ': ' + arcpy.GetParameterAsText(3))
 Helpers.add_to_logfile(logfile,'Development Scenario' + ': ' + arcpy.GetParameterAsText(4))
 Helpers.add_to_logfile(logfile,'Custom Development Mask' + ': ' + arcpy.GetParameterAsText(5))
-Helpers.add_to_logfile(logfile,'Treatment Mask' + ': ' + arcpy.GetParameterAsText(46))
+Helpers.add_to_logfile(logfile,'Treatment Mask' + ': ' + arcpy.GetParameterAsText(44))
 
 
 
@@ -384,7 +384,7 @@ if arcpy.GetParameterAsText(30) == 'Yes':
 
 else:
     ug = 0
-    ucc = 0
+    ucc = .102
 
 #Import the modules
 import Initial
@@ -403,14 +403,17 @@ outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_a
 Helpers.pmes('Finished with Activity Application Module, entering Carbon Accounting Module')
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, logfile)
 
-
+#templist[0].to_csv('P:/Temp/Review.csv')
+#import arcpy
+#arcpy.TableToTable_conversion ('P:/Temp/Review.csv', 'E:/Temp/Temp.gdb/', 'Review')
+#arcpy.AddIndex_management ('E:/Temp/Temp.gdb/Review', 'pointid', 'tempindex')
 Helpers.pmes("**CREATING MULTIBENEFIT REPORTS...**")
-Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc)
+Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc, logfile)
 Helpers.pmes("**CREATING CARBON REPORTS...**")
 
 
 
-Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug)
-Reporting.report_acres(templist[0],activitylist,outpath, acdict)
+Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug, logfile)
+Reporting.report_acres(templist[0],activitylist,outpath, acdict, logfile)
 
 
