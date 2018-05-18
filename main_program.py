@@ -42,6 +42,9 @@ Helpers.add_to_logfile(logfile,'Treatment Mask' + ': ' + arcpy.GetParameterAsTex
 
 
 
+
+
+ludict = {'ac_wet_arc':'AC Wetland to Annual Row Crop','ac_gra_arc':'AC Grassland to Annual Row Crop','ac_irr_arc':'AC Irrigated Pasture to Annual Row Crop','ac_orc_arc': 'AC Orchard to Annual Row Crop','ac_arc_urb':'AC Annual Row Crop to Urban','ac_gra_urb':'AC Grassland to Urban','ac_irr_urb':'AC Irrigated Pasture to Urban','ac_orc_urb':'AC Orchard to Urban','ac_arc_orc':'AC Annual Row Crop to Orchard','ac_gra_orc':'AC Grassland to Orchard','ac_irr_orc':'AC Irrigated Pasture to Orchard','ac_vin_orc':'AC Vineyard to Orchard','ac_arc_irr':'AC Annual Row Crop to Irrigated Pasture','ac_orc_irr':'AC Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Conversion','ccr':'Cover Cropping','mul':'Mulching','nfm':'Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Grassland Restoration','cam':'Compost Amendment','cag':'Compost Amendment to Grasslands'}
 #Set the development mask variable, if a development mask is provided, this will point to the polygon feature class
 devmask = arcpy.GetParameterAsText(5)
 
@@ -304,7 +307,7 @@ if 'hpl' in activitylist:
     Helpers.add_to_logfile(logfile,'Hedgerow Planting Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Hedgerow Planting Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
     
-Helpers.add_to_logfile(logfile,'Compost Amendment' + ': ' + arcpy.GetParameterAsText(34))   
+Helpers.add_to_logfile(logfile,'Compost Amendment' + ': ' + arcpy.GetParameterAsText(36))   
 if 'cam' in activitylist:
     x = 36
     Generic.dict_activity['cam']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
@@ -314,7 +317,7 @@ if 'cam' in activitylist:
     Helpers.add_to_logfile(logfile,'Compost Amendment Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Compost Amendment Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
 
-Helpers.add_to_logfile(logfile,'Grassland Restoration' + ': ' + arcpy.GetParameterAsText(38))   
+Helpers.add_to_logfile(logfile,'Grassland Restoration' + ': ' + arcpy.GetParameterAsText(32))   
 if 'gra' in activitylist:
     gra = 1
     x = 32
@@ -326,7 +329,7 @@ if 'gra' in activitylist:
     Helpers.add_to_logfile(logfile,'Grassland Restoration Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
 else: 
     gra = 0
-Helpers.add_to_logfile(logfile,'Grassland Compost Amendment' + ': ' + arcpy.GetParameterAsText(42))   
+Helpers.add_to_logfile(logfile,'Grassland Compost Amendment' + ': ' + arcpy.GetParameterAsText(40))   
 if 'cag' in activitylist:
     x = 40
     Generic.dict_activity['cag']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
@@ -386,6 +389,11 @@ else:
     ug = 0
     ucc = .102
 
+if arcpy.GetParameterAsText(64) == 'Yes':
+    plotlykey = arcpy.GetParameterAsText(65)
+else:
+    plotlykey = 'None'
+    
 #Import the modules
 import Initial
 import ActivityApplication
@@ -416,4 +424,7 @@ Helpers.pmes("**CREATING CARBON REPORTS...**")
 Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug, logfile)
 Reporting.report_acres(templist[0],activitylist,outpath, acdict, logfile)
 
+if plotlykey != 'None':
+    import Create_Plots
+    Create_Plots.Plots(outpath, acdict, activitylist, terflag,plotlykey)
 

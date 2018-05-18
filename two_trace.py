@@ -321,7 +321,7 @@ def simp(afolder = ''):
     
     
     def eco_resi():
-        df = pd.read_csv(afolder + r'\aquatic.csv')
+        df = pd.read_csv(afolder + r'\eco_resil.csv')
         df = df[['gen_class','ha_change_base_bau','ha_change_trt_bau']]
         df = df.rename(columns = {'gen_class': 'Landcover', 'ha_change_base_bau':'Reference Scenario', 'ha_change_trt_bau':'Treatment Scenario'})
         temp = df
@@ -331,7 +331,7 @@ def simp(afolder = ''):
         
         temp.to_csv(outfolder+'2030 ecoresilience_table.csv', index = False)   
     def soc_resi():
-        df = pd.read_csv(afolder + r'\aquatic.csv')
+        df = pd.read_csv(afolder + r'\soc_res.csv')
         df = df[['gen_class','ha_change_base_bau','ha_change_trt_bau']]
         df = df.rename(columns = {'gen_class': 'Landcover', 'ha_change_base_bau':'Reference Scenario', 'ha_change_trt_bau':'Treatment Scenario'})
         temp = df

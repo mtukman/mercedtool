@@ -5,6 +5,7 @@ This script holds the functions used in other modules of the tool.
 @author: mtukman
 """
 import arcpy
+ludict = {'ac_wet_arc':'AC Wetland to Annual Row Crop','ac_gra_arc':'AC Grassland to Annual Row Crop','ac_irr_arc':'AC Irrigated Pasture to Annual Row Crop','ac_orc_arc': 'AC Orchard to Annual Row Crop','ac_arc_urb':'AC Annual Row Crop to Urban','ac_gra_urb':'AC Grassland to Urban','ac_irr_urb':'AC Irrigated Pasture to Urban','ac_orc_urb':'AC Orchard to Urban','ac_arc_orc':'AC Annual Row Crop to Orchard','ac_gra_orc':'AC Grassland to Orchard','ac_irr_orc':'AC Irrigated Pasture to Orchard','ac_vin_orc':'AC Vineyard to Orchard','ac_arc_irr':'AC Annual Row Crop to Irrigated Pasture','ac_orc_irr':'AC Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Conversion','ccr':'Cover Cropping','mul':'Mulching','nfm':'Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Grassland Restoration','cam':'Compost Amendment','cag':'Compost Amendment to Grasslands'}
 def add_to_logfile(logfile,string_to_add):
     """
     This function writes to a logfile.
@@ -121,14 +122,14 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'N
             else:
                 pass
         if aco != 'None':
-            add_to_logfile(logfile,aco + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
+            add_to_logfile(logfile,ludict[aco] + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
             query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
-            add_to_logfile(logfile,aco + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
+            add_to_logfile(logfile,ludict[aco] + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
             df.loc[query,selflag] = 1  
         else:
-            add_to_logfile(logfile,activity + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
+            add_to_logfile(logfile,ludict[activity] + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
             query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
-            add_to_logfile(logfile,activity + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
+            add_to_logfile(logfile,ludict[activity] + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
             df.loc[query,selflag] = 1  
     #Run the select function using either small or large groups of points
     if dictact[activity]['grpsize'] == 'medium':
