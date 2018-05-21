@@ -114,11 +114,11 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
     temp = df.head(20)
     temp.to_csv('P:/Temp/test.csv')
     if acdict != 'None':
-        aclist = [*acdict]
+        aclist = list(acdict.keys())
         for i in aclist:
             df2 = df.loc[(df[i+'selected'] == 1)]
             dfdict[i] = df2
-    keylist = [*dfdict]
+    keylist = list(dfdict.keys())
     
 
 
@@ -2543,12 +2543,12 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         dfdict['con'] = df5      
 
     if acdict != 'None':
-            aclist = [*acdict]
+            aclist = list(acdict.keys())
             for i in aclist:
                 df2 = df.loc[(df[i+'selected'] == 1)]
                 dfdict[i] = df2
         
-    keylist = [*dfdict]
+    keylist = list(dfdict.keys())
     
     Helpers.pmes(keylist)
     
@@ -2753,7 +2753,7 @@ def report_acres(df, activitylist, outpath, acdict = 'None', logfile = 'None'):
             acredict[i] = temp
             
         if acdict != 'None':
-            aclist = [*acdict]
+            aclist = list(acdict.keys())
             for i in aclist:
                 temp = df.loc[df[i + 'selected'] == 1]
                 temp = temp.groupby([i + 'selected'], as_index = False).count()

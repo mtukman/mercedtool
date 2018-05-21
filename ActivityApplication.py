@@ -105,7 +105,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     
     
     #Loop through the keys in the acdict dictionary, created in the main program. For each avoided conversion activity found, perform suitability, eligibility and selection functions.    
-    keylist = [*acdict]
+    keylist = list(acdict.keys())
     Helpers.pmes(keylist)
     Helpers.pmes ('treatment mask: ' + treatmask)
     if treatmask != 'None':

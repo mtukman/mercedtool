@@ -100,7 +100,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None'):
     # Update gridcodes for treatment scenarios
     gcdict = {'Wetland':0, 'Water':1, 'Grassland':2,'Barren':4, 'Orchard':7,'Vineyard':8,'Annual Cropland':9,'Rice':10,'Irrigated Pasture':11,'Young Forest':14, 'Young Shrubland':15}
     devlist = ['bau','med','max']
-    keylist = [*gcdict]
+    keylist = list(gcdict.keys())
     
     for i in devlist:
         for x in keylist:
