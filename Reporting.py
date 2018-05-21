@@ -2650,7 +2650,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
             lct['change'] = lct['sumtrt'] - lct['sumbase']
             temp = lct[['landcover', 'change']]
             
-            temp = temp.rename(columns = {'change':'carbon_avoided_' + name}) 
+            temp = temp.rename(columns = {'change':'carbon_' + name}) 
             intdict[name] = temp
             
             

@@ -394,6 +394,11 @@ if arcpy.GetParameterAsText(64) == 'Yes':
 else:
     plotlykey = 'None'
     
+if arcpy.GetParameterAsText(64) == 'Yes':
+    username = arcpy.GetParameterAsText(66)
+else:
+    username = 'None'
+    
 #Import the modules
 import Initial
 import ActivityApplication
@@ -426,5 +431,5 @@ Reporting.report_acres(templist[0],activitylist,outpath, acdict, logfile)
 
 if plotlykey != 'None':
     import Create_Plots
-    Create_Plots.Plots(outpath, acdict, activitylist, terflag,plotlykey)
+    Create_Plots.Plots(outpath, acdict, activitylist, terflag,cproc,plotlykey, username)
 
