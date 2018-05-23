@@ -784,16 +784,16 @@ def  reductions_ALL(outfile):
 
     trace1 = {
       #"x": ["Riparian Restoration", 'Improved N Fertilizer Mngmt',"Compost Amendments to Croplands", 'Compost Amendments to Grasslands', #'Cover Cropping', 'Mulching', 'Hedgerow Planting', 'Oak Woodland Restoration', 'Urban Tree Planting']
-      "x": [ 'Improved N<br> Fertilizer<br> Mngmt',"Compost<br>on<br>Croplands", 'Compost<br> on<br> Grasslands', 'Mulching','Cover<br>Cropping',  "Riparian<br>Restoration",  'Urban<br>Tree<br>Planting','Hedgerow<br>Planting', 'Oak<br> Woodland<br>Restoration'], 
-      "y": [nfm25['carbon_nfm'].sum(), cam25['carbon_cam'].sum(), cag25['carbon_cag'].sum(), mul25['carbon_mul'].sum(), ccr25['carbon_ccr'].sum(), rre25['carbon_rre'].sum(),  urb25['carbon_urb'].sum(),  hpl25['carbon_hpl'].sum(), oak25['carbon_oak'].sum()],
+      "x": [ 'Improved N<br> Fertilizer<br> Mngmt',"Compost<br>on<br>Croplands", 'Compost<br> on<br> Grasslands', 'Mulching','Cover<br>Cropping','Native<br>Grass<br>Restoration',  "Riparian<br>Restoration",  'Urban<br>Tree<br>Planting','Hedgerow<br>Planting', 'Oak<br> Woodland<br>Restoration'], 
+      "y": [nfm25['carbon_nfm'].sum(), cam25['carbon_cam'].sum(), cag25['carbon_cag'].sum(), mul25['carbon_mul'].sum(), ccr25['carbon_ccr'].sum(), gra25['carbon_gra'].sum(),  rre25['carbon_rre'].sum(),  urb25['carbon_urb'].sum(),  hpl25['carbon_hpl'].sum(), oak25['carbon_oak'].sum()],
       "type": "bar",
-      "name":'25% Adoption'
+      "name":'25%<br>Adoption'
       }
     trace2 = {
-      "x": [ 'Improved N<br> Fertilizer<br> Mngmt',"Compost<br>on<br>Croplands", 'Compost<br> on<br> Grasslands', 'Mulching','Cover<br>Cropping',  "Riparian<br>Restoration",  'Urban<br>Tree<br>Planting','Hedgerow<br>Planting', 'Oak<br> Woodland<br>Restoration'], 
-      "y": [nfm100['carbon_nfm'].sum(), cam100['carbon_cam'].sum(), cag100['carbon_cag'].sum(), mul100['carbon_mul'].sum(), ccr100['carbon_ccr'].sum(),  rre100['carbon_rre'].sum(),  urb100['carbon_urb'].sum(), hpl100['carbon_hpl'].sum(), oak100['carbon_oak'].sum()],
+      "x": [ 'Improved N<br> Fertilizer<br> Mngmt',"Compost<br>on<br>Croplands", 'Compost<br> on<br> Grasslands', 'Mulching','Cover<br>Cropping','Native<br>Grass<br>Restoration', "Riparian<br>Restoration",  'Urban<br>Tree<br>Planting','Hedgerow<br>Planting', 'Oak<br> Woodland<br>Restoration'], 
+      "y": [nfm100['carbon_nfm'].sum(), cam100['carbon_cam'].sum(), cag100['carbon_cag'].sum(), mul100['carbon_mul'].sum(), ccr100['carbon_ccr'].sum(), gra100['carbon_gra'].sum(),  rre100['carbon_rre'].sum(),  urb100['carbon_urb'].sum(), hpl100['carbon_hpl'].sum(), oak100['carbon_oak'].sum()],
       "type": "bar",
-      "name":'Full Adoption'
+      "name":'Full<br>Adoption'
       }
 
     print (str(rre25['carbon_rre'].sum()))
@@ -802,7 +802,7 @@ def  reductions_ALL(outfile):
       "autosize": True, 
       "hovermode": "closest", 
       "showlegend": True, 
-      "title": "2014-2030 GHG Reductions from Countywide Activities", 
+      "title": "2014-2030 GHG Reductions from Selected Countywide Activities", 
       "titlefont": {
       "size": titlefont
           },
@@ -1569,19 +1569,95 @@ def make_plots_AG():
     boxpath = 'E:/Box/'
     countywide_reductions_AG(table_hr= os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/hedgerow_100/carbon.csv'),   table_cc=os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/cover_cropping_100/carbon.csv'), outfile = os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Burroughs/Countywide AG Reductions.png'))
     reductions_AG(os.path.join(boxpath, r'Box Sync/Merced Project/Tool/Outputs/Burroughs/hpl_ccr_carbon.csv'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Burroughs/Case Study AG Reductions.png') )
-    
-def make_countywide_reductions_all_activities():
+
+
+def make_plot_all_reductions_all_activities():
     import os
     import plotly.plotly as py
 
     py.sign_in('mtukman', 'FbUYCv4tcjCPF2ZdfzKo')
 
     boxpath = 'E:/Box/'
-    reductions_ALL(os.path.join(boxpath, r'Box Sync/Merced Project/Report_How-To Guide/Tukman Working Material/Countywide GHG Reductions All Activities.png'))
+    reductions_ALL(os.path.join(boxpath, r'Box Sync/Merced Project/Report_How-To Guide/Tukman Working Material/Countywide GHG Reductions Selected Activities.png'))
     
- 
+    
+    
+    
+def make_carbon_reductions_table(folder = r"E:\Box\Box Sync\Merced Project\Tool\outputs\activities"):
+    import os
+    import plotly.plotly as py
+    boxpath = 'E:/Box/'
+    import pandas as pd
 
+    folder = r"E:\Box\Box Sync\Merced Project\Tool\outputs\activities"
+    carb = 'carbon'
+    acres = 'act_acres'
     
+    
+    cam25_carb = pd.read_csv(folder + '/compost_amendment_25/' + carb + '.csv')
+    cam100_carb = pd.read_csv(folder + '/compost_amendment_100/' + carb + '.csv')
+    ccr25_carb = pd.read_csv(folder + '/cover_cropping_25/' + carb + '.csv')
+    ccr100_carb = pd.read_csv(folder + '/cover_cropping_100/' + carb + '.csv')
+    cag25_carb = pd.read_csv(folder + '/grass_compost_amendment_25/' + carb + '.csv')
+    cag100_carb = pd.read_csv(folder + '/grass_compost_amendment_100/' + carb + '.csv')
+    gra25_carb = pd.read_csv(folder + '/grassland_resto_25/' + carb + '.csv')
+    gra100_carb = pd.read_csv(folder + '/grassland_resto_100/' + carb + '.csv')
+    hpl25_carb = pd.read_csv(folder + '/hedgerow_25/' + carb + '.csv')
+    hpl100_carb = pd.read_csv(folder + '/hedgerow_100/' + carb + '.csv')
+    mul25_carb = pd.read_csv(folder + '/mulching_25/' + carb + '.csv')
+    mul100_carb = pd.read_csv(folder + '/mulching_100/' + carb + '.csv')
+    nfm25_carb = pd.read_csv(folder + '/nfm_25/' + carb + '.csv')
+    nfm100_carb = pd.read_csv(folder + '/nfm_100/' + carb + '.csv')
+    rre25_carb = pd.read_csv(folder + '/RRE_COUNTY_25/' + carb + '.csv')
+    rre100_carb = pd.read_csv(folder + '/RRE_COUNTY_100/' + carb + '.csv')
+    oak25_carb = pd.read_csv(folder + '/oak_25/' + carb + '.csv')
+    oak100_carb = pd.read_csv(folder + '/oak_100/' + carb + '.csv') 
+    urb25_carb = pd.read_csv(folder + '/urb_25/' + carb + '.csv')
+    urb100_carb = pd.read_csv(folder + '/urb_100/' + carb + '.csv')
+    cam25_acres = pd.read_csv(folder + '/compost_amendment_25/' + acres + '.csv')
+    cam100_acres = pd.read_csv(folder + '/compost_amendment_100/' + acres + '.csv')
+    ccr25_acres = pd.read_csv(folder + '/cover_cropping_25/' + acres + '.csv')
+    ccr100_acres = pd.read_csv(folder + '/cover_cropping_100/' + acres + '.csv')
+    cag25_acres = pd.read_csv(folder + '/grass_compost_amendment_25/' + acres + '.csv')
+    cag100_acres = pd.read_csv(folder + '/grass_compost_amendment_100/' + acres + '.csv')
+    gra25_acres = pd.read_csv(folder + '/grassland_resto_25/' + acres + '.csv')
+    gra100_acres = pd.read_csv(folder + '/grassland_resto_100/' + acres + '.csv')
+    hpl25_acres = pd.read_csv(folder + '/hedgerow_25/' + acres + '.csv')
+    hpl100_acres = pd.read_csv(folder + '/hedgerow_100/' + acres + '.csv')
+    mul25_acres = pd.read_csv(folder + '/mulching_25/' + acres + '.csv')
+    mul100_acres = pd.read_csv(folder + '/mulching_100/' + acres + '.csv')
+    nfm25_acres = pd.read_csv(folder + '/nfm_25/' + acres + '.csv')
+    nfm100_acres = pd.read_csv(folder + '/nfm_100/' + acres + '.csv')
+    rre25_acres = pd.read_csv(folder + '/RRE_COUNTY_25/' + acres + '.csv')
+    rre100_acres = pd.read_csv(folder + '/RRE_COUNTY_100/' + acres + '.csv')
+    oak25_acres = pd.read_csv(folder + '/oak_25/' + acres + '.csv')
+    oak100_acres = pd.read_csv(folder + '/oak_100/' + acres + '.csv') 
+    urb25_acres = pd.read_csv(folder + '/urb_25/' + acres + '.csv')
+    urb100_acres = pd.read_csv(folder + '/urb_100/' + acres + '.csv')
+ 
+    ndf = pd.DataFrame(columns=['Activity', 'Acres for 25% Adoption', 'Reductions (tons CO2e) for 25% Adoption', 'Acres for Full Adoption', 'Reductions (tons CO2e) for Full Adoption)'])
+    
+    adict = {'Improved Nitrogen Fertilizer Management':['nfm',nfm25_carb, nfm100_carb, nfm25_acres, nfm100_acres],
+'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments' :['cam',cam25_carb, cam100_carb, cam25_acres, cam100_acres],
+'Oak Woodland Restoration':['oak', oak25_carb, oak100_carb, oak25_acres, oak100_acres],
+'Cover Crops':['ccr', ccr25_carb, ccr100_carb, ccr25_acres, ccr100_acres],
+'Mulching':['mul', mul25_carb, mul100_carb, mul25_acres, mul100_acres],
+'Riparian Restoration':['rre', rre25_carb, rre100_carb, rre25_acres, rre100_acres],
+'Urban Forestry':['urb', urb25_carb, urb100_carb, urb25_acres, urb100_acres],
+'Hedgerow Planting':['hpl', hpl25_carb, hpl100_carb, hpl25_acres, hpl100_acres],
+'Compost Application to Non-irrigated Grasslands':['cag', cag25_carb, cag100_carb, cag25_acres, cag100_acres],
+'Native grassland Restoration':['gra', gra25_carb, gra100_carb, gra25_acres, gra100_acres]}
+ 
+    for i in  adict.keys():
+        newline = []
+        newline.append(i)  #append name of activity
+        newline.append(float(adict[i][3].loc[0]))  #append acreage of 25% adoption
+        newline.append(adict[i][1]['carbon_' + adict[i][0]].sum())  #append reductions of 25% adoption
+        newline.append(float(adict[i][4].loc[0]))  #append acreage of full adoption
+        newline.append(adict[i][2]['carbon_' + adict[i][0]].sum()) #append reductions of full adoption   
+        ndf.loc[len(ndf)]= newline
+
+    ndf.to_csv(os.path.join(folder, 'all_activities.csv'))
     
     
     
