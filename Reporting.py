@@ -11,7 +11,7 @@ Created on Thu Feb 22 08:58:23 2018
 
 
 #def report(outpath, df):
-def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0, gra = 0, cproc = 0, terflag = 0, ug = 0, ucc = 0):
+def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0, gra = 0, cproc = 0, terflag = 0, ug = 0, ucc = 0, logfile = 'none'):
     
     """
     This function reports on the multi-benefits. 
@@ -19,12 +19,26 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
     
     Arguments:
     df: The dataframe from main program
+    outpath: The folder path where the reporting csvs are exported to
+    glu: general class look up table
+    wlu: water use look up table
+    rlu: resistance look up table
+    clu: crop value look up table
+    nlu: nitrate look up table
+    alu: air pollution look up table
+    cov14: Vegetation cover table for 2014
+    cov30:  Vegetation cover table for 2030
+    lupath: Path to look-up tables folder
     acdict: avoided conversion dictionary, only created if avoided conversion activities are selected
     oak: 1 or 0 flag for oak conversion activity
     rre: 1 or 0 flag for riparian restoration activity
     cd: 0, 1 or 2 flag for if a custom development mask was used
     cm: 1 or 0 flag for if a consermation mask was used 
-    
+    gra: 0 or 1 flag for whether grassland restoration was chosen as an activity
+    cproc = 0 or 1 flag for whether a custom processing mask was used
+    terflag: 0 or 1 flag for whether terrestrial habitat reporting was chosen
+    ug: Urban forestry canopy cover % increase
+    ucc: Urban forestry canopy cover % total
     """
     
     #Create a full list of all basic landcovers (not young shrubland, young forest, oak conversion or riparian restoration)
@@ -38,7 +52,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
     rclass = pd.read_csv(rlu) #resistance look up
     cclass = pd.read_csv(clu) #crop value look up
     nclass = pd.read_csv(nlu) #nitrate look up
-    aclass = pd.read_csv(alu) #nitrate look up
+    aclass = pd.read_csv(alu) #air pollution look up
     cover14 = pd.read_csv(cov14)
     cover30 =  pd.read_csv(cov30)
 
@@ -97,13 +111,15 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
     if 'hplselected' in df:
         dfdict['hpl'] = df.loc[(df['hplselected'] == 1)]
     #Create avoided conversion dataframes if they were selected
+    temp = df.head(20)
+    temp.to_csv('P:/Temp/test.csv')
     if acdict != 'None':
-        aclist = [*acdict]
+        aclist = list(acdict.keys())
         for i in aclist:
             df2 = df.loc[(df[i+'selected'] == 1)]
             dfdict[i] = df2
-    keylist = [*dfdict]
-
+    keylist = list(dfdict.keys())
+    
 
 
     def fmmp(df, outpath):
@@ -207,10 +223,150 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         
         #Export to output folder
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
-        Helpers.pmes('Exporting .csv to : ' + outpath + 'fmmp.csv')
+        Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'fmmp.csv')
         temp.to_csv(outpath + 'fmmp.csv', index = False)
+        
+    def socresilience(df, outpath):
+        """
+        This function reports on general landcover change in areas of important ecological resilience.
+        It requires the main dataframe and an outpath for the reporting csv.
+        
+        """
+        
+        
+        def ecofunct(name, field, dev , df):        
+            """
+            This subfunction create a dataframe which is added to a dataframe dictionary (all will be merged at the end of the parent function to create a csv report)
+            name: The name of the scenario being processed
+            field: The 2030 reporting field to use
+            dev: Development scenario to use in the report
+            df: The dataframe the report is based on
+            """
+            if x in ['base', 'dev','cons', 'trt']:
+                if 'hpl' in df.columns:
+                    flist = ['LC2014','pointid', 'rat_grp','fema_class', field,'hplselected']
+                else: 
+                    flist =  ['LC2014','pointid', 'rat_grp','fema_class', field]
+                td = df[flist]
+                td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
+                td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
+                td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
+                td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
+                if 'trt' in field:
+                    if 'hpl' in flist:
+                        td.loc[(td['hplselected'] == 1), field] = 'Forest'
+            else:
+                if 'hpl' in df.columns:
+                    td = df[['LC2014','pointid', 'rat_grp','fema_class', field, 'LC2030_bau','hplselected']]
+                else:
+                    td = df[['LC2014','pointid', 'rat_grp','fema_class', field, 'LC2030_bau']]
+                td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
+                td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
+                td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
+                td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
+                td.loc[(td['LC2030_bau'] == 'Young Forest'), field] = 'Forest'
+                td.loc[(td['LC2030_bau'] == 'Young Shrubland'), field] = 'Shrubland'
+                td.loc[(td['LC2030_bau'] == 'Woody Riparian'), field] = 'Forest'
+                td.loc[(td['LC2030_bau'] == 'Oak Conversion'), field] = 'Forest'
+                if 'hpl' in td:
+                    td.loc[(td['hplselected'] == 1), field] = 'Forest'
 
-    
+            
+            #Perform the queries, find the pixels that are natural or ag in 2014 and developed in the 2030 scenario, and are in the FMMP reporting classes
+            Helpers.pmes('Social/Economic Resilience Reporting: ' + name + ', ' + dev)
+            td = td.loc[(td['rat_grp'].isin(['Excellent','Good'])) | (td['fema_class'].isin([100,500]))] #Query for sagbi and 500 yr floodplain
+            # Create the 2014 general landcover dataframe
+            tempdf14 = td
+            tempdf14 = pd.merge(gclass,tempdf14, how = 'outer', left_on = 'landcover', right_on = 'LC2014')
+            group14 = tempdf14.groupby('gen_class', as_index = False).count()
+            group14 = group14[['pointid','gen_class']]
+            group14 = group14.rename(columns={'pointid':'count14'})
+            
+            
+            # Create the 2030 general landcover dataframe
+            tempdf30 = td
+            tempdf30 = pd.merge(gclass,tempdf30, how = 'outer', left_on = 'landcover', right_on = field)
+            group30 = tempdf30.groupby('gen_class', as_index = False).count()
+            group30 = group30[['pointid','gen_class']]
+            group30 = group30.rename(columns={'pointid':'count30'})
+            
+            if len(group30.index) == 0 | len(group14.index) == 0:
+                Helpers.pmes('Empty rows in ' + i)
+                
+            #If there are rows in the dataframe, merge the tables, create a change field and add the reporting dataframe to the dataframe list
+            else:
+                tempmerge = pd.merge(group14,group30, on = 'gen_class', how = 'outer')
+                tempmerge['change'] = tempmerge['count30']-tempmerge['count14']
+                tempmerge['change'] = tempmerge['change']*.09 #Convert to hectares
+                if name in ['base','trt']:
+                    tempmerge = tempmerge[['gen_class', 'change','count30']]
+                    tempmerge = tempmerge.rename(columns = {'count30':'ha_' + name +'_'+ dev})
+                    tempmerge['ha_' + name +'_'+ dev] = tempmerge['ha_' + name +'_'+ dev]*.09 #Convert to hectares
+                    tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name +'_'+ dev})
+                    
+                #For other scenarios and activities, do this section
+                else:
+                    tempdf302 = td
+                    tempdf302 = pd.merge(gclass,tempdf302, how = 'outer', left_on = 'landcover', right_on = 'LC2030_bau')
+                    group302 = tempdf302.groupby('gen_class', as_index = False).count()
+                    group302 = group302[['pointid','gen_class']]
+                    group302 = group302.rename(columns={'pointid':'count302'})
+                    
+                    tempmerge = pd.merge(group30,group302, on = 'gen_class', how = 'outer')
+                    tempmerge['count302'].fillna(0, inplace = True)
+                    tempmerge['count30'].fillna(0, inplace = True)
+                    tempmerge['change'] = tempmerge['count30']-tempmerge['count302']
+                    tempmerge['change'] = tempmerge['change']*.09 #Convert to hectares
+                    tempmerge = tempmerge[['change','gen_class']]
+                    tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name})
+
+                #Add the reporting dataframe to the dictionary of dataframes
+                scendict[name + dev] = tempmerge
+            
+        scendict = {}
+        
+        #Loop through the scenarios and activities to create reporting dataframes
+        for x in keylist:
+            if x in ['base', 'trt']:
+                if x == 'base':
+                    for i in devlist:
+                        ecofunct(x, 'LC2030_' + i, i, dfdict[x])
+                else:
+                    for i in devlist:
+                        ecofunct(x, 'LC2030_trt_' + i, i, dfdict[x])
+                        
+            else:
+                if x == 'urb':
+                    pass
+                else:
+                    ecofunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
+                
+        #Create 2014 baseline reporting dataframe
+        td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid', 'rat_grp','fema_class']]
+        tempdf14 = td.loc[(td['rat_grp'].isin(['Excellent','Good'])) | (td['fema_class'].isin([100,500]))]
+        tempdf14 = pd.merge(tempdf14,gclass, how = 'outer', left_on = 'LC2014', right_on = 'landcover')
+        group14 = tempdf14.groupby('gen_class', as_index = False).count()
+        group14 = group14[['pointid','gen_class']]
+        group14 = group14.rename(columns={'pointid':'ha_2014'})
+        group14['ha_2014'] = group14['ha_2014']*.09 #Convert to hectares
+        scendict['Base_2014'] = group14
+        tlist = list(scendict.values())
+        l = len(tlist)
+        count = 1
+        temp = tlist[0]
+        
+        #Loop through the reporting dataframes and merge into one dataframe
+        while count < l:
+            temp = pd.merge(temp,tlist[count],on = 'gen_class', how = 'outer' )
+            count = count + 1
+        temp.fillna(0, inplace = True)
+        temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        #Export the merged dataframe as a csv
+        
+        Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'soc_res' + '.csv')
+        temp.to_csv(outpath + 'soc_res.csv', index = False)            
+
+
     def fema(df, outpath):
         """
         This function reports on landcover change in 100 and 500 year floodplains.        
@@ -361,7 +517,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             temp.fillna(0,inplace = False)
             #Export dataframe to output folder
             temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]   
-            Helpers.pmes('Exporting .csv to : ' + outpath + 'flood' + str(z) + '.csv')
+            Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'flood' + str(z) + '.csv')
             temp.to_csv(outpath + 'flood' + str(z) + '.csv', index = False)
                     
     
@@ -499,7 +655,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         #Fill nulls and export the merged dataframes as a csv
         temp = temp.fillna(0)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]   
-        Helpers.pmes('Exporting .csv to : ' + outpath + 'scenic' + '.csv')
+        Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'scenic' + '.csv')
         temp.to_csv(outpath + 'scenic' + '.csv', index = False)
 
     
@@ -628,7 +784,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         temp = temp.fillna(0)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
         temp = temp.loc[temp['landcover'] != 0]
-        Helpers.pmes('Exporting .csv to : ' + outpath + 'watcon' + '.csv')
+        Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'watcon' + '.csv')
         #Export the merged dataframe
         temp.to_csv(outpath+'watcon.csv', index = False)
         
@@ -741,7 +897,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         temp.fillna(0, inplace = True)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
         #Export Dataframe to csv
-        Helpers.pmes('Exporting .csv to : ' + outpath + 'lcchange' + '.csv')
+        Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'lcchange' + '.csv')
         temp.to_csv(outpath+'lcchange.csv', index = False)    
     
     def pcalcchange(df, outpath):
@@ -859,9 +1015,152 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         temp.fillna(0, inplace = True)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
         #Export the reporting dataframe to a csv
-        Helpers.pmes('Exporting .csv to : ' + outpath + 'pca_cover_change' + '.csv')
+        Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'pca_cover_change' + '.csv')
         temp.to_csv(outpath+'pca_cover_change.csv', index = False)       
+    def eco_res(df, outpath):
+        """
+        This function reports on general landcover change in areas of important ecological resilience.
+        It requires the main dataframe and an outpath for the reporting csv.
         
+        """
+        
+        
+        def ecofunct(name, field, dev , df):        
+            """
+            This subfunction create a dataframe which is added to a dataframe dictionary (all will be merged at the end of the parent function to create a csv report)
+            name: The name of the scenario being processed
+            field: The 2030 reporting field to use
+            dev: Development scenario to use in the report
+            df: The dataframe the report is based on
+            """
+            
+            #Create the initial dataframe and change landcovers as necessary for reporting
+             
+            if x in ['base', 'dev','cons', 'trt']:
+                if 'hpl' in df.columns:
+                    flist = ['LC2014','pointid','cli_ref','clim_conn', field,'hplselected']
+                else: 
+                    flist =  ['LC2014','pointid','cli_ref','clim_conn', field]
+                td = df[flist]
+                td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
+                td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
+                td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
+                td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
+                if 'trt' in field:
+                    if 'hpl' in flist:
+                        td.loc[(td['hplselected'] == 1), field] = 'Forest'
+            else:
+                if 'hpl' in df.columns:
+                    td = df[['LC2014','pointid','cli_ref','clim_conn', field, 'LC2030_bau','hplselected']]
+                else:
+                    td = df[['LC2014','pointid','cli_ref','clim_conn', field, 'LC2030_bau']]
+                td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
+                td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
+                td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
+                td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
+                td.loc[(td['LC2030_bau'] == 'Young Forest'), field] = 'Forest'
+                td.loc[(td['LC2030_bau'] == 'Young Shrubland'), field] = 'Shrubland'
+                td.loc[(td['LC2030_bau'] == 'Woody Riparian'), field] = 'Forest'
+                td.loc[(td['LC2030_bau'] == 'Oak Conversion'), field] = 'Forest'
+                if 'hpl' in td:
+                    td.loc[(td['hplselected'] == 1), field] = 'Forest'
+                    
+                    
+            Helpers.pmes('Ecological Resilience Reporting: ' + name + ', ' + dev)
+            
+            td = td.loc[(td['cli_ref'] == 1) | (td['clim_conn'] > 100)]
+            
+            # Create the 2014 general landcover dataframe
+            tempdf14 = td
+            tempdf14 = pd.merge(gclass,tempdf14, how = 'outer', left_on = 'landcover', right_on = 'LC2014')
+            group14 = tempdf14.groupby('gen_class', as_index = False).count()
+            group14 = group14[['pointid','gen_class']]
+            group14 = group14.rename(columns={'pointid':'count14'})
+            
+            
+            # Create the 2030 general landcover dataframe
+            tempdf30 = td
+            tempdf30 = pd.merge(gclass,tempdf30, how = 'outer', left_on = 'landcover', right_on = field)
+            group30 = tempdf30.groupby('gen_class', as_index = False).count()
+            group30 = group30[['pointid','gen_class']]
+            group30 = group30.rename(columns={'pointid':'count30'})
+            
+            if len(group30.index) == 0 | len(group14.index) == 0:
+                Helpers.pmes('Empty rows in ' + i)
+                
+            #If there are rows in the dataframe, merge the tables, create a change field and add the reporting dataframe to the dataframe list
+            else:
+                tempmerge = pd.merge(group14,group30, on = 'gen_class', how = 'outer')
+                tempmerge['change'] = tempmerge['count30']-tempmerge['count14']
+                tempmerge['change'] = tempmerge['change']*.09 #Convert to hectares
+                if name in ['base','trt']:
+                    tempmerge = tempmerge[['gen_class', 'change','count30']]
+                    tempmerge = tempmerge.rename(columns = {'count30':'ha_' + name +'_'+ dev})
+                    tempmerge['ha_' + name +'_'+ dev] = tempmerge['ha_' + name +'_'+ dev]*.09 #Convert to hectares
+                    tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name +'_'+ dev})
+                    
+                #For other scenarios and activities, do this section
+                else:
+                    tempdf302 = td
+                    tempdf302 = pd.merge(gclass,tempdf302, how = 'outer', left_on = 'landcover', right_on = 'LC2030_bau')
+                    group302 = tempdf302.groupby('gen_class', as_index = False).count()
+                    group302 = group302[['pointid','gen_class']]
+                    group302 = group302.rename(columns={'pointid':'count302'})
+                    
+                    tempmerge = pd.merge(group30,group302, on = 'gen_class', how = 'outer')
+                    tempmerge['count302'].fillna(0, inplace = True)
+                    tempmerge['count30'].fillna(0, inplace = True)
+                    tempmerge['change'] = tempmerge['count30']-tempmerge['count302']
+                    tempmerge['change'] = tempmerge['change']*.09 #Convert to hectares
+                    tempmerge = tempmerge[['change','gen_class']]
+                    tempmerge = tempmerge.rename(columns = {'change':'ha_change_' + name})
+
+                #Add the reporting dataframe to the dictionary of dataframes
+                scendict[name + dev] = tempmerge
+            
+        scendict = {}
+        
+        #Loop through the scenarios and activities to create reporting dataframes
+        for x in keylist:
+            if x in ['base', 'trt']:
+                if x == 'base':
+                    for i in devlist:
+                        ecofunct(x, 'LC2030_' + i, i, dfdict[x])
+                else:
+                    for i in devlist:
+                        ecofunct(x, 'LC2030_trt_' + i, i, dfdict[x])
+                        
+            else:
+                if x == 'urb':
+                    pass
+                else:
+                    ecofunct(x, 'LC2030_trt_bau', 'bau', dfdict[x])
+                
+        #Create 2014 baseline reporting dataframe
+        td = df[['LC2014','dcode_medinfill','dcode_maxinfill','pointid','cli_ref','clim_conn']]
+        tempdf14 = td.loc[(td['cli_ref'] == 1) | (td['clim_conn'] > 100)]
+        tempdf14 = pd.merge(tempdf14,gclass, how = 'outer', left_on = 'LC2014', right_on = 'landcover')
+        group14 = tempdf14.groupby('gen_class', as_index = False).count()
+        group14 = group14[['pointid','gen_class']]
+        group14 = group14.rename(columns={'pointid':'ha_2014'})
+        group14['ha_2014'] = group14['ha_2014']*.09 #Convert to hectares
+        scendict['Base_2014'] = group14
+        tlist = list(scendict.values())
+        l = len(tlist)
+        count = 1
+        temp = tlist[0]
+        
+        #Loop through the reporting dataframes and merge into one dataframe
+        while count < l:
+            temp = pd.merge(temp,tlist[count],on = 'gen_class', how = 'outer' )
+            count = count + 1
+        temp.fillna(0, inplace = True)
+        temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        #Export the merged dataframe as a csv
+        
+        Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'eco_resil' + '.csv')
+        temp.to_csv(outpath + 'eco_resil.csv', index = False)
+
     def aqua(df, outpath):
         """
         This function reports on general landcover change in the to 20% of important watersheds for aquatic habitat.
@@ -998,6 +1297,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             count = count + 1
         temp.fillna(0, inplace = True)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'aquatic' + '.csv')
         #Export the merged dataframe as a csv
         temp.to_csv(outpath + 'aquatic.csv', index = False)
         
@@ -1151,6 +1451,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 count = count + 1
             temp.fillna(0, inplace = True)
             temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+            Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + y + 'movement' + '.csv')
             #Export the merged reporting dataframe to a csv
             temp.to_csv(outpath+y+'movement.csv', index = False)   
     
@@ -1259,13 +1560,14 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
         temp.fillna(0, inplace = True)
         temp = temp.loc[temp['landcover'].isin(['Annual Cropland','Rice','Orchard','Vineyard','Irrigated Pasture'])]
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'cropvalue' + '.csv')
         #Export the reporting dataframe to a csv
         temp.to_csv(outpath+'cropvalue.csv', index = False)              
             
     
     def groundwater(df, outpath):
         """
-        This function reports on changes in groundwater recharge.
+        This function reports on changes in groundwater recharge volume.
         
         """
         
@@ -1346,6 +1648,15 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                     pass
                 else:
                     gwfunct(x, 'LC2030_bau', 'bau', dfdict[x])
+        td = df[['LC2014','pointid', 'bcm_val']]
+        td = td.loc[td['LC2014'].isin(['Orchard','Annual Cropland','Vineyard', 'Rice', 'Irrigated Pasture','Forest', 'Shrubland', 'Wetland', 'Barren', 'Water', 'Grassland'])]
+        
+        group14 = td.groupby('LC2014', as_index = False).sum()
+        group14 = group14[['bcm_val','LC2014']]
+        group14 = group14.rename(columns={'bcm_val':'ac_ft_rec_2014', 'LC2014':'landcover'})
+        gwdict['Base_2014'] = group14
+        
+        
         tlist = list(gwdict.values())
         l = len(tlist)
         count = 1
@@ -1356,7 +1667,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
             count = count + 1
         temp.fillna(0,inplace = True)
-        temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]  
+        Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'groundwater' + '.csv')
         #Export the combined dataframes to a csv
         temp.to_csv(outpath+'groundwater.csv', index = False)       
 
@@ -1502,6 +1814,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 count = count + 1
             temp.fillna(0, inplace = True)
             temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+            Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + y + '_nitrates' + '.csv')
             #Export the merged reporting dataframe to a csv
             temp.to_csv(outpath+y+'_nitrates.csv', index = False)                       
  
@@ -1681,6 +1994,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 count = count + 1
             temp.fillna(0, inplace = True)
             temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+            Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + y + '_airpollute' + '.csv')
             #Export the merged reporting dataframe to a csv
             temp.to_csv(outpath+y+'_airpollute.csv', index = False)
     
@@ -1713,8 +2027,10 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                 td.loc[(td[field] == 'Woody Riparian'), field] = 'Forest'
                 td.loc[(td[field] == 'Oak Conversion'), field] = 'Forest'
-                
-                
+            
+            if 'base' in field:
+                td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
+                td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
                 
             import pandas as pd
             tdf = pd.DataFrame()
@@ -1908,6 +2224,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             count = count + 1
         temp.fillna(0, inplace = True)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'watint' + '.csv')
         #Export merged dataframe to a csv
         temp.to_csv(outpath+'watint.csv', index = False)      
     def thab_func(df, outpath, lupath):
@@ -2010,9 +2327,6 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                                 countdict['b'] = countdict['b'] + 1
                             elif 'a' in i:
                                 countdict['a'] = countdict['a'] + 1
-#                            elif 't' in i:
-#                                countdict['t'] = countdict['t'] + 1
-#                                Helpers.pmes ('TE Count: ' + str(countdict['t']))
                         
                         #This section goes through each species in each rid/species combination, finds the suitability based on the landcover, and decides whether the suitability has improved or degraded.
                         if row[gridcode2] in uf_dict14.keys():
@@ -2041,11 +2355,12 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                             dev_dict[i]['degraded'] = dev_dict[i]['degraded'] + row['pointid']
                         
             def summarize(first_letter, guild):
-
+                """
+                This function takes the processed data and summarizes it for 
+                """
                 if guild=='tes':
                     
                     new_dict = {x: v for x,v in dev_dict.items() if x in list(tespp['species']) }
-                    Helpers.pmes(new_dict)
                     tescount = len(new_dict)
                 else:
                     new_dict = {x: v for x,v in dev_dict.items() if x.startswith(first_letter) }
@@ -2065,6 +2380,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             if a.empty:
                 pass
             else:
+                #This section runs all of the upper functions
                 suit_dict = {}
                 dev_dict = {}
                 uf_dict14 = {}
@@ -2079,14 +2395,15 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
                 a.apply(initialize_dict, axis=1)
                 Helpers.pmes ('Tallying the DF')
                 a.apply(tally, axis = 1)
+                Helpers.pmes ('Summarizing the Results')
                 summarize('m', 'mammals')
                 summarize('b', 'birds')
                 summarize('a', 'amphibians')
                 summarize('t', 'tes')
-                Helpers.pmes(a.head(10))
+
                 a = pd.DataFrame.from_dict(summary_dict, orient='index')
                 a.reset_index(inplace=True)
-                Helpers.pmes(a.head(10))
+
                 if a.empty:
                     Helpers.pmes('Dataframe is empty')
                 else:
@@ -2128,33 +2445,35 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu,alu, cov14, cov30, lupath, acdic
             temp.fillna(0, inplace = True)
             temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
             #Export the merged reporting dataframe to a csv
+            Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'terrhab' + '.csv')
             temp.to_csv(outpath+'terrhab.csv', index = False)    
         else:
             Helpers.pmes('DF List is Empty')
 
     
     #Run all of the reporting functions
-#    fmmp(df,outpath)
-#    fema(df,outpath)
-#    scenic(df,outpath)
-#    wateruse(df,outpath)
-#    lcchange(df,outpath)
-#    pcalcchange(df,outpath)
-#    termovement(df,outpath)
-#    cropvalue(df,outpath)
-#    groundwater(df,outpath)
-#    nitrates(df,outpath)
-#    airpol(df,outpath)
-#    if cproc == 0:
-#        watershedintegrity(df,outpath)
-#    else:
-#        pass
-#    aqua(df,outpath)
-#    if terflag == 1:
-#        thab_func(df,outpath, lupath)
-#    
+    socresilience(df,outpath)
+    eco_res(df,outpath)
+    fmmp(df,outpath)
+    fema(df,outpath)
+    scenic(df,outpath)
+    wateruse(df,outpath)
+    lcchange(df,outpath)
+    pcalcchange(df,outpath)
+    termovement(df,outpath)
+    cropvalue(df,outpath)
+    groundwater(df,outpath)
+    nitrates(df,outpath)
+    airpol(df,outpath)
+    if cproc == 0:
+        watershedintegrity(df,outpath)
+    else:
+        pass
+    aqua(df,outpath)
+    if terflag == 1:
+        thab_func(df,outpath, lupath) 
     
-def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 , cm = 0, ug = 0):
+def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 , cm = 0, ug = 0, logfile = 'None'):
     """
     This function reporting on carbon totals and carbon changes for the development scenarios and activities
     
@@ -2167,6 +2486,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     acdict: If avoided conversion activities were selected, this dictionary holds them
     cd: Custom Development flag
     cm: Conservation Mask flag
+    ug: Urban forestry canopy cover % increase
     """
     
     import pandas as pd
@@ -2223,12 +2543,12 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         dfdict['con'] = df5      
 
     if acdict != 'None':
-            aclist = [*acdict]
+            aclist = list(acdict.keys())
             for i in aclist:
                 df2 = df.loc[(df[i+'selected'] == 1)]
                 dfdict[i] = df2
         
-    keylist = [*dfdict]
+    keylist = list(dfdict.keys())
     
     Helpers.pmes(keylist)
     
@@ -2278,13 +2598,15 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
             lct = lct.rename(columns = {'LC2030_'+ dev:'landcover','carbrate30':'carbon_' + name +'_'+ dev})
             intdict[name +'_'+ dev] = lct
             
+        #Calculate carbon for treatments
         elif name == 'trt':
             temp = pd.merge(td,c30, how = 'left', left_on = 'gridcode30_trt_'+ dev, right_on ='gridcode30' )
             lct = temp.groupby(['LC2030_trt_'+ dev], as_index = False).sum()
             lct = lct[['LC2030_trt_'+ dev, 'carbrate30']]
             lct = lct.rename(columns = {'LC2030_trt_'+ dev:'landcover','carbrate30':'carbon_' + name +'_'+ dev})
             intdict[name +'_'+ dev] = lct
-
+            
+        #Calculate carbon for activities
         elif name in activitylist:
             if (name + '_carbred') in df:
                 lct = td.groupby(['LC2030_trt_bau'], as_index = False).sum()
@@ -2294,6 +2616,8 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
                 intdict[name] = lct
             else:
                 Helpers.pmes('Activity Carbon Rates not in Dataframe')
+                
+        #Calculate carbon for conservation mask area
         elif name in ['con']:
             temp14 = pd.merge(td,c14, how = 'left', left_on = 'gridcode14', right_on = 'gridcode14')
             temp30 = pd.merge(td,c30, how = 'left', left_on = 'gridcode30_trt_bau', right_on = 'gridcode30')
@@ -2326,7 +2650,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
             lct['change'] = lct['sumtrt'] - lct['sumbase']
             temp = lct[['landcover', 'change']]
             
-            temp = temp.rename(columns = {'change':'carbon_avoided_' + name}) 
+            temp = temp.rename(columns = {'change':'carbon_' + name}) 
             intdict[name] = temp
             
             
@@ -2352,19 +2676,18 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     c14 = pd.read_csv(carb14)
     
     #Calculate the 2014 carbon total
-#    def do2014(df, c14):
-#        td = df[['LC2014', 'gridcode14']]
-#        temp = pd.merge(td,c14, how = 'left', on = 'gridcode14')
-#        lct = temp.groupby(['LC2014'], as_index = False).sum()
-#        return lct
-#    lct = do2014(df, c14)
-#      
-#    lct = lct[['LC2014', 'carbrate14']]
-#    lct = lct.rename(columns = {'LC2014':'landcover','carbrate14':'carbon2014'})
-#    intdict['Carbon2014'] = lct
+    def do2014(df, c14):
+        td = df[['LC2014', 'gridcode14']]
+        temp = pd.merge(td,c14, how = 'left', on = 'gridcode14')
+        lct = temp.groupby(['LC2014'], as_index = False).sum()
+        return lct
+    lct = do2014(df, c14)
+      
+    lct = lct[['LC2014', 'carbrate14']]
+    lct = lct.rename(columns = {'LC2014':'landcover','carbrate14':'carbon2014'})
+    intdict['Carbon2014'] = lct
 
     tlist = list(intdict.values())
-    Helpers.pmes(tlist)
     l = len(tlist)
     count = 1
     temp = tlist[0]
@@ -2378,27 +2701,38 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     temp.fillna(0, inplace = True)
     
     
-    temp['trt_bau_total'] = 0
-    temp['trt_med_total'] = 0
-    temp['trt_max_total'] = 0
-    temp['trt_bau_total'] = temp['carbon_trt_bau'] + temp['trt_bau_total']
-    temp['trt_med_total'] = temp['carbon_trt_med'] + temp['trt_med_total']
-    temp['trt_max_total'] = temp['carbon_trt_max'] + temp['trt_max_total']
+
+    temp['trt_bau_total'] = temp['carbon_trt_bau']
+    temp['trt_med_total'] = temp['carbon_trt_med']
+    temp['trt_max_total'] = temp['carbon_trt_max']
+    if cd == 1:
+        temp['trt_cust_total'] = temp['carbon_trt_cust']
+    
     
     for i in collist:
         temp['trt_med_total'] = temp[i] + temp['trt_med_total']
         temp['trt_max_total'] = temp[i] + temp['trt_max_total']
         temp['trt_bau_total'] = temp[i] + temp['trt_bau_total']
+        if cd == 1:
+            temp['trt_cust_total'] = temp[i] + temp['trt_cust_total']
     temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+    Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'carbon' + '.csv')
     #Export the dataframe to a csv
+#    df.to_csv(outpath+'review.csv', index = False) 
+#    import arcpy
+#    arcpy.CreateFileGDB_management (outpath, 'reviewgdb')
+#    arcpy.TableToTable_conversion (outpath+'review.csv', outpath + 'reviewgdb.gdb/', 'Review')
+#    arcpy.AddIndex_management (outpath + 'reviewgdb.gdb/Review', 'pointid', 'tempindex')
     temp.to_csv(outpath+'carbon.csv', index = False)  
     
     
     
-def report_acres(df, activitylist, outpath):
+def report_acres(df, activitylist, outpath, acdict = 'None', logfile = 'None'):
     """
     This function reports the number of acres adopted for each activity.
-    
+    df: The dataframe, passed from the main program
+    outpath: The folder to which reporting csvs will be exported
+    activitylist: List of activities selected from the main program module
     
     """
     
@@ -2406,7 +2740,7 @@ def report_acres(df, activitylist, outpath):
     import pandas as pd
     acredict= {}
     
-    
+    #Go through each activity selected and calculate acres adopted.
     if activitylist:
         for i in activitylist:
             temp = df.loc[df[i + 'selected'] == 1]
@@ -2418,7 +2752,16 @@ def report_acres(df, activitylist, outpath):
             
             acredict[i] = temp
             
-        
+        if acdict != 'None':
+            aclist = list(acdict.keys())
+            for i in aclist:
+                temp = df.loc[df[i + 'selected'] == 1]
+                temp = temp.groupby([i + 'selected'], as_index = False).count()
+                temp = temp [[i + 'selected', 'pointid']]
+                temp['pointid'] = temp['pointid'] * 0.222395
+                temp = temp[['pointid']]
+                temp = temp.rename(columns = {'pointid':i + '_acres'})
+                acredict[i] = temp
         tlist = list(acredict.values())
 
         temp = tlist[0]
@@ -2427,6 +2770,7 @@ def report_acres(df, activitylist, outpath):
         Helpers.pmes('Combining Dataframes')
         result = pd.concat(tlist, axis=1)
         result = result.loc[:, ~result.columns.str.contains('^Unnamed')]    
+        Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'act_acres' + '.csv')
         result.to_csv(outpath+'act_acres.csv', index = False)  
     
     

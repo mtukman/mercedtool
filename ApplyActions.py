@@ -41,11 +41,9 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None'):
         # Loop through landcovers for the activity and calculate and sum up carbon
         tempix = 0
         for i in dfList:
-            Helpers.pmes('maxyears: ' + str(maxyrs) + ' and full adoptyears : ' + str(fulladoptyrs))
             if i in actcount:
                 carb1 = 0
                 tempix = 0
-                Helpers.pmes('Landcover is: ' + i +', AND Pixels: ' + str(actcount2.at[i,activity+'selected']))
                 pixels = actcount2.at[i,activity+'selected'] #Get the number of selected pixers for the activity/landcover combination
                 #If there are selected pixels, do the carbon reduction loop
                 if pixels > 0:
@@ -88,12 +86,11 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None'):
                     carb2[activity +i+ '_sel'] = tempix
                     
                     
-            counter1 = counter1 + 1
-            Helpers.pmes('tempix: ' + str(tempix))   
+            counter1 = counter1 + 1 
             if tempix > 0:
                 tempdf[activity +'_carbred'] = tempdf[activity+'selected']*(carb1/pixels)
             
-        Helpers.add_to_logfile(logfile,'Activity is: ' + activity + ', Number of Pixels Treated is: ' + str(pixels) + ' AND reduction rate per pixel is: ' + str(carb1/pixels) + ' Tons of CO2e')
+#        Helpers.add_to_logfile(logfile,'Activity is: ' + activity + ', Number of Pixels Treated is: ' + str(pixels) + ' AND reduction rate per pixel is: ' + str(carb1/pixels) + ' Tons of CO2e')
     # Run the above functionf or every activity selected
     for i in activitylist:
         if i != 'urb':
@@ -103,17 +100,17 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None'):
     # Update gridcodes for treatment scenarios
     gcdict = {'Wetland':0, 'Water':1, 'Grassland':2,'Barren':4, 'Orchard':7,'Vineyard':8,'Annual Cropland':9,'Rice':10,'Irrigated Pasture':11,'Young Forest':14, 'Young Shrubland':15}
     devlist = ['bau','med','max']
-    keylist = [*gcdict]
+    keylist = list(gcdict.keys())
     
     for i in devlist:
         for x in keylist:
             tempdf.loc[(tempdf['LC2030_trt_'+i] ==  x),'gridcode30_trt_' + i] = gcdict[x]
         
         
-        
+    #Calculate urban tree planting carbon
     if ug != 0 :
 
-        carbon =  29.6082 #Convert tons/ha to tons/pixel
+        carbon =  29.6082 #Convert tons/ha to tons/pixel 
         
         tempdf['urb' +'_carbred'] = 0
         tempdf.loc[tempdf['urbselected'] == 1, 'urb_carbred'] = carbon

@@ -5,6 +5,7 @@ This script holds the functions used in other modules of the tool.
 @author: mtukman
 """
 import arcpy
+ludict = {'ac_wet_arc':'AC Wetland to Annual Row Crop','ac_gra_arc':'AC Grassland to Annual Row Crop','ac_irr_arc':'AC Irrigated Pasture to Annual Row Crop','ac_orc_arc': 'AC Orchard to Annual Row Crop','ac_arc_urb':'AC Annual Row Crop to Urban','ac_gra_urb':'AC Grassland to Urban','ac_irr_urb':'AC Irrigated Pasture to Urban','ac_orc_urb':'AC Orchard to Urban','ac_arc_orc':'AC Annual Row Crop to Orchard','ac_gra_orc':'AC Grassland to Orchard','ac_irr_orc':'AC Irrigated Pasture to Orchard','ac_vin_orc':'AC Vineyard to Orchard','ac_arc_irr':'AC Annual Row Crop to Irrigated Pasture','ac_orc_irr':'AC Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Conversion','ccr':'Cover Cropping','mul':'Mulching','nfm':'Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Grassland Restoration','cam':'Compost Amendment','cag':'Compost Amendment to Grasslands'}
 def add_to_logfile(logfile,string_to_add):
     """
     This function writes to a logfile.
@@ -15,6 +16,18 @@ def add_to_logfile(logfile,string_to_add):
     lf.close()
     arcpy.AddMessage(string_to_add)
     print (string_to_add)
+    
+def add_to_logfile2(logfile,string_to_add, string2 = ' '):
+    """
+    This function writes to a logfile.
+    """
+    lf = open(logfile, "a")
+    lf.write(string_to_add + "\n")
+    lf.write(string2 + "\n")
+    lf.close()
+    
+    
+    
 def pmes(message):
     """
     Takes a string and prints it as an arcpy msg and as a python print statement
@@ -49,7 +62,7 @@ def CreateEligDict(df, activity, dictact, dict_eligibility, act):
     dict_eligibility[act] = eli_dict_element
     
 
-def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
+def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'None'):
     """
     This function takes a dictionary, a dataframe and an activity.
     It takes a user input to determine how many pixels to select for the activity.
@@ -60,7 +73,6 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
     goal = 0
     tempdict = dict_eligibility[act]
     tempdict2 = tempdict[act + 'suitflag']
-    pmes(tempdict2)
     
     #Create a list of the landcovers for the activity
     klist = list(tempdict2.keys())
@@ -88,7 +100,6 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
     initflag =  act + 'suitflag'
     selflag = act + 'selected'
     df[selflag] = 0
-    pmes ('group size is :' + str(dictact[activity]['grpsize']))
     
     def select(groupsize, count):
         #Group pixels by their medium group value (medium grid)
@@ -110,13 +121,16 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile):
                 
             else:
                 pass
-    
-        pmes (str(count))
-        add_to_logfile(logfile,activity + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
-        query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
-        add_to_logfile(logfile,activity + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
-        df.loc[query,selflag] = 1  
-        
+        if aco != 'None':
+            add_to_logfile(logfile,ludict[aco] + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
+            query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
+            add_to_logfile(logfile,ludict[aco] + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
+            df.loc[query,selflag] = 1  
+        else:
+            add_to_logfile(logfile,ludict[activity] + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
+            query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
+            add_to_logfile(logfile,ludict[activity] + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
+            df.loc[query,selflag] = 1  
     #Run the select function using either small or large groups of points
     if dictact[activity]['grpsize'] == 'medium':
         select('medgroup_val', count)
@@ -135,13 +149,8 @@ def CreateSuitFlags(activity,df,dictact, act):
     pmes ('Calculating Suitability for : ' + initflag)
     df[initflag] = 0
     df.loc[dictact[activity]['query'], initflag] = 1
-
-    
-    
-"""
-Initialization
-"""
-
+    temp = df.head(20)
+    temp.to_csv('P:/Temp/test2.csv')
 
 
 #PREPROCESSING FUNCTIONS
@@ -414,8 +423,7 @@ def Carbon2030calc():
     df1 = pd.DataFrame(np.nan, index=[], columns=[])
     
     for i in temp:
-        
-        total = result3.loc[result3['Landcover_Class'] == i]
+
         temp1 = result4.loc[result4['Landcover_Class'] == i]
         carbsum = temp1['Sumco'].sum()
         temp1['share'] = 0
@@ -473,22 +481,14 @@ def create_processing_table(InPoints,inmask, tempgdb, scratch):
     return temppts
         
         
-        
 
-        
-        
-        
-        
         
 def lc_mod(flagfield, label, labelfield, dataframe):
     """
     This function just simplifies the query that calculates a field"""
     dataframe.loc[(dataframe[flagfield] == 1), labelfield] = label
         
-    
-    
 
-    
 
 def devscen (td):
     """
@@ -580,6 +580,9 @@ def carbon30(df):
 
 
 def remove_unnamed(folder):
+    """
+    This function removes the unnamed index field from any csv in the provided folder
+    """
     import os
     import pandas as pd
 

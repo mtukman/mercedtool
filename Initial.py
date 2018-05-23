@@ -28,12 +28,12 @@ def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb,
     import Helpers
     #Load Tables into Dataframes
     Helpers.pmes('Loading CSV Value Tables - this takes a few minutes...')
-    jointables = Helpers.LoadCSVs(joins)
-    value_df = Helpers.MergeMultiDF('pointid', jointables)
+    value_df = pd.read_csv(joins + '/values.csv')
+#    value_df = Helpers.MergeMultiDF('pointid', jointables)
 
     Helpers.pmes('Loading CSV Near Tables - this takes a few more minutes...')
-    neartables = Helpers.LoadCSVs(nears)
-    near_df = Helpers.MergeMultiDF('pointid', neartables)
+    near_df = pd.read_csv(nears+ '/near.csv')
+#    near_df = Helpers.MergeMultiDF('pointid', neartables)
     
     #Define the list of developed landcovers
     developed = ['Developed','Urban','Developed Roads']
@@ -134,7 +134,7 @@ def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb,
     
     
     devlist = ['bau','med','max']
-    keylist = [*gcdict]
+    keylist = list(gcdict.keys())
     
     #Make sure all gridcodes in treatment scenarios are correct
     for i in devlist:
