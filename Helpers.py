@@ -386,7 +386,7 @@ rids_only = "D:\\TGS\\projects\\64 - Merced Carbon\\MBA\\ToolData\\Vector\\speci
     
 def Carbon2030calc():
     """
-    This function calculate weighted carbon rates for 2030 using the 2014 carbon rates and the baseline carbon data.
+    This function calculates weighted carbon rates for 2030 using the 2014 carbon rates and the baseline carbon data.
     
     """
     

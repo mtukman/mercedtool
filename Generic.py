@@ -143,6 +143,8 @@ gra - NATIVE GRASS RESTORATION
 '''
 global dict_activity
 
+
+#These are activity entries that will be modified through tool parameters.
 oakdict = {'name':'Oak Woodland Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':'medium', 'suitflag':'oaksuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2}
 rredict = {'name':'Riparian Restoration','query' : 'holder', 'ag_modifier':1, 'grpsize':'medium', 'suitflag':'ripsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':1}
 muldict =  {'name':'Mulching','query' : 'holder', 'ag_modifier':1, 'grpsize':'small', 'suitflag':'mulsuitflag','selquery':'holder','adoption':'holder','years':'holder','adoptyear':'holder', 'adoptcap':.2}

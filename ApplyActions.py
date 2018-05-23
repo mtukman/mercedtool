@@ -19,7 +19,17 @@ import Helpers
 global _eligibility
 
 def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None'):
-
+    """
+    This function taking the dataframe with the selection flags and calculates carbon reductions.
+    df- This is the dataframe created in Initial and modified in Activity Application
+    activitylist- This is the list of activities chosen, acronyms
+    dictact- This is a dictionary of activity adoption rates
+    trt- This is the trt carbon look up table path
+    ug- Urban Tree Planting % Growth
+    logfile- Path to the logfile
+    
+    
+    """
     tempdf = df.sort_values(['pointid'])
     carb = {}
     carb2 = {}
