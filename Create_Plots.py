@@ -1,10 +1,24 @@
 def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
+    """
+    This function takes the reports from the Reporting module and creates siplified tables and plots using the Plotly website.
+    
+    folder - Folder that the tool outputs went into.
+    aclist - List of activities chosen for the run of the tool
+    actlist - List of avoided conversion activities chosen for the run of the tool
+    thabflag - Flag for whether terrestrial habitat reporting was checked or not.
+    cproc - flag for whether a custom processing mask was used in the run of the tool
+    apikey - API Key from Plotly
+    username - Username from Plotly
+        
+    """
     runfolder = folder
     mba_title_font = 20
     axis_lab_font = 16
     import plotly.plotly as py
     import Helpers
     py.sign_in(username, apikey)
+    
+    #This dictionary contains acronym to actual activity description lookups
     ludict = {'ac_wet_arc':'AC Wetland to Annual Row Crop','ac_gra_arc':'AC Grassland to Annual Row Crop','ac_irr_arc':'AC Irrigated Pasture to Annual Row Crop','ac_orc_arc': 'AC Orchard to Annual Row Crop','ac_arc_urb':'AC Annual Row Crop to Urban','ac_gra_urb':'AC Grassland to Urban','ac_irr_urb':'AC Irrigated Pasture to Urban','ac_orc_urb':'AC Orchard to Urban','ac_arc_orc':'AC Annual Row Crop to Orchard','ac_gra_orc':'AC Grassland to Orchard','ac_irr_orc':'AC Irrigated Pasture to Orchard','ac_vin_orc':'AC Vineyard to Orchard','ac_arc_irr':'AC Annual Row Crop to Irrigated Pasture','ac_orc_irr':'AC Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Conversion','ccr':'Cover Cropping','mul':'Mulching','nfm':'Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Grassland Restoration','cam':'Compost Amendment','cag':'Compost Amendment to Grasslands'}
     def simp(afolder = ''):
     
@@ -12,18 +26,21 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         import pandas as pd
         import functools
         
-        if not os.path.exists(afolder + 'plot_tables_twotrace'):
-            os.makedirs(afolder + 'plot_tables_twotrace')
-        if not os.path.exists(afolder + 'plots_twotrace'):
-            os.makedirs(afolder + 'plots_twotrace')
-        outfolder =     afolder + 'plot_tables_twotrace/'
+        #Create the folders if they do not exist
+        if not os.path.exists(afolder + 'plot_tables'):
+            os.makedirs(afolder + 'plot_tables')
+        if not os.path.exists(afolder + 'plots'):
+            os.makedirs(afolder + 'plots')
+        outfolder =     afolder + 'plot_tables/'
 
         df = pd.read_csv(afolder + 'act_acres.csv')
         test = df.transpose()
         test.reset_index(inplace = True)
         test.rename(columns = {'index': 'Activity','0':'Acres'}, inplace = True)
         test.to_csv(outfolder + 'act_acres.csv')
-
+        
+        
+        #Create the function that create the simplified tables
         def fmmp2014():
             df = pd.read_csv(afolder + 'fmmp.csv')
             df = df[['fmmp_class','ha_2014']]
@@ -192,36 +209,26 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
             df = df.rename(columns = {'gen_class': 'Landcover', 'ha_2014':'Hectares'})
             df.to_csv(outfolder+'2014 Natural Resilience.csv', index = False)        
     
-        
+        #Create the 2014 simplified tables
         fmmp2014()
-    
         crop2014()
-    
         watcon2014()
         if cproc == 0:
             watint2014()
-    
         nitrun2014()
         nitleach2014()
-    
         flood2014()
-    
         air2014()
-    
         scenic2014()
-    
         move2014()
-    
         move2014_eca()
-    
         lcc2014()
-    
         pcalcc2014()
-    
         aqua2014()
-    
         eco_resi14()
         soc_resi14()
+        
+        
         def fmmp2030():
             df = pd.read_csv(afolder + 'fmmp.csv')
             df = df[['fmmp_class','ha_loss_base_bau', 'ha_loss_trt_bau' ]]
@@ -599,42 +606,32 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
     
         
     
-    
+    #Create the 2014-2030 simplified tables
         fmmp2030()
-    
         crop2030()
         watcon2030()
         if cproc == 0:
             watint2030()
-            
         groundwater2030()
-    
         nitrun2030()
         nitleach2030()
-    
         flood2030()
-    
         air2030()
-    
         scenic2030()
-    
         move2030()
-    
         move2030_eca()
-    
         lcc2030()
-    
         pcalcc2030()
-        
         if thabflag == 1:
             terrhab2030()
-    
         aqua2030()
         eco_resi()
         soc_resi()
         carbon()
         carbon2()
     
+    
+    #Define the plotting functions
     def mba_twotrace(table, title = 'Nothing' , xax = 'holder', yax = 'holder',  ytitle = 'None', x1 = 'None',  x2 = 'None', x3 = 'None', outfile = 'temp',y1 = 'none',y2 = 'none', xtit = '', a_font = 14):
         import plotly.plotly as py
         from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
@@ -758,12 +755,14 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
     #    plot(fig, filename= plot_dict[mba]['title'] + '.html')
         py.image.save_as(fig, outfile, format='png')
         return fig
+    
+    #Create a function to make the plots
     def custom_plots(afolder):
+        #Set the folder variables
+        tables = afolder + 'plot_tables'
+        outpath = afolder + 'plots/'
     
-        tables = afolder + 'plot_tables_twotrace'
-        outpath = afolder + 'plots_twotrace/'
-    
-    
+        #Call the plotting functions for each plot
         mba_twotrace(tables + "/2030 Ag Land Quality.csv", '2014-2030 Farmland Loss', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Farmland Class', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Farmland Loss.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 14)
         
     

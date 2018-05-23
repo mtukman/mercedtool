@@ -32,7 +32,7 @@ def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb,
 #    value_df = Helpers.MergeMultiDF('pointid', jointables)
 
     Helpers.pmes('Loading CSV Near Tables - this takes a few more minutes...')
-    near_df = Helpers.LoadCSVs(nears+ '/near.csv')
+    near_df = pd.read_csv(nears+ '/near.csv')
 #    near_df = Helpers.MergeMultiDF('pointid', neartables)
     
     #Define the list of developed landcovers

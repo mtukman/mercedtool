@@ -13,6 +13,9 @@ import Generic
 import os
 import time
 #variables passed in from ArcMap tool
+import platform
+import sys
+
 output_file_location = arcpy.GetParameterAsText(0)  #must be a folder
 rootpath = arcpy.GetParameterAsText(1) #Rootpath of data location
 activitylist = []
@@ -29,7 +32,10 @@ logfile = os.path.join((newdir), "logfile.txt")
 Helpers.add_to_logfile(logfile,'Tool Started at: ' + time.strftime("%Y%m%d-%H%M%S") + ' \n')
 Helpers.add_to_logfile2(logfile, '')
 
-
+bit = platform.architecture()
+if bit[0] == '32bit':
+    Helpers.add_to_logfile(logfile, '*******************************************Tool is running in 32bit python, must have 64-bit Background Processing installed and toggled on in Geoprocessing Options.*******************************************')
+    sys.exit()
 Helpers.add_to_logfile2(logfile, 'Writing out the tool parameter inputs','----------------------------------------------------------------------------------')
 Helpers.add_to_logfile(logfile,'Output Folder' + ': ' + arcpy.GetParameterAsText(0))
 Helpers.add_to_logfile(logfile,'Data Rootpath' + ': ' + arcpy.GetParameterAsText(1))
@@ -420,6 +426,7 @@ templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt,
 #import arcpy
 #arcpy.TableToTable_conversion ('P:/Temp/Review.csv', 'E:/Temp/Temp.gdb/', 'Review')
 #arcpy.AddIndex_management ('E:/Temp/Temp.gdb/Review', 'pointid', 'tempindex')
+
 Helpers.pmes("**CREATING MULTIBENEFIT REPORTS...**")
 Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc, logfile)
 Helpers.pmes("**CREATING CARBON REPORTS...**")
