@@ -414,10 +414,6 @@ outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_a
 Helpers.pmes('Finished with Activity Application Module, entering Carbon Accounting Module')
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, logfile)
 
-#templist[0].to_csv('P:/Temp/Review.csv')
-#import arcpy
-#arcpy.TableToTable_conversion ('P:/Temp/Review.csv', 'E:/Temp/Temp.gdb/', 'Review')
-#arcpy.AddIndex_management ('E:/Temp/Temp.gdb/Review', 'pointid', 'tempindex')
 
 Helpers.pmes("**CREATING MULTIBENEFIT REPORTS...**")
 Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc, logfile)

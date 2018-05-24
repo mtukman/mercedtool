@@ -149,8 +149,7 @@ def CreateSuitFlags(activity,df,dictact, act):
     pmes ('Calculating Suitability for : ' + initflag)
     df[initflag] = 0
     df.loc[dictact[activity]['query'], initflag] = 1
-    temp = df.head(20)
-    temp.to_csv('P:/Temp/test2.csv')
+
 
 
 #PREPROCESSING FUNCTIONS

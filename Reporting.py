@@ -111,8 +111,6 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
     if 'hplselected' in df:
         dfdict['hpl'] = df.loc[(df['hplselected'] == 1)]
     #Create avoided conversion dataframes if they were selected
-    temp = df.head(20)
-    temp.to_csv('P:/Temp/test.csv')
     if acdict != 'None':
         aclist = list(acdict.keys())
         for i in aclist:
