@@ -584,9 +584,15 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
             test.sort_values(by='Tons of CO2e Reduced', ascending=1)
             test.to_csv(outfolder+'Carbon Reductions.csv', index = False)
             
+            
+            
+            
+            
+        
         def carbon2():
             df = pd.read_csv(afolder + 'carbon.csv')
-            df = df[['landcover','carbon_base_bau','trt_bau_total']]
+            df = df[['landcover','carbon_base_bau','trt_bau_total', 'carbon2014']]
+            c14 = df['carbon2014'].sum()
             df.set_index(['landcover'], inplace = True)
             df = df[df.values.sum(axis=1) != 0]
             df.reset_index(inplace = True)
@@ -603,7 +609,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
             test = test[1:]
             test.reset_index(inplace = True)
             test.rename(columns = {'index':'Scenario'}, inplace = True)
-            test['Tons of CO2e'] = test['Tons of CO2e'] - 52331726
+            test['Tons of CO2e'] = test['Tons of CO2e'] - c14
             test.to_csv(outfolder+'Carbon Reductions Compare.csv', index = False)
     
         
@@ -810,7 +816,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         
         df = pd.read_csv(tables + "/Carbon Reductions.csv")
         for key in ludict:
-            df.loc[df['Activity'] ==  'carbon_' + key] = ludict[key]
+            df.loc[df['Activity'] ==  'carbon_' + key, 'Activity'] = ludict[key]
         df.to_csv(tables + "/Carbon Reductions.csv")
         
         mba_chart_onetrace(tables + "/Carbon Reductions.csv", '2030 Carbon Reductions from Activities', yax = 'Tons of CO2e', x = 'Activity',y = 'Tons of CO2e Reduced', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions.png", xtit = '', xfont = 14)
