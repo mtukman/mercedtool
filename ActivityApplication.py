@@ -250,8 +250,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
             #Change the gridcode and landcover label in the treatment bau
             Helpers.lc_mod(i+'selected',t, 'LC2030_trt_bau', df)
             Helpers.lc_mod(i+'selected',g, 'gridcode30_trt_bau', df)
-    temp = df.head(20)
-    temp.to_csv('P:/Temp/test1.csv')
+
     #Create GHG dictionary entries for suitability, these queries will be used for the ag activity suitability function
     df['lcchange'] = 0
     

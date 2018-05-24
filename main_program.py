@@ -390,12 +390,12 @@ else:
 if arcpy.GetParameterAsText(64) == 'Yes':
     plotlykey = arcpy.GetParameterAsText(65)
 else:
-    plotlykey = 'None'
+    plotlykey = 'FbUYCv4tcjCPF2ZdfzKo'
     
 if arcpy.GetParameterAsText(64) == 'Yes':
     username = arcpy.GetParameterAsText(66)
 else:
-    username = 'None'
+    username = 'mtukman'
     
 #Import the modules
 import Initial
