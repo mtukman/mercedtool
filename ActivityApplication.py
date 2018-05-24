@@ -74,7 +74,12 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         if customdev == 1:
             df.loc[df['rreselected'] == 1, 'LC2030_trt_cust'] = 'Forest'
             df.loc[df['rreselected'] == 1, 'gridcode30_trt_cust'] = 3
-            
+#    df = df['LC2030_base_bau','rreselected']
+    df.to_csv('P:/Temp/rre100.csv')
+    import sys
+    sys.exit()
+    
+    
     #Create Oak Suitability and Selection
     if 'oak' in activitylist:
         dictact['oak']['query'] =(df['LC2030_trt_bau'].isin(['Grassland','Shrubland','Irrigated Pasture','Barren'])) & (df['lcchange'] == 1) & (df['oakrange_flg'] == 1) & queryadd
@@ -297,7 +302,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         Helpers.pmes ('Adoption Goal Acres for Urban: ' + str(dictact['urb']['adoption']))
         
         ghg_selection (df,'urb',dict_eligibility,dictact)
-        
+    #This list below is a list of fields to be dropped from the dataframe in order to speed up processing time.
     blist = ['ccrsuitflag','mulsuitflag','nfmsuitflag','hplsuitflag','camsuitflag','cagsuitflag','grasuitflag','urbsuitflag','urb2suitflag','oaksuitflag','rresuitflag','ac_wet_arc','ac_gra_arc','ac_irr_arc','ac_orc_arc','ac_arc_urb','ac_gra_urb','ac_irr_urb','ac_orc_urb','ac_arc_orc','ac_gra_orc','ac_irr_orc','ac_vin_orc','ac_arc_irr','ac_orc_irr','gp_code','LC2001','hydrovuln_flag','huc12_val','slope_val','medgroup_val','smallgroup_val','gridcode01','pref_dev_flag','near_nwi','near_roads','pref_dev_type','woodyrip_class','near_woody', 'biodiversity_rank','clim_rank','terrhabrank']
     
     clist = []

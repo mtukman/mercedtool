@@ -236,14 +236,6 @@ else:
     Helpers.pmes ('No custom processing area')
 
 
-#if not arcpy.ProductInfo()=='ArcInfo':
-#    arcpy.AddMessage("********************The Carbon Tool requires a 10.2.2 or later ArcInfo (advanced) license - tool won't work with a standard or basic license.*************")
-#    sys.exit()
-#
-#if (arcpy.GetInstallInfo()['Version'] not in ('10.2.2', '10.3', '10.3.1', '10.3.2')):
-#    arcpy.AddMessage("********************The Carbon Tool requires an version 10.2.2 or later of ArcGIS.*************")
-#    sys.exit()
-    
 Helpers.pmes ('Custom Provessing Mask is :' + mask)
 
 adoptdict = {}
