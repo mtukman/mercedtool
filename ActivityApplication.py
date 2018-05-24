@@ -74,10 +74,6 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         if customdev == 1:
             df.loc[df['rreselected'] == 1, 'LC2030_trt_cust'] = 'Forest'
             df.loc[df['rreselected'] == 1, 'gridcode30_trt_cust'] = 3
-#    df = df['LC2030_base_bau','rreselected']
-    df.to_csv('P:/Temp/rre100.csv')
-    import sys
-    sys.exit()
     
     
     #Create Oak Suitability and Selection
