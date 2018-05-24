@@ -20,6 +20,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
     
     #This dictionary contains acronym to actual activity description lookups
     ludict = {'ac_wet_arc':'AC Wetland to Annual Row Crop','ac_gra_arc':'AC Grassland to Annual Row Crop','ac_irr_arc':'AC Irrigated Pasture to Annual Row Crop','ac_orc_arc': 'AC Orchard to Annual Row Crop','ac_arc_urb':'AC Annual Row Crop to Urban','ac_gra_urb':'AC Grassland to Urban','ac_irr_urb':'AC Irrigated Pasture to Urban','ac_orc_urb':'AC Orchard to Urban','ac_arc_orc':'AC Annual Row Crop to Orchard','ac_gra_orc':'AC Grassland to Orchard','ac_irr_orc':'AC Irrigated Pasture to Orchard','ac_vin_orc':'AC Vineyard to Orchard','ac_arc_irr':'AC Annual Row Crop to Irrigated Pasture','ac_orc_irr':'AC Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Conversion','ccr':'Cover Cropping','mul':'Mulching','nfm':'Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Grassland Restoration','cam':'Compost Amendment','cag':'Compost Amendment to Grasslands'}
+    
     def simp(afolder = ''):
     
         import os
@@ -582,6 +583,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
             print (test)
             test.sort_values(by='Tons of CO2e Reduced', ascending=1)
             test.to_csv(outfolder+'Carbon Reductions.csv', index = False)
+            
         def carbon2():
             df = pd.read_csv(afolder + 'carbon.csv')
             df = df[['landcover','carbon_base_bau','trt_bau_total']]
@@ -803,10 +805,24 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
     
     
         mba_twotrace(tables + "/2030 ecoresilience_table.csv", '2014-2030 Landcover Change in Areas Important <br>For Natural Resilience', xax = 'holder', yax = 'holder', ytitle = 'Hectares', x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Social Resilience.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
-    
+        
+        import pandas as pd
+        
+        df = pd.read_csv(tables + "/Carbon Reductions.csv")
+        for key in ludict:
+            df.loc[df['Activity'] ==  'carbon_' + key] = ludict[key]
+        df.to_csv(tables + "/Carbon Reductions.csv")
+        
         mba_chart_onetrace(tables + "/Carbon Reductions.csv", '2030 Carbon Reductions from Activities', yax = 'Tons of CO2e', x = 'Activity',y = 'Tons of CO2e Reduced', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions.png", xtit = '', xfont = 14)
         
         mba_chart_onetrace(tables + "/Carbon Reductions Compare.csv", '2014-2030 Carbon Reduction Change', yax = 'Tons of CO2e', x = 'Scenario',y = 'Tons of CO2e', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions Compare.png", xtit = '', xfont = 14)
+        
+        import pandas as pd
+        df = pd.read_csv(tables + "/act_acres.csv")
+        for key in ludict:
+            df.loc[df['Activity'] == key + '_acres','Activity'] = ludict[key]
+        df.to_csv(tables + "/act_acres.csv")
+        
         
         mba_chart_onetrace(tables + "/act_acres.csv", 'Activities and Acres', yax = 'Acres Selected', x = 'Activity',y = '0', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "Activity Acres Selected.png", xtit = '', xfont = 14)
         
@@ -839,6 +855,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         mba_chart_onetrace(tables + "/2014 ECA Terrestrial Connectivity.csv", xax = '2014 Resistance to Species Movement in Essential Connectivity Areas', yax = 'Hectares', x = 'Resistance to Movement',y = 'Hectares', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Terrestrial Connectivity ECA.png")
 
         mba_chart_onetrace(tables + "/2014 Natural Habitat Area.csv", xax = '2014 Landcover', yax = 'Hectares', x = 'Landcover',y = 'Hectares', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Natural Habitat Area.png")
+        
         mba_chart_onetrace(tables + "/2014 Priority Conservation Areas.csv", xax = '2014 Landcover in Priority Conservation Areas', yax = 'Hectares', x = 'Landcover',y = 'Hectares', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Priority Conservation Areas.png")
 
         
