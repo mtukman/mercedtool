@@ -197,12 +197,12 @@ if arcpy.GetParameterAsText(40) == 'Yes':
     
     
 #Set the custom development parameters
-if arcpy.GetParameterAsText(4) == 'Custom (Replaces Business as Usual)':
+if arcpy.GetParameterAsText(4) == 'Custom (Creates Custom Scenario)':
     dev = 1
     arcpy.Project_management(arcpy.GetParameterAsText(5), newdir + '/DevMask.shp', Generic.SPATIAL_REFERENCE_TEXT)
     devmask =  newdir + '/DevMask.shp'
     arcpy.AddMessage('New BAU')
-elif arcpy.GetParameterAsText(4) == 'Custom (Adds on to Business as Usual)':
+elif arcpy.GetParameterAsText(4) == 'Custom (Adds on to Reference Footprint)':
     dev = 2
     arcpy.Project_management(arcpy.GetParameterAsText(5), newdir + '/DevMask.shp', Generic.SPATIAL_REFERENCE_TEXT)
     devmask =  newdir + '/DevMask.shp'
