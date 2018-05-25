@@ -7,6 +7,9 @@
 3.  Download the 'MASTER_DATA' folder at goo.gl/A1H6BB and save it to a folder on your PC
 4.  Run the toolbox
 
+## Full Tool Guide
+The full tool guide (MS Word Document) for the Merced Tool is available here:  http://rebrand.ly/box4ba8b
+
 
 ## Installation Instructions for MC_CAT
 
