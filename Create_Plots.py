@@ -279,19 +279,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
             df.reset_index(inplace = True)
             df['landcover'] = 'Acre Feet of Annual Groundwater Recharge Lost'
             df = df.groupby(['landcover'], as_index = False).sum()
-            test = df.transpose()
-            test.columns = test.iloc[0]
-            test = test[1:]
-            test.reset_index(inplace = True)
-            
             df = df.rename(columns = {'landcover': 'Landcover', 'ac_ft_rec_lst_base_bau':'Reference Scenario', 'ac_ft_rec_lst_trt_bau':'Treatment Scenario'})
-            test = df.transpose()
-            test.columns = test.iloc[0]
-            test = test[1:]
-            test.reset_index(inplace = True)
-            test.rename(columns = {'index':'Development Scenario'}, inplace = True)
-            print (test)
-            test.to_csv(outfolder+'2030 Groundwater Recharge.csv', index = False)
+            print (df)
+            df.to_csv(outfolder+'2030 Groundwater Recharge.csv', index = False)
         
 
         def watint2030():
@@ -705,7 +695,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
     #    plot(fig, filename= plot_dict[mba]['title'] + '.html')
         py.image.save_as(fig, outfile, format='png')
         return fig
-    
+
     def mba_chart_onetrace(table, xax = 'holder', yax = 'holder', x = 'None',y = 'None', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = 'temp', xtit = '', xfont = 14):
         import plotly.plotly as py
         from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
@@ -773,6 +763,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         #Call the plotting functions for each plot
         mba_twotrace(tables + "/2030 Ag Land Quality.csv", '2014-2030 Farmland Loss', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Farmland Class', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Farmland Loss.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 14)
         
+        mba_twotrace(tables + "/2030 Groundwater Recharge.csv", '2014-2030 Groundwater Recharge Loss', xax = 'holder', yax = 'holder',   ytitle = 'Acre Feet per Year', x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Groundwater Recharge.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 14)
     
         mba_twotrace(tables + "/2030 Crop Value.csv", '2014-2030 Change in Crop Value', xax = 'holder', yax = 'holder',   ytitle = 'US Dollars', x1 = 'Crop Type', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Crop Value.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
      

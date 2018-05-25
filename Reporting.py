@@ -2520,7 +2520,6 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         devlist = ['bau','med','max', 'cust']
     else:
         devlist = ['bau','med','max']
-    Helpers.pmes(activitylist)
     for i in activitylist:
         if i != 'urb':
             df9 = df.loc[(df[i+'selected'] == 1)]
@@ -2548,7 +2547,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         
     keylist = list(dfdict.keys())
     
-    Helpers.pmes(keylist)
+
     
     #Read in the carbon tables
     c30 = pd.read_csv(carb30)
