@@ -21,8 +21,7 @@ To use the tool on your local computer, first make sure that you meet the follow
 * ArcGIS, version 10.2.2 or greater OR ArcPro
 * 16 GB Memory
 * 5 GB hard drive Space
-
-### ArcGIS Pro is Recommended for Running this tool
+* ### ArcGIS Pro is Recommended for Running this tool
 
 ## Installing the Tool in ArcMap
 1.	Download the Github Repository and the supporting data from https://github.com/mtukman/mercedtool.  
