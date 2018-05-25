@@ -21,7 +21,7 @@ The MC-CAT and its supporting data are available at:
 
 * MC-CAT Supporting Data:
 
-	goo.gl/A1H6BB
+	http://goo.gl/A1H6BB
   
 ## System Requirements
 To use the tool on your local computer, first make sure that you meet the following system requirements:
