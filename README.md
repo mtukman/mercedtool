@@ -22,6 +22,8 @@ To use the tool on your local computer, first make sure that you meet the follow
 * 16 GB Memory
 * 5 GB hard drive Space
 
+### ArcGIS Pro is Recommended for Running this tool
+
 ## Installing the Tool in ArcMap
 1.	Download the Github Repository and the supporting data from https://github.com/mtukman/mercedtool.  
 2.	Extract the contents of “mercedtool-master.zip” (which contains a folder called mercedtool-master) to a folder on your hard drive.  The extracted folder contains a number of python modules and an ArcGIS toolbox called MC-CAT. Download and extract the Master_Data folder from http://www.goo.gl/A1H6BB to anywhere on your hard drive.
