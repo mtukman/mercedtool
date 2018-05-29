@@ -34,7 +34,7 @@ Helpers.add_to_logfile2(logfile, '')
 
 bit = platform.architecture()
 if bit[0] == '32bit':
-    Helpers.add_to_logfile(logfile, '*******************************************Tool is running in 32bit python, must have 64-bit Background Processing installed and toggled on in Geoprocessing Options.*******************************************')
+    Helpers.add_to_logfile(logfile, '*******************************************Tool is running in 32bit python, must have 64-bit Background Processing installed and toggled on in Geoprocessing Options.  Go to Geoprocessing-->Geoprocessing Options in ArcMap and click "enable" under background processing. Also, in the "General" tab of the properties of the tool itself, make sure that "always run in the foreground" is unchecked. *******************************************')
     sys.exit()
 Helpers.add_to_logfile2(logfile, 'Writing out the tool parameter inputs','----------------------------------------------------------------------------------')
 Helpers.add_to_logfile(logfile,'Output Folder' + ': ' + arcpy.GetParameterAsText(0))
@@ -390,12 +390,29 @@ else:
 if arcpy.GetParameterAsText(64) == 'Yes':
     plotlykey = arcpy.GetParameterAsText(65)
 else:
-    plotlykey = 'FbUYCv4tcjCPF2ZdfzKo'
+    plotlykey = 'None'
     
 if arcpy.GetParameterAsText(64) == 'Yes':
     username = arcpy.GetParameterAsText(66)
 else:
-    username = 'mtukman'
+    username = 'None'
+ 
+#check for plotly package and check plotyly creds
+import imp
+if (username != "None") and (arcpy.GetParameterAsText(64) == 'Yes'):
+    try:
+        imp.find_module('plotly')
+        found = True
+        if found == True:
+            try:
+                import plotly.plotly as py
+                py.sign_in(username, plotlykey)
+            except:
+                Helpers.add_to_logfile(logfile, '*******************************************Plotly user name or API key is not valid.*******************************************')
+                sys.exit()        
+    except ImportError:
+        Helpers.add_to_logfile(logfile, '*******************************************Plotly package is not installed.  Either install plotly package or uncheck Generate Plots.*******************************************')
+        sys.exit()   
     
 #Import the modules
 import Initial
