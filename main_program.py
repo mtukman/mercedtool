@@ -425,10 +425,10 @@ import Reporting
 initout = Initial.DoInitial(mask, cproc, dev, devmask, Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
 
 
-Helpers.pmes('Finished with Initialization Module, entering Activity Application Module')
+Helpers.pmes('**FINISHED WITH INITIALIZATION MODULE, ENTERING ACTIVITY APPLICATION MODULE...***')
 
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, sflag)
-Helpers.pmes('Finished with Activity Application Module, entering Carbon Accounting Module')
+Helpers.pmes('**FINISHED WITH ACTIVITY APPLICATION MODULE, ENTERING CARBON ACCOUNTING MODULE...')
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, logfile)
 
 
