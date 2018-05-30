@@ -1643,7 +1643,6 @@ def make_plot_all_reductions_all_activities():
     reductions_ALL(os.path.join(boxpath, r'Box Sync/Merced Project/Report_How-To Guide/Tukman Working Material/Countywide GHG Reductions Selected Activities.png'))
     
     
-<<<<<<< HEAD
     
     
 def make_carbon_reductions_table(folder = r"E:\Box\Box Sync\Merced Project\Tool\outputs\activities"):

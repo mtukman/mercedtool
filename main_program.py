@@ -46,11 +46,7 @@ Helpers.add_to_logfile(logfile,'Custom Development Mask' + ': ' + arcpy.GetParam
 Helpers.add_to_logfile(logfile,'Treatment Mask' + ': ' + arcpy.GetParameterAsText(44))
 
 
-
-
-
-
-ludict = {'ac_wet_arc':'AC Wetland to Annual Row Crop','ac_gra_arc':'AC Grassland to Annual Row Crop','ac_irr_arc':'AC Irrigated Pasture to Annual Row Crop','ac_orc_arc': 'AC Orchard to Annual Row Crop','ac_arc_urb':'AC Annual Row Crop to Urban','ac_gra_urb':'AC Grassland to Urban','ac_irr_urb':'AC Irrigated Pasture to Urban','ac_orc_urb':'AC Orchard to Urban','ac_arc_orc':'AC Annual Row Crop to Orchard','ac_gra_orc':'AC Grassland to Orchard','ac_irr_orc':'AC Irrigated Pasture to Orchard','ac_vin_orc':'AC Vineyard to Orchard','ac_arc_irr':'AC Annual Row Crop to Irrigated Pasture','ac_orc_irr':'AC Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Conversion','ccr':'Cover Cropping','mul':'Mulching','nfm':'Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Grassland Restoration','cam':'Compost Amendment','cag':'Compost Amendment to Grasslands'}
+ludict = {'ac_wet_arc':'AC Wetland to Annual Row Crop','ac_gra_arc':'AC Grassland to Annual Row Crop','ac_irr_arc':'AC Irrigated Pasture to Annual Row Crop','ac_orc_arc': 'AC Orchard to Annual Row Crop','ac_arc_urb':'AC Annual Row Crop to Urban','ac_gra_urb':'AC Grassland to Urban','ac_irr_urb':'AC Irrigated Pasture to Urban','ac_orc_urb':'AC Orchard to Urban','ac_arc_orc':'AC Annual Row Crop to Orchard','ac_gra_orc':'AC Grassland to Orchard','ac_irr_orc':'AC Irrigated Pasture to Orchard','ac_vin_orc':'AC Vineyard to Orchard','ac_arc_irr':'AC Annual Row Crop to Irrigated Pasture','ac_orc_irr':'AC Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Restoration','ccr':'Cover Crops','mul':'Mulching','nfm':'Improved Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Native Grassland Restoration','cam':'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments','cag':'Compost Application to Non-irrigated Grasslands'}
 #Set the development mask variable, if a development mask is provided, this will point to the polygon feature class
 devmask = arcpy.GetParameterAsText(5)
 
@@ -253,26 +249,26 @@ if 'rre' in activitylist:
     Helpers.add_to_logfile(logfile,'Riparian Restoration Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(9))
 else:
     rre = 0
-Helpers.add_to_logfile(logfile,'Oak Woodland Conversion' + ': ' + arcpy.GetParameterAsText(10))
+Helpers.add_to_logfile(logfile,'Oak Woodland Restoration' + ': ' + arcpy.GetParameterAsText(10))
 if 'oak' in activitylist:
     oak = 1
     Generic.dict_activity['oak']['adoption'] = float(arcpy.GetParameterAsText(11)) 
     Generic.dict_activity['oak']['years'] = float(arcpy.GetParameterAsText(13))    
     Generic.dict_activity['oak']['adoptyear'] = float(arcpy.GetParameterAsText(12))  
-    Helpers.add_to_logfile(logfile,'Oak Woodland Conversion Adoption Acres' + ': ' + arcpy.GetParameterAsText(11))
-    Helpers.add_to_logfile(logfile,'Oak Woodland Conversion Beginning Year' + ': ' + arcpy.GetParameterAsText(12))
-    Helpers.add_to_logfile(logfile,'Oak Woodland Conversion Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(13))
+    Helpers.add_to_logfile(logfile,'Oak Woodland Restoration Adoption Acres' + ': ' + arcpy.GetParameterAsText(11))
+    Helpers.add_to_logfile(logfile,'Oak Woodland Restoration Beginning Year' + ': ' + arcpy.GetParameterAsText(12))
+    Helpers.add_to_logfile(logfile,'Oak Woodland Restoration Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(13))
 else:
     oak = 0
-Helpers.add_to_logfile(logfile,'Cover Cropping' + ': ' + arcpy.GetParameterAsText(14))    
+Helpers.add_to_logfile(logfile,'Cover Crops' + ': ' + arcpy.GetParameterAsText(14))    
 if 'ccr' in activitylist:
     x = 14
     Generic.dict_activity['ccr']['adoption'] = float(arcpy.GetParameterAsText(15)) 
     Generic.dict_activity['ccr']['years'] = float(arcpy.GetParameterAsText(17))    
     Generic.dict_activity['ccr']['adoptyear'] = float(arcpy.GetParameterAsText(16))  
-    Helpers.add_to_logfile(logfile,'Cover Cropping Adoption Acres' + ': ' + arcpy.GetParameterAsText(15))
-    Helpers.add_to_logfile(logfile,'Cover Cropping Beginning Year' + ': ' + arcpy.GetParameterAsText(16))
-    Helpers.add_to_logfile(logfile,'Cover Cropping Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(17))
+    Helpers.add_to_logfile(logfile,'Cover Crops Adoption Acres' + ': ' + arcpy.GetParameterAsText(15))
+    Helpers.add_to_logfile(logfile,'Cover Crops Beginning Year' + ': ' + arcpy.GetParameterAsText(16))
+    Helpers.add_to_logfile(logfile,'Cover Crops Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(17))
     
     
 Helpers.add_to_logfile(logfile,'Mulching' + ': ' + arcpy.GetParameterAsText(18))    
@@ -285,15 +281,15 @@ if 'mul' in activitylist:
     Helpers.add_to_logfile(logfile,'Mulching Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Mulching Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
     
-Helpers.add_to_logfile(logfile,'Nitrogen Fertilizer Management' + ': ' + arcpy.GetParameterAsText(22))    
+Helpers.add_to_logfile(logfile,'Improved Nitrogen Fertilizer Management' + ': ' + arcpy.GetParameterAsText(22))    
 if 'nfm' in activitylist:
     x = 22
     Generic.dict_activity['nfm']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
     Generic.dict_activity['nfm']['years'] = float(arcpy.GetParameterAsText(x + 3))        
     Generic.dict_activity['nfm']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2)) 
-    Helpers.add_to_logfile(logfile,'Nitrogen Fertilizer Management Adoption %' + ': ' + arcpy.GetParameterAsText(x + 1))
-    Helpers.add_to_logfile(logfile,'Nitrogen Fertilizer Management Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
-    Helpers.add_to_logfile(logfile,'Nitrogen Fertilizer Management Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
+    Helpers.add_to_logfile(logfile,'Improved Nitrogen Fertilizer Management Adoption %' + ': ' + arcpy.GetParameterAsText(x + 1))
+    Helpers.add_to_logfile(logfile,'Improved Nitrogen Fertilizer Management Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
+    Helpers.add_to_logfile(logfile,'Improved Nitrogen Fertilizer Management Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
     
 Helpers.add_to_logfile(logfile,'Hedgerow Planting' + ': ' + arcpy.GetParameterAsText(26))    
 if 'hpl' in activitylist:
@@ -305,44 +301,44 @@ if 'hpl' in activitylist:
     Helpers.add_to_logfile(logfile,'Hedgerow Planting Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Hedgerow Planting Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
     
-Helpers.add_to_logfile(logfile,'Compost Amendment' + ': ' + arcpy.GetParameterAsText(36))   
+Helpers.add_to_logfile(logfile,'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments' + ': ' + arcpy.GetParameterAsText(36))   
 if 'cam' in activitylist:
     x = 36
     Generic.dict_activity['cam']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
     Generic.dict_activity['cam']['years'] = float(arcpy.GetParameterAsText(x + 3))        
     Generic.dict_activity['cam']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2))   
-    Helpers.add_to_logfile(logfile,'Compost Amendment Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
-    Helpers.add_to_logfile(logfile,'Compost Amendment Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
-    Helpers.add_to_logfile(logfile,'Compost Amendment Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
+    Helpers.add_to_logfile(logfile,'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
+    Helpers.add_to_logfile(logfile,'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
+    Helpers.add_to_logfile(logfile,'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
 
-Helpers.add_to_logfile(logfile,'Grassland Restoration' + ': ' + arcpy.GetParameterAsText(32))   
+Helpers.add_to_logfile(logfile,'Native Grassland Restoration' + ': ' + arcpy.GetParameterAsText(32))   
 if 'gra' in activitylist:
     gra = 1
     x = 32
     Generic.dict_activity['gra']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
     Generic.dict_activity['gra']['years'] = float(arcpy.GetParameterAsText(x + 3))        
     Generic.dict_activity['gra']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2))   
-    Helpers.add_to_logfile(logfile,'Grassland Restoration Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
-    Helpers.add_to_logfile(logfile,'Grassland Restoration Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
-    Helpers.add_to_logfile(logfile,'Grassland Restoration Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
+    Helpers.add_to_logfile(logfile,'Native Grassland Restoration Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
+    Helpers.add_to_logfile(logfile,'Native Grassland Restoration Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
+    Helpers.add_to_logfile(logfile,'Native Grassland Restoration Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
 else: 
     gra = 0
-Helpers.add_to_logfile(logfile,'Grassland Compost Amendment' + ': ' + arcpy.GetParameterAsText(40))   
+Helpers.add_to_logfile(logfile,'Compost Application to Non-irrigated Grasslands' + ': ' + arcpy.GetParameterAsText(40))   
 if 'cag' in activitylist:
     x = 40
     Generic.dict_activity['cag']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
     Generic.dict_activity['cag']['years'] = float(arcpy.GetParameterAsText(x + 3))        
     Generic.dict_activity['cag']['adoptyear'] = float(arcpy.GetParameterAsText(x + 2))   
-    Helpers.add_to_logfile(logfile,'Grassland Compost Amendment Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
-    Helpers.add_to_logfile(logfile,'Grassland Compost Amendment Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
-    Helpers.add_to_logfile(logfile,'Grassland Compost Amendment Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
+    Helpers.add_to_logfile(logfile,'Compost Application to Non-irrigated Grasslands Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
+    Helpers.add_to_logfile(logfile,'Compost Application to Non-irrigated Grasslands Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
+    Helpers.add_to_logfile(logfile,'Compost Application to Non-irrigated Grasslands Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
     
-Helpers.add_to_logfile(logfile,'Urban Forestry' + ': ' + arcpy.GetParameterAsText(30))   
+Helpers.add_to_logfile(logfile,'Urban Tree Planting' + ': ' + arcpy.GetParameterAsText(30))   
 if 'urb' in activitylist:
     x = 30
     Generic.dict_activity['urb']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
 
-    Helpers.add_to_logfile(logfile,'Urban Forestry Growth' + ': ' + arcpy.GetParameterAsText(x + 1))
+    Helpers.add_to_logfile(logfile,'Urban Canopy Growth' + ': ' + arcpy.GetParameterAsText(x + 1))
 
 
 
