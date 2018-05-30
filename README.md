@@ -1,7 +1,7 @@
 # Merced Conservation and Carbon Accounting Tool
 
 ## Full Tool Guide
-The full tool guide (MS Word Document) for the Merced Tool is available here:  http://rebrand.ly/box4ba8b
+The full tool guide (MS Word Document) for the Merced Tool is available here:  http://carb.press/manual
 
 
 ## Files to Download 
@@ -28,6 +28,9 @@ To use the tool on your local computer, first make sure that you meet the follow
 2.	Extract the contents of “mercedtool-master.zip” (which contains a folder called mercedtool-master) to a folder on your hard drive.  The extracted folder contains a number of python modules and an ArcGIS toolbox called MC-CAT. Download and extract the Master_Data folder from http://www.goo.gl/A1H6BB to anywhere on your hard drive.
 3.	Add the Merced Conservation Carbon Accounting Tool to the ArcMap Toolbox window within ArcMap.  To do this, right-click the Arc Toolbox folder (see below) and click Add Toolbox.  Browse to the location containing the toolbox that you extracted above in step 1 and select the “MC_CAT_ArcMap_10_5” toolbox. After adding the toolbox, navigate to the tool’s properties and make sure the “Always run in foreground” box is NOT checked.
 4.	To have the tool automatically create charts and plots, you will need to have the Plotly package installed and to have a valid Plotly API key.  Install Plotly using your preferred package manager.  Obtain a Plotly API key by setting up a free Plotly account and generating a key in your user settings. 
+5. 	To install Plotly in ArcMap, try using pip from the command line. From a command prompt, navigate to the ‘Scripts’ folder of the 64-bit python that ArcMap uses.  Then install plotly (see below for an example of what this command looked like on our machine):
+_C:\Python27\ArcGISx6410.5\Scripts>   pip.exe install plotly_ 
+
 
 Once your .mxd is saved, the contents of the Arc Toolbox window are also saved within the map document. The next time you open the document, the Toolbox window will be the same as when you saved the document.
 
