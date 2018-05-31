@@ -174,8 +174,8 @@ def FCstoCSVs (inputgdb,Outpath):
     #--first lets make a list of all of the fields in the table
         fields = arcpy.ListFields(table)
         field_names = [field.name for field in fields]
-        pmes (fields)
-        pmes (field_names)
+        #pmes (fields)
+        #pmes (field_names)
         # Now we create the output file and write the table to it
         with open(outfile,'w') as f:
             dw = csv.DictWriter(f,field_names, lineterminator = '\n')
@@ -200,8 +200,8 @@ def FCtoCSV (inputfc,Outpath):
     #--first lets make a list of all of the fields in the table
     fields = arcpy.ListFields(inputfc)
     field_names = [field.name for field in fields]
-    pmes (fields)
-    pmes (field_names)
+    #pmes (fields)
+    #pmes (field_names)
     # Now we create the output file and write the table to it
     with open(Outpath,'w') as f:
         dw = csv.DictWriter(f,field_names, lineterminator = '\n')
@@ -228,7 +228,7 @@ def Clean_Table (csv,idfield,length=5689373,keepfields = [], renamefields = [],v
         df = pd.read_csv(csv, usecols = keepfields)
     else:
         df = pd.read_csv(csv)
-    pmes (len(df))
+    #pmes (len(df))
     pmes ('Finished Loading DF, finding MAX')
     max = df[idfield].max()
     if (max != length) or (len(df) != length):
@@ -238,7 +238,7 @@ def Clean_Table (csv,idfield,length=5689373,keepfields = [], renamefields = [],v
         pass
     pmes ('Checking Uniqueness')
     unique = df[idfield].is_unique
-    pmes (unique)
+    #pmes (unique)
     if unique is True:
         pass
     else:
@@ -283,9 +283,9 @@ def LoadCSVs(infolder):
     arcpy.env.overwriteOutput = 1
     list1 = arcpy.ListFiles("*.csv")
     dflist = []
-    pmes (list1)
+    #pmes (list1)
     for z in list1:
-        pmes (str(os.path.join(ws, z)))
+        #pmes (str(os.path.join(ws, z)))
         dflist.append(pd.read_csv(os.path.join(ws, z), encoding = 'latin-1')) # , encoding = 'latin-1'
 
     newlist = []
@@ -597,9 +597,24 @@ def remove_unnamed(folder):
             df = df.loc[:, ~df.columns.str.contains('^Unnamed')]   
             print (df.head(10))
             df.to_csv(i, index = False)
+
+def reorder_dataframe_fields(df):
+    cols= list(df.columns)
+    for i in ['landcover', 'gen_class', 'fmmp_class', 'resistance_class', 'guild']:
+        if i in cols:
+            cols.sort()
+            cols.pop(cols.index(i))
+            cols.insert(0, i)
+            df=df.reindex(columns=cols)
+            
     
-    
-    
-    
-     
+    for i in ludict.keys():
+        cols= list(df.columns)
+        for x in cols:
+            if i in x:
+                cols.pop(cols.index(x))
+                cols.insert(2, x)
+                df=df.reindex(columns=cols)
+                
+    return df 
         

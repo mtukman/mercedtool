@@ -179,7 +179,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
         
         #loop through scenarios and activities and run the reporting function
         for x in keylist:
-            Helpers.pmes('Doing FMMP for: ' + x)
+            #Helpers.pmes('Doing FMMP for: ' + x)
             if x in ['base', 'dev', 'trt']:
                 if x == 'base':
                     for i in devlist:
@@ -221,6 +221,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
         
         #Export to output folder
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        temp = Helpers.reorder_dataframe_fields(temp)
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'fmmp.csv')
         temp.to_csv(outpath + 'fmmp.csv', index = False)
         
@@ -360,7 +361,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
         temp.fillna(0, inplace = True)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
         #Export the merged dataframe as a csv
-        
+        temp = Helpers.reorder_dataframe_fields(temp)
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'soc_res' + '.csv')
         temp.to_csv(outpath + 'soc_res.csv', index = False)            
 
@@ -479,7 +480,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                 query = [100,500]
 
             for x in keylist:
-                Helpers.pmes('Doing : ' + x)
+                #Helpers.pmes('Doing : ' + x)
                 if x in ['base', 'dev','cons', 'trt']:
                     if x == 'base':
                         for i in devlist:
@@ -515,6 +516,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             temp.fillna(0,inplace = False)
             #Export dataframe to output folder
             temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]   
+            temp = Helpers.reorder_dataframe_fields(temp)
             Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'flood' + str(z) + '.csv')
             temp.to_csv(outpath + 'flood' + str(z) + '.csv', index = False)
                     
@@ -653,6 +655,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
         #Fill nulls and export the merged dataframes as a csv
         temp = temp.fillna(0)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]   
+        temp = Helpers.reorder_dataframe_fields(temp)
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'scenic' + '.csv')
         temp.to_csv(outpath + 'scenic' + '.csv', index = False)
 
@@ -782,6 +785,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
         temp = temp.fillna(0)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
         temp = temp.loc[temp['landcover'] != 0]
+        temp = Helpers.reorder_dataframe_fields(temp)
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'watcon' + '.csv')
         #Export the merged dataframe
         temp.to_csv(outpath+'watcon.csv', index = False)
@@ -894,7 +898,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             count = count + 1
         temp.fillna(0, inplace = True)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
-        #Export Dataframe to csv
+        temp = Helpers.reorder_dataframe_fields(temp)
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'lcchange' + '.csv')
         temp.to_csv(outpath+'lcchange.csv', index = False)    
     
@@ -1012,6 +1016,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             count = count + 1
         temp.fillna(0, inplace = True)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        temp = Helpers.reorder_dataframe_fields(temp)
         #Export the reporting dataframe to a csv
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'pca_cover_change' + '.csv')
         temp.to_csv(outpath+'pca_cover_change.csv', index = False)       
@@ -1154,6 +1159,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             count = count + 1
         temp.fillna(0, inplace = True)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        temp = Helpers.reorder_dataframe_fields(temp)
         #Export the merged dataframe as a csv
         
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'eco_resil' + '.csv')
@@ -1295,6 +1301,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             count = count + 1
         temp.fillna(0, inplace = True)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        temp = Helpers.reorder_dataframe_fields(temp)
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'aquatic' + '.csv')
         #Export the merged dataframe as a csv
         temp.to_csv(outpath + 'aquatic.csv', index = False)
@@ -1449,6 +1456,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                 count = count + 1
             temp.fillna(0, inplace = True)
             temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+            temp = Helpers.reorder_dataframe_fields(temp)
             Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + y + 'movement' + '.csv')
             #Export the merged reporting dataframe to a csv
             temp.to_csv(outpath+y+'movement.csv', index = False)   
@@ -1558,6 +1566,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
         temp.fillna(0, inplace = True)
         temp = temp.loc[temp['landcover'].isin(['Annual Cropland','Rice','Orchard','Vineyard','Irrigated Pasture'])]
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        temp = Helpers.reorder_dataframe_fields(temp)
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'cropvalue' + '.csv')
         #Export the reporting dataframe to a csv
         temp.to_csv(outpath+'cropvalue.csv', index = False)              
@@ -1666,6 +1675,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             count = count + 1
         temp.fillna(0,inplace = True)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]  
+        temp = Helpers.reorder_dataframe_fields(temp)
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'groundwater' + '.csv')
         #Export the combined dataframes to a csv
         temp.to_csv(outpath+'groundwater.csv', index = False)       
@@ -1812,6 +1822,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                 count = count + 1
             temp.fillna(0, inplace = True)
             temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+            temp = Helpers.reorder_dataframe_fields(temp)
             Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + y + '_nitrates' + '.csv')
             #Export the merged reporting dataframe to a csv
             temp.to_csv(outpath+y+'_nitrates.csv', index = False)                       
@@ -1992,6 +2003,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                 count = count + 1
             temp.fillna(0, inplace = True)
             temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+            temp = Helpers.reorder_dataframe_fields(temp)
             Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + y + '_airpollute' + '.csv')
             #Export the merged reporting dataframe to a csv
             temp.to_csv(outpath+y+'_airpollute.csv', index = False)
@@ -2222,6 +2234,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             count = count + 1
         temp.fillna(0, inplace = True)
         temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+        temp = Helpers.reorder_dataframe_fields(temp)
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'watint' + '.csv')
         #Export merged dataframe to a csv
         temp.to_csv(outpath+'watint.csv', index = False)      
@@ -2441,7 +2454,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                 temp = pd.merge(temp,tlist[count],on = 'guild', how = 'outer' )
                 count = count + 1
             temp.fillna(0, inplace = True)
-            temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+            temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')] 
+            temp = Helpers.reorder_dataframe_fields(temp)
             #Export the merged reporting dataframe to a csv
             Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'terrhab' + '.csv')
             temp.to_csv(outpath+'terrhab.csv', index = False)    
@@ -2526,7 +2540,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
             dfdict[i] = df9
         elif i == 'urb':
             df9 = df.loc[(df[i+'selected'] == 1)]
-            Helpers.pmes(str(df9['urb_carbred'].sum))
+            #Helpers.pmes(str(df9['urb_carbred'].sum))
             dfdict[i] = df9
 
 
@@ -2713,13 +2727,9 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         if cd == 1:
             temp['trt_cust_total'] = temp[i] + temp['trt_cust_total']
     temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+    temp = Helpers.reorder_dataframe_fields(temp)
+
     Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'carbon' + '.csv')
-    #Export the dataframe to a csv
-#    df.to_csv(outpath+'review.csv', index = False) 
-#    import arcpy
-#    arcpy.CreateFileGDB_management (outpath, 'reviewgdb')
-#    arcpy.TableToTable_conversion (outpath+'review.csv', outpath + 'reviewgdb.gdb/', 'Review')
-#    arcpy.AddIndex_management (outpath + 'reviewgdb.gdb/Review', 'pointid', 'tempindex')
     temp.to_csv(outpath+'carbon.csv', index = False)  
     
     

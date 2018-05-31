@@ -39,15 +39,15 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     if customdev == 1:
         
         if treatmask != 'None':
-            Helpers.pmes ('customdev = 1, treatmask')
+            #Helpers.pmes ('customdev = 1, treatmask')
             queryadd = queryadd & (df['trt_flag'] == 1) & (df['gridcode30_trt_cust'] != 13)
         else:
-            Helpers.pmes ('customdev = 1, no treatmask')
+            #Helpers.pmes ('customdev = 1, no treatmask')
             queryadd = queryadd &  (df['gridcode30_trt_cust'] != 13)
         
     else:    
         if treatmask != 'None':
-            Helpers.pmes ('customdev != 1, treatmask')
+            #Helpers.pmes ('customdev != 1, treatmask')
             queryadd = queryadd &  (df['trt_flag'] == 1)
         
             
@@ -107,7 +107,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     
     #Loop through the keys in the acdict dictionary, created in the main program. For each avoided conversion activity found, perform suitability, eligibility and selection functions.    
     keylist = list(acdict.keys())
-    Helpers.pmes(keylist)
+    #Helpers.pmes(keylist)
     Helpers.pmes ('treatment mask: ' + treatmask)
     if treatmask != 'None':
         for i in keylist:

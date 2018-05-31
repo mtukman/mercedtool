@@ -219,7 +219,7 @@ else:
     conmask = newdir + '/ConMask.shp'
     arcpy.Project_management(arcpy.GetParameterAsText(2), newdir + '/ConMask.shp', Generic.SPATIAL_REFERENCE_TEXT)
 
-    Helpers.pmes('Yes cm')
+    Helpers.pmes('A conservation mask is being used')
 #Set the custom processing area variables if one has been chosen
 if arcpy.GetParameterAsText(3):
     cproc = 1
@@ -383,6 +383,7 @@ else:
     ug = 0
     ucc = .102
 
+
 if arcpy.GetParameterAsText(64) == 'Yes':
     plotlykey = arcpy.GetParameterAsText(65)
 else:
@@ -404,11 +405,12 @@ if (username != "None") and (arcpy.GetParameterAsText(64) == 'Yes'):
                 import plotly.plotly as py
                 py.sign_in(username, plotlykey)
             except:
-                Helpers.add_to_logfile(logfile, '*******************************************Plotly user name or API key is not valid.*******************************************')
+                Helpers.add_to_logfile(logfile, '*******************************************Plotly user name ('+ username + ') or API key(' + plotlykey + ') is not valid.*******************************************')
                 sys.exit()        
     except ImportError:
         Helpers.add_to_logfile(logfile, '*******************************************Plotly package is not installed.  Either install plotly package or uncheck Generate Plots.*******************************************')
         sys.exit()   
+
     
 #Import the modules
 import Initial
