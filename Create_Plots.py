@@ -19,7 +19,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
     py.sign_in(username, apikey)
     
     #This dictionary contains acronym to actual activity description lookups
-    ludict = {'ac_wet_arc':'AC Wetland to Annual Row Crop','ac_gra_arc':'AC Grassland to Annual Row Crop','ac_irr_arc':'AC Irrigated Pasture to Annual Row Crop','ac_orc_arc': 'AC Orchard to Annual Row Crop','ac_arc_urb':'AC Annual Row Crop to Urban','ac_gra_urb':'AC Grassland to Urban','ac_irr_urb':'AC Irrigated Pasture to Urban','ac_orc_urb':'AC Orchard to Urban','ac_arc_orc':'AC Annual Row Crop to Orchard','ac_gra_orc':'AC Grassland to Orchard','ac_irr_orc':'AC Irrigated Pasture to Orchard','ac_vin_orc':'AC Vineyard to Orchard','ac_arc_irr':'AC Annual Row Crop to Irrigated Pasture','ac_orc_irr':'AC Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Restoration','ccr':'Cover Crops','mul':'Mulching','nfm':'Improved Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Native Grassland Restoration','cam':'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments','cag':'Compost Application to Non-irrigated Grasslands'}
+    ludict = {'ac_wet_arc':'AC Wet. to Ann. Crop','ac_gra_arc':'AC Grass. to <br> Ann. Crop','ac_irr_arc':'AC Irr. Pas. to Ann. Crop','ac_orc_arc': 'AC Orc. to Ann. Crop','ac_arc_urb':'AC Ann. Crop to Urban','ac_gra_urb':'AC Grass. to Urban','ac_irr_urb':'AC Irr. Pas. <br> to Urban','ac_orc_urb':'AC Orc. to Urban','ac_arc_orc':'AC Ann. Crop to Orc.','ac_gra_orc':'AC Grass. to Orc.','ac_irr_orc':'AC Irr. Pas. to Orc.','ac_vin_orc':'AC Vin. to Orc.','ac_arc_irr':'AC Ann. Crop to Irr. Pas.','ac_orc_irr':'AC Or. to Irr. Pas.','rre':'Riparian Restoration','oak':'Oak Woodland<br>Restoration','ccr':'Cover Crops','mul':'Mulching','nfm':'Improved Nitrogen<br>Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree<br>Planting','gra':'Native Grass<br>Restoration','cam':'Replacing Synthetic<br>Nitrogen Fertilizer<br>with Soil Amendments','cag':'Compost Application<br>to Non-irrigated<br> Grasslands'}
 
     def simp(afolder = ''):
     
@@ -33,12 +33,14 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         if not os.path.exists(afolder + 'plots'):
             os.makedirs(afolder + 'plots')
         outfolder =     afolder + 'plot_tables/'
+        import os.path
 
-        df = pd.read_csv(afolder + 'act_acres.csv')
-        test = df.transpose()
-        test.reset_index(inplace = True)
-        test.rename(columns = {'index': 'Activity','0':'Acres'}, inplace = True)
-        test.to_csv(outfolder + 'act_acres.csv')
+        if os.path.exists(afolder + "/act_acres.csv"):
+            df = pd.read_csv(afolder + 'act_acres.csv')
+            test = df.transpose()
+            test.reset_index(inplace = True)
+            test.rename(columns = {'index': 'Activity',0:'Acres'}, inplace = True)
+            test.to_csv(outfolder + 'act_acres.csv')
         
         
         #Create the function that create the simplified tables
@@ -543,12 +545,20 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
                
         def carbon():
             df = pd.read_csv(afolder + 'carbon.csv')
-
+            alist2 = []
+            aclist2 = []
             alist = ['carbon_' + i for i in actlist]
+            for i in alist:
+                if i in df.columns:
+                    alist2.append(i)
             aclist1 = ['carbon_' + i for i in aclist]
+            for i in aclist1:
+                if i in df.columns:
+                    aclist2.append(i)
             plist = ['landcover']
-            plist.extend(alist)
-            plist.extend(aclist1)
+            
+            plist.extend(alist2)
+            plist.extend(aclist2)
             df = df[plist]
             df.set_index(['landcover'], inplace = True)
             df = df[df.values.sum(axis=1) != 0]
@@ -594,12 +604,14 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
             test.reset_index(inplace = True)
             
             df = df.rename(columns = {'landcover': 'Landcover', 'carbon_base_bau':'Reference Scenario','trt_bau_total':'Treatment Scenario'})
+            df = df[['Landcover','Reference Scenario','Treatment Scenario']]
             test = df.transpose()
             test.columns = test.iloc[0]
             test = test[1:]
             test.reset_index(inplace = True)
             test.rename(columns = {'index':'Scenario'}, inplace = True)
             test['Tons of CO2e'] = test['Tons of CO2e'] - c14
+            
             test.to_csv(outfolder+'Carbon Reductions Compare.csv', index = False)
     
         
@@ -810,18 +822,20 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
             df.loc[df['Activity'] ==  'carbon_' + key, 'Activity'] = ludict[key]
         df.to_csv(tables + "/Carbon Reductions.csv")
         
-        mba_chart_onetrace(tables + "/Carbon Reductions.csv", '2030 Carbon Reductions from Activities', yax = 'Tons of CO2e', x = 'Activity',y = 'Tons of CO2e Reduced', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions.png", xtit = '', xfont = 14)
+        mba_chart_onetrace(tables + "/Carbon Reductions.csv", '2030 Carbon Reductions from Activities', yax = 'Tons of CO2e', x = 'Activity',y = 'Tons of CO2e Reduced', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions.png", xtit = '', xfont = 10)
         
-        mba_chart_onetrace(tables + "/Carbon Reductions Compare.csv", '2014-2030 Carbon Reduction Change', yax = 'Tons of CO2e', x = 'Scenario',y = 'Tons of CO2e', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions Compare.png", xtit = '', xfont = 14)
+        mba_chart_onetrace(tables + "/Carbon Reductions Compare.csv", '2014-2030 Carbon Reduction Change', yax = 'Tons of CO2e', x = 'Scenario',y = 'Tons of CO2e', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions Compare.png", xtit = '', xfont = 10)
         
-        import pandas as pd
-        df = pd.read_csv(tables + "/act_acres.csv")
-        for key in ludict:
-            df.loc[df['Activity'] == key + '_acres','Activity'] = ludict[key]
-        df.to_csv(tables + "/act_acres.csv")
+        import os.path
+
+        if os.path.exists(tables + "/act_acres.csv"):
+            df = pd.read_csv(tables + "/act_acres.csv")
+            for key in ludict:
+                df.loc[df['Activity'] == key + '_acres','Activity'] = ludict[key]
+            df.to_csv(tables + "/act_acres.csv")
         
         
-        mba_chart_onetrace(tables + "/act_acres.csv", 'Activities and Acres', yax = 'Acres Selected', x = 'Activity',y = '0', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "Activity Acres Selected.png", xtit = '', xfont = 14)
+            mba_chart_onetrace(tables + "/act_acres.csv", 'Activities and Acres', yax = 'Acres Selected', x = 'Activity',y = 'Acres', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "Activity Acres Selected.png", xtit = '', xfont = 11)
         
         mba_twotrace(tables + "/2030 Water Quality - Nitrate Runoff.csv", '2014-2030 Change in Nitrate Runoff', xax = 'holder', yax = 'holder',   ytitle = 'Tons of Nitrate', x1 = 'Scenario', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Water Quality - Nitrate Runoff.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
         

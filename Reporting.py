@@ -165,7 +165,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             group['pointid'] = group['pointid']*.09 #Convert to hectares
             
             #If avoided conversion is being reporting, label the reporting columns differently
-            if 'urb' in name:
+            if '_urb' in name:
                 group['pointid'] = group['pointid']* (-1)
                 group = group.rename(columns = {'pointid':'ha_loss_avoided_' + name})
                 group['ha_loss_avoided_' + name].fillna(0)
@@ -191,6 +191,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                 ffunct(x, 'LC2030_bau', i, dfdict[x])
             elif ('dev_flag' in x):
                 ffunct(x, 'LC2030_trt_bau', i, dfdict[x])
+                
+                
+                
                 
         #Report the baseline in 2014
         td = df[['LC2014','pointid', 'fmmp_class']]
@@ -2746,7 +2749,6 @@ def report_acres(df, activitylist, outpath, acdict = 'None', logfile = 'None'):
     import Helpers
     import pandas as pd
     acredict= {}
-    
     #Go through each activity selected and calculate acres adopted.
     if activitylist:
         for i in activitylist:
@@ -2759,16 +2761,16 @@ def report_acres(df, activitylist, outpath, acdict = 'None', logfile = 'None'):
             
             acredict[i] = temp
             
-        if acdict != 'None':
-            aclist = list(acdict.keys())
-            for i in aclist:
-                temp = df.loc[df[i + 'selected'] == 1]
-                temp = temp.groupby([i + 'selected'], as_index = False).count()
-                temp = temp [[i + 'selected', 'pointid']]
-                temp['pointid'] = temp['pointid'] * 0.222395
-                temp = temp[['pointid']]
-                temp = temp.rename(columns = {'pointid':i + '_acres'})
-                acredict[i] = temp
+    if acdict != 'None':
+        aclist = list(acdict.keys())
+        for i in aclist:
+            temp = df.loc[df[i + 'selected'] == 1]
+            temp = temp.groupby([i + 'selected'], as_index = False).count()
+            temp = temp [[i + 'selected', 'pointid']]
+            temp['pointid'] = temp['pointid'] * 0.222395
+            temp = temp[['pointid']]
+            temp = temp.rename(columns = {'pointid':i + '_acres'})
+            acredict[i] = temp
         tlist = list(acredict.values())
 
         temp = tlist[0]
