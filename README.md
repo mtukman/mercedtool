@@ -1,5 +1,8 @@
 # Merced Conservation and Carbon Accounting Tool
 
+## Notes
+-- 6/12 - bug found that miscalculates groundwater recharge scenarios.  Team is fixing...
+
 ## Full Tool Guide
 The full tool guide (MS Word Document) for the Merced Tool is available here:  http://carb.press/manual
 
