@@ -18,7 +18,7 @@ import pandas as pd
 import Helpers
 global _eligibility
 
-def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None'):
+def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None',cd = 0):
     """
     This function taking the dataframe with the selection flags and calculates carbon reductions.
     df- This is the dataframe created in Initial and modified in Activity Application
@@ -110,6 +110,8 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None'):
     # Update gridcodes for treatment scenarios
     gcdict = {'Wetland':0, 'Water':1, 'Grassland':2,'Barren':4, 'Orchard':7,'Vineyard':8,'Annual Cropland':9,'Rice':10,'Irrigated Pasture':11,'Young Forest':14, 'Young Shrubland':15}
     devlist = ['bau','med','max']
+    if cd ==1 :
+        devlist = ['bau','med','max','cust']
     keylist = list(gcdict.keys())
     
     for i in devlist:

@@ -86,7 +86,8 @@ def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb,
         tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'LC2030_trt_cust'] = 'Urban'
         tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'LC2030_cust'] = 'Urban'
         tabs_all_df['dev_flag'] = 0
-        tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'dev_flag'] = 1        
+        tabs_all_df.loc[tabs_all_df['pointid'].isin(plist),'dev_flag'] = 1   
+        
     # If a custom development area is specified, change pixels in the treatment landcover and treatment gridcodes to urban.
     elif cd == 2:
         pts = Helpers.create_processing_table(points,devmask, tempgdb, scratch)
@@ -134,6 +135,9 @@ def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb,
     
     
     devlist = ['bau','med','max']
+    if cd ==1:
+        devlist = ['bau','med','max', 'cust']
+    
     keylist = list(gcdict.keys())
     
     #Make sure all gridcodes in treatment scenarios are correct

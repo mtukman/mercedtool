@@ -354,6 +354,12 @@ cover30 = Generic.lut_cover30
 
 
 
+if arcpy.GetParameterAsText(67) == 'Acres':
+    units = 'Acres'
+
+if arcpy.GetParameterAsText(67) == 'Hectares':
+    units = 'Hectares'
+
 
 #If a treatment mask has been provided, set the variable
 if arcpy.GetParameterAsText(44):
@@ -427,19 +433,20 @@ Helpers.pmes('**FINISHED WITH INITIALIZATION MODULE, ENTERING ACTIVITY APPLICATI
 
 outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, sflag)
 Helpers.pmes('**FINISHED WITH ACTIVITY APPLICATION MODULE, ENTERING CARBON ACCOUNTING MODULE...')
-templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, logfile)
+templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, logfile, dev)
 
 
 Helpers.pmes("**CREATING MULTIBENEFIT REPORTS...**")
-Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc, logfile)
+Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc, logfile, units)
 Helpers.pmes("**CREATING CARBON REPORTS...**")
 
 
-
+#templist[0].to_csv('P:/Temp/reviewer.csv')
 Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug, logfile)
+Reporting.emis_report(templist[0],outpath,activitylist,Generic.em14,Generic.em30, acdict,dev,cm, ug, logfile)
 Reporting.report_acres(templist[0],activitylist,outpath, acdict, logfile)
 
 if plotlykey != 'None':
     import Create_Plots
-    Create_Plots.Plots(outpath, acdict, activitylist, terflag,cproc,plotlykey, username)
+    Create_Plots.Plots(outpath, acdict, activitylist, terflag,cproc,plotlykey, username, units)
 

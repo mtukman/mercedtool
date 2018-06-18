@@ -102,6 +102,12 @@ def set_paths_and_workspaces(root_data_path = r"E:\TGS\projects\Merced Carbon\MA
     global Carbon2030
     Carbon2030 = os.path.join(root_data_path, 'Tables/CarbonTables/Carb30.csv')
     all_layers.append(Carbon2030)
+    global em14
+    em14 = os.path.join(root_data_path, 'Tables/CarbonTables/Emis_14.csv')
+    all_layers.append(em14)
+    global em30
+    em30 = os.path.join(root_data_path, 'Tables/CarbonTables/Emis_30.csv')
+    all_layers.append(em30)
 
 
 

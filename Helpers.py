@@ -62,12 +62,12 @@ def CreateEligDict(df, activity, dictact, dict_eligibility, act):
     dict_eligibility[act] = eli_dict_element
     
 
-def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'None'):
+def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'None', sflag = 1, dev = ''):
     """
     This function takes a dictionary, a dataframe and an activity.
     It takes a user input to determine how many pixels to select for the activity.
     """
-    pmes('Selecting points for: ' + activity)
+    pmes('Selecting points for: ' + activity + ', ' + dev)
     import arcpy
     #Create a temporary dictionary of the activity's dictionary from the eligibility dict
     goal = 0
@@ -99,7 +99,7 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'N
     pmes ('Cap is : ' + str (cap))
     initflag =  act + 'suitflag'
     selflag = act + 'selected'
-    df[selflag] = 0
+    
     
     def select(groupsize, count):
         #Group pixels by their medium group value (medium grid)
@@ -125,12 +125,15 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'N
             add_to_logfile(logfile,ludict[aco] + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
             query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
             add_to_logfile(logfile,ludict[aco] + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
-            df.loc[query,selflag] = 1  
+            if dev == 'bau':
+                df[selflag] = 0
+            df.loc[query,selflag] = sflag + df[selflag]
         else:
-            add_to_logfile(logfile,ludict[activity] + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
+            add_to_logfile(logfile,ludict[activity] + ' ' + dev + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
             query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
-            add_to_logfile(logfile,ludict[activity] + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
-            df.loc[query,selflag] = 1  
+            add_to_logfile(logfile,ludict[activity] +  ' ' + dev + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
+            df[selflag] = 0
+            df.loc[query,selflag] = sflag
     #Run the select function using either small or large groups of points
     if dictact[activity]['grpsize'] == 'medium':
         select('medgroup_val', count)
@@ -482,10 +485,10 @@ def create_processing_table(InPoints,inmask, tempgdb, scratch):
         
 
         
-def lc_mod(flagfield, label, labelfield, dataframe):
+def lc_mod(flagfield, label, labelfield, dataframe, fval = 1):
     """
     This function just simplifies the query that calculates a field"""
-    dataframe.loc[(dataframe[flagfield] == 1), labelfield] = label
+    dataframe.loc[(dataframe[flagfield] > fval), labelfield] = label
         
 
 
@@ -528,14 +531,18 @@ def carbon30(df):
     """
     import Generic
     import pandas as pd
-    c14 = pd.read_csv(Generic.Carbon2014)
+    c14 = pd.read_csv("P:\Temp\MASTER_DATA\Tables\CarbonTables\Carb14_new.csv")
     c14['gridcode30_bau'] = c14['gridcode14'] + 100
+    
     df2 = df[['gridcode30_bau','LC2030_bau','gridcode14','pointid']]
     df2 = df2.groupby(['gridcode30_bau','LC2030_bau','gridcode14'],as_index = False).count()
     d3 = pd.merge(df2,c14, left_on = 'gridcode14', right_on = 'gridcode14', how = 'left')
     d3['carb*pointid'] = d3['pointid'] * d3['carbrate14']
     d3.loc[(d3['landcover'] ==  'Developed'),'landcover'] = 'Urban'
     d3.loc[(d3['landcover'] ==  'Developed Roads'),'landcover'] = 'Urban'
+    d3.loc[(d3['LC2030_bau'] ==  'Developed'),'LC2030_bau'] = 'Urban'
+    d3.loc[(d3['LC2030_bau'] ==  'Developed Roads'),'LC2030_bau'] = 'Urban'
+    
     tsum = d3.groupby(['landcover'], as_index = False).sum()
     tsum = tsum[['landcover','carb*pointid', 'pointid']]
     tsum['avgrate'] = tsum['carb*pointid']/tsum['pointid']
@@ -543,10 +550,7 @@ def carbon30(df):
     tsum3 = tsum2.loc[tsum2['landcover'].isin(['Forest','Shrubland', 'Urban'])]
     tsum3.loc[(tsum3['landcover'] == 'Forest'), 'landcover'] = 'Young Forest'
     tsum3.loc[(tsum3['landcover'] == 'Shrubland'), 'landcover'] = 'Young Shrubland'
-    tsum3.loc[(tsum3['landcover'] == 'Urban'), 'landcover'] = 'Developed'
-    tsum4 = tsum2.loc[tsum2['landcover'].isin(['Urban'])]
-    tsum4.loc[(tsum4['landcover'] == 'Urban'), 'landcover'] = 'Developed Roads'
-    tsum5 = pd.concat([tsum2,tsum3,tsum4], ignore_index=True)
+    tsum5 = pd.concat([tsum2,tsum3], ignore_index=True)
     
     
     d4 = pd.merge(d3,tsum5, left_on = 'LC2030_bau',right_on = 'landcover', how = 'left')
@@ -561,6 +565,7 @@ def carbon30(df):
     d4.loc[(d4['templc'] == 'Developed Roads'), 'templc'] = 'Urban'
     
     newdf = d4.groupby(['gridcode30_bau_x', 'templc','LC2030_bau', 'carb30temp' ], as_index = False).sum()
+    
     newdf['carb30*pointid'] = newdf['pointid'] * newdf['carb30temp'] #Make total carbon per gridcode
     
     
@@ -572,6 +577,7 @@ def carbon30(df):
     newdf3 = pd.merge(newdf,newdf2, left_on = 'templc',right_on = 'templc', how = 'left')
     newdf3['share30'] = newdf3['carb30*pointid']/newdf3['sumcarb30']
     total30 = pd.read_csv(r"D:\TGS\projects\64 - Merced Carbon\MBA\ToolData\Tables\LookUpTables\carbon2030totals.csv")
+    #
     newdf4 = pd.merge(newdf3, total30, left_on = 'templc',right_on = 'landcover', how = 'left')
     newdf4['totshare30'] = newdf4['share30']*newdf4['carbontotal']
     newdf4['finalcarb30rate'] = newdf4['totshare30']/newdf4['pointid']
@@ -618,3 +624,66 @@ def reorder_dataframe_fields(df):
                 
     return df 
         
+
+
+
+
+def carbon14():
+    import pandas as pd
+    c14 = pd.read_csv(r"P:\Temp\MASTER_DATA\Tables\CarbonTables\Carb14.csv")
+    newc = pd.read_csv(r"P:\Temp\carbon_2014.csv")
+    newc = newc[['Count','gridcode14']]
+    c14 = pd.merge(c14,newc,on = 'gridcode14', how = 'left')
+    
+    c14['share1'] = c14['carbrate14']*c14['Count']
+    c14.loc[c14['landcover'].isin(['Developed','Developed Roads']), 'landcover'] = 'Urban'
+    group = c14.groupby(['landcover'], as_index = False).sum()
+    group.loc[group['landcover'].isin(['Developed','Developed Roads']), 'landcover'] = 'Urban'
+    joiner = group[['landcover','share1']]
+    joiner['ratetotal'] = joiner['share1']
+    joiner = joiner[['landcover','ratetotal']]
+    new = pd.merge(c14,joiner, on = 'landcover', how = 'left')
+    new['share'] = new['share1']/new['ratetotal']
+    c14new = pd.read_csv(r"P:\Temp\carbon_net_14.csv")
+    temp = pd.merge(new,c14new, on = 'landcover', how = 'left')
+    
+    temp['share_final'] = temp['share'] * temp['carbon_net']
+    temp['final_rate'] = temp['share_final']/temp['Count']
+    
+    c14 = pd.read_csv(r"P:\Temp\MASTER_DATA\Tables\CarbonTables\Carb14.csv")
+    c14 = c14[['landcover','gridcode14','cover14']]
+    temp = temp[['gridcode14','final_rate']]
+    temp = temp.rename(columns = {'final_rate':'carbrate14'})
+    final = pd.merge(c14,temp,on = 'gridcode14',how = 'left')
+    final.to_csv(r"P:\Temp\MASTER_DATA\Tables\CarbonTables\Carb14_new.csv")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,4 +1,4 @@
-def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
+def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Acres'):
     """
     This function takes the reports from the Reporting module and creates siplified tables and plots using the Plotly website.
     
@@ -20,7 +20,10 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
     
     #This dictionary contains acronym to actual activity description lookups
     ludict = {'ac_wet_arc':'AC Wet. to Ann. Crop','ac_gra_arc':'AC Grass. to <br> Ann. Crop','ac_irr_arc':'AC Irr. Pas. to Ann. Crop','ac_orc_arc': 'AC Orc. to Ann. Crop','ac_arc_urb':'AC Ann. Crop to Urban','ac_gra_urb':'AC Grass. to Urban','ac_irr_urb':'AC Irr. Pas. <br> to Urban','ac_orc_urb':'AC Orc. to Urban','ac_arc_orc':'AC Ann. Crop to Orc.','ac_gra_orc':'AC Grass. to Orc.','ac_irr_orc':'AC Irr. Pas. to Orc.','ac_vin_orc':'AC Vin. to Orc.','ac_arc_irr':'AC Ann. Crop to Irr. Pas.','ac_orc_irr':'AC Or. to Irr. Pas.','rre':'Riparian Restoration','oak':'Oak Woodland<br>Restoration','ccr':'Cover Crops','mul':'Mulching','nfm':'Improved Nitrogen<br>Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree<br>Planting','gra':'Native Grass<br>Restoration','cam':'Replacing Synthetic<br>Nitrogen Fertilizer<br>with Soil Amendments','cag':'Compost Application<br>to Non-irrigated<br> Grasslands'}
-
+    if units == 'Acres':
+        ubrv = 'ac'
+    if units == 'Hectares':
+        ubrv= 'ha'
     def simp(afolder = ''):
     
         import os
@@ -39,16 +42,16 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
             df = pd.read_csv(afolder + 'act_acres.csv')
             test = df.transpose()
             test.reset_index(inplace = True)
-            test.rename(columns = {'index': 'Activity',0:'Acres'}, inplace = True)
+            test.rename(columns = {'index': 'Activity',0:units}, inplace = True)
             test.to_csv(outfolder + 'act_acres.csv')
         
         
         #Create the function that create the simplified tables
         def fmmp2014():
             df = pd.read_csv(afolder + 'fmmp.csv')
-            df = df[['fmmp_class','ha_2014']]
-            df = df.loc[df['ha_2014'] > 0]
-            df = df.rename(columns = {'fmmp_class': 'Farmland Class', 'ha_2014':'Hectares'})
+            df = df[['fmmp_class',ubrv + '_2014']]
+            df = df.loc[df[ubrv + '_2014'] > 0]
+            df = df.rename(columns = {'fmmp_class': 'Farmland Class', ubrv + '_2014':units})
             df.to_csv(outfolder+'2014 Ag Land Quality.csv', index = False)
     
         def crop2014():
@@ -66,8 +69,8 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
 
         def watint2014():
             df = pd.read_csv(afolder + 'watint.csv')
-            df = df[['Integrity_Class','ha_2014']]
-            df = df.rename(columns = {'Integrity_Class': 'Watershed Class', 'ha_2014':'Hectares'})
+            df = df[['Integrity_Class',ubrv + '_2014']]
+            df = df.rename(columns = {'Integrity_Class': 'Watershed Class', ubrv + '_2014':units})
             df = df.loc[df['Watershed Class'] != 'na']
             
             df.to_csv(outfolder+'2014 Watershed Integrity.csv', index = False)
@@ -88,9 +91,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
     
         def flood2014():
             df = pd.read_csv(afolder + 'flood100.csv')
-            df = df[['gen_class','ha_2014']]
-            df = df.loc[df['ha_2014'] > 0]
-            df = df.rename(columns = {'gen_class': 'General Landcover', 'ha_2014':'Hectares'})
+            df = df[['gen_class',ubrv + '_2014']]
+            df = df.loc[df[ubrv + '_2014'] > 0]
+            df = df.rename(columns = {'gen_class': 'General Landcover', ubrv + '_2014':units})
             df.to_csv(outfolder+'2014 Flood Risk Reduction.csv', index = False)
     
         def air2014():
@@ -133,16 +136,16 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
     
         def scenic2014():
             df = pd.read_csv(afolder + 'scenic.csv')
-            df = df[['gen_class','ha_2014']]
-            df = df.loc[df['ha_2014'] > 0]
-            df = df.rename(columns = {'gen_class': 'General Landcover', 'ha_2014':'Hectares'})
+            df = df[['gen_class',ubrv + '_2014']]
+#            df = df.loc[df[ubrv + '_2014'] > 0]
+            df = df.rename(columns = {'gen_class': 'General Landcover', ubrv + '_2014':units})
             df.to_csv(outfolder+'2014 Scenic Value.csv', index = False)
     
         def move2014():
             df = pd.read_csv(afolder + 'countymovement.csv')
-            df = df[['resistance_class','ha_2014']]
-            df = df.loc[df['ha_2014'] > 0]
-            df = df.rename(columns = {'resistance_class': 'Resistance to Movement', 'ha_2014':'Hectares'})
+            df = df[['resistance_class',ubrv + '_2014']]
+#            df = df.loc[df[ubrv + '_2014'] > 0]
+            df = df.rename(columns = {'resistance_class': 'Resistance to Movement', ubrv + '_2014':units})
             
             
             a = df
@@ -161,9 +164,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
     
         def move2014_eca():
             df = pd.read_csv(afolder + 'ecamovement.csv')
-            df = df[['resistance_class','ha_2014']]
-            df = df.loc[df['ha_2014'] > 0]
-            df = df.rename(columns = {'resistance_class': 'Resistance to Movement', 'ha_2014':'Hectares'})
+            df = df[['resistance_class',ubrv + '_2014']]
+#            df = df.loc[df[ubrv + '_2014'] > 0]
+            df = df.rename(columns = {'resistance_class': 'Resistance to Movement', ubrv + '_2014':units})
             
             a = df
             c =a.iloc[1]
@@ -176,40 +179,41 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
             a.iloc[1] = c
             a.iloc[2] = temp
             df = a
+            
             df.to_csv(outfolder+'2014 ECA Terrestrial Connectivity.csv', index = False)
     
         def lcc2014():
             df = pd.read_csv(afolder + 'lcchange.csv')
-            df = df[['landcover','ha_2014']]
-            df = df.loc[df['ha_2014'] > 0]
-            df = df.rename(columns = {'landcover': 'Landcover', 'ha_2014':'Hectares'})
+            df = df[['landcover',ubrv + '_2014']]
+            df = df.loc[df[ubrv + '_2014'] > 0]
+            df = df.rename(columns = {'landcover': 'Landcover', ubrv + '_2014':units})
             df.to_csv(outfolder+'2014 Natural Habitat Area.csv', index = False)
     
         def pcalcc2014():
             df = pd.read_csv(afolder + 'pca_cover_change.csv')
-            df = df[['landcover','ha_2014']]
-            df = df.loc[df['ha_2014'] > 0]
-            df = df.rename(columns = {'landcover': 'Landcover', 'ha_2014':'Hectares'})
+            df = df[['landcover',ubrv + '_2014']]
+            df = df.loc[df[ubrv + '_2014'] > 0]
+            df = df.rename(columns = {'landcover': 'Landcover', ubrv + '_2014':units})
             df.to_csv(outfolder+'2014 Priority Conservation Areas.csv', index = False)
     
         def aqua2014():
             df = pd.read_csv(afolder + 'aquatic.csv')
-            df = df[['gen_class','ha_2014']]
-            df = df.loc[df['ha_2014'] > 0]
-            df = df.rename(columns = {'gen_class': 'Landcover', 'ha_2014':'Hectares'})
+            df = df[['gen_class',ubrv + '_2014']]
+            df = df.loc[df[ubrv + '_2014'] > 0]
+            df = df.rename(columns = {'gen_class': 'Landcover', ubrv + '_2014':units})
             df.to_csv(outfolder+'2014 Aquatic Biodiversity.csv', index = False)     
     
         def soc_resi14():
             df = pd.read_csv(afolder + 'aquatic.csv')
-            df = df[['gen_class','ha_2014']]
-            df = df.loc[df['ha_2014'] > 0]
-            df = df.rename(columns = {'gen_class': 'Landcover', 'ha_2014':'Hectares'})
+            df = df[['gen_class',ubrv + '_2014']]
+            df = df.loc[df[ubrv + '_2014'] > 0]
+            df = df.rename(columns = {'gen_class': 'Landcover', ubrv + '_2014':units})
             df.to_csv(outfolder+'2014 Social Resilience.csv', index = False)        
         def eco_resi14():
             df = pd.read_csv(afolder + 'aquatic.csv')
-            df = df[['gen_class','ha_2014']]
-            df = df.loc[df['ha_2014'] > 0]
-            df = df.rename(columns = {'gen_class': 'Landcover', 'ha_2014':'Hectares'})
+            df = df[['gen_class',ubrv + '_2014']]
+            df = df.loc[df[ubrv + '_2014'] > 0]
+            df = df.rename(columns = {'gen_class': 'Landcover', ubrv + '_2014':units})
             df.to_csv(outfolder+'2014 Natural Resilience.csv', index = False)        
     
         #Create the 2014 simplified tables
@@ -234,8 +238,8 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         
         def fmmp2030():
             df = pd.read_csv(afolder + 'fmmp.csv')
-            df = df[['fmmp_class','ha_loss_base_bau', 'ha_loss_trt_bau' ]]
-            df = df.rename(columns = {'fmmp_class': 'Farmland Class', 'ha_loss_base_bau':'Reference Scenario', 'ha_loss_trt_bau':'Treatment Scenario'})
+            df = df[['fmmp_class',ubrv + '_loss_base_bau', ubrv + '_loss_trt_bau' ]]
+            df = df.rename(columns = {'fmmp_class': 'Farmland Class', ubrv + '_loss_base_bau':'Reference Scenario', ubrv + '_loss_trt_bau':'Treatment Scenario'})
             df.set_index(['Farmland Class'], inplace = True)
             df = df[df.values.sum(axis=1) != 0]
             df.reset_index(inplace = True)
@@ -289,10 +293,10 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         def watint2030():
             df2 = pd.read_csv(afolder + 'watint.csv')
             df = pd.read_csv(afolder + 'watint.csv')
-            df2 = df2[['Integrity_Class','ha_change_base_bau']]
-            df2 = df2.rename(columns = {'Integrity_Class': 'Watershed Class','ha_change_base_bau':'Reference Scenario'})
-            df = df[['Integrity_Class','ha_change_trt_bau']]
-            df = df.rename(columns = {'Integrity_Class': 'Watershed Class', 'ha_change_trt_bau':'Treatment Scenario'})
+            df2 = df2[['Integrity_Class',ubrv + '_change_base_bau']]
+            df2 = df2.rename(columns = {'Integrity_Class': 'Watershed Class',ubrv + '_change_base_bau':'Reference Scenario'})
+            df = df[['Integrity_Class',ubrv + '_change_trt_bau']]
+            df = df.rename(columns = {'Integrity_Class': 'Watershed Class', ubrv + '_change_trt_bau':'Treatment Scenario'})
         
             temp = pd.merge(df2, df, on = 'Watershed Class', how = 'left')
             temp.set_index(['Watershed Class'], inplace = True)
@@ -337,8 +341,8 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         
         def flood2030():
             df = pd.read_csv(afolder + 'flood100.csv')
-            df = df[['gen_class','ha_change_base_bau', 'ha_change_trt_bau' ]]
-            df = df.rename(columns = {'gen_class': 'General Landcover', 'ha_change_base_bau':'Reference Scenario', 'ha_change_trt_bau':'Treatment Scenario'})
+            df = df[['gen_class',ubrv + '_change_base_bau', ubrv + '_change_trt_bau' ]]
+            df = df.rename(columns = {'gen_class': 'General Landcover', ubrv + '_change_base_bau':'Reference Scenario', ubrv + '_change_trt_bau':'Treatment Scenario'})
             
             #Remove any rows with all 0s
             df.set_index(['General Landcover'], inplace = True)
@@ -394,8 +398,8 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
     
         def scenic2030():
             df = pd.read_csv(afolder + 'scenic.csv')
-            df = df[['gen_class','ha_change_base_bau', 'ha_change_trt_bau' ]]
-            df = df.rename(columns = {'gen_class': 'General Landcover', 'ha_change_base_bau':'Reference Scenario', 'ha_change_trt_bau':'Treatment Scenario'})
+            df = df[['gen_class',ubrv + '_change_base_bau', ubrv + '_change_trt_bau' ]]
+            df = df.rename(columns = {'gen_class': 'General Landcover', ubrv + '_change_base_bau':'Reference Scenario', ubrv + '_change_trt_bau':'Treatment Scenario'})
             
             #Remove any rows with all 0s
             df.set_index(['General Landcover'], inplace = True)
@@ -408,10 +412,10 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         def move2030():
             df2 = pd.read_csv(afolder + 'countymovement.csv')
             df = pd.read_csv(afolder + 'countymovement.csv')
-            df2 = df2[['resistance_class','ha_change_base_bau']]
-            df2 = df2.rename(columns = {'resistance_class': 'Resistance to Movement','ha_change_base_bau':'Reference Scenario'})
-            df = df[['resistance_class','ha_change_trt_bau']]
-            df = df.rename(columns = {'resistance_class': 'Resistance to Movement', 'ha_change_trt_bau':'Treatment Scenario'})
+            df2 = df2[['resistance_class',ubrv + '_change_base_bau']]
+            df2 = df2.rename(columns = {'resistance_class': 'Resistance to Movement',ubrv + '_change_base_bau':'Reference Scenario'})
+            df = df[['resistance_class',ubrv + '_change_trt_bau']]
+            df = df.rename(columns = {'resistance_class': 'Resistance to Movement', ubrv + '_change_trt_bau':'Treatment Scenario'})
             
             
             temp = pd.merge(df2, df, on = 'Resistance to Movement', how = 'left')
@@ -433,10 +437,10 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         def move2030_eca():
             df2 = pd.read_csv(afolder + 'ecamovement.csv')
             df = pd.read_csv(afolder + 'ecamovement.csv')
-            df2 = df2[['resistance_class','ha_change_base_bau']]
-            df2 = df2.rename(columns = {'resistance_class': 'Resistance to Movement','ha_change_base_bau':'Reference Scenario'})
-            df = df[['resistance_class','ha_change_trt_bau']]
-            df = df.rename(columns = {'resistance_class': 'Resistance to Movement', 'ha_change_trt_bau':'Treatment Scenario'})
+            df2 = df2[['resistance_class',ubrv + '_change_base_bau']]
+            df2 = df2.rename(columns = {'resistance_class': 'Resistance to Movement',ubrv + '_change_base_bau':'Reference Scenario'})
+            df = df[['resistance_class',ubrv + '_change_trt_bau']]
+            df = df.rename(columns = {'resistance_class': 'Resistance to Movement', ubrv + '_change_trt_bau':'Treatment Scenario'})
             
             
             temp = pd.merge(df2, df, on = 'Resistance to Movement', how = 'left')
@@ -458,10 +462,10 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         def lcc2030():
             df2 = pd.read_csv(afolder + 'lcchange.csv')
             df = pd.read_csv(afolder + 'lcchange.csv')
-            df2 = df2[['landcover','ha_change_base_bau']]
-            df2 = df2.rename(columns = {'landcover': 'Landcover','ha_change_base_bau':'Reference Scenario'})
-            df = df[['landcover','ha_change_trt_bau']]
-            df = df.rename(columns = {'landcover': 'Landcover', 'ha_change_trt_bau':'Treatment Scenario'})
+            df2 = df2[['landcover',ubrv + '_change_base_bau']]
+            df2 = df2.rename(columns = {'landcover': 'Landcover',ubrv + '_change_base_bau':'Reference Scenario'})
+            df = df[['landcover',ubrv + '_change_trt_bau']]
+            df = df.rename(columns = {'landcover': 'Landcover', ubrv + '_change_trt_bau':'Treatment Scenario'})
             
             
             temp = pd.merge(df2, df, on = 'Landcover', how = 'left')
@@ -471,10 +475,10 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         def pcalcc2030():
             df2 = pd.read_csv(afolder + 'pca_cover_change.csv')
             df = pd.read_csv(afolder + 'pca_cover_change.csv')
-            df2 = df2[['landcover','ha_change_base_bau']]
-            df2 = df2.rename(columns = {'landcover': 'Landcover','ha_change_base_bau':'Reference Scenario'})
-            df = df[['landcover','ha_change_trt_bau']]
-            df = df.rename(columns = {'landcover': 'Landcover', 'ha_change_trt_bau':'Treatment Scenario'})
+            df2 = df2[['landcover',ubrv + '_change_base_bau']]
+            df2 = df2.rename(columns = {'landcover': 'Landcover',ubrv + '_change_base_bau':'Reference Scenario'})
+            df = df[['landcover',ubrv + '_change_trt_bau']]
+            df = df.rename(columns = {'landcover': 'Landcover', ubrv + '_change_trt_bau':'Treatment Scenario'})
             
             
             temp = pd.merge(df2, df, on = 'Landcover', how = 'left')
@@ -486,10 +490,10 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
                 if os.path.exists(afolder + '/terrhab.csv'):
                     df2 = pd.read_csv(afolder + 'terrhab.csv')
                     df = pd.read_csv(afolder + 'terrhab.csv')
-                    df2 = df2[['guild','ha_base_bau']]
-                    df2 = df2.rename(columns = {'guild': 'Guild','ha_base_bau':'Reference Scenario'})
-                    df = df[['guild','ha_trt_bau']]
-                    df = df.rename(columns = {'guild': 'Guild', 'ha_trt_bau':'Treatment Scenario'})
+                    df2 = df2[['guild',ubrv + '_base_bau']]
+                    df2 = df2.rename(columns = {'guild': 'Guild',ubrv + '_base_bau':'Reference Scenario'})
+                    df = df[['guild',ubrv + '_trt_bau']]
+                    df = df.rename(columns = {'guild': 'Guild', ubrv + '_trt_bau':'Treatment Scenario'})
                     
                     
                     temp = pd.merge(df2, df, on = 'Guild', how = 'left')
@@ -510,10 +514,10 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         def aqua2030():
             df2 = pd.read_csv(afolder + 'aquatic.csv')
             df = pd.read_csv(afolder + 'aquatic.csv')
-            df2 = df2[['gen_class','ha_change_base_bau']]
-            df2 = df2.rename(columns = {'gen_class': 'Landcover','ha_change_base_bau':'Reference Scenario'})
-            df = df[['gen_class','ha_change_trt_bau']]
-            df = df.rename(columns = {'gen_class': 'Landcover', 'ha_change_trt_bau':'Treatment Scenario'})
+            df2 = df2[['gen_class',ubrv + '_change_base_bau']]
+            df2 = df2.rename(columns = {'gen_class': 'Landcover',ubrv + '_change_base_bau':'Reference Scenario'})
+            df = df[['gen_class',ubrv + '_change_trt_bau']]
+            df = df.rename(columns = {'gen_class': 'Landcover', ubrv + '_change_trt_bau':'Treatment Scenario'})
             
             
             temp = pd.merge(df2, df, on = 'Landcover', how = 'left')
@@ -524,18 +528,19 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         
         def eco_resi():
             df = pd.read_csv(afolder + 'eco_resil.csv')
-            df = df[['gen_class','ha_change_base_bau','ha_change_trt_bau']]
-            df = df.rename(columns = {'gen_class': 'Landcover', 'ha_change_base_bau':'Reference Scenario', 'ha_change_trt_bau':'Treatment Scenario'})
+            df = df[['gen_class',ubrv + '_change_base_bau',ubrv + '_change_trt_bau']]
+            df = df.rename(columns = {'gen_class': 'Landcover', ubrv + '_change_base_bau':'Reference Scenario', ubrv + '_change_trt_bau':'Treatment Scenario'})
             temp = df
             temp.set_index(['Landcover'], inplace = True)
             temp = temp[temp.values.sum(axis=1) != 0]
             temp.reset_index(inplace = True)
             
-            temp.to_csv(outfolder+'2030 ecoresilience_table.csv', index = False)   
+            temp.to_csv(outfolder+'2030 ecoresilience_table.csv', index = False)
+            
         def soc_resi():
             df = pd.read_csv(afolder + 'soc_res.csv')
-            df = df[['gen_class','ha_change_base_bau','ha_change_trt_bau']]
-            df = df.rename(columns = {'gen_class': 'Landcover', 'ha_change_base_bau':'Reference Scenario', 'ha_change_trt_bau':'Treatment Scenario'})
+            df = df[['gen_class',ubrv + '_change_base_bau',ubrv + '_change_trt_bau']]
+            df = df.rename(columns = {'gen_class': 'Landcover', ubrv + '_change_base_bau':'Reference Scenario', ubrv + '_change_trt_bau':'Treatment Scenario'})
             temp = df
             temp.set_index(['Landcover'], inplace = True)
             temp = temp[temp.values.sum(axis=1) != 0]
@@ -771,9 +776,11 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         #Set the folder variables
         tables = afolder + 'plot_tables'
         outpath = afolder + 'plots/'
-    
+
+
+   
         #Call the plotting functions for each plot
-        mba_twotrace(tables + "/2030 Ag Land Quality.csv", '2014-2030 Farmland Loss', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Farmland Class', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Farmland Loss.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 14)
+        mba_twotrace(tables + "/2030 Ag Land Quality.csv", '2014-2030 Farmland Loss', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Farmland Class', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Farmland Loss.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 14)
         
         mba_twotrace(tables + "/2030 Groundwater Recharge.csv", '2014-2030 Groundwater Recharge Loss', xax = 'holder', yax = 'holder',   ytitle = 'Acre Feet per Year', x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Groundwater Recharge.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 14)
     
@@ -783,37 +790,37 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
         
         
         if cproc == 0:
-            mba_twotrace(tables + "/2030 Watershed Integrity.csv", '2014-2030 Change in Watershed Integrity', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Watershed Class', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Watershed Integrity Riparian.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
+            mba_twotrace(tables + "/2030 Watershed Integrity.csv", '2014-2030 Change in Watershed Integrity', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Watershed Class', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Watershed Integrity Riparian.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
     
         
-        mba_twotrace(tables + "/2030 Flood Risk Reduction.csv", '2014-2030 Change in Landcover in 100 Year Floodplain', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'General Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Flood Risk Reduction.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
+        mba_twotrace(tables + "/2030 Flood Risk Reduction.csv", '2014-2030 Change in Landcover in 100 Year Floodplain', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'General Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Flood Risk Reduction.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
         
     
         mba_twotrace(tables + "/2030 Air Quality Change.csv", '2014-2030 Change in Air Pollutant Sequestration', xax = 'holder', yax = 'holder',   ytitle = 'Tons of Pollutant Sequestered', x1 = 'Air Pollutant', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Air Quality.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
         
         
     
-        mba_twotrace(tables + "/2030 Flood Risk Reduction.csv", '2014-2030 Change in Landcover in Highly Visible Areas', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'General Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Scenic Value.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
+        mba_twotrace(tables + "/2030 Flood Risk Reduction.csv", '2014-2030 Change in Landcover in Highly Visible Areas', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'General Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Scenic Value.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
     
     
-        mba_twotrace(tables + "/2030 ECA Terrestrial Connectivity.csv", '2014-2030 Change in Resistance to Species Movement<br>in Essential Connectivity Areas', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Resistance to Movement', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 ECA Terrestrial Connectivity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', xtit = 'Resistance to Movement',a_font = 14)
+        mba_twotrace(tables + "/2030 ECA Terrestrial Connectivity.csv", '2014-2030 Change in Resistance to Species Movement<br>in Essential Connectivity Areas', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Resistance to Movement', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 ECA Terrestrial Connectivity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', xtit = 'Resistance to Movement',a_font = 14)
     
-        mba_twotrace(tables + "/2030 Terrestrial Connectivity.csv", '2014-2030 Change in Resistance to <br>Species Movement', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Resistance to Movement', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Terrestrial Connectivity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', xtit = 'Resistance to Movement', a_font = 14)
+        mba_twotrace(tables + "/2030 Terrestrial Connectivity.csv", '2014-2030 Change in Resistance to <br>Species Movement', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Resistance to Movement', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Terrestrial Connectivity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', xtit = 'Resistance to Movement', a_font = 14)
         
     
-        mba_twotrace(tables + "/2030 Priority Conservation Areas.csv", '2014-2030 Change in Landcover in Priority Conservation Areas', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Priority Conservation Areas.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
+        mba_twotrace(tables + "/2030 Priority Conservation Areas.csv", '2014-2030 Change in Landcover in Priority Conservation Areas', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Priority Conservation Areas.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
     
-        mba_twotrace(tables + "/2030 Natural Habitat Area.csv", '2014-2030 Change in Landcover', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Natural Habitat Area.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
+        mba_twotrace(tables + "/2030 Natural Habitat Area.csv", '2014-2030 Change in Landcover', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Natural Habitat Area.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
         if thabflag == 1:
-            mba_twotrace(tables + "/2030 Terrestrial Habitat Value.csv", '2014-2030 Change in Terrestrial Habitat Value', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Guild', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Terrestrial Habitat Value.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 13)
+            mba_twotrace(tables + "/2030 Terrestrial Habitat Value.csv", '2014-2030 Change in Terrestrial Habitat Value', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Guild', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Terrestrial Habitat Value.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 13)
         
     
-        mba_twotrace(tables + "/2030 Aquatic Biodiversity.csv", '2014-2030 Landcover Change in Watersheds with <br>Important Aquatic Habitat', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Aquatic Biodiversity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
+        mba_twotrace(tables + "/2030 Aquatic Biodiversity.csv", '2014-2030 Landcover Change in Watersheds with <br>Important Aquatic Habitat', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Aquatic Biodiversity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
     
-        mba_twotrace(tables + "/2030 socresilience_table.csv", '2014-2030 Landcover Change in Areas Important <br>For Social Resilience', xax = 'holder', yax = 'holder',   ytitle = 'Hectares', x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Social Resilience.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
+        mba_twotrace(tables + "/2030 socresilience_table.csv", '2014-2030 Landcover Change in Areas Important <br>For Social Resilience', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Social Resilience.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
     
     
-        mba_twotrace(tables + "/2030 ecoresilience_table.csv", '2014-2030 Landcover Change in Areas Important <br>For Natural Resilience', xax = 'holder', yax = 'holder', ytitle = 'Hectares', x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Social Resilience.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
+        mba_twotrace(tables + "/2030 ecoresilience_table.csv", '2014-2030 Landcover Change in Areas Important <br>For Natural Resilience', xax = 'holder', yax = 'holder', ytitle = units, x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Natural Resilience.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 13)
         
         import pandas as pd
         
@@ -822,9 +829,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
             df.loc[df['Activity'] ==  'carbon_' + key, 'Activity'] = ludict[key]
         df.to_csv(tables + "/Carbon Reductions.csv")
         
-        mba_chart_onetrace(tables + "/Carbon Reductions.csv", '2030 Carbon Reductions from Activities', yax = 'Tons of CO2e', x = 'Activity',y = 'Tons of CO2e Reduced', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions.png", xtit = '', xfont = 10)
+        mba_chart_onetrace(tables + "/Carbon Reductions.csv", '2030 Carbon Reductions from Activities', yax = 'Tons of CO2e', x = 'Activity',y = 'Tons of CO2e Reduced', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions.png", xtit = '', xfont = 12)
         
-        mba_chart_onetrace(tables + "/Carbon Reductions Compare.csv", '2014-2030 Carbon Reduction Change', yax = 'Tons of CO2e', x = 'Scenario',y = 'Tons of CO2e', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions Compare.png", xtit = '', xfont = 10)
+        mba_chart_onetrace(tables + "/Carbon Reductions Compare.csv", '2014-2030 Carbon Reduction Change', yax = 'Tons of CO2e', x = 'Scenario',y = 'Tons of CO2e', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions Compare.png", xtit = '', xfont = 12)
         
         import os.path
 
@@ -835,47 +842,47 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username):
             df.to_csv(tables + "/act_acres.csv")
         
         
-            mba_chart_onetrace(tables + "/act_acres.csv", 'Activities and Acres', yax = 'Acres Selected', x = 'Activity',y = 'Acres', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "Activity Acres Selected.png", xtit = '', xfont = 11)
+            mba_chart_onetrace(tables + "/act_acres.csv", 'Activities and Acres', yax = 'Acres Selected', x = 'Activity',y = units, yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "Activity Acres Selected.png", xtit = '', xfont = 11)
         
         mba_twotrace(tables + "/2030 Water Quality - Nitrate Runoff.csv", '2014-2030 Change in Nitrate Runoff', xax = 'holder', yax = 'holder',   ytitle = 'Tons of Nitrate', x1 = 'Scenario', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Water Quality - Nitrate Runoff.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
         
         mba_twotrace(tables + "/2030 Water Quality - Nitrate Leaching.csv", '2014-2030 Change in Nitrate Leaching', xax = 'holder', yax = 'holder',   ytitle = 'Tons of Nitrate', x1 = 'Scenario', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Water Quality - Nitrate Leaching.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 14)
 
                                                     
-        mba_chart_onetrace(tables + "/2014 Ag Land Quality.csv", xax = '2014 Farmland', yax = 'Hectares', x = 'Farmland Class',y = 'Hectares', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Farmland.png")
+        mba_chart_onetrace(tables + "/2014 Ag Land Quality.csv", xax = '2014 Farmland', yax = units, x = 'Farmland Class',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Farmland.png")
 
         mba_chart_onetrace(tables + "/2014 Crop Value.csv", xax = '2014 Crop Value', yax = 'US Dollars', x = 'Crop Type',y = 'US Dollars', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Crop Value.png")
 
         mba_chart_onetrace(tables + "/2014 Ag and Urban Water Conservation.csv", xax = '2014 Water Demand', yax = 'Acre Ft/Year', x = 'Landcover',y = 'Acre Feet Annual Water Demand', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Ag and Urban Water Conservation.png")
 
         if cproc == 0:
-            mba_chart_onetrace(tables + "/2014 Watershed Integrity.csv", xax = '2014 Watershed Integrity', yax = 'Hectares', x = 'Watershed Class',y = 'Hectares', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Watershed Integrity.png")
+            mba_chart_onetrace(tables + "/2014 Watershed Integrity.csv", xax = '2014 Watershed Integrity', yax = units, x = 'Watershed Class',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Watershed Integrity.png")
         
         mba_chart_onetrace(tables + "/2014 Water Quality - Nitrate Runoff.csv", xax = '2014 Nitrate Runoff', yax = 'Tons', x = 'Landcover',y = 'Annual Tons of Nitrate Runoff', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Nitrate Runoff.png")
         
         mba_chart_onetrace(tables + "/2014 Water Quality - Nitrate Leaching.csv", xax = '2014 Nitrate Leaching', yax = 'Tons', x = 'Landcover',y = 'Annual Tons of Nitrate Leaching', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Nitrate Leaching.png")
 
-        mba_chart_onetrace(tables + "/2014 Flood Risk Reduction.csv", xax = '2014 Landcover in 100 Year Floodplain', yax = 'Hectares', x = 'General Landcover',y = 'Hectares', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Flood Risk Reduction.png")
+        mba_chart_onetrace(tables + "/2014 Flood Risk Reduction.csv", xax = '2014 Landcover in 100 Year Floodplain', yax = units, x = 'General Landcover',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Flood Risk Reduction.png")
 
         mba_chart_onetrace(tables + "/2014 Air Quality.csv", xax = '2014 Air Pollutant Sequestration', yax = 'Tons of Pollutant Sequestered Annually', x = 'Air Pollutant',y = 'Tons of Pollutant Sequestered Annually', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Air Quality.png")
 
-        mba_chart_onetrace(tables + "/2014 Scenic Value.csv", xax = '2014 Landcover in Highly Visible Areas', yax = 'Hectares', x = 'General Landcover',y = 'Hectares', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Scenic Value.png")
+        mba_chart_onetrace(tables + "/2014 Scenic Value.csv", xax = '2014 Landcover in Highly Visible Areas', yax = units, x = 'General Landcover',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Scenic Value.png")
 
-        mba_chart_onetrace(tables + "/2014 Terrestrial Connectivity.csv", xax = '2014 Resistance to Species Movement', yax = 'Hectares', x = 'Resistance to Movement',y = 'Hectares', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Terrestrial Connectivity.png")
+        mba_chart_onetrace(tables + "/2014 Terrestrial Connectivity.csv", xax = '2014 Resistance to Species Movement', yax = units, x = 'Resistance to Movement',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Terrestrial Connectivity.png")
         
-        mba_chart_onetrace(tables + "/2014 ECA Terrestrial Connectivity.csv", xax = '2014 Resistance to Species Movement in Essential Connectivity Areas', yax = 'Hectares', x = 'Resistance to Movement',y = 'Hectares', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Terrestrial Connectivity ECA.png")
+        mba_chart_onetrace(tables + "/2014 ECA Terrestrial Connectivity.csv", xax = '2014 Resistance to Species Movement in Essential Connectivity Areas', yax = units, x = 'Resistance to Movement',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Terrestrial Connectivity ECA.png")
 
-        mba_chart_onetrace(tables + "/2014 Natural Habitat Area.csv", xax = '2014 Landcover', yax = 'Hectares', x = 'Landcover',y = 'Hectares', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Natural Habitat Area.png")
+        mba_chart_onetrace(tables + "/2014 Natural Habitat Area.csv", xax = '2014 Landcover', yax = units, x = 'Landcover',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Natural Habitat Area.png")
         
-        mba_chart_onetrace(tables + "/2014 Priority Conservation Areas.csv", xax = '2014 Landcover in Priority Conservation Areas', yax = 'Hectares', x = 'Landcover',y = 'Hectares', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Priority Conservation Areas.png")
+        mba_chart_onetrace(tables + "/2014 Priority Conservation Areas.csv", xax = '2014 Landcover in Priority Conservation Areas', yax = units, x = 'Landcover',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Priority Conservation Areas.png")
 
         
-        mba_chart_onetrace(tables + "/2014 Aquatic Biodiversity.csv", xax = '2014 Landcover in Watersheds with <br>Important Aquatic Habitat', yax = 'Hectares', x = 'Landcover',y = 'Hectares', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Aquatic Biodiversity.png")
+        mba_chart_onetrace(tables + "/2014 Aquatic Biodiversity.csv", xax = '2014 Landcover in Watersheds with <br>Important Aquatic Habitat', yax = units, x = 'Landcover',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Aquatic Biodiversity.png")
 
     
-        mba_chart_onetrace(tables + "/2014 Social Resilience.csv", xax = '2014 Landcover in Areas Important <br>For Social Resilience', yax = 'Hectares', x = 'Landcover',y = 'Hectares', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Social Resilience.png")
+        mba_chart_onetrace(tables + "/2014 Social Resilience.csv", xax = '2014 Landcover in Areas Important <br>For Social Resilience', yax = units, x = 'Landcover',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Social Resilience.png")
         
-        mba_chart_onetrace(tables + "/2014 Natural Resilience.csv", xax = '2014 Landcover in Areas Important <br>For Natural Resilience', yax = 'Hectares', x = 'Landcover',y = 'Hectares', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Natural Resilience.png")
+        mba_chart_onetrace(tables + "/2014 Natural Resilience.csv", xax = '2014 Landcover in Areas Important <br>For Natural Resilience', yax = units, x = 'Landcover',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Natural Resilience.png")
                 
 
     simp(runfolder)
