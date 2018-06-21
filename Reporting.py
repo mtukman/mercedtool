@@ -2543,13 +2543,13 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
     #Change treatment labels for riparian restoration, oak conversion and grass restoration to bau values for carbon reporting
     
     
-#    if 'rreselected' in df.columns:
-#        df.loc[(df['rreselected'] == 1), 'gridcode30_trt_med'] = df['gridcode30_med']
-#        df.loc[(df['rreselected'] == 1), 'gridcode30_trt_max'] = df['gridcode30_max']
-#        df.loc[(df['rreselected'] == 1), 'LC2030_trt_max'] = df['LC2030_max']
-#        df.loc[(df['rreselected'] == 1), 'LC2030_trt_med'] = df['LC2030_med']
-#        df.loc[(df['rreselected'] == 1), 'LC2030_trt_bau'] = df['LC2030_bau']
-#        df.loc[(df['rreselected'] == 1), 'gridcode30_trt_bau'] = df['gridcode30_bau']
+    if 'rreselected' in df.columns:
+        df.loc[(df['rreselected'] == 1), 'gridcode30_trt_med'] = df['gridcode30_med']
+        df.loc[(df['rreselected'] == 1), 'gridcode30_trt_max'] = df['gridcode30_max']
+        df.loc[(df['rreselected'] == 1), 'LC2030_trt_max'] = 'Forest'
+        df.loc[(df['rreselected'] == 1), 'LC2030_trt_med'] = 'Forest'
+        df.loc[(df['rreselected'] == 1), 'LC2030_trt_bau'] = 'Forest'
+        df.loc[(df['rreselected'] == 1), 'gridcode30_trt_bau'] = df['gridcode30_bau']
     
     if 'oakselected' in df.columns:
         df.loc[(df['oakselected'] == 1), 'gridcode30_trt_bau'] = df['gridcode30_bau']
@@ -2606,7 +2606,7 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
     c30 = pd.read_csv(em30)
     c14 = pd.read_csv(em14)
         
-    def carbrepfull(df, name, dev, field):
+    def carbrepfull(df, name, dev, field, comp):
         """
             This subfunction create a dataframe which is added to a dataframe dictionary (all will be merged at the end of the parent function to create a csv report)
             name: The name of the scenario being processed
@@ -2614,7 +2614,7 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
             dev: Development scenario to use in the report
             df: The dataframe the report is based on
         """
-        Helpers.pmes ('Calculating Carbon For: ' + name)
+        Helpers.pmes ('Calculating Emissions For: ' + name + ' ' + dev)
         
         #Create a dataframe for reporting based on which scenario/activity is being reported
         if dev in devlist:
@@ -2629,14 +2629,14 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
             if (name + '_carbred') in df:
                 td = df[['LC2030_bau', 'LC2030_trt_bau', 'LC2014', 'gridcode14', 'gridcode30_bau', 'gridcode30_trt_bau', name + '_carbred']]
             else:
-                Helpers.pmes('Activity Carbon Rates not in Dataframe')
+                Helpers.pmes('Activity Emissions Rates not in Dataframe')
                 
         if name in ['con']:
             td = df[['LC2030_bau', 'LC2030_trt_bau', 'LC2014', 'gridcode14', 'gridcode30_bau', 'gridcode30_trt_bau']]
             
         if 'ac' in name:
             if dev in devlist:
-                Helpers.pmes('Calculating carbon report for ' + name + ' for ' + dev)
+                Helpers.pmes('Calculating emissions report for ' + name + ' for ' + dev)
                 if x == 'bau':
                     td = df[['LC2030_bau', 'LC2030_trt_bau','gridcode30_bau', 'gridcode30_trt_bau']]
                 if x == 'med':
@@ -2650,18 +2650,18 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
         if name == 'base':
             temp = pd.merge(td,c30, how = 'left', left_on = 'LC2030_'+ dev, right_on = 'landcover')
             lct = temp.groupby(['LC2030_'+ dev], as_index = False).sum()
-
-            lct = lct[['LC2030_'+ dev, 'em_rate_pix']]
-            lct = lct.rename(columns = {'LC2030_'+ dev:'landcover','em_rate_pix':'emissions_' + name +'_'+ dev})
-            intdict[name +'_'+ dev] = lct
+            lct.to_csv('P:/Temp/thisisstupid.csv')
+            lct = lct[['LC2030_'+ dev, comp + '_em_rate_pix30']]
+            lct = lct.rename(columns = {'LC2030_'+ dev:'landcover',comp + '_em_rate_pix30':comp + '_emissions_' + name +'_'+ dev})
+            intdict[name +'_'+ dev + comp] = lct
             
         #Calculate carbon for treatments
         elif name == 'trt':
             temp = pd.merge(td,c30, how = 'left', left_on = 'LC2030_trt_'+ dev, right_on ='landcover' )
             lct = temp.groupby(['LC2030_trt_'+ dev], as_index = False).sum()
-            lct = lct[['LC2030_trt_'+ dev, 'em_rate_pix']]
-            lct = lct.rename(columns = {'LC2030_trt_'+ dev:'landcover','em_rate_pix':'emissions_' + name +'_'+ dev})
-            intdict[name +'_'+ dev] = lct
+            lct = lct[['LC2030_trt_'+ dev, comp + '_em_rate_pix30']]
+            lct = lct.rename(columns = {'LC2030_trt_'+ dev:'landcover',comp + '_em_rate_pix30':comp + '_emissions_' + name +'_'+ dev})
+            intdict[name +'_'+ dev + comp] = lct
 
                 
         #Calculate carbon for conservation mask area
@@ -2672,13 +2672,13 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
             lct14 = temp14.groupby(['LC2014'], as_index = False).sum()
             lct30 = temp30.groupby(['LC2030_trt_bau'], as_index = False).sum()
             lct = pd.merge(lct30,lct14, left_on ='LC2030_trt_bau', right_on = 'LC2014', how = 'outer')
-            lct['em_rate_pix14'].fillna(0)
-            lct['emchange'] = lct['14'] - lct['em_rate_pix']
+            lct[comp + '_em_rate_pix14'].fillna(0)
+            lct['emchange'] = lct[comp + '_em_rate_pix14'] - lct[comp + '_em_rate_pix30']
             lct = lct[['LC2030_trt_bau', 'emchange']]
             
-            lct = lct.rename(columns = {'LC2030_trt_bau':'landcover','conchange':'emissions_change_' + name}) 
+            lct = lct.rename(columns = {'LC2030_trt_bau':'landcover','conchange':comp + '_emissions_change_' + name}) 
             
-            intdict[name] = lct
+            intdict[name + comp] = lct
         
         #If the activity is avoided conversion, then this function will show the change between baseline and treatment carbon totals
         elif 'ac' in name:
@@ -2688,8 +2688,8 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
             lct30_bau = temp30_bau.groupby(['LC2030_' +dev], as_index = False).sum()
             lct30_trt = temp30_trt.groupby(['LC2030_trt_' +dev], as_index = False).sum()
             lct30_bau = pd.merge(lc,lct30_bau, left_on ='landcover', right_on = 'LC2030_' +dev, how = 'outer')
-            lct30_bau = lct30_bau.rename(columns = {'em_rate_pix':'sumbase'})
-            lct30_trt = lct30_trt.rename(columns = {'em_rate_pix':'sumtrt'})
+            lct30_bau = lct30_bau.rename(columns = {comp + '_em_rate_pix30':'sumbase'})
+            lct30_trt = lct30_trt.rename(columns = {comp + '_em_rate_pix30':'sumtrt'})
             lct = pd.merge(lct30_bau,lct30_trt, left_on ='landcover', right_on = 'LC2030_trt_' +dev, how = 'outer')
             lct['sumbase'].fillna(0, inplace = True)
             lct['sumtrt'].fillna(0, inplace = True)
@@ -2697,29 +2697,50 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
             lct['change'] = lct['sumtrt'] - lct['sumbase']
             temp = lct[['landcover', 'change']]
             
-            temp = temp.rename(columns = {'change':'emissions_' + name}) 
-            intdict[name] = temp
+            temp = temp.rename(columns = {'change':comp + '_emissions_' + name}) 
+            intdict[name + comp] = temp
+        elif 'rre' in name:
+            temp30_bau = pd.merge(td,c30, how = 'left', left_on = 'LC2030_' +dev, right_on = 'landcover')
+            temp30_trt = pd.merge(td,c30, how = 'left', left_on = 'LC2030_trt_' +dev, right_on = 'landcover')
+
+            lct30_bau = temp30_bau.groupby(['LC2030_' +dev], as_index = False).sum()
+            lct30_trt = temp30_trt.groupby(['LC2030_trt_' +dev], as_index = False).sum()
+            lct30_bau = pd.merge(lc,lct30_bau, left_on ='landcover', right_on = 'LC2030_' +dev, how = 'outer')
+            lct30_bau = lct30_bau.rename(columns = {comp + '_em_rate_pix30':'sumbase'})
+            lct30_trt = lct30_trt.rename(columns = {comp + '_em_rate_pix30':'sumtrt'})
+            lct = pd.merge(lct30_bau,lct30_trt, left_on ='landcover', right_on = 'LC2030_trt_' +dev, how = 'outer')
+            lct['sumbase'].fillna(0, inplace = True)
+            lct['sumtrt'].fillna(0, inplace = True)
             
+            lct['change'] = lct['sumtrt'] - lct['sumbase']
+            temp = lct[['landcover', 'change']]
+            
+            temp = temp.rename(columns = {'change':comp + '_emissions_' + name}) 
+            intdict[name + comp] = temp
             
     intdict= {}
     
     #Loop through the list of scenarios/activities and calclulate carbon dataframes
-    for i in keylist:
-        Helpers.pmes(i)
-        
-        if i in ['base', 'trt']:
-            if i == 'base':
+    
+    elist = ['n2o','ch4']
+    
+    for z in elist:
+        for i in keylist:
+            Helpers.pmes(i)
+            
+            if i in ['base', 'trt']:
+                if i == 'base':
+                    for x in devlist:
+                        carbrepfull(dfdict[i],i, x, 'LC2030_' + x,z )
+                else:
+                    for x in devlist:
+                        carbrepfull(dfdict[i],i, x, 'LC2030_trt_' + x,z)
+            elif 'ac' in i:
                 for x in devlist:
-                    carbrepfull(dfdict[i],i, x, 'LC2030_' + x)
+                    carbrepfull(dfdict[i],i, x, 'LC2030_trt_' + x,z)
             else:
-                for x in devlist:
-                    carbrepfull(dfdict[i],i, x, 'LC2030_trt_' + x)
-        elif 'ac' in i:
-            for x in devlist:
-                carbrepfull(dfdict[i],i, x, 'LC2030_trt_' + x)
-        else:
-
-            carbrepfull(dfdict[i],i, 'bau', 'LC2030_trt_bau')
+    
+                carbrepfull(dfdict[i],i, 'bau', 'LC2030_trt_bau',z)
 
             
     c14 = pd.read_csv(em14)
@@ -2731,10 +2752,12 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
         lct = temp.groupby(['LC2014'], as_index = False).sum()
         return lct
     lct = do2014(df, c14)
-      
-    lct = lct[['LC2014', 'em_rate_pix14']]
-    lct = lct.rename(columns = {'LC2014':'landcover','em_rate_pix14':'carbon2014'})
-    intdict['Carbon2014'] = lct
+     
+    
+    for i in elist:
+        td2 = lct[['LC2014', i + '_em_rate_pix14']]
+        td2 = td2.rename(columns = {'LC2014':'landcover',i +'_em_rate_pix14':i + '_emissions_2014'})
+        intdict['Carbon2014' + i] = td2
 
     tlist = list(intdict.values())
     l = len(tlist)
@@ -3028,8 +3051,94 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'carbon' + '.csv')
     temp = temp.loc[temp['landcover'] != '0']
     temp.to_csv(outpath+'carbon.csv', index = False)  
+    newlist = list(df)
+    newlist2  = [i for i in newlist if '_er' in i]
     
     
+    if newlist2:
+        newlist2.append('LC2030_bau')
+        newdf = df[newlist2]
+        newdf2 = newdf.groupby('LC2030_bau', as_index = False).sum()
+        newdf2.to_csv(outpath+'emissions_reductions.csv', index = False) 
+    
+    def emissions():
+        """
+        This function exports three tables about emissions and carbon for use in the plotting function.
+        """
+        import pandas as pd
+        
+        #Import the tables needed
+        em = pd.read_csv(outpath + 'emissions.csv')
+        df3 = pd.read_csv(outpath + 'emissions_reductions.csv')
+        df2 = pd.read_csv(outpath + 'carbon.csv')
+        
+        #Create variables of the emission sums for compounds and scenarios
+        n2o_base = em['n2o_emissions_base_bau'].sum()
+        n2o_trt = em['n2o_emissions_trt_bau'].sum()
+        ch4_base = em['ch4_emissions_base_bau'].sum()
+        ch4_trt = em['ch4_emissions_trt_bau'].sum()
+        n2o_2014 = em['n2o_emissions_2014'].sum()
+        ch4_2014 = em['ch4_emissions_2014'].sum()
+        years = list(range(16))
+        emlist = list(df3)
+        emlist2 = [i for i in emlist if '_er' in i]
+        carbon_trt = df2['trt_bau_total'].sum() 
+        carbon_bau = df2['carbon_base_bau'].sum()
+        carbon_2014 = df2['carbon2014'].sum()
+        n2o_reductions = 0
+        
+        carbon_trt_ann = (carbon_trt - carbon_2014)/15
+        carbon_bau_ann = (carbon_bau - carbon_2014)/15
+        
+        if emlist2:
+            for i in emlist2:
+                n2o_reductions = df3[i].sum() + n2o_reductions
+            n2o_reductions2 = n2o_reductions/15
+            n2o_trt = n2o_trt + n2o_reductions2
+            
+            
+        n2o_change_bau = n2o_base - n2o_2014
+        n2o_change_trt = n2o_trt - n2o_2014
+        ch4_change_bau = ch4_base - ch4_2014
+        ch4_change_trt = ch4_trt - ch4_2014
+        
+        n2o_change_bau_ann = n2o_change_bau/15
+        n2o_change_trt_ann = n2o_change_trt/15
+        ch4_change_bau_ann = ch4_change_bau/15
+        ch4_change_trt_ann = ch4_change_trt/15
+        
+        n2o_bau_tot = 0
+        n2o_trt_tot = 0
+        ch4_bau_tot = 0
+        ch4_trt_tot = 0
+        
+        for i in years:
+            n2o_bau_tot = n2o_bau_tot + (i*n2o_change_bau_ann)
+            n2o_trt_tot = n2o_trt_tot + (i*n2o_change_trt_ann)
+            ch4_bau_tot = ch4_bau_tot + (i*ch4_change_bau_ann)
+            ch4_trt_tot = ch4_trt_tot + (i*ch4_change_trt_ann)
+        
+        
+        # For total reductions chart
+        n2o_diff = (n2o_trt_tot - n2o_bau_tot )*-1
+        ch4_diff = (ch4_trt_tot - ch4_bau_tot)*-1
+        carb_diff = carbon_trt - carbon_bau
+        
+        agg_bau = (n2o_base + ch4_base)-carbon_bau_ann
+        agg_trt = (n2o_trt + ch4_trt)-carbon_trt_ann
+        
+        
+        total = pd.DataFrame([['CO2e Equivalents',carb_diff,'CO2e Equivalents',ch4_diff,'CO2e Equivalents',n2o_diff]], columns = ['Carbon','CO2e Reductions','CH4','CH4 Reductions','N2O','N2O Reductions'])
+        
+        annual = pd.DataFrame([['N2O',n2o_base,n2o_trt],['CH4',ch4_base,ch4_trt],['CO2e',carbon_bau_ann,carbon_trt_ann]], columns = ['Source','2030 Baseline','2030 Treatment'])
+
+        annual_agg =pd.DataFrame([['CO2e',agg_bau,agg_trt]], columns = ['Source','2030 Baseline','2030 Treatment'])
+        
+        total.to_csv(outpath+'total_reductions.csv', index = False)
+        annual_agg.to_csv(outpath+'annual_emissions_aggregate.csv', index = False)
+        annual.to_csv(outpath+'annual_emissions.csv', index = False)
+            
+    emissions()
     
 def report_acres(df, activitylist, outpath, acdict = 'None', logfile = 'None', cd = 0):
     """

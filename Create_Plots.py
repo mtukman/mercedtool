@@ -14,8 +14,8 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
     runfolder = folder
     mba_title_font = 20
     axis_lab_font = 16
-    import plotly.plotly as py
-    import Helpers
+import plotly.plotly as py
+import Helpers
     py.sign_in(username, apikey)
     
     #This dictionary contains acronym to actual activity description lookups
@@ -47,6 +47,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         
         
         #Create the function that create the simplified tables
+
         def fmmp2014():
             df = pd.read_csv(afolder + 'fmmp.csv')
             df = df[['fmmp_class',ubrv + '_2014']]
@@ -646,6 +647,78 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         carbon2()
     
     
+    
+    def mba_threetrace(table, title = 'Nothing' , xax = 'holder', yax = 'holder',  ytitle = 'None', x1 = 'None',  x2 = 'None', x3 = 'None', outfile = 'temp',y1 = 'none',y2 = 'none',y3 = 'none', xtit = '', a_font = 14, barmode = 'group'):
+        import plotly.plotly as py
+        from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+        #import plotly.plotly as py
+        from plotly import tools
+        import plotly.graph_objs as go
+        import pandas as pd
+        table = pd.read_csv(table)
+        table = table.loc[:, ~table.columns.str.contains('^Unnamed')]
+    
+            
+    
+        trace1 = {
+          "x": table[x1], 
+          "y": table[y1], 
+          "type":"bar",
+          "name":y1
+        }
+        
+        trace2 = {
+          "x": table[x2], 
+          "y": table[y2],  
+          "type":"bar",
+           "name":y2
+        }
+        trace3 = {
+          "x": table[x3], 
+          "y": table[y3],  
+          "type":"bar",
+           "name":y3
+        }
+    
+    
+        data = go.Data([trace1, trace2,trace3])
+        layout = {
+          "autosize": False, 
+          "hovermode": "closest", 
+          "showlegend": True,
+          "legend": {"font": {"size": 14}},
+          "height": 1024,
+          "width": 1280,  
+          "title": title,
+          "barmode": barmode,
+          "bargap": 0.6599999999999999,
+          "titlefont": {
+          "size": mba_title_font
+              },
+          "xaxis": {
+            "autorange": True, 
+            "type": "category",
+            "title": xtit,
+            "tickfont": {
+          "size": a_font
+              }
+          }, 
+          "yaxis": {
+            "autorange": True, 
+            "range": [0,1], 
+            "title": ytitle, 
+            "type": "linear",
+            "titlefont": {
+                    "size": 17
+              }
+          },
+        }
+       
+        fig = go.Figure(data=data, layout=layout)
+    #    plot(fig, filename= plot_dict[mba]['title'] + '.html')
+        py.image.save_as(fig, outfile, format='png')
+        return fig
+    
     #Define the plotting functions
     def mba_twotrace(table, title = 'Nothing' , xax = 'holder', yax = 'holder',  ytitle = 'None', x1 = 'None',  x2 = 'None', x3 = 'None', outfile = 'temp',y1 = 'none',y2 = 'none', xtit = '', a_font = 14):
         import plotly.plotly as py
@@ -883,13 +956,52 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         mba_chart_onetrace(tables + "/2014 Social Resilience.csv", xax = '2014 Landcover in Areas Important <br>For Social Resilience', yax = units, x = 'Landcover',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Social Resilience.png")
         
         mba_chart_onetrace(tables + "/2014 Natural Resilience.csv", xax = '2014 Landcover in Areas Important <br>For Natural Resilience', yax = units, x = 'Landcover',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Natural Resilience.png")
-                
+
+        mba_threetrace(tables + "/total_reductions.csv", 'Total Emission Reductions and CO2 Removals<br>Achieved at 2030 from Planned Activities', xax = 'holder', yax = 'Tonnes CO2e', x1 = 'Carbon', x3 = 'CH4', x2 = 'N2O',outfile = outpath + "Total Reductions.png", y1 = 'CO2e Reductions', y3 = 'CH4 Reductions',y2 = 'N2O Reductions', a_font = 13, barmode = 'stack', ytitle = 'Tonnes CO2e')
+
+        mba_twotrace(tables + "/annual_emissions.csv", 'A Comparison of 2030 N2O, CH4 Emissions<br>and CO2 Removal Flux (Baseline and Treatment) ', xax = 'holder', yax = 'holder', ytitle = 'Tonnes CO2e', x1 = 'Source', x2 = '2030 Baseline', x3 = '2030 Treatment',outfile = outpath + "Annual Flux.png", y1 = '2030<br>Baseline', y2 = '2030<br>Treatment', a_font = 13)
+
+        mba_twotrace(tables + "/annual_emissions_aggregate.csv", 'A Comparison of 2030 N2O and CH4 Emissions<br>Net of CO2 Removals (Baseline and Treatment) ', xax = 'holder', yax = 'holder', ytitle = 'Tonnes CO2e', x1 = 'Source', x2 = '2030 Baseline', x3 = '2030 Treatment',outfile = outpath + "Aggregate Flux.png", y1 = '2030<br>Baseline', y2 = '2030<br>Treatment', a_font = 13)
+
 
     simp(runfolder)
     custom_plots(runfolder)
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

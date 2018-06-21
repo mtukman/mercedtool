@@ -437,13 +437,14 @@ templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt,
 
 
 Helpers.pmes("**CREATING MULTIBENEFIT REPORTS...**")
-Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc, logfile, units)
-Helpers.pmes("**CREATING CARBON REPORTS...**")
-
-
+#Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc, logfile, units)
+#Helpers.pmes("**CREATING CARBON REPORTS...**")
+#
+#
 #templist[0].to_csv('P:/Temp/reviewer.csv')
-Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug, logfile)
 Reporting.emis_report(templist[0],outpath,activitylist,Generic.em14,Generic.em30, acdict,dev,cm, ug, logfile)
+Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug, logfile)
+
 Reporting.report_acres(templist[0],activitylist,outpath, acdict, logfile)
 
 if plotlykey != 'None':
