@@ -82,21 +82,20 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'N
         goal = goal + tempdict2[i]
     pmes ('Suitable pixels: ' + str(goal))
     
+    
     #Multiply the adoption goal to convert from acres to points
     goal1 = float(dictact[activity]['adoption']) * 4.49555  #update to link to user defined acres for final tool
-    cap = goal * dictact[activity]['adoptcap'] #Modify the goal by the adoption cap
+    goal2 = goal
     
     #Use either the cap or the user defined goal, depending on number of points available
-    if cap < goal1:
-        goal = goal * float(dictact[activity]['adoptcap'])
-    elif cap > goal1:
-        goal = float(dictact[activity]['adoption'])*4.49555
+
+    goal = float(dictact[activity]['adoption'])*4.49555
  
     count = 0
     
     #Define fields
     pmes ('Goal is : ' + str (goal))
-    pmes ('Cap is : ' + str (cap))
+    pmes ('Cap is : ' + str (goal2))
     initflag =  act + 'suitflag'
     selflag = act + 'selected'
     
@@ -122,14 +121,14 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'N
             else:
                 pass
         if aco != 'None':
-            add_to_logfile(logfile,ludict[aco] + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
+            add_to_logfile(logfile,ludict[aco] + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(goal2/4.495555))
             query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
             add_to_logfile(logfile,ludict[aco] + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
             if dev == 'bau':
                 df[selflag] = 0
             df.loc[query,selflag] = sflag + df[selflag]
         else:
-            add_to_logfile(logfile,ludict[activity] + ' ' + dev + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(cap/4.495555))
+            add_to_logfile(logfile,ludict[activity] + ' ' + dev + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(goal2/4.495555))
             query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
             add_to_logfile(logfile,ludict[activity] +  ' ' + dev + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
             df[selflag] = 0

@@ -3066,10 +3066,16 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         This function exports three tables about emissions and carbon for use in the plotting function.
         """
         import pandas as pd
-        
+        import os
         #Import the tables needed
         em = pd.read_csv(outpath + 'emissions.csv')
-        df3 = pd.read_csv(outpath + 'emissions_reductions.csv')
+        
+        if not os.path.exists(outpath + 'emissions_reductions.csv'):
+            Helpers.add_to_logfile(logfile,'No emissions reductions from activities')
+        else:
+            df3 = pd.read_csv(outpath + 'emissions_reductions.csv')
+            emlist = list(df3)
+            emlist2 = [i for i in emlist if '_er' in i]
         df2 = pd.read_csv(outpath + 'carbon.csv')
         
         #Create variables of the emission sums for compounds and scenarios
@@ -3080,8 +3086,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         n2o_2014 = em['n2o_emissions_2014'].sum()
         ch4_2014 = em['ch4_emissions_2014'].sum()
         years = list(range(16))
-        emlist = list(df3)
-        emlist2 = [i for i in emlist if '_er' in i]
+        
         carbon_trt = df2['trt_bau_total'].sum() 
         carbon_bau = df2['carbon_base_bau'].sum()
         carbon_2014 = df2['carbon2014'].sum()
@@ -3090,11 +3095,12 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         carbon_trt_ann = (carbon_trt - carbon_2014)/15
         carbon_bau_ann = (carbon_bau - carbon_2014)/15
         
-        if emlist2:
-            for i in emlist2:
-                n2o_reductions = df3[i].sum() + n2o_reductions
-            n2o_reductions2 = n2o_reductions/15
-            n2o_trt = n2o_trt + n2o_reductions2
+        if os.path.exists(outpath + 'emissions_reductions.csv'):
+            if emlist2:
+                for i in emlist2:
+                    n2o_reductions = df3[i].sum() + n2o_reductions
+                n2o_reductions2 = n2o_reductions/15
+                n2o_trt = n2o_trt + n2o_reductions2
             
             
         n2o_change_bau = n2o_base - n2o_2014
