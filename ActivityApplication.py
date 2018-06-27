@@ -288,10 +288,10 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     #This next line of code updates the land cover change flag, which removes pixels selected for those activities from consideration for ag activity suitability
     df.loc[(df['LC2030_trt_bau'] == df['LC2014']), 'lcchange'] = 1        
         
-    dictact['ccr']['query'] =  (df['LC2030_trt_bau'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)& queryadd #
+    dictact['ccr']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1)& queryadd #
     dictact['mul']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland','Rice'])) & (df['lcchange'] == 1) & queryadd
     dictact['nfm']['query'] = (df['LC2030_trt_bau'].isin(['Annual Cropland', 'Orchard', 'Vineyard', 'Rice'])) & (df['lcchange'] == 1) & queryadd
-    dictact['hpl']['query'] =  (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1)& queryadd #
+    dictact['hpl']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Vineyard'])) & (df['lcchange'] == 1)& queryadd #
     dictact['cam']['query'] = (df['LC2030_trt_bau'].isin(['Orchard','Annual Cropland'])) & (df['lcchange'] == 1) & queryadd
     dictact['urb']['query'] = (df['LC2030_trt_bau'].isin(['Urban', 'Developed', 'Developed Roads'])) & (df['lcchange'] == 1) & queryadd
     dictact['cag']['query'] = (df['LC2030_trt_bau'].isin(['Grassland'])) & (df['lcchange'] == 1) & (df['slope_val'] < 15) & ((df['near_rivers'] > 304.8) | (df['near_streams'] > 30.48)) & queryadd

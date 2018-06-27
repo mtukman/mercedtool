@@ -3100,24 +3100,29 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
                 for i in emlist2:
                     n2o_reductions = df3[i].sum() + n2o_reductions
                 n2o_reductions2 = n2o_reductions/15
-                n2o_trt = n2o_trt + n2o_reductions2
+                Helpers.pmes('N2O Reductions from TRT are: ' + str(n2o_reductions2))
+                Helpers.pmes('N2O Emissions from Landcover are: ' + str(n2o_trt))
+
             
-            
-        n2o_change_bau = n2o_base - n2o_2014
-        n2o_change_trt = n2o_trt - n2o_2014
-        ch4_change_bau = ch4_base - ch4_2014
-        ch4_change_trt = ch4_trt - ch4_2014
+        #Calculate 2014-2030 difference in annual emissions rates
+        n2o_change_bau = n2o_2014 - n2o_base 
+        n2o_change_trt = n2o_2014 - n2o_trt
+        ch4_change_bau = ch4_2014 - ch4_base
+        ch4_change_trt = ch4_2014 - ch4_trt
         
+        #Calculated annual change in annual emission rate
         n2o_change_bau_ann = n2o_change_bau/15
         n2o_change_trt_ann = n2o_change_trt/15
         ch4_change_bau_ann = ch4_change_bau/15
         ch4_change_trt_ann = ch4_change_trt/15
         
+        #Set empty total variables
         n2o_bau_tot = 0
         n2o_trt_tot = 0
         ch4_bau_tot = 0
         ch4_trt_tot = 0
         
+        #Accumulate emissions
         for i in years:
             n2o_bau_tot = n2o_bau_tot + (i*n2o_change_bau_ann)
             n2o_trt_tot = n2o_trt_tot + (i*n2o_change_trt_ann)
@@ -3125,11 +3130,13 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
             ch4_trt_tot = ch4_trt_tot + (i*ch4_change_trt_ann)
         
         
-        # For total reductions chart
-        n2o_diff = (n2o_trt_tot - n2o_bau_tot )*-1
-        ch4_diff = (ch4_trt_tot - ch4_bau_tot)*-1
+        # For total reductions chart, calculate difference in accumulated emissions between reference and treatment scenarios
+        n2o_diff = (n2o_bau_tot-n2o_trt_tot) + n2o_reductions
+        Helpers.pmes('N2O Diff = ' + str(n2o_diff))
+        ch4_diff = (ch4_bau_tot - ch4_trt_tot)
         carb_diff = carbon_trt - carbon_bau
         
+        #Calculate cumulative annual CO2e rate
         agg_bau = (n2o_base + ch4_base)-carbon_bau_ann
         agg_trt = (n2o_trt + ch4_trt)-carbon_trt_ann
         
