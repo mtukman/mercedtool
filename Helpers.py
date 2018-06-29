@@ -35,31 +35,31 @@ def pmes(message):
     arcpy.AddMessage(message)
     print (message)
     
-def CreateEligDict(df, activity, dictact, dict_eligibility, act):
-    """
-    This function takes the suitably flagged points and creates a dictionary with the number of suitable points for each activity, modified by ag modifiers for annual croplands.
-    
-    
-    """
-    pmes ('Eligibility for: ' + act)
-    
-    #Create a suiability flag field
-    initflag = act + 'suitflag'
-    df = df[['LC2030_trt_bau', initflag]]
-    
-    #Group on landcover to get counts of suitable points
-    eli = df.groupby(['LC2030_trt_bau'], as_index = False).sum()  
-    
-    #Apply the annual cropland ag modifier
-    eli.loc[(eli['LC2030_trt_bau'] == 'Annual Cropland'),initflag] = eli[initflag] * dictact[activity]['ag_modifier']
-    
-    #For compost amendment, apply the orchard modifier
-    if act == 'cam':
-        eli.loc[(eli['LC2030_trt_bau'] == 'Orchard'),initflag] = eli[initflag] * dictact[activity]['orc_modifier']
-    eli_dict_element = eli.to_dict()
-    
-    #Add the number of eligible points to the eligibility dictionary
-    dict_eligibility[act] = eli_dict_element
+#def CreateEligDict(df, activity, dictact, dict_eligibility, act):
+#    """
+#    This function takes the suitably flagged points and creates a dictionary with the number of suitable points for each activity, modified by ag modifiers for annual croplands.
+#    
+#    
+#    """
+#    pmes ('Eligibility for: ' + act)
+#    
+#    #Create a suiability flag field
+#    initflag = act + 'suitflag'
+#    df = df[['LC2030_trt_bau', initflag]]
+#    
+#    #Group on landcover to get counts of suitable points
+#    eli = df.groupby(['LC2030_trt_bau'], as_index = False).sum()  
+#    
+#    #Apply the annual cropland ag modifier
+#    eli.loc[(eli['LC2030_trt_bau'] == 'Annual Cropland'),initflag] = eli[initflag] * dictact[activity]['ag_modifier']
+#    
+#    #For compost amendment, apply the orchard modifier
+#    if act == 'cam':
+#        eli.loc[(eli['LC2030_trt_bau'] == 'Orchard'),initflag] = eli[initflag] * dictact[activity]['orc_modifier']
+#    eli_dict_element = eli.to_dict()
+#    
+#    #Add the number of eligible points to the eligibility dictionary
+#    dict_eligibility[act] = eli_dict_element
     
 
 def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'None', sflag = 1, dev = ''):
@@ -71,16 +71,7 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'N
     import arcpy
     #Create a temporary dictionary of the activity's dictionary from the eligibility dict
     goal = 0
-    tempdict = dict_eligibility[act]
-    tempdict2 = tempdict[act + 'suitflag']
-    
-    #Create a list of the landcovers for the activity
-    klist = list(tempdict2.keys())
-    
-    #Add up the points to get a total number of eligible points
-    for i in klist:
-        goal = goal + tempdict2[i]
-    pmes ('Suitable pixels: ' + str(goal))
+
     
     
     #Multiply the adoption goal to convert from acres to points

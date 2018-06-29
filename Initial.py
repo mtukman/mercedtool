@@ -156,7 +156,7 @@ def DoInitial(procmask, cs, cd, devmask, c1,c14,c30,joins,nears,points, tempgdb,
         tabs_all_df.loc[(tabs_all_df['pointid'].isin(plist)) ,'trt_flag'] = 1
 
     else:
-        tabs_all_df['trt_flag'] = 0
+        tabs_all_df['trt_flag'] = 1
     
     #Load up the carbon look up tables
     carb01 = pd.read_csv(c1)

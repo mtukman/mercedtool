@@ -55,11 +55,16 @@ acdict = {}
 aclist2 = [45,47,49,51,53,55,57,59,61]
 Helpers.add_to_logfile2(logfile, '')
 Helpers.add_to_logfile2(logfile, 'Checking for Avoided Conversion parameters:')
+
+import pandas as pd
+total_table = pd.DataFrame(columns = ['Activity','Acres Selected','Year Started','Years to Full Adoption','Total CO2e Reduction','Total CH4 Reductions','Total N2O Reductions'])
+
 for i in aclist2:
     if arcpy.GetParameterAsText(i) == 'Wetland to Annual Cropland':
         if arcpy.GetParameterAsText(i + 1) != '':
             acdict['ac_wet_arc'] = arcpy.GetParameterAsText(i + 1)
             Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected: '  + arcpy.GetParameterAsText(i + 1) + ' Acres')
+            
         else:
             Helpers.add_to_logfile(logfile,'Avoided Conversion - Wetland to Annual Cropland has been selected, but no acreage has been specified')
             
@@ -156,8 +161,11 @@ for i in aclist2:
                
     elif arcpy.GetParameterAsText(i) == 'None':
         pass
+    
+    if arcpy.GetParameterAsText(i) != 'None':
+        total_table = total_table.append({'Activity': arcpy.GetParameterAsText(i), 'Acres Selected': arcpy.GetParameterAsText(i + 1), 'Year Started':0, 'Years to Full Adoption': 0,'Total CO2e Reduction':0,'Total CH4 Reductions':0,'Total N2O Reductions':0}, ignore_index=True)
         
-
+        
 outpath = newdir +  '/'
 #Add activity markers to list
 if arcpy.GetParameterAsText(6) == 'Yes':
@@ -247,6 +255,7 @@ if 'rre' in activitylist:
     Helpers.add_to_logfile(logfile,'Riparian Restoration Adoption Acres' + ': ' + arcpy.GetParameterAsText(7))
     Helpers.add_to_logfile(logfile,'Riparian Restoration Beginning Year' + ': ' + arcpy.GetParameterAsText(8))
     Helpers.add_to_logfile(logfile,'Riparian Restoration Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(9))
+    total_table = total_table.append({'Activity': 'Riparian Restoration', 'Acres Selected': arcpy.GetParameterAsText(7), 'Year Started':arcpy.GetParameterAsText(8), 'Years to Full Adoption': arcpy.GetParameterAsText(9),'Total CO2e Reduction':0,'Total CH4 Reductions':0,'Total N2O Reductions':0}, ignore_index=True)
 else:
     rre = 0
 Helpers.add_to_logfile(logfile,'Oak Woodland Restoration' + ': ' + arcpy.GetParameterAsText(10))
@@ -258,18 +267,19 @@ if 'oak' in activitylist:
     Helpers.add_to_logfile(logfile,'Oak Woodland Restoration Adoption Acres' + ': ' + arcpy.GetParameterAsText(11))
     Helpers.add_to_logfile(logfile,'Oak Woodland Restoration Beginning Year' + ': ' + arcpy.GetParameterAsText(12))
     Helpers.add_to_logfile(logfile,'Oak Woodland Restoration Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(13))
+    total_table = total_table.append({'Activity': 'Oak Woodland Restoration', 'Acres Selected': arcpy.GetParameterAsText(11), 'Year Started':arcpy.GetParameterAsText(12), 'Years to Full Adoption':  arcpy.GetParameterAsText(13),'Total CO2e Reduction':0,'Total CH4 Reductions':0,'Total N2O Reductions':0}, ignore_index=True)
 else:
     oak = 0
-Helpers.add_to_logfile(logfile,'Cover Crops' + ': ' + arcpy.GetParameterAsText(14))    
+Helpers.add_to_logfile(logfile,'Cover Cropping' + ': ' + arcpy.GetParameterAsText(14))    
 if 'ccr' in activitylist:
     x = 14
     Generic.dict_activity['ccr']['adoption'] = float(arcpy.GetParameterAsText(15)) 
     Generic.dict_activity['ccr']['years'] = float(arcpy.GetParameterAsText(17))    
     Generic.dict_activity['ccr']['adoptyear'] = float(arcpy.GetParameterAsText(16))  
-    Helpers.add_to_logfile(logfile,'Cover Crops Adoption Acres' + ': ' + arcpy.GetParameterAsText(15))
-    Helpers.add_to_logfile(logfile,'Cover Crops Beginning Year' + ': ' + arcpy.GetParameterAsText(16))
-    Helpers.add_to_logfile(logfile,'Cover Crops Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(17))
-    
+    Helpers.add_to_logfile(logfile,'Cover Cropping Adoption Acres' + ': ' + arcpy.GetParameterAsText(15))
+    Helpers.add_to_logfile(logfile,'Cover Cropping Beginning Year' + ': ' + arcpy.GetParameterAsText(16))
+    Helpers.add_to_logfile(logfile,'Cover Cropping Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(17))
+    total_table = total_table.append({'Activity': 'Cover Cropping', 'Acres Selected': arcpy.GetParameterAsText(15), 'Year Started':arcpy.GetParameterAsText(16), 'Years to Full Adoption':  arcpy.GetParameterAsText(17),'Total CO2e Reduction':0,'Total CH4 Reductions':0,'Total N2O Reductions':0}, ignore_index=True)
     
 Helpers.add_to_logfile(logfile,'Mulching' + ': ' + arcpy.GetParameterAsText(18))    
 if 'mul' in activitylist:
@@ -280,6 +290,7 @@ if 'mul' in activitylist:
     Helpers.add_to_logfile(logfile,'Mulching Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
     Helpers.add_to_logfile(logfile,'Mulching Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Mulching Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
+    total_table = total_table.append({'Activity': 'Mulching', 'Acres Selected': arcpy.GetParameterAsText(x + 1), 'Year Started':arcpy.GetParameterAsText(x + 2), 'Years to Full Adoption':  arcpy.GetParameterAsText(x + 3),'Total CO2e Reduction':0,'Total CH4 Reductions':0,'Total N2O Reductions':0}, ignore_index=True)
     
 Helpers.add_to_logfile(logfile,'Improved Nitrogen Fertilizer Management' + ': ' + arcpy.GetParameterAsText(22))    
 if 'nfm' in activitylist:
@@ -290,6 +301,7 @@ if 'nfm' in activitylist:
     Helpers.add_to_logfile(logfile,'Improved Nitrogen Fertilizer Management Adoption %' + ': ' + arcpy.GetParameterAsText(x + 1))
     Helpers.add_to_logfile(logfile,'Improved Nitrogen Fertilizer Management Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Improved Nitrogen Fertilizer Management Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
+    total_table = total_table.append({'Activity': 'Improved Nitrogen Fertilizer Management', 'Acres Selected': arcpy.GetParameterAsText(x + 1), 'Year Started':arcpy.GetParameterAsText(x + 2), 'Years to Full Adoption':  arcpy.GetParameterAsText(x + 3),'Total CO2e Reduction':0,'Total CH4 Reductions':0,'Total N2O Reductions':0}, ignore_index=True)
     
 Helpers.add_to_logfile(logfile,'Hedgerow Planting' + ': ' + arcpy.GetParameterAsText(26))    
 if 'hpl' in activitylist:
@@ -300,6 +312,7 @@ if 'hpl' in activitylist:
     Helpers.add_to_logfile(logfile,'Hedgerow Planting Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
     Helpers.add_to_logfile(logfile,'Hedgerow Planting Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Hedgerow Planting Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
+    total_table = total_table.append({'Activity': 'Hedgerow Planting', 'Acres Selected': arcpy.GetParameterAsText(x + 1), 'Year Started':arcpy.GetParameterAsText(x + 2), 'Years to Full Adoption':  arcpy.GetParameterAsText(x + 3),'Total CO2e Reduction':0,'Total CH4 Reductions':0,'Total N2O Reductions':0}, ignore_index=True)
     
 Helpers.add_to_logfile(logfile,'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments' + ': ' + arcpy.GetParameterAsText(36))   
 if 'cam' in activitylist:
@@ -310,6 +323,7 @@ if 'cam' in activitylist:
     Helpers.add_to_logfile(logfile,'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
     Helpers.add_to_logfile(logfile,'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
+    total_table = total_table.append({'Activity': 'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments', 'Acres Selected': arcpy.GetParameterAsText(x + 1), 'Year Started':arcpy.GetParameterAsText(x + 2), 'Years to Full Adoption':  arcpy.GetParameterAsText(x + 3),'Total CO2e Reduction':0,'Total CH4 Reductions':0,'Total N2O Reductions':0}, ignore_index=True)
 
 Helpers.add_to_logfile(logfile,'Native Grassland Restoration' + ': ' + arcpy.GetParameterAsText(32))   
 if 'gra' in activitylist:
@@ -321,6 +335,7 @@ if 'gra' in activitylist:
     Helpers.add_to_logfile(logfile,'Native Grassland Restoration Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
     Helpers.add_to_logfile(logfile,'Native Grassland Restoration Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Native Grassland Restoration Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
+    total_table = total_table.append({'Activity': 'Native Grassland Restoration', 'Acres Selected': arcpy.GetParameterAsText(x + 1), 'Year Started':arcpy.GetParameterAsText(x + 2), 'Years to Full Adoption':  arcpy.GetParameterAsText(x + 3),'Total CO2e Reduction':0,'Total CH4 Reductions':0,'Total N2O Reductions':0}, ignore_index=True)
 else: 
     gra = 0
 Helpers.add_to_logfile(logfile,'Compost Application to Non-irrigated Grasslands' + ': ' + arcpy.GetParameterAsText(40))   
@@ -332,12 +347,13 @@ if 'cag' in activitylist:
     Helpers.add_to_logfile(logfile,'Compost Application to Non-irrigated Grasslands Adoption Acres' + ': ' + arcpy.GetParameterAsText(x + 1))
     Helpers.add_to_logfile(logfile,'Compost Application to Non-irrigated Grasslands Beginning Year' + ': ' + arcpy.GetParameterAsText(x + 2))
     Helpers.add_to_logfile(logfile,'Compost Application to Non-irrigated Grasslands Years to Full Adoption' + ': ' + arcpy.GetParameterAsText(x + 3))
+    total_table = total_table.append({'Activity': 'Compost Application to Non-irrigated Grasslands', 'Acres Selected': arcpy.GetParameterAsText(x + 1), 'Year Started':arcpy.GetParameterAsText(x + 2), 'Years to Full Adoption': arcpy.GetParameterAsText(x + 3),'Total CO2e Reduction':0,'Total CH4 Reductions':0,'Total N2O Reductions':0}, ignore_index=True)
     
 Helpers.add_to_logfile(logfile,'Urban Tree Planting' + ': ' + arcpy.GetParameterAsText(30))   
 if 'urb' in activitylist:
     x = 30
     Generic.dict_activity['urb']['adoption'] = float(arcpy.GetParameterAsText(x + 1)) 
-
+    total_table = total_table.append({'Activity': 'Urban Tree Planting', 'Acres Selected': arcpy.GetParameterAsText(x + 1), 'Year Started':0, 'Years to Full Adoption': 0,'Total CO2e Reduction':0,'Total CH4 Reductions':0,'Total N2O Reductions':0}, ignore_index=True)
     Helpers.add_to_logfile(logfile,'Urban Canopy Growth' + ': ' + arcpy.GetParameterAsText(x + 1))
 
 
@@ -374,10 +390,6 @@ if arcpy.GetParameterAsText(63) != '':
 else:
     terflag = 0
 
-if arcpy.GetParameterAsText(63):
-    sflag = 1
-else:
-    sflag = 0
 
 
 if arcpy.GetParameterAsText(30) == 'Yes':
@@ -389,7 +401,15 @@ else:
     ug = 0
     ucc = .102
 
-
+#Check if suitability requirements are wanted
+if arcpy.GetParameterAsText(64) == '':
+    suitreq = 1
+    Helpers.pmes('Suitability requirements in effect')
+else:
+    suitreq = 0
+    Helpers.pmes('Suitability requirements bypassed')
+    
+    
 if arcpy.GetParameterAsText(64) == 'Yes':
     plotlykey = arcpy.GetParameterAsText(65)
 else:
@@ -424,14 +444,14 @@ import ActivityApplication
 import ApplyActions
 import Reporting
 
-
+total_table.to_csv('P:/Temp/testtable.csv')
 #Run each module
 initout = Initial.DoInitial(mask, cproc, dev, devmask, Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
 
 
 Helpers.pmes('**FINISHED WITH INITIALIZATION MODULE, ENTERING ACTIVITY APPLICATION MODULE...***')
 
-outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug, sflag)
+outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug)
 Helpers.pmes('**FINISHED WITH ACTIVITY APPLICATION MODULE, ENTERING CARBON ACCOUNTING MODULE...')
 templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, logfile, dev)
 
@@ -440,14 +460,17 @@ templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt,
 #Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc, logfile, units)
 #Helpers.pmes("**CREATING CARBON REPORTS...**")
 
-
+#Use this line below for debugging purposes
 #templist[0].to_csv('P:/Temp/reviewer.csv')
+
+#Finish other Reports
 Reporting.emis_report(templist[0],outpath,activitylist,Generic.em14,Generic.em30, acdict,dev,cm, ug, logfile)
 Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug, logfile)
 
-Reporting.report_acres(templist[0],activitylist,outpath, acdict, logfile)
+temptable = Reporting.report_acres(total_table,templist[0],activitylist,outpath, acdict, logfile)
 
 if plotlykey != 'None':
     import Create_Plots
     Create_Plots.Plots(outpath, acdict, activitylist, terflag,cproc,plotlykey, username, units)
-
+temptable.to_csv('P:/Temp/Test121212.csv')
+Reporting.emissions(temptable,templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug, logfile)

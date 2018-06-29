@@ -2541,7 +2541,10 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
     
     #Change treatment labels for riparian restoration, oak conversion and grass restoration to bau values for carbon reporting
-    
+    if cd ==1:
+        devlist = ['bau','med','max', 'cust']
+    else:
+        devlist = ['bau','med','max']
     
     if 'rreselected' in df.columns:
         df.loc[(df['rreselected'] == 1), 'gridcode30_trt_med'] = df['gridcode30_med']
@@ -2550,23 +2553,27 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
         df.loc[(df['rreselected'] == 1), 'LC2030_trt_med'] = 'Forest'
         df.loc[(df['rreselected'] == 1), 'LC2030_trt_bau'] = 'Forest'
         df.loc[(df['rreselected'] == 1), 'gridcode30_trt_bau'] = df['gridcode30_bau']
-    
+        if 'cust' in devlist:
+            df.loc[(df['rreselected'] == 1), 'LC2030_trt_cust'] = 'Forest'
+            df.loc[(df['rreselected'] == 1), 'gridcode30_trt_cust'] = df['gridcode30_bau']
+            
+            
     if 'oakselected' in df.columns:
         df.loc[(df['oakselected'] == 1), 'gridcode30_trt_bau'] = df['gridcode30_bau']
         df.loc[(df['oakselected'] == 1), 'gridcode30_trt_med'] = df['gridcode30_med']
         df.loc[(df['oakselected'] == 1), 'gridcode30_trt_max'] = df['gridcode30_max']
-        df.loc[(df['oakselected'] == 1), 'LC2030_trt_bau'] = df['LC2030_bau']
-        df.loc[(df['oakselected'] == 1), 'LC2030_trt_med'] = df['LC2030_med']
-        df.loc[(df['oakselected'] == 1), 'LC2030_trt_max'] = df['LC2030_max']
+        df.loc[(df['oakselected'] == 1), 'LC2030_trt_max'] = 'Forest'
+        df.loc[(df['oakselected'] == 1), 'LC2030_trt_med'] = 'Forest'
+        df.loc[(df['oakselected'] == 1), 'LC2030_trt_bau'] = 'Forest'
+        if 'cust' in devlist:
+            df.loc[(df['oakselected'] == 1), 'gridcode30_trt_cust'] = df['gridcode30_max']
+            df.loc[(df['oakselected'] == 1), 'LC2030_trt_cust'] = 'Forest'
 
     #Create dataframes for each scenario and activity
     dfdict = {}
     dfdict['base'] = df
     dfdict['trt'] = df
-    if cd ==1:
-        devlist = ['bau','med','max', 'cust']
-    else:
-        devlist = ['bau','med','max']
+    
     for i in activitylist:
         df9 = df.loc[(df[i+'selected'] == 1)]
         dfdict[i] = df9
@@ -2598,6 +2605,7 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
     if 'rre' in activitylist:
         df5 = df.loc[df['rreselected'] == 1]
         dfdict['rre'] = df5  
+        
     keylist = list(dfdict.keys())
     Helpers.pmes(str(keylist))
 
@@ -2637,13 +2645,13 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
         if 'ac' in name:
             if dev in devlist:
                 Helpers.pmes('Calculating emissions report for ' + name + ' for ' + dev)
-                if x == 'bau':
+                if dev == 'bau':
                     td = df[['LC2030_bau', 'LC2030_trt_bau','gridcode30_bau', 'gridcode30_trt_bau']]
-                if x == 'med':
+                if dev == 'med':
                     td = df[['LC2030_med', 'LC2030_trt_med','gridcode30_med', 'gridcode30_trt_med']]
-                if x == 'max':
+                if dev == 'max':
                     td = df[['LC2030_max', 'LC2030_trt_max','gridcode30_max', 'gridcode30_trt_max']]
-                if x == 'cust':
+                if dev == 'cust':
                     td = df[['LC2030_cust', 'LC2030_trt_cust','gridcode30_cust', 'gridcode30_trt_cust']]
         
         #Calculate carbon differently for each scenario/activity
@@ -2736,8 +2744,14 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
                     for x in devlist:
                         carbrepfull(dfdict[i],i, x, 'LC2030_trt_' + x,z)
             elif 'ac' in i:
-                for x in devlist:
-                    carbrepfull(dfdict[i],i, x, 'LC2030_trt_' + x,z)
+                if 'bau' in i:
+                    carbrepfull(dfdict[i],i, 'bau', 'LC2030_trt_bau',z)
+                if 'med' in i:
+                    carbrepfull(dfdict[i],i, 'med', 'LC2030_trt_med',z)
+                if 'max' in i:
+                    carbrepfull(dfdict[i],i, 'max', 'LC2030_trt_max',z)
+                if 'cust' in i:
+                    carbrepfull(dfdict[i],i, 'cust', 'LC2030_trt_cust',z)
             else:
     
                 carbrepfull(dfdict[i],i, 'bau', 'LC2030_trt_bau',z)
@@ -2813,7 +2827,10 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     
     #Change treatment labels for riparian restoration, oak conversion and grass restoration to bau values for carbon reporting
     
-    
+    if cd ==1:
+        devlist = ['bau','med','max', 'cust']
+    else:
+        devlist = ['bau','med','max']
     if 'rreselected' in df.columns:
         df.loc[(df['rreselected'] == 1), 'gridcode30_trt_med'] = df['gridcode30_med']
         df.loc[(df['rreselected'] == 1), 'gridcode30_trt_max'] = df['gridcode30_max']
@@ -2821,6 +2838,10 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         df.loc[(df['rreselected'] == 1), 'LC2030_trt_med'] = df['LC2030_med']
         df.loc[(df['rreselected'] == 1), 'LC2030_trt_bau'] = df['LC2030_bau']
         df.loc[(df['rreselected'] == 1), 'gridcode30_trt_bau'] = df['gridcode30_bau']
+        if 'cust' in devlist:
+            df.loc[(df['rreselected'] == 1), 'LC2030_trt_cust'] = df['LC2030_cust']
+            df.loc[(df['rreselected'] == 1), 'gridcode30_trt_cust'] = df['gridcode30_cust']
+    
     
     if 'oakselected' in df.columns:
         df.loc[(df['oakselected'] == 1), 'gridcode30_trt_bau'] = df['gridcode30_bau']
@@ -2829,15 +2850,14 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         df.loc[(df['oakselected'] == 1), 'LC2030_trt_bau'] = df['LC2030_bau']
         df.loc[(df['oakselected'] == 1), 'LC2030_trt_med'] = df['LC2030_med']
         df.loc[(df['oakselected'] == 1), 'LC2030_trt_max'] = df['LC2030_max']
-
+        if 'cust' in devlist:
+            df.loc[(df['oakselected'] == 1), 'LC2030_trt_cust'] = df['LC2030_cust']
+            df.loc[(df['oakselected'] == 1), 'gridcode30_trt_cust'] = df['gridcode30_cust']
     #Create dataframes for each scenario and activity
     dfdict = {}
     dfdict['base'] = df
     dfdict['trt'] = df
-    if cd ==1:
-        devlist = ['bau','med','max', 'cust']
-    else:
-        devlist = ['bau','med','max']
+    
     for i in activitylist:
         df9 = df.loc[(df[i+'selected'] == 1)]
         dfdict[i] = df9
@@ -2908,13 +2928,13 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         if 'ac' in name:
             if dev in devlist:
                 Helpers.pmes('Calculating carbon report for ' + name + ' for ' + dev)
-                if x == 'bau':
+                if dev == 'bau':
                     td = df[['LC2030_bau', 'LC2030_trt_bau','gridcode30_bau', 'gridcode30_trt_bau']]
-                if x == 'med':
+                if dev == 'med':
                     td = df[['LC2030_med', 'LC2030_trt_med','gridcode30_med', 'gridcode30_trt_med']]
-                if x == 'max':
+                if dev == 'max':
                     td = df[['LC2030_max', 'LC2030_trt_max','gridcode30_max', 'gridcode30_trt_max']]
-                if x == 'cust':
+                if dev == 'cust':
                     td = df[['LC2030_cust', 'LC2030_trt_cust','gridcode30_cust', 'gridcode30_trt_cust']]
         
         #Calculate carbon differently for each scenario/activity
@@ -2996,10 +3016,16 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
                 for x in devlist:
                     carbrepfull(dfdict[i],i, x, 'LC2030_trt_' + x)
         elif 'ac' in i:
-            for x in devlist:
-                carbrepfull(dfdict[i],i, x, 'LC2030_trt_' + x)
+            if 'bau' in i:
+                carbrepfull(dfdict[i],i, 'bau', 'LC2030_trt_bau')
+            if 'med' in i:
+                carbrepfull(dfdict[i],i, 'med', 'LC2030_trt_med')
+            if 'max' in i:
+                carbrepfull(dfdict[i],i, 'max', 'LC2030_trt_max')
+            if 'cust' in i:
+                carbrepfull(dfdict[i],i, 'cust', 'LC2030_trt_cust')
         else:
-
+            
             carbrepfull(dfdict[i],i, 'bau', 'LC2030_trt_bau')
 
             
@@ -3153,7 +3179,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
             
     emissions()
     
-def report_acres(df, activitylist, outpath, acdict = 'None', logfile = 'None', cd = 0):
+def report_acres(ttable,df, activitylist, outpath, acdict = 'None', logfile = 'None', cd = 0):
     """
     This function reports the number of acres adopted for each activity.
     df: The dataframe, passed from the main program
@@ -3161,7 +3187,7 @@ def report_acres(df, activitylist, outpath, acdict = 'None', logfile = 'None', c
     activitylist: List of activities selected from the main program module
     
     """
-
+    ludict = {'ac_wet_arc':'Wetland to Annual Cropland','ac_gra_arc':'Grassland to Annual Cropland','ac_irr_arc':'Irrigated Pasture to Annual Cropland','ac_orc_arc': 'Orchard to Annual Cropland','ac_arc_urb':'Annual Cropland to Urban','ac_gra_urb':'Grassland to Urban','ac_irr_urb':'Irrigated Pasture to Urban','ac_orc_urb':'Orchard to Urban','ac_arc_orc':'Annual Cropland to Orchard','ac_gra_orc':'Grassland to Orchard','ac_irr_orc':'Irrigated Pasture to Orchard','ac_vin_orc':'Vineyard to Orchard','ac_arc_irr':'Annual Cropland to Irrigated Pasture','ac_orc_irr':'Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Restoration','ccr':'Cover Crops','mul':'Mulching','nfm':'Improved Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Native Grassland Restoration','cam':'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments','cag':'Compost Application to Non-irrigated Grasslands'}
     import Helpers
     import pandas as pd
     acredict= {}
@@ -3173,39 +3199,32 @@ def report_acres(df, activitylist, outpath, acdict = 'None', logfile = 'None', c
             temp = temp [[i + 'selected', 'pointid']]
             temp['pointid'] = temp['pointid'] * 0.222395
             temp = temp[['pointid']]
+            v = temp['pointid'].sum()
             temp = temp.rename(columns = {'pointid':i + '_acres'})
+            ttable.loc[ttable['Activity'] == ludict[i], 'Acres Selected'] = v
+            
             
             acredict[i] = temp
     devlist =['bau','med','max']
     if cd == 1:
         devlist =['bau','med','max']
-#    if acdict != 'None':
-#        aclist = list(acdict.keys())
-#        for i in aclist:
-#            for x in devlist:
-#                if x == 'bau':
-#                    
-#                    
-#                    
-#                    temp = df.loc[(df[i+'selected'].isin([1,11,111,1111]))]
-#
-#                if x == 'med':
-#                    temp = df.loc[(df[i+'selected'].isin([10,11,110,111,1111,1110,1010,1011]))]
-#
-#                if x == 'max':
-#                    temp = df.loc[(df[i+'selected'].isin([100,101,110,111,1111,1110,1101,1100]))]
-#
-#                if x == 'cust':
-#                    temp = df.loc[(df[i+'selected'].isin([1111,1110,1100,1000,1010,1011,1001]))]
-#                
-#                temp[i+'selected'] = 1
-#                temp = temp.groupby([i + 'selected'], as_index = False).count()
-#                temp = temp [[i + 'selected', 'pointid']]
-#                temp['pointid'] = temp['pointid'] * 0.222395
-#                temp = temp[['pointid']]
-#                temp = temp.rename(columns = {'pointid':i +'_'+x+ '_acres'})
-#                acredict[i + x] = temp
-                
+    if acdict != 'None':
+        aclist = list(acdict.keys())
+        for i in aclist:
+            
+            Helpers.pmes ('Reporting total acres for : ' + i + ', AKA - ' + ludict[i])
+            temp = df.loc[(df[i+'selected'].isin([1,11,111,1111]))]
+
+            
+            temp[i+'selected'] = 1
+            temp = temp.groupby([i + 'selected'], as_index = False).count()
+            temp = temp [[i + 'selected', 'pointid']]
+            temp['pointid'] = temp['pointid'] * 0.222395
+            temp = temp[['pointid']]
+            v = temp['pointid'].sum()
+            ttable.loc[ttable['Activity'] == ludict[i], 'Acres Selected'] = v
+
+             
     tlist = list(acredict.values())
     Helpers.pmes(tlist)
     
@@ -3218,6 +3237,106 @@ def report_acres(df, activitylist, outpath, acdict = 'None', logfile = 'None', c
         result = result.loc[:, ~result.columns.str.contains('^Unnamed')]    
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'act_acres' + '.csv')
         result.to_csv(outpath+'act_acres.csv', index = False)  
-    
-    
+    return ttable
+def emissions(ttable,df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 , cm = 0, ug = 0, logfile = 'None'):
+        """
+        This function exports three tables about emissions and carbon for use in the plotting function.
+        """
+        import pandas as pd
+        import os
+        import Helpers
+        #Import the tables needed
+        em = pd.read_csv(outpath + 'emissions.csv')
+        ludict = {'ac_wet_arc':'Wetland to Annual Cropland','ac_gra_arc':'Grassland to Annual Cropland','ac_irr_arc':'Irrigated Pasture to Annual Cropland','ac_orc_arc': 'Orchard to Annual Cropland','ac_arc_urb':'Annual Cropland to Urban','ac_gra_urb':'Grassland to Urban','ac_irr_urb':'Irrigated Pasture to Urban','ac_orc_urb':'Orchard to Urban','ac_arc_orc':'Annual Cropland to Orchard','ac_gra_orc':'Grassland to Orchard','ac_irr_orc':'Irrigated Pasture to Orchard','ac_vin_orc':'Vineyard to Orchard','ac_arc_irr':'Annual Cropland to Irrigated Pasture','ac_orc_irr':'Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Restoration','ccr':'Cover Crops','mul':'Mulching','nfm':'Improved Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Native Grassland Restoration','cam':'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments','cag':'Compost Application to Non-irrigated Grasslands'}
+        
+        if not os.path.exists(outpath + 'emissions_reductions.csv'):
+            Helpers.add_to_logfile(logfile,'No emissions reductions from activities')
+        else:
+            df3 = pd.read_csv(outpath + 'emissions_reductions.csv')
+        df2 = pd.read_csv(outpath + 'carbon.csv')
+        years = list(range(16))
+        
+        aclist = list(acdict.keys())
+        
+        for i in activitylist:
+            Helpers.pmes ('Reporting total reductions for : ' + i + ', AKA - ' + ludict[i])
+            v = 0
+            n2o = 0
+            ch4 = 0
+            v = df2['carbon_'+i].sum()
+            Helpers.pmes ('Carbon change is : ' + str(v))
+            if i == 'rre':
+                n2o_reductions = 0
+                ch4_reductions = 0
+                Helpers.pmes(str(em['n2o_emissions_'+i].sum()))
+                n2o2 = em['n2o_emissions_'+i].sum()*-1
+                
+                ch42 = em['ch4_emissions_'+i].sum()*-1
+                
+                n2o15 = n2o2/15
+                
+                Helpers.pmes(str(n2o15))
+                
+                for n in years:
+                    n2o_reductions = float(n2o_reductions) + (n*float(n2o15))
+                n2o = n2o_reductions
+                
+                ch4215 = ch42/15
+                for n in years:
+                    ch4_reductions = float(ch4_reductions) + (n*float(ch4215))
+                ch4 = ch4_reductions
+                
+                
+            if i in ['nfm','hpl','mma','cam','mma','ccr']:
+                n2o1 = df3[i+'_er'].sum()
+                
+                n2o = n2o1
+            
+            ttable.loc[ttable['Activity'] == ludict[i], 'Total CO2e Reduction'] = str(v)
+            ttable.loc[ttable['Activity'] == ludict[i], 'Total N2O Reductions'] = n2o
+            ttable.loc[ttable['Activity'] == ludict[i], 'Total CH4 Reductions'] = ch4
+                
+        
+        for i in aclist:
+            v = 0
+            n2o = 0
+            ch4 = 0
+            v = df2['carbon_'+i+'_bau'].sum()
+
+            n2o_reductions = 0
+            ch4_reductions = 0
+            n2o2 = em['n2o_emissions_'+i+'_bau'].sum()*-1
+            ch42 = em['ch4_emissions_'+i+'_bau'].sum()*-1
+            
+            n2o15 = n2o2/15
+            for n in years:
+                n2o_reductions = n2o_reductions + (n*n2o15)
+            n2o = n2o_reductions
+            
+            ch4215 = ch42/15
+            for n in years:
+                ch4_reductions = ch4_reductions + (n*ch4215)
+            ch4 = ch4_reductions
+
+            
+            ttable.loc[ttable['Activity'] == ludict[i], 'Total CO2e Reduction'] = v
+            ttable.loc[ttable['Activity'] == ludict[i], 'Total N2O Reductions'] = n2o
+            ttable.loc[ttable['Activity'] == ludict[i], 'Total CH4 Reductions'] = ch4
+        
+        ttable.to_csv(outpath+'total_report.csv', index = False)  
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
