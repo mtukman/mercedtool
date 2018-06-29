@@ -62,11 +62,12 @@ def pmes(message):
 #    dict_eligibility[act] = eli_dict_element
     
 
-def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'None', sflag = 1, dev = ''):
+def selectionfunc (ttable,dict_eligibility,df, activity,dictact, act, logfile, aco = 'None', sflag = 1, dev = ''):
     """
     This function takes a dictionary, a dataframe and an activity.
     It takes a user input to determine how many pixels to select for the activity.
     """
+    ludict2 = {'ac_wet_arc':'Wetland to Annual Cropland','ac_gra_arc':'Grassland to Annual Cropland','ac_irr_arc':'Irrigated Pasture to Annual Cropland','ac_orc_arc': 'Orchard to Annual Cropland','ac_arc_urb':'Annual Cropland to Urban','ac_gra_urb':'Grassland to Urban','ac_irr_urb':'Irrigated Pasture to Urban','ac_orc_urb':'Orchard to Urban','ac_arc_orc':'Annual Cropland to Orchard','ac_gra_orc':'Grassland to Orchard','ac_irr_orc':'Irrigated Pasture to Orchard','ac_vin_orc':'Vineyard to Orchard','ac_arc_irr':'Annual Cropland to Irrigated Pasture','ac_orc_irr':'Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Restoration','ccr':'Cover Crops','mul':'Mulching','nfm':'Improved Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Native Grassland Restoration','cam':'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments','cag':'Compost Application to Non-irrigated Grasslands'}
     pmes('Selecting points for: ' + activity + ', ' + dev)
     import arcpy
     #Create a temporary dictionary of the activity's dictionary from the eligibility dict
@@ -95,6 +96,9 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'N
         #Group pixels by their medium group value (medium grid)
         tempdf = df.groupby('medgroup_val').sum()[['pointid',initflag]]
         
+        suitable = df[initflag].sum()
+        
+        
         tempdf.loc[0:,'grptemp'] = tempdf.index
         tempdf.loc[tempdf[initflag] == 1]
         vlen = len(tempdf['grptemp']) #Get the length of the number of groups
@@ -103,7 +107,6 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'N
         s = tempdf['grptemp'].sample(n = vlen)
         glist = [] #Any empty list to hold selected group values
         #Now the function loops through the list of group values and adds the pixels in each group to the count until the goal is reached
-        arcpy.AddMessage(goal)
         for i in s:
             if count<goal:
                 count = count + tempdf.at[i,initflag]
@@ -112,12 +115,14 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'N
             else:
                 pass
         if aco != 'None':
-            add_to_logfile(logfile,ludict[aco] + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(goal2/4.495555))
+            add_to_logfile(logfile,ludict[aco] + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(suitable/4.495555))
             query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
             add_to_logfile(logfile,ludict[aco] + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
             if dev == 'bau':
                 df[selflag] = 0
             df.loc[query,selflag] = sflag + df[selflag]
+            if dev == 'bau':
+                ttable.loc[ttable['Activity'] == ludict2[aco], 'Acres Selected'] = str(count/4.495555)
         else:
             add_to_logfile(logfile,ludict[activity] + ' ' + dev + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(goal2/4.495555))
             query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
@@ -130,7 +135,7 @@ def selectionfunc (dict_eligibility,df, activity,dictact, act, logfile, aco = 'N
     elif dictact[activity]['grpsize'] == 'small':
          select('smallgroup_val', count)
     
-    return df
+    return df,ttable
 
                 
                 

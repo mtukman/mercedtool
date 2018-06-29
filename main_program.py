@@ -451,14 +451,14 @@ initout = Initial.DoInitial(mask, cproc, dev, devmask, Generic.Carbon2001, Gener
 
 Helpers.pmes('**FINISHED WITH INITIALIZATION MODULE, ENTERING ACTIVITY APPLICATION MODULE...***')
 
-outdf = ActivityApplication.DoActivities(initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug)
+outdf = ActivityApplication.DoActivities(total_table,initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug)
 Helpers.pmes('**FINISHED WITH ACTIVITY APPLICATION MODULE, ENTERING CARBON ACCOUNTING MODULE...')
-templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt, ug, logfile, dev)
+templist = ApplyActions.ApplyGHG(outdf[0],activitylist, Generic.dict_activity, trt, ug, logfile, dev)
 
 
-#Helpers.pmes("**CREATING MULTIBENEFIT REPORTS...**")
-#Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc, logfile, units)
-#Helpers.pmes("**CREATING CARBON REPORTS...**")
+Helpers.pmes("**CREATING MULTIBENEFIT REPORTS...**")
+Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc, logfile, units)
+Helpers.pmes("**CREATING CARBON REPORTS...**")
 
 #Use this line below for debugging purposes
 #templist[0].to_csv('P:/Temp/reviewer.csv')
@@ -467,10 +467,10 @@ templist = ApplyActions.ApplyGHG(outdf,activitylist, Generic.dict_activity, trt,
 Reporting.emis_report(templist[0],outpath,activitylist,Generic.em14,Generic.em30, acdict,dev,cm, ug, logfile)
 Reporting.carbreport(templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug, logfile)
 
-temptable = Reporting.report_acres(total_table,templist[0],activitylist,outpath, acdict, logfile)
+temptable = Reporting.report_acres(outdf[1],templist[0],activitylist,outpath, acdict, logfile)
 
 if plotlykey != 'None':
     import Create_Plots
     Create_Plots.Plots(outpath, acdict, activitylist, terflag,cproc,plotlykey, username, units)
 temptable.to_csv('P:/Temp/Test121212.csv')
-Reporting.emissions(temptable,templist[0],outpath,activitylist,Generic.Carbon2014, Generic.Carbon2030,acdict, dev,cm, ug, logfile)
+Reporting.emissions(temptable,outpath,activitylist,acdict, logfile)

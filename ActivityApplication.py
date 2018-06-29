@@ -5,7 +5,7 @@ import Helpers
 global dict_eligibility
 
 
-def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',customdev = 0, ug = 0, sflag = 0):
+def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'None',customdev = 0, ug = 0, sflag = 0):
     ''' This function takes the activities selected by the user, finds suitable pixels and randomly selects pixels for the activity based on spatial attributes until the desired amount of pixels have been selected.
     
     df: The dataframe fom the initial module
@@ -64,7 +64,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
 #        Helpers.CreateEligDict(df, 'rre', dictact,dict_eligibility, 'rre')
         
         # Select points randomly that were flagged as suitable
-        Helpers.selectionfunc (dict_eligibility,df, 'rre',dictact, 'rre', logfile)
+        Helpers.selectionfunc (ttable,dict_eligibility,df, 'rre',dictact, 'rre', logfile)
         queryadd = queryadd & (df['rreselected'] != 1)
         df.loc[df['rreselected'] == 1, 'LC2030_trt_bau'] = 'Forest'
         df.loc[df['rreselected'] == 1, 'LC2030_trt_med'] = 'Forest'
@@ -84,7 +84,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
         Helpers.CreateSuitFlags('oak',df,dictact, 'oak')
 #        Helpers.CreateEligDict(df, 'oak', dictact,dict_eligibility, 'oak')
         #Select points randomly for the oak conversion activity
-        Helpers.selectionfunc (dict_eligibility,df, 'oak',dictact, 'oak', logfile)
+        Helpers.selectionfunc (ttable,dict_eligibility,df, 'oak',dictact, 'oak', logfile)
         queryadd = queryadd & (df['oakselected'] != 1)
         df.loc[df['oakselected'] == 1, 'LC2030_trt_bau'] = 'Forest'
         df.loc[df['oakselected'] == 1, 'LC2030_trt_med'] = 'Forest'
@@ -185,19 +185,19 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
             
                 #Change the gridcode and landcover label in the treatment bau
                 if x == 'bau':
-                    Helpers.selectionfunc (dict_eligibility,df,'aco',dictact, i, logfile, i,1, x)
+                    Helpers.selectionfunc (ttable,dict_eligibility,df,'aco',dictact, i, logfile, i,1, x)
                     Helpers.lc_mod(i+'selected',t, 'LC2030_trt_' + x, df,0)
                     Helpers.lc_mod(i+'selected',g, 'gridcode30_trt_' + x, df,0)
                 if x == 'med':
-                    Helpers.selectionfunc (dict_eligibility,df,'aco',dictact, i, logfile, i,10, x)
+                    Helpers.selectionfunc (ttable,dict_eligibility,df,'aco',dictact, i, logfile, i,10, x)
                     Helpers.lc_mod(i+'selected',t, 'LC2030_trt_' + x, df,9)
                     Helpers.lc_mod(i+'selected',g, 'gridcode30_trt_' + x, df,9)
                 if x == 'max':
-                    Helpers.selectionfunc (dict_eligibility,df,'aco',dictact, i, logfile, i,100, x)
+                    Helpers.selectionfunc (ttable,dict_eligibility,df,'aco',dictact, i, logfile, i,100, x)
                     Helpers.lc_mod(i+'selected',t, 'LC2030_trt_' + x, df,99)
                     Helpers.lc_mod(i+'selected',g, 'gridcode30_trt_' + x, df,99)
                 if x == 'cust':
-                    Helpers.selectionfunc (dict_eligibility,df,'aco',dictact, i, logfile, i,1000, x)
+                    Helpers.selectionfunc (ttable,dict_eligibility,df,'aco',dictact, i, logfile, i,1000, x)
                     Helpers.lc_mod(i+'selected',t, 'LC2030_trt_' + x, df,999)
                     Helpers.lc_mod(i+'selected',g, 'gridcode30_trt_' + x, df,999)
         else:
@@ -267,19 +267,19 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
 #                Helpers.CreateEligDict(df, 'aco', dictact,dict_eligibility, i)
                 
                 if x == 'bau':
-                    Helpers.selectionfunc (dict_eligibility,df,'aco',dictact, i, logfile, i,1, x)
+                    Helpers.selectionfunc (ttable,dict_eligibility,df,'aco',dictact, i, logfile, i,1, x)
                     Helpers.lc_mod(i+'selected',t, 'LC2030_trt_' + x, df,0)
                     Helpers.lc_mod(i+'selected',g, 'gridcode30_trt_' + x, df,0)
                 if x == 'med':
-                    Helpers.selectionfunc (dict_eligibility,df,'aco',dictact, i, logfile, i,10, x)
+                    Helpers.selectionfunc (ttable,dict_eligibility,df,'aco',dictact, i, logfile, i,10, x)
                     Helpers.lc_mod(i+'selected',t, 'LC2030_trt_' + x, df,9)
                     Helpers.lc_mod(i+'selected',g, 'gridcode30_trt_' + x, df,9)
                 if x == 'max':
-                    Helpers.selectionfunc (dict_eligibility,df,'aco',dictact, i, logfile, i,100, x)
+                    Helpers.selectionfunc (ttable,dict_eligibility,df,'aco',dictact, i, logfile, i,100, x)
                     Helpers.lc_mod(i+'selected',t, 'LC2030_trt_' + x, df,99)
                     Helpers.lc_mod(i+'selected',g, 'gridcode30_trt_' + x, df,99)
                 if x == 'cust':
-                    Helpers.selectionfunc (dict_eligibility,df,'aco',dictact, i, logfile, i,1000, x)
+                    Helpers.selectionfunc (ttable,dict_eligibility,df,'aco',dictact, i, logfile, i,1000, x)
                     Helpers.lc_mod(i+'selected',t, 'LC2030_trt_' + x, df,999)
                     Helpers.lc_mod(i+'selected',g, 'gridcode30_trt_' + x, df,999)
 
@@ -302,7 +302,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     def ghg_selection (df,activity,dict_eligibility,dictact):
         Helpers.CreateSuitFlags(activity,df,dictact, activity)
 #        Helpers.CreateEligDict(df, activity, dictact,dict_eligibility, activity)
-        Helpers.selectionfunc (dict_eligibility,df,activity,dictact, activity, logfile)
+        Helpers.selectionfunc (ttable,dict_eligibility,df,activity,dictact, activity, logfile)
     #GHG Suitability Flag and Selection for CCR
     if 'ccr' in activitylist:
         ghg_selection (df,'ccr',dict_eligibility,dictact)
@@ -341,7 +341,7 @@ def DoActivities(df,activitylist, dictact,acdict,logfile, treatmask = 'None',cus
     
     
     
-    return df
+    return [df,ttable]
 
 
 

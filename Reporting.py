@@ -3205,24 +3205,23 @@ def report_acres(ttable,df, activitylist, outpath, acdict = 'None', logfile = 'N
             
             
             acredict[i] = temp
-    devlist =['bau','med','max']
-    if cd == 1:
-        devlist =['bau','med','max']
-    if acdict != 'None':
-        aclist = list(acdict.keys())
-        for i in aclist:
             
-            Helpers.pmes ('Reporting total acres for : ' + i + ', AKA - ' + ludict[i])
-            temp = df.loc[(df[i+'selected'].isin([1,11,111,1111]))]
-
-            
-            temp[i+'selected'] = 1
-            temp = temp.groupby([i + 'selected'], as_index = False).count()
-            temp = temp [[i + 'selected', 'pointid']]
-            temp['pointid'] = temp['pointid'] * 0.222395
-            temp = temp[['pointid']]
-            v = temp['pointid'].sum()
-            ttable.loc[ttable['Activity'] == ludict[i], 'Acres Selected'] = v
+    # Loop through avoided conversions and add 
+#    if acdict != 'None':
+#        aclist = list(acdict.keys())
+#        for i in aclist:
+#            
+#            Helpers.pmes ('Reporting total acres for : ' + i + ', AKA - ' + ludict[i])
+#            temp = df.loc[(df[i+'selected'].isin([1,11,111,1111]))]
+#
+#            
+#            temp[i+'selected'] = 1
+#            temp = temp.groupby([i + 'selected'], as_index = False).count()
+#            temp = temp [[i + 'selected', 'pointid']]
+#            temp['pointid'] = temp['pointid'] * 0.222395
+#            temp = temp[['pointid']]
+#            v = temp['pointid'].sum()
+#            ttable.loc[ttable['Activity'] == ludict[i], 'Acres Selected'] = v
 
              
     tlist = list(acredict.values())
@@ -3238,15 +3237,30 @@ def report_acres(ttable,df, activitylist, outpath, acdict = 'None', logfile = 'N
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'act_acres' + '.csv')
         result.to_csv(outpath+'act_acres.csv', index = False)  
     return ttable
-def emissions(ttable,df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 , cm = 0, ug = 0, logfile = 'None'):
+
+
+
+
+
+def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
         """
-        This function exports three tables about emissions and carbon for use in the plotting function.
+        This function exports a reporting table showing the total reductions for each activity, along with some activity settings.
+        
+        ttable - dataframe created in the main_program that will be filled in with reductions data 
+        outpath - path to output folder
+        activitylist - list of activities used in the tool
+        acdict - dictionary of avoided conversions chosen
+        logfile - logfile to write out to
+        
+        
         """
         import pandas as pd
         import os
         import Helpers
         #Import the tables needed
         em = pd.read_csv(outpath + 'emissions.csv')
+        
+        #look up dictionary to translate activity abbreviations to full names
         ludict = {'ac_wet_arc':'Wetland to Annual Cropland','ac_gra_arc':'Grassland to Annual Cropland','ac_irr_arc':'Irrigated Pasture to Annual Cropland','ac_orc_arc': 'Orchard to Annual Cropland','ac_arc_urb':'Annual Cropland to Urban','ac_gra_urb':'Grassland to Urban','ac_irr_urb':'Irrigated Pasture to Urban','ac_orc_urb':'Orchard to Urban','ac_arc_orc':'Annual Cropland to Orchard','ac_gra_orc':'Grassland to Orchard','ac_irr_orc':'Irrigated Pasture to Orchard','ac_vin_orc':'Vineyard to Orchard','ac_arc_irr':'Annual Cropland to Irrigated Pasture','ac_orc_irr':'Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Restoration','ccr':'Cover Crops','mul':'Mulching','nfm':'Improved Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Native Grassland Restoration','cam':'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments','cag':'Compost Application to Non-irrigated Grasslands'}
         
         if not os.path.exists(outpath + 'emissions_reductions.csv'):
@@ -3258,6 +3272,8 @@ def emissions(ttable,df, outpath,activitylist,carb14, carb30,acdict = 'None', cd
         
         aclist = list(acdict.keys())
         
+        
+        #Loop through activities and calculate fields for reductions
         for i in activitylist:
             Helpers.pmes ('Reporting total reductions for : ' + i + ', AKA - ' + ludict[i])
             v = 0
@@ -3269,34 +3285,42 @@ def emissions(ttable,df, outpath,activitylist,carb14, carb30,acdict = 'None', cd
                 n2o_reductions = 0
                 ch4_reductions = 0
                 Helpers.pmes(str(em['n2o_emissions_'+i].sum()))
-                n2o2 = em['n2o_emissions_'+i].sum()*-1
                 
+                #Calculate 
+                n2o2 = em['n2o_emissions_'+i].sum()*-1
                 ch42 = em['ch4_emissions_'+i].sum()*-1
                 
+                #Get annual change of annual n2o emissions rate
                 n2o15 = n2o2/15
                 
                 Helpers.pmes(str(n2o15))
                 
+                #Accumulate n2o
                 for n in years:
                     n2o_reductions = float(n2o_reductions) + (n*float(n2o15))
                 n2o = n2o_reductions
                 
+                #Get annual change of annual ch4 emissions rate
                 ch4215 = ch42/15
+                
+                #Accumulate ch4
                 for n in years:
                     ch4_reductions = float(ch4_reductions) + (n*float(ch4215))
                 ch4 = ch4_reductions
                 
-                
+            #If the activity has an n2o trt component, get the n2o reduction value
             if i in ['nfm','hpl','mma','cam','mma','ccr']:
                 n2o1 = df3[i+'_er'].sum()
                 
                 n2o = n2o1
             
+            #Write the reduction values to the table
             ttable.loc[ttable['Activity'] == ludict[i], 'Total CO2e Reduction'] = str(v)
             ttable.loc[ttable['Activity'] == ludict[i], 'Total N2O Reductions'] = n2o
             ttable.loc[ttable['Activity'] == ludict[i], 'Total CH4 Reductions'] = ch4
                 
         
+        #Calculate the total avoided emissions for each avoided conversion
         for i in aclist:
             v = 0
             n2o = 0
@@ -3308,6 +3332,8 @@ def emissions(ttable,df, outpath,activitylist,carb14, carb30,acdict = 'None', cd
             n2o2 = em['n2o_emissions_'+i+'_bau'].sum()*-1
             ch42 = em['ch4_emissions_'+i+'_bau'].sum()*-1
             
+            
+            #Accumulate avoided emissions
             n2o15 = n2o2/15
             for n in years:
                 n2o_reductions = n2o_reductions + (n*n2o15)
