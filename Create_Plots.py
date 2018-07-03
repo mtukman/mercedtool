@@ -955,9 +955,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         
         mba_chart_onetrace(tables + "/2014 Natural Resilience.csv", xax = '2014 Landcover in Areas Important <br>For Natural Resilience', yax = units, x = 'Landcover',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Natural Resilience.png")
 
-        mba_threetrace(runfolder + "/total_reductions.csv", 'Total Emission Reductions and CO2 Removals<br>Achieved at 2030 from Planned Activities', xax = 'holder', yax = 'Tonnes CO2e', x1 = 'Carbon', x3 = 'CH4', x2 = 'N2O',outfile = outpath + "Total Reductions.png", y1 = 'CO2e Reductions', y3 = 'CH4 Reductions',y2 = 'N2O Reductions', a_font = 13, barmode = 'stack', ytitle = 'Tonnes CO2e')
+        mba_threetrace(runfolder + "/total_reductions.csv", 'Total Emission Reductions and CO2 Removals<br>Achieved at 2030 from Planned Activities', xax = 'holder', yax = 'Tonnes CO2e', x1 = 'Source', x3 = 'Source', x2 = 'Source',outfile = outpath + "Total Reductions.png", y1 = 'CO2e Reductions', y3 = 'CH4 Reductions',y2 = 'N2O Reductions', a_font = 13, barmode = 'stack', ytitle = 'Tonnes CO2e')
 
-        mba_twotrace(runfolder + "/annual_emissions.csv", 'A Comparison of 2030 N2O, CH4 Emissions<br>and CO2 Removal Flux (Baseline and Treatment) ', xax = 'holder', yax = 'holder', ytitle = 'Tonnes CO2e', x1 = 'Source', x2 = '2030 Baseline', x3 = '2030 Treatment',outfile = outpath + "Annual Flux.png", y1 = '2030<br>Baseline', y2 = '2030<br>Treatment', a_font = 13)
+        mba_twotrace(runfolder + "/ann_emissions_and_CStock_Change.csv", 'A Comparison of 2030 N2O, CH4 Emissions<br>and CO2 Removal Flux (Baseline and Treatment) ', xax = 'holder', yax = 'holder', ytitle = 'Tonnes CO2e', x1 = 'Source', x2 = '2030 Baseline', x3 = '2030 Treatment',outfile = outpath + "Annual Flux.png", y1 = '2030<br>Baseline', y2 = '2030<br>Treatment', a_font = 13)
 
         mba_twotrace(runfolder + "/annual_emissions_aggregate.csv", 'A Comparison of 2030 N2O and CH4 Emissions<br>Net of CO2 Removals (Baseline and Treatment) ', xax = 'holder', yax = 'holder', ytitle = 'Tonnes CO2e', x1 = 'Source', x2 = '2030 Baseline', x3 = '2030 Treatment',outfile = outpath + "Aggregate Flux.png", y1 = '2030<br>Baseline', y2 = '2030<br>Treatment', a_font = 13)
 

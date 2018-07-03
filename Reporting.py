@@ -2059,12 +2059,12 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             """
             
             #Create the initial dataframes
-            
+
             if 'hplselected' in df:            
-                td = df[['LC2014','pointid', 'HUC_12', 'near_rivers','near_streams', field, 'hplselected']]
+                td = df[['LC2014','pointid', 'catch_code', 'near_rivers','near_streams', field, 'hplselected']]
                 td.loc[(td['hplselected'] == 1), field] = 'Forest'
             else:
-                td = df[['LC2014','pointid', 'HUC_12', 'near_rivers','near_streams', field]]
+                td = df[['LC2014','pointid', 'catch_code', 'near_rivers','near_streams', field]]
             if 'trt' in field:
                 td.loc[(td[field] == 'Young Forest'), field] = 'Forest'
                 td.loc[(td[field] == 'Young Shrubland'), field] = 'Shrubland'
@@ -2092,7 +2092,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             td['watint30'] = 'na'
 
             #Create a list of HUC_12 codes
-            huclist =  td['HUC_12'].tolist()
+            huclist =  td['catch_code'].tolist()
             huclist = list(set(huclist))
             
             # Create a dataframe for 2014 where the landcover is natural
@@ -2107,10 +2107,10 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                 tdict[i] = {}
                 
                 #Create a dataframe queried on the huc12
-                temp = td.loc[td['HUC_12'] == i]
+                temp = td.loc[td['catch_code'] == i]
                 
                 #Create a dataframe for 2014 grouped on the natural and riparian flag
-                ctemp14 = temp.groupby(['natural14','riparian', 'HUC_12'], as_index = False).count()
+                ctemp14 = temp.groupby(['natural14','riparian', 'catch_code'], as_index = False).count()
                 ctemp14huc = temp.groupby(['natural14'], as_index = False).count()
                 
                 #Create a dataframe for 2030 grouped on the natural and riparian flag
@@ -2339,7 +2339,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                 if row['cwhr_id'] not in suit_dict.keys():
                     suit_dict[row['cwhr_id']] = {}
                 else:
-                    suit_dict[row['cwhr_id']][row['whr13_code']] = row[ubrv + 'bitat_suitability']
+                    suit_dict[row['cwhr_id']][row['whr13_code']] = row['habitat_suitability']
             
             #This function adds the ufcode to each row based on the gridcode for 2014
             def initialize_uf_lu14(row):
@@ -2416,8 +2416,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                     deg= (pd.DataFrame.from_dict(new_dict, orient = 'index')['degraded'].sum()*mod)/tescount
                     imp = (pd.DataFrame.from_dict(new_dict, orient = 'index')['improved'].sum()*mod)/tescount
                 
-                summary_dict[guild + '_avg_deg_ha']=deg
-                summary_dict[guild + '_avg_imp_ha']=imp
+                summary_dict[guild + '_avg_deg_' + ubrv]=deg
+                summary_dict[guild + '_avg_imp_' + ubrv]=imp
                 
                 
             a = td.groupby(['rid', gridcode, gridcode2], as_index = False).count()
@@ -2497,26 +2497,26 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
 
     
     #Run all of the reporting functions
-    socresilience(df,outpath)
-    eco_res(df,outpath)
-    fmmp(df,outpath)
-    fema(df,outpath)
-    scenic(df,outpath)
-    wateruse(df,outpath)
-    lcchange(df,outpath)
-    pcalcchange(df,outpath)
-    termovement(df,outpath)
-    cropvalue(df,outpath)
-    groundwater(df,outpath)
-    nitrates(df,outpath)
-    airpol(df,outpath)
+#    socresilience(df,outpath)
+#    eco_res(df,outpath)
+#    fmmp(df,outpath)
+#    fema(df,outpath)
+#    scenic(df,outpath)
+#    wateruse(df,outpath)
+#    lcchange(df,outpath)
+#    pcalcchange(df,outpath)
+#    termovement(df,outpath)
+#    cropvalue(df,outpath)
+#    groundwater(df,outpath)
+#    nitrates(df,outpath)
+#    airpol(df,outpath)
     if cproc == 0:
         watershedintegrity(df,outpath)
-    else:
-        pass
-    aqua(df,outpath)
-    if terflag == 1:
-        thab_func(df,outpath, lupath) 
+#    else:
+#        pass
+#    aqua(df,outpath)
+#    if terflag == 1:
+#        thab_func(df,outpath, lupath) 
     
 def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm = 0, ug = 0, logfile = 'None'):
     """
@@ -3064,7 +3064,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     if cd == 1:
         temp['trt_cust_total'] = temp['carbon_trt_cust']
     
-    
+    #Add carbon to treatment to calculate total carbon change fields
     for i in collist:
         temp['trt_med_total'] = temp[i] + temp['trt_med_total']
         temp['trt_max_total'] = temp[i] + temp['trt_max_total']
@@ -3074,6 +3074,8 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
     temp = Helpers.reorder_dataframe_fields(temp)
 
+
+    
     Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'carbon' + '.csv')
     temp = temp.loc[temp['landcover'] != '0']
     temp.to_csv(outpath+'carbon.csv', index = False)  
@@ -3166,16 +3168,18 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         agg_bau = (n2o_base + ch4_base)-carbon_bau_ann
         agg_trt = (n2o_trt + ch4_trt)-carbon_trt_ann
         
-        
-        total = pd.DataFrame([['CO2e Equivalents',carb_diff,'CO2e Equivalents',ch4_diff,'CO2e Equivalents',n2o_diff]], columns = ['Carbon','CO2e Reductions','CH4','CH4 Reductions','N2O','N2O Reductions'])
+        #Create the 3 dataframes for output to CSV
+        total = pd.DataFrame([['CO2e Equivalents',carb_diff,ch4_diff,n2o_diff]], columns = ['Source','CO2e Reductions','CH4 Reductions','N2O Reductions'])
         
         annual = pd.DataFrame([['N2O',n2o_base,n2o_trt],['CH4',ch4_base,ch4_trt],['CO2e',carbon_bau_ann,carbon_trt_ann]], columns = ['Source','2030 Baseline','2030 Treatment'])
 
         annual_agg =pd.DataFrame([['CO2e',agg_bau,agg_trt]], columns = ['Source','2030 Baseline','2030 Treatment'])
         
+        
+        #Write out the three dataframes
         total.to_csv(outpath+'total_reductions.csv', index = False)
         annual_agg.to_csv(outpath+'annual_emissions_aggregate.csv', index = False)
-        annual.to_csv(outpath+'annual_emissions.csv', index = False)
+        annual.to_csv(outpath+'ann_emissions_and_CStock_Change.csv', index = False)
             
     emissions()
     
@@ -3187,10 +3191,14 @@ def report_acres(ttable,df, activitylist, outpath, acdict = 'None', logfile = 'N
     activitylist: List of activities selected from the main program module
     
     """
+    
+    #Lookup table to turn the abbreviated name into a complete activity name
     ludict = {'ac_wet_arc':'Wetland to Annual Cropland','ac_gra_arc':'Grassland to Annual Cropland','ac_irr_arc':'Irrigated Pasture to Annual Cropland','ac_orc_arc': 'Orchard to Annual Cropland','ac_arc_urb':'Annual Cropland to Urban','ac_gra_urb':'Grassland to Urban','ac_irr_urb':'Irrigated Pasture to Urban','ac_orc_urb':'Orchard to Urban','ac_arc_orc':'Annual Cropland to Orchard','ac_gra_orc':'Grassland to Orchard','ac_irr_orc':'Irrigated Pasture to Orchard','ac_vin_orc':'Vineyard to Orchard','ac_arc_irr':'Annual Cropland to Irrigated Pasture','ac_orc_irr':'Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Restoration','ccr':'Cover Crops','mul':'Mulching','nfm':'Improved Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Native Grassland Restoration','cam':'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments','cag':'Compost Application to Non-irrigated Grasslands'}
     import Helpers
     import pandas as pd
     acredict= {}
+    
+    
     #Go through each activity selected and calculate acres adopted.
     if activitylist:
         for i in activitylist:
@@ -3205,28 +3213,13 @@ def report_acres(ttable,df, activitylist, outpath, acdict = 'None', logfile = 'N
             
             
             acredict[i] = temp
-            
-    # Loop through avoided conversions and add 
-#    if acdict != 'None':
-#        aclist = list(acdict.keys())
-#        for i in aclist:
-#            
-#            Helpers.pmes ('Reporting total acres for : ' + i + ', AKA - ' + ludict[i])
-#            temp = df.loc[(df[i+'selected'].isin([1,11,111,1111]))]
-#
-#            
-#            temp[i+'selected'] = 1
-#            temp = temp.groupby([i + 'selected'], as_index = False).count()
-#            temp = temp [[i + 'selected', 'pointid']]
-#            temp['pointid'] = temp['pointid'] * 0.222395
-#            temp = temp[['pointid']]
-#            v = temp['pointid'].sum()
-#            ttable.loc[ttable['Activity'] == ludict[i], 'Acres Selected'] = v
+
 
              
     tlist = list(acredict.values())
     Helpers.pmes(tlist)
     
+    #If activities were chosen, append the dataframes and write the output csv.
     if tlist:
         temp = tlist[0]
     
@@ -3322,6 +3315,8 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
         
         #Calculate the total avoided emissions for each avoided conversion
         for i in aclist:
+            
+            #Set emissions and carbon values to 0
             v = 0
             n2o = 0
             ch4 = 0
@@ -3329,6 +3324,8 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
 
             n2o_reductions = 0
             ch4_reductions = 0
+            
+            #Calculate emissions reductions from landcover change
             n2o2 = em['n2o_emissions_'+i+'_bau'].sum()*-1
             ch42 = em['ch4_emissions_'+i+'_bau'].sum()*-1
             
@@ -3344,7 +3341,7 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
                 ch4_reductions = ch4_reductions + (n*ch4215)
             ch4 = ch4_reductions
 
-            
+            #Calculate the field values for each activity used in the run
             ttable.loc[ttable['Activity'] == ludict[i], 'Total CO2e Reduction'] = v
             ttable.loc[ttable['Activity'] == ludict[i], 'Total N2O Reductions'] = n2o
             ttable.loc[ttable['Activity'] == ludict[i], 'Total CH4 Reductions'] = ch4
