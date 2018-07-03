@@ -2497,26 +2497,26 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
 
     
     #Run all of the reporting functions
-#    socresilience(df,outpath)
-#    eco_res(df,outpath)
-#    fmmp(df,outpath)
-#    fema(df,outpath)
-#    scenic(df,outpath)
-#    wateruse(df,outpath)
-#    lcchange(df,outpath)
-#    pcalcchange(df,outpath)
-#    termovement(df,outpath)
-#    cropvalue(df,outpath)
-#    groundwater(df,outpath)
-#    nitrates(df,outpath)
-#    airpol(df,outpath)
+    socresilience(df,outpath)
+    eco_res(df,outpath)
+    fmmp(df,outpath)
+    fema(df,outpath)
+    scenic(df,outpath)
+    wateruse(df,outpath)
+    lcchange(df,outpath)
+    pcalcchange(df,outpath)
+    termovement(df,outpath)
+    cropvalue(df,outpath)
+    groundwater(df,outpath)
+    nitrates(df,outpath)
+    airpol(df,outpath)
     if cproc == 0:
         watershedintegrity(df,outpath)
-#    else:
-#        pass
-#    aqua(df,outpath)
-#    if terflag == 1:
-#        thab_func(df,outpath, lupath) 
+    else:
+        pass
+    aqua(df,outpath)
+    if terflag == 1:
+        thab_func(df,outpath, lupath) 
     
 def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm = 0, ug = 0, logfile = 'None'):
     """
@@ -2785,16 +2785,7 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
             temp = pd.merge(temp,tlist[count],on = 'landcover', how = 'outer' )
             count = count + 1
     temp.fillna(0, inplace = True)
-#    
-#    
-#
-#    temp['trt_bau_total'] = temp['carbon_trt_bau']
-#    temp['trt_med_total'] = temp['carbon_trt_med']
-#    temp['trt_max_total'] = temp['carbon_trt_max']
-#    if cd == 1:
-#        temp['trt_cust_total'] = temp['carbon_trt_cust']
-#    
-    
+
     temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
     temp = Helpers.reorder_dataframe_fields(temp)
 
