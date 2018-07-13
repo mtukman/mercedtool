@@ -11,7 +11,7 @@ Created on Thu Feb 22 08:58:23 2018
 
 
 #def report(outpath, df):
-def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0, gra = 0, cproc = 0, terflag = 0, ug = 0, ucc = 0, logfile = 'none', units = 'Acres'):
+def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdict = 'None', oak = 0, rre = 0, cd = 0 , cm = 0, gra = 0, cproc = 0, terflag = 0, ug = 0, ucc = 0, logfile = 'none', units = 'Acres', watflag = 1):
     
     """
     This function reports on the multi-benefits. 
@@ -2041,7 +2041,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             #Export the merged reporting dataframe to a csv
             temp.to_csv(outpath+y+'_airpollute.csv', index = False)
     
-
+    
     def watershedintegrity(df, outpath):
         """
         This function reports on changes in watershed integrity based on landcover change.
@@ -2293,14 +2293,14 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             
             #Select the fields needed for the analysis
             if name in ['base', 'dev','cons', 'trt']:
-                        td = df[['LC2014','pointid', 'rid', gridcode2,gridcode, field]]
-                        td.loc[(td[gridcode] == 14), gridcode] = 3
-                        td.loc[(td[gridcode] == 15), gridcode] = 5
-                        td.loc[(td[gridcode2] == 14), gridcode2] = 3
-                        td.loc[(td[gridcode2] == 15), gridcode2] = 5
-                        
-                        
-                        td = td.loc[td['LC2014'] != td[field]]
+                td = df[['LC2014','pointid', 'rid', gridcode2,gridcode, field]]
+                td.loc[(td[gridcode] == 14), gridcode] = 3
+                td.loc[(td[gridcode] == 15), gridcode] = 5
+                td.loc[(td[gridcode2] == 14), gridcode2] = 3
+                td.loc[(td[gridcode2] == 15), gridcode2] = 5
+                
+                
+                td = td.loc[td['LC2014'] != td[field]]
                         
             else:
                 td = df[[gridcode2,'pointid', 'rid',gridcode,'LC2030_bau','LC2030_trt_bau']]
@@ -2320,7 +2320,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             bcount = 0
             acount = 0
             tcount = 0
-            countdict = {'m':mcount, 'b':bcount,'a':acount,'t':tcount,}
+            countdict = {'m':mcount, 'b':bcount,'a':acount,'t':tcount}
                 
             specieslist = []
             
@@ -2474,7 +2474,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                 elif x == 'urb':
                     pass
                 else:
-                    subfunc(x, 'LC2030_trt_bau', 'bau', dfdict[x],'gridcode30_trt_bau', 'gridcode30_bau')
+                    subfunc(x, 'LC2030_trt_bau', 'bau', dfdict[x],'gridcode30_trt_bau', 'gridcode14')
         
         tlist = list(thab_dict.values())
         l = len(tlist)
@@ -2511,7 +2511,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
     nitrates(df,outpath)
     airpol(df,outpath)
     if cproc == 0:
-        watershedintegrity(df,outpath)
+        if watflag ==1:
+            watershedintegrity(df,outpath)
     else:
         pass
     aqua(df,outpath)
@@ -2658,7 +2659,6 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
         if name == 'base':
             temp = pd.merge(td,c30, how = 'left', left_on = 'LC2030_'+ dev, right_on = 'landcover')
             lct = temp.groupby(['LC2030_'+ dev], as_index = False).sum()
-            lct.to_csv('P:/Temp/thisisstupid.csv')
             lct = lct[['LC2030_'+ dev, comp + '_em_rate_pix30']]
             lct = lct.rename(columns = {'LC2030_'+ dev:'landcover',comp + '_em_rate_pix30':comp + '_emissions_' + name +'_'+ dev})
             intdict[name +'_'+ dev + comp] = lct
@@ -3180,7 +3180,6 @@ def report_acres(ttable,df, activitylist, outpath, acdict = 'None', logfile = 'N
     df: The dataframe, passed from the main program
     outpath: The folder to which reporting csvs will be exported
     activitylist: List of activities selected from the main program module
-    
     """
     
     #Lookup table to turn the abbreviated name into a complete activity name
@@ -3191,15 +3190,15 @@ def report_acres(ttable,df, activitylist, outpath, acdict = 'None', logfile = 'N
     
     
     #Go through each activity selected and calculate acres adopted.
-    if activitylist:
+    if activitylist: 
         for i in activitylist:
-            temp = df.loc[df[i + 'selected'] == 1]
-            temp = temp.groupby([i + 'selected'], as_index = False).count()
-            temp = temp [[i + 'selected', 'pointid']]
-            temp['pointid'] = temp['pointid'] * 0.222395
-            temp = temp[['pointid']]
-            v = temp['pointid'].sum()
-            temp = temp.rename(columns = {'pointid':i + '_acres'})
+            temp = df.loc[df[i + 'selected'] == 1] #Create a dataframe with the selected pixels
+            temp = temp.groupby([i + 'selected'], as_index = False).count() #Get a count of the number of pixels
+            temp = temp [[i + 'selected', 'pointid']] #Select only the required fields
+            temp['pointid'] = temp['pointid'] * 0.222395 #Convert the number of pixels to number of acres
+            temp = temp[['pointid']] #Get only the count field
+            v = temp['pointid'].sum() #Sum up the acres
+            temp = temp.rename(columns = {'pointid':ludict[i]}) #Rename the field to activity_acres
             ttable.loc[ttable['Activity'] == ludict[i], 'Acres Selected'] = v
             
             
@@ -3208,7 +3207,6 @@ def report_acres(ttable,df, activitylist, outpath, acdict = 'None', logfile = 'N
 
              
     tlist = list(acredict.values())
-    Helpers.pmes(tlist)
     
     #If activities were chosen, append the dataframes and write the output csv.
     if tlist:
@@ -3216,10 +3214,12 @@ def report_acres(ttable,df, activitylist, outpath, acdict = 'None', logfile = 'N
     
         
         Helpers.pmes('Combining Dataframes')
-        result = pd.concat(tlist, axis=1)
+        result = pd.concat(tlist, axis=1) #Concatenate the list of dataframes
+        result['Reporting Units'] = 'Acres'
         result = result.loc[:, ~result.columns.str.contains('^Unnamed')]    
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'act_acres' + '.csv')
         result.to_csv(outpath+'act_acres.csv', index = False)  
+        
     return ttable
 
 
@@ -3249,6 +3249,7 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
         
         if not os.path.exists(outpath + 'emissions_reductions.csv'):
             Helpers.add_to_logfile(logfile,'No emissions reductions from activities')
+            df3 = 'None'
         else:
             df3 = pd.read_csv(outpath + 'emissions_reductions.csv')
         df2 = pd.read_csv(outpath + 'carbon.csv')
@@ -3263,12 +3264,12 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
             v = 0
             n2o = 0
             ch4 = 0
-            v = df2['carbon_'+i].sum()
+            if 'carbon'+i in df2:
+                v = df2['carbon_'+i].sum()
             Helpers.pmes ('Carbon change is : ' + str(v))
             if i == 'rre':
                 n2o_reductions = 0
                 ch4_reductions = 0
-                Helpers.pmes(str(em['n2o_emissions_'+i].sum()))
                 
                 #Calculate 
                 n2o2 = em['n2o_emissions_'+i].sum()*-1
@@ -3277,7 +3278,6 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
                 #Get annual change of annual n2o emissions rate
                 n2o15 = n2o2/15
                 
-                Helpers.pmes(str(n2o15))
                 
                 #Accumulate n2o
                 for n in years:
@@ -3294,9 +3294,11 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
                 
             #If the activity has an n2o trt component, get the n2o reduction value
             if i in ['nfm','hpl','mma','cam','mma','ccr']:
-                n2o1 = df3[i+'_er'].sum()
                 
-                n2o = n2o1
+                if df3 != 'None':
+                    n2o1 = df3[i+'_er'].sum()
+                    
+                    n2o = n2o1
             
             #Write the reduction values to the table
             ttable.loc[ttable['Activity'] == ludict[i], 'Total CO2e Reduction'] = str(v)

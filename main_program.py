@@ -370,10 +370,10 @@ cover30 = Generic.lut_cover30
 
 
 
-if arcpy.GetParameterAsText(67) == 'Acres':
+if arcpy.GetParameterAsText(68) == 'Acres':
     units = 'Acres'
 
-if arcpy.GetParameterAsText(67) == 'Hectares':
+if arcpy.GetParameterAsText(68) == 'Hectares':
     units = 'Hectares'
 
 
@@ -385,10 +385,23 @@ if arcpy.GetParameterAsText(44):
 else:
     treatmask = 'None'
     
-if arcpy.GetParameterAsText(63) != '':
-    terflag = 1
-else:
+if arcpy.GetParameterAsText(63) == 'false':
     terflag = 0
+    Helpers.pmes('Terrestrial Habitat reporting is turned off')
+
+else:
+    terflag = 1
+    Helpers.pmes('Terrestrial Habitat reporting is turned on')
+
+    
+if arcpy.GetParameterAsText(64) == 'false':
+    watflag = 0
+    Helpers.pmes('Watershed Integrity reporting is turned off')
+
+else:
+    watflag = 1
+    Helpers.pmes('Watershed Integrity reporting is turned on')
+
 
 
 
@@ -402,27 +415,21 @@ else:
     ucc = .102
 
 #Check if suitability requirements are wanted
-if arcpy.GetParameterAsText(64) == '':
-    suitreq = 1
-    Helpers.pmes('Suitability requirements in effect')
-else:
-    suitreq = 0
-    Helpers.pmes('Suitability requirements bypassed')
     
     
-if arcpy.GetParameterAsText(64) == 'Yes':
-    plotlykey = arcpy.GetParameterAsText(65)
+if arcpy.GetParameterAsText(65) == 'Yes':
+    plotlykey = arcpy.GetParameterAsText(66)
 else:
     plotlykey = 'None'
     
-if arcpy.GetParameterAsText(64) == 'Yes':
-    username = arcpy.GetParameterAsText(66)
+if arcpy.GetParameterAsText(65) == 'Yes':
+    username = arcpy.GetParameterAsText(67)
 else:
     username = 'None'
  
 #check for plotly package and check plotyly creds
 import imp
-if (username != "None") and (arcpy.GetParameterAsText(64) == 'Yes'):
+if (username != "None") and (arcpy.GetParameterAsText(65) == 'Yes'):
     try:
         imp.find_module('plotly')
         found = True
@@ -444,24 +451,24 @@ import ActivityApplication
 import ApplyActions
 import Reporting
 
-total_table.to_csv('P:/Temp/testtable.csv')
 #Run each module
 initout = Initial.DoInitial(mask, cproc, dev, devmask, Generic.Carbon2001, Generic.Carbon2014, Generic.Carbon2030, Generic.valuetables, Generic.neartabs, Generic.Points, Generic.tempgdb, Generic.scratch, cm, conmask, treatmask)
 
 
 Helpers.pmes('**FINISHED WITH INITIALIZATION MODULE, ENTERING ACTIVITY APPLICATION MODULE...***')
-
 outdf = ActivityApplication.DoActivities(total_table,initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug)
+
+
 Helpers.pmes('**FINISHED WITH ACTIVITY APPLICATION MODULE, ENTERING CARBON ACCOUNTING MODULE...')
 templist = ApplyActions.ApplyGHG(outdf[0],activitylist, Generic.dict_activity, trt, ug, logfile, dev)
 
-
-Helpers.pmes("**CREATING MULTIBENEFIT REPORTS...**")
-Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc, logfile, units)
-Helpers.pmes("**CREATING CARBON REPORTS...**")
-
 #Use this line below for debugging purposes
 #templist[0].to_csv('P:/Temp/reviewer.csv')
+
+Helpers.pmes("**CREATING MULTIBENEFIT REPORTS...**")
+Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc, logfile, units, watflag)
+Helpers.pmes("**CREATING CARBON REPORTS...**")
+
 
 #Finish other Reports
 Reporting.emis_report(templist[0],outpath,activitylist,Generic.em14,Generic.em30, acdict,dev,cm, ug, logfile)
@@ -472,5 +479,4 @@ temptable = Reporting.report_acres(outdf[1],templist[0],activitylist,outpath, ac
 if plotlykey != 'None':
     import Create_Plots
     Create_Plots.Plots(outpath, acdict, activitylist, terflag,cproc,plotlykey, username, units)
-temptable.to_csv('P:/Temp/Test121212.csv')
 Reporting.emissions(temptable,outpath,activitylist,acdict, logfile)

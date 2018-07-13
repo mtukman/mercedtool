@@ -34,32 +34,40 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None',cd = 0):
     carb = {}
     carb2 = {}
     trt = pd.read_csv(trt)    
+    
     def UpdateValues (tempdf,activity,carb,carb2, dictact):
         Helpers.pmes('Updating Carbon For: ' + activity)
+        
         upact = activity.upper()
         
         #Create a dataframe from trt_reductions for the activity
         temptrt = trt.loc[trt['Activity'] == upact]
-        actcount = tempdf.groupby('LC2030_trt_bau').sum()[activity+'selected']
-        actcount2 = actcount.to_frame()
+        actcount = tempdf.groupby('LC2030_trt_bau', as_index = False).sum()
+        
+#        actdict = dict(zip(actcount.LC2030_trt_bau,actcount.activity+'selected'))
+        actdict = actcount.set_index('LC2030_trt_bau')[activity+'selected'].to_dict()
+#        actcount2 = actcount.to_frame()
         #Convert Landcover and reduction rates to their own lists
-        dfList = temptrt['Landcover'].tolist()
-        dfList2 = temptrt['co2_rate'].tolist() #CHANGE TO CO2 FIELD
+#        dfList = temptrt['Landcover'].tolist()
+        dfdict = dict(zip(temptrt.Landcover, temptrt.co2_rate))
+        
+        
         counter1 = 0
         maxyrs = 2031 - dictact[activity]['adoptyear'] #Max number of years an activity can run between 2014 and 2030 (counting the year 2030)
         fulladoptyrs = (11-dictact[activity]['years']) #How many years an ag activity can run at full capativity between growth and decay
         # Loop through landcovers for the activity and calculate and sum up carbon
         tempix = 0
-        for i in dfList:
-            if i in actcount:
+        dlist = list(dfdict.keys())
+        for i in dlist:
+            if i in actdict:
                 carb1 = 0
                 tempix = 0
-                pixels = actcount2.at[i,activity+'selected'] #Get the number of selected pixers for the activity/landcover combination
+                pixels = actdict[i] #Get the number of selected pixers for the activity/landcover combination
                 #If there are selected pixels, do the carbon reduction loop
                 if pixels > 0:
                     anngrowth = pixels/dictact[activity]['years']
                     
-                    redrate = dfList2[counter1] #Get the carbon reduction rate that corresponds to the activity/landcover
+                    redrate = dfdict[i] #Get the carbon reduction rate that corresponds to the activity/landcover
                     counter2 = 0
                     
                     #Do the first years of activity growth 
@@ -97,6 +105,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None',cd = 0):
                     
                     
             counter1 = counter1 + 1 
+            Helpers.pmes('Total selected pixels = ' + str(tempix))
             if tempix > 0:
                 tempdf[activity +'_carbred'] = tempdf[activity+'selected']*(carb1/pixels)
                 
@@ -198,26 +207,6 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None',cd = 0):
 
         
     return (tempdf,carb,carb2)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

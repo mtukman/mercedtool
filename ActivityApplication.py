@@ -5,7 +5,7 @@ import Helpers
 global dict_eligibility
 
 
-def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'None',customdev = 0, ug = 0, sflag = 0):
+def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'None',customdev = 0, ug = 0):
     ''' This function takes the activities selected by the user, finds suitable pixels and randomly selects pixels for the activity based on spatial attributes until the desired amount of pixels have been selected.
     
     df: The dataframe fom the initial module
@@ -26,7 +26,7 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
     urb - URBAN FORESTRY
     '''
 
-    Helpers.add_to_logfile2(logfile, 'Now selecting points for activities and avoided conversion','------------------------------------------------------------------------------------')
+    Helpers.add_to_logfile2(logfile, 'Now selecting points for activities and avoided conversion with suitability requirements','------------------------------------------------------------------------------------')
     #Create a dictionary of eligibility,this will inform the tool as to how many points need to be selected and will be populated as the tool progresses
     dict_eligibility = {}
 
@@ -59,7 +59,7 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
         
         
         #Set the query that will define suitability
-        dictact['rre']['query'] = (df['LC2030_trt_bau'].isin(['Grassland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (df['lcchange'] == 1) & ((df['near_rivers'] < 304.8) | ((df['ripstr_dist'] < 30.48) & (df['ripstr_flag'] == 1))) & (df['near_woody'] != 0) & queryadd #Units are in meters for distance requirements
+        dictact['rre']['query'] = (df['LC2030_trt_bau'].isin(['Grassland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (df['lcchange'] == 1) & ((df['near_rivers'] < 304.8) | ((df['ripstr_dist'] < 30.48) & (df['ripstr_flag'] == 1))) & (df['near_woody'] != 0) & queryadd #Units are in meters for distance requirements(df['trt_flag'] == 1)#
         Helpers.CreateSuitFlags('rre',df,dictact,'rre')
 #        Helpers.CreateEligDict(df, 'rre', dictact,dict_eligibility, 'rre')
         
@@ -341,14 +341,7 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
     
     
     
-    return [df,ttable]
-
-
-
-
-
-
-
+    return [df,ttable]                                              
 
 
 

@@ -489,14 +489,17 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
                 if os.path.exists(afolder + '/terrhab.csv'):
                     df2 = pd.read_csv(afolder + 'terrhab.csv')
                     df = pd.read_csv(afolder + 'terrhab.csv')
-                    df2 = df2[['guild',ubrv + '_base_bau']]
-                    df2 = df2.rename(columns = {'guild': 'Guild',ubrv + '_base_bau':'Reference Scenario'})
+                    if ubrv + 'base_bau' in df2:
+                        df2 = df2[['guild',ubrv + '_base_bau']]
+                        df2 = df2.rename(columns = {'guild': 'Guild',ubrv + '_base_bau':'Reference Scenario'})
+                        
                     df = df[['guild',ubrv + '_trt_bau']]
                     df = df.rename(columns = {'guild': 'Guild', ubrv + '_trt_bau':'Treatment Scenario'})
                     
-                    
-                    temp = pd.merge(df2, df, on = 'Guild', how = 'left')
-                    
+                    if 'Reference Scenario' in df2:
+                        temp = pd.merge(df2, df, on = 'Guild', how = 'left')
+                    else:
+                        temp = df
                     
                     temp.loc[temp['Guild'] == 'mammals_avg_deg_ha', 'Guild'] = 'Mammal Degraded'
                     temp.loc[temp['Guild'] == 'mammals_avg_imp_ha', 'Guild'] = 'Mammal Improved'
@@ -584,9 +587,11 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             test = test[1:]
             test.reset_index(inplace = True)
             test.rename(columns = {'index':'Activity'}, inplace = True)
-            print (test)
-            test.sort_values(by='Tons of CO2e Reduced', ascending=1)
-            test.to_csv(outfolder+'Carbon Reductions.csv', index = False)
+            
+            if 'Tons of CO2e Reduced' in test:
+                test.sort_values(by='Tons of CO2e Reduced', ascending=1)
+                test.to_csv(outfolder+'Carbon Reductions.csv', index = False)
+
             
             
             
@@ -882,8 +887,13 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         mba_twotrace(tables + "/2030 Priority Conservation Areas.csv", '2014-2030 Change in Landcover in Priority Conservation Areas', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Priority Conservation Areas.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
     
         mba_twotrace(tables + "/2030 Natural Habitat Area.csv", '2014-2030 Change in Landcover', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Natural Habitat Area.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
+        
+        
         if thabflag == 1:
-            mba_twotrace(tables + "/2030 Terrestrial Habitat Value.csv", '2014-2030 Change in Terrestrial Habitat Value', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Guild', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Terrestrial Habitat Value.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 13)
+            import pandas as pd
+            tempdf = pd.read_csv(tables + "/2030 Terrestrial Habitat Value.csv")
+            if 'Reference Scenario' in tempdf: #Check if the fields are there
+                mba_twotrace(tables + "/2030 Terrestrial Habitat Value.csv", '2014-2030 Change in Terrestrial Habitat Value', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Guild', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Terrestrial Habitat Value.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 13)
         
     
         mba_twotrace(tables + "/2030 Aquatic Biodiversity.csv", '2014-2030 Landcover Change in Watersheds with <br>Important Aquatic Habitat', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Aquatic Biodiversity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
@@ -894,13 +904,14 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         mba_twotrace(tables + "/2030 ecoresilience_table.csv", '2014-2030 Landcover Change in Areas Important <br>For Natural Resilience', xax = 'holder', yax = 'holder', ytitle = units, x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Natural Resilience.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 13)
         
         import pandas as pd
+        import os
+        if os.path.exists(tables + "/Carbon Reductions.csv"):
+            df = pd.read_csv(tables + "/Carbon Reductions.csv")
+            for key in ludict:
+                df.loc[df['Activity'] ==  'carbon_' + key, 'Activity'] = ludict[key]
+            df.to_csv(tables + "/Carbon Reductions.csv")
         
-        df = pd.read_csv(tables + "/Carbon Reductions.csv")
-        for key in ludict:
-            df.loc[df['Activity'] ==  'carbon_' + key, 'Activity'] = ludict[key]
-        df.to_csv(tables + "/Carbon Reductions.csv")
-        
-        mba_chart_onetrace(tables + "/Carbon Reductions.csv", '2030 Carbon Reductions from Activities', yax = 'Tons of CO2e', x = 'Activity',y = 'Tons of CO2e Reduced', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions.png", xtit = '', xfont = 12)
+            mba_chart_onetrace(tables + "/Carbon Reductions.csv", '2030 Carbon Reductions from Activities', yax = 'Tons of CO2e', x = 'Activity',y = 'Tons of CO2e Reduced', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions.png", xtit = '', xfont = 12)
         
         mba_chart_onetrace(tables + "/Carbon Reductions Compare.csv", '2014-2030 Carbon Reduction Change', yax = 'Tons of CO2e', x = 'Scenario',y = 'Tons of CO2e', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions Compare.png", xtit = '', xfont = 12)
         
@@ -913,7 +924,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(tables + "/act_acres.csv")
         
         
-            mba_chart_onetrace(tables + "/act_acres.csv", 'Activities and Acres', yax = 'Acres Selected', x = 'Activity',y = units, yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "Activity Acres Selected.png", xtit = '', xfont = 11)
+            mba_chart_onetrace(tables + "/act_acres.csv", 'Acres Selected by Activity', yax = 'Acres Selected', x = 'Activity',y = units, yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "Activity Acres Selected.png", xtit = '', xfont = 11)
         
         mba_twotrace(tables + "/2030 Water Quality - Nitrate Runoff.csv", '2014-2030 Change in Nitrate Runoff', xax = 'holder', yax = 'holder',   ytitle = 'Tons of Nitrate', x1 = 'Scenario', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Water Quality - Nitrate Runoff.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
         

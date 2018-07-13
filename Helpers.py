@@ -69,7 +69,6 @@ def selectionfunc (ttable,dict_eligibility,df, activity,dictact, act, logfile, a
     """
     ludict2 = {'ac_wet_arc':'Wetland to Annual Cropland','ac_gra_arc':'Grassland to Annual Cropland','ac_irr_arc':'Irrigated Pasture to Annual Cropland','ac_orc_arc': 'Orchard to Annual Cropland','ac_arc_urb':'Annual Cropland to Urban','ac_gra_urb':'Grassland to Urban','ac_irr_urb':'Irrigated Pasture to Urban','ac_orc_urb':'Orchard to Urban','ac_arc_orc':'Annual Cropland to Orchard','ac_gra_orc':'Grassland to Orchard','ac_irr_orc':'Irrigated Pasture to Orchard','ac_vin_orc':'Vineyard to Orchard','ac_arc_irr':'Annual Cropland to Irrigated Pasture','ac_orc_irr':'Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Restoration','ccr':'Cover Crops','mul':'Mulching','nfm':'Improved Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Native Grassland Restoration','cam':'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments','cag':'Compost Application to Non-irrigated Grasslands'}
     pmes('Selecting points for: ' + activity + ', ' + dev)
-    import arcpy
     #Create a temporary dictionary of the activity's dictionary from the eligibility dict
     goal = 0
 
@@ -77,7 +76,6 @@ def selectionfunc (ttable,dict_eligibility,df, activity,dictact, act, logfile, a
     
     #Multiply the adoption goal to convert from acres to points
     goal1 = float(dictact[activity]['adoption']) * 4.49555  #update to link to user defined acres for final tool
-    goal2 = goal
     
     #Use either the cap or the user defined goal, depending on number of points available
 
@@ -87,14 +85,13 @@ def selectionfunc (ttable,dict_eligibility,df, activity,dictact, act, logfile, a
     
     #Define fields
     pmes ('Goal is : ' + str (goal))
-    pmes ('Cap is : ' + str (goal2))
     initflag =  act + 'suitflag'
     selflag = act + 'selected'
     
     
     def select(groupsize, count):
         #Group pixels by their medium group value (medium grid)
-        tempdf = df.groupby('medgroup_val').sum()[['pointid',initflag]]
+        tempdf = df.groupby(groupsize).sum()[['pointid',initflag]]
         
         suitable = df[initflag].sum()
         
@@ -115,7 +112,7 @@ def selectionfunc (ttable,dict_eligibility,df, activity,dictact, act, logfile, a
             else:
                 pass
         if aco != 'None':
-            add_to_logfile(logfile,ludict[aco] + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(suitable/4.495555))
+            add_to_logfile(logfile,ludict[aco] + ': user specified ' + str(goal1/4.49555) + ' acres, max suitable acres are ' + str(suitable/4.495555))
             query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
             add_to_logfile(logfile,ludict[aco] + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
             if dev == 'bau':
@@ -124,8 +121,8 @@ def selectionfunc (ttable,dict_eligibility,df, activity,dictact, act, logfile, a
             if dev == 'bau':
                 ttable.loc[ttable['Activity'] == ludict2[aco], 'Acres Selected'] = str(count/4.495555)
         else:
-            add_to_logfile(logfile,ludict[activity] + ' ' + dev + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(goal2/4.495555))
-            query = (df['medgroup_val'].isin(glist)) & (df[act + 'suitflag'] == 1)
+            add_to_logfile(logfile,ludict[activity] + ' ' + dev + ': user specified ' + str(goal1/4.49555) + ' acres, max eligible acres are ' + str(suitable/4.495555))
+            query = (df[groupsize].isin(glist)) & (df[act + 'suitflag'] == 1)
             add_to_logfile(logfile,ludict[activity] +  ' ' + dev + ': Pixels Selected: ' + str(count) + ', Acres Selected: ' + str(count/4.495555))
             df[selflag] = 0
             df.loc[query,selflag] = sflag
@@ -139,14 +136,18 @@ def selectionfunc (ttable,dict_eligibility,df, activity,dictact, act, logfile, a
 
                 
                 
-def CreateSuitFlags(activity,df,dictact, act):
+def CreateSuitFlags(activity,df,dictact, act, sflag = 1):
     '''Takes an activity name (a key from dict_activity) and uses
     that to calculate a 1/0 suitability flag for the activity 
     in the tabs_all_df dataframe'''
     initflag = act + 'suitflag'
     pmes ('Calculating Suitability for : ' + initflag)
     df[initflag] = 0
-    df.loc[dictact[activity]['query'], initflag] = 1
+    
+    if sflag == 0:
+        df[initflag] = 1
+    else:
+        df.loc[dictact[activity]['query'], initflag] = 1
 
 
 
