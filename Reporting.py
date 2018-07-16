@@ -2753,8 +2753,8 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
                 if 'cust' in i:
                     carbrepfull(dfdict[i],i, 'cust', 'LC2030_trt_cust',z)
             else:
-    
-                carbrepfull(dfdict[i],i, 'bau', 'LC2030_trt_bau',z)
+                if i != 'con':
+                    carbrepfull(dfdict[i],i, 'bau', 'LC2030_trt_bau',z)
 
             
     c14 = pd.read_csv(em14)
@@ -3215,7 +3215,6 @@ def report_acres(ttable,df, activitylist, outpath, acdict = 'None', logfile = 'N
         
         Helpers.pmes('Combining Dataframes')
         result = pd.concat(tlist, axis=1) #Concatenate the list of dataframes
-        result['Reporting Units'] = 'Acres'
         result = result.loc[:, ~result.columns.str.contains('^Unnamed')]    
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'act_acres' + '.csv')
         result.to_csv(outpath+'act_acres.csv', index = False)  
@@ -3246,10 +3245,10 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
         
         #look up dictionary to translate activity abbreviations to full names
         ludict = {'ac_wet_arc':'Wetland to Annual Cropland','ac_gra_arc':'Grassland to Annual Cropland','ac_irr_arc':'Irrigated Pasture to Annual Cropland','ac_orc_arc': 'Orchard to Annual Cropland','ac_arc_urb':'Annual Cropland to Urban','ac_gra_urb':'Grassland to Urban','ac_irr_urb':'Irrigated Pasture to Urban','ac_orc_urb':'Orchard to Urban','ac_arc_orc':'Annual Cropland to Orchard','ac_gra_orc':'Grassland to Orchard','ac_irr_orc':'Irrigated Pasture to Orchard','ac_vin_orc':'Vineyard to Orchard','ac_arc_irr':'Annual Cropland to Irrigated Pasture','ac_orc_irr':'Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Restoration','ccr':'Cover Crops','mul':'Mulching','nfm':'Improved Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Native Grassland Restoration','cam':'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments','cag':'Compost Application to Non-irrigated Grasslands'}
-        
+        holder1 = 'Yes'
         if not os.path.exists(outpath + 'emissions_reductions.csv'):
             Helpers.add_to_logfile(logfile,'No emissions reductions from activities')
-            df3 = 'None'
+            holder1 = 'None'
         else:
             df3 = pd.read_csv(outpath + 'emissions_reductions.csv')
         df2 = pd.read_csv(outpath + 'carbon.csv')
@@ -3295,7 +3294,7 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
             #If the activity has an n2o trt component, get the n2o reduction value
             if i in ['nfm','hpl','mma','cam','mma','ccr']:
                 
-                if df3 != 'None':
+                if holder1 != 'None':
                     n2o1 = df3[i+'_er'].sum()
                     
                     n2o = n2o1

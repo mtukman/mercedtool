@@ -1,4 +1,4 @@
-def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Acres'):
+def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Acres', watflag = 0):
     """
     This function takes the reports from the Reporting module and creates siplified tables and plots using the Plotly website.
     
@@ -288,7 +288,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             print (df)
             df.to_csv(outfolder+'2030 Groundwater Recharge.csv', index = False)
         
-
+        
         def watint2030():
             df2 = pd.read_csv(afolder + 'watint.csv')
             df = pd.read_csv(afolder + 'watint.csv')
@@ -630,7 +630,8 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         crop2030()
         watcon2030()
         if cproc == 0:
-            watint2030()
+            if watflag == 1:
+                watint2030()
         groundwater2030()
         nitrun2030()
         nitleach2030()
@@ -846,12 +847,12 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
     #    plot(fig, filename= plot_dict[mba]['title'] + '.html')
         py.image.save_as(fig, outfile, format='png')
         return fig
-    
-    #Create a function to make the plots
-    def custom_plots(afolder):
-        #Set the folder variables
-        tables = afolder + 'plot_tables'
-        outpath = afolder + 'plots/'
+        
+        #Create a function to make the plots
+        def custom_plots(afolder):
+            #Set the folder variables
+            tables = afolder + 'plot_tables'
+            outpath = afolder + 'plots/'
 
 
    
@@ -866,7 +867,8 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         
         
         if cproc == 0:
-            mba_twotrace(tables + "/2030 Watershed Integrity.csv", '2014-2030 Change in Watershed Integrity', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Watershed Class', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Watershed Integrity Riparian.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
+            if watflag == 1:
+                mba_twotrace(tables + "/2030 Watershed Integrity.csv", '2014-2030 Change in Watershed Integrity', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Watershed Class', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Watershed Integrity Riparian.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
     
         
         mba_twotrace(tables + "/2030 Flood Risk Reduction.csv", '2014-2030 Change in Landcover in 100 Year Floodplain', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'General Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Flood Risk Reduction.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
@@ -924,7 +926,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(tables + "/act_acres.csv")
         
         
-            mba_chart_onetrace(tables + "/act_acres.csv", 'Acres Selected by Activity', yax = 'Acres Selected', x = 'Activity',y = units, yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "Activity Acres Selected.png", xtit = '', xfont = 11)
+            mba_chart_onetrace(tables + "/act_acres.csv", 'Acres Selected by Activity', yax = 'Acres Selected', x = 'Activity',y = 'Acres', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "Activity Acres Selected.png", xtit = '', xfont = 11)
         
         mba_twotrace(tables + "/2030 Water Quality - Nitrate Runoff.csv", '2014-2030 Change in Nitrate Runoff', xax = 'holder', yax = 'holder',   ytitle = 'Tons of Nitrate', x1 = 'Scenario', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Water Quality - Nitrate Runoff.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
         

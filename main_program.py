@@ -478,5 +478,5 @@ temptable = Reporting.report_acres(outdf[1],templist[0],activitylist,outpath, ac
 
 if plotlykey != 'None':
     import Create_Plots
-    Create_Plots.Plots(outpath, acdict, activitylist, terflag,cproc,plotlykey, username, units)
+    Create_Plots.Plots(outpath, acdict, activitylist, terflag,cproc,plotlykey, username, units, watflag)
 Reporting.emissions(temptable,outpath,activitylist,acdict, logfile)
