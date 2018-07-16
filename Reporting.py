@@ -2320,7 +2320,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             bcount = 0
             acount = 0
             tcount = 0
-            countdict = {'m':mcount, 'b':bcount,'a':acount,'t':tcount}
+            rcount = 0
+            countdict = {'m':mcount, 'b':bcount,'a':acount, 'r':rcount,'t':tcount}
                 
             specieslist = []
             
@@ -2338,6 +2339,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             def initialize_suit_lu(row):
                 if row['cwhr_id'] not in suit_dict.keys():
                     suit_dict[row['cwhr_id']] = {}
+                    suit_dict[row['cwhr_id']][row['whr13_code']] = row['habitat_suitability']
                 else:
                     suit_dict[row['cwhr_id']][row['whr13_code']] = row['habitat_suitability']
             
@@ -2371,6 +2373,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                                 countdict['b'] = countdict['b'] + 1
                             elif 'a' in i:
                                 countdict['a'] = countdict['a'] + 1
+                            elif 'r' in i:
+                                countdict['r'] = countdict['r'] + 1
                         
                         #This section goes through each species in each rid/species combination, finds the suitability based on the landcover, and decides whether the suitability has improved or degraded.
                         if row[gridcode2] in uf_dict14.keys():
@@ -2443,7 +2447,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                 summarize('m', 'mammals')
                 summarize('b', 'birds')
                 summarize('a', 'amphibians')
+                summarize('r', 'reptiles')
                 summarize('t', 'tes')
+                
 
                 a = pd.DataFrame.from_dict(summary_dict, orient='index')
                 a.reset_index(inplace=True)

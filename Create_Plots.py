@@ -849,10 +849,10 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         return fig
         
         #Create a function to make the plots
-        def custom_plots(afolder):
-            #Set the folder variables
-            tables = afolder + 'plot_tables'
-            outpath = afolder + 'plots/'
+    def custom_plots(afolder):
+        #Set the folder variables
+        tables = afolder + 'plot_tables'
+        outpath = afolder + 'plots/'
 
 
    
