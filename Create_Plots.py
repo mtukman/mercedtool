@@ -220,7 +220,8 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         crop2014()
         watcon2014()
         if cproc == 0:
-            watint2014()
+            if watflag == 1:
+                watint2014()
         nitrun2014()
         nitleach2014()
         flood2014()

@@ -283,7 +283,7 @@ def countywide_reductions_AG(table_hr= r'E:/Box/Box Sync/Merced Project/Tool/out
     layout = {
   "autosize": True, 
   "hovermode": "closest", 
-  "showlegend": True, 
+  "showlegend": False, 
   "title": "2014-2030 Countywide GHG Reductions from Cover Cropping and Hedgerow Planting", 
         "titlefont": {
       "size": 16
@@ -1628,9 +1628,9 @@ def make_plots_AG():
 
     py.sign_in('mtukman', 'FbUYCv4tcjCPF2ZdfzKo')
 
-    boxpath = 'E:/Box/'
+    boxpath = 'E:/BoxSync/'
     countywide_reductions_AG(table_hr= os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/hedgerow_100/carbon.csv'),   table_cc=os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/cover_cropping_100/carbon.csv'), outfile = os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Burroughs/Countywide AG Reductions.png'))
-    reductions_AG(os.path.join(boxpath, r'Box Sync/Merced Project/Tool/Outputs/Burroughs/hpl_ccr_carbon.csv'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Burroughs/Case Study AG Reductions.png') )
+#    reductions_AG(os.path.join(boxpath, r'Box Sync/Merced Project/Tool/Outputs/Burroughs/hpl_ccr_carbon.csv'), os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Burroughs/Case Study AG Reductions.png') )
 
 
 def make_plot_all_reductions_all_activities():
