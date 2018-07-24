@@ -1,18 +1,18 @@
-# Terra Count
+# TerraCount
 
 ## Full Tool Guide
-The full tool guide (MS Word Document) for Terra County is available here:  http://carb.press/manual
+The full tool guide (MS Word Document) for TerraCount is available here:  http://carb.press/manual
 
 
 ## Files to Download 
 
-The Terra Count and its supporting data are available at:
+The TerraCount and its supporting data are available at:
 
-* Terra Count Python Scripts and Toolbox:
+* TerraCount Python Scripts and Toolbox:
 
 	https://github.com/mtukman/mercedtool
 
-* Terra Count Supporting Data:
+* TerraCount Supporting Data:
 
 	https://carb.press/master_data
   
@@ -26,7 +26,7 @@ To use the tool on your local computer, first make sure that you meet the follow
 
 ## Installing the Tool in ArcMap
 1.	Download the Github Repository and the supporting data from https://github.com/mtukman/mercedtool.  
-2.	Extract the contents of “mercedtool-master.zip” (which contains a folder called mercedtool-master) to a folder on your hard drive.  The extracted folder contains a number of python modules and an ArcGIS toolbox called Terra Count. Download and extract the Master_Data folder from https://carb.press/master_data to anywhere on your hard drive.
+2.	Extract the contents of “mercedtool-master.zip” (which contains a folder called mercedtool-master) to a folder on your hard drive.  The extracted folder contains a number of python modules and an ArcGIS toolbox called TerraCount. Download and extract the Master_Data folder from https://carb.press/master_data to anywhere on your hard drive.
 3.	Add the Merced Conservation Carbon Accounting Tool to the ArcMap Toolbox window within ArcMap.  To do this, right-click the Arc Toolbox folder and click 'Add Toolbox'.  Browse to the location containing the toolbox that you extracted above in step 1 and select the “Terra Count ArcMap 10_5” toolbox. After adding the toolbox, navigate to the tool’s properties and make sure the “Always run in foreground” box is NOT checked.
 4.	To have the tool automatically create charts and plots, you will need to have the Plotly package installed and to have a valid Plotly API key.  Install Plotly using your preferred package manager (or see step 5 below if you are unfamiliar with installing packages).  Obtain a Plotly API key by setting up a free Plotly account and generating a key in your user settings. 
 5. 	To install Plotly in ArcMap, try using pip from the command line. From a command prompt, navigate to the ‘Scripts’ folder of the 64-bit python that ArcMap uses.  Then install plotly (see below for an example of what this command looked like on our machine):
