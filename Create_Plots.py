@@ -490,7 +490,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
                 if os.path.exists(afolder + '/terrhab.csv'):
                     df2 = pd.read_csv(afolder + 'terrhab.csv')
                     df = pd.read_csv(afolder + 'terrhab.csv')
-                    if ubrv + 'base_bau' in df2:
+                    if ubrv + '_base_bau' in df2:
                         df2 = df2[['guild',ubrv + '_base_bau']]
                         df2 = df2.rename(columns = {'guild': 'Guild',ubrv + '_base_bau':'Reference Scenario'})
                         
@@ -595,12 +595,6 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
                 test.sort_values(by='Tons of CO2e Reduced', ascending=1)
                 test.to_csv(outfolder+'Carbon Reductions.csv', index = False)
 
-            
-            
-            
-            
-            
-        
         def carbon2():
             df = pd.read_csv(afolder + 'carbon.csv')
             df = df[['landcover','carbon_base_bau','trt_bau_total', 'carbon2014']]
@@ -917,7 +911,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
                 df.loc[df['Activity'] ==  'carbon_' + key, 'Activity'] = ludict[key]
             df.to_csv(tables + "/Carbon Reductions.csv")
         
-            mba_chart_onetrace(tables + "/Carbon Reductions.csv", '2030 Carbon Reductions from Activities', yax = 'Tons of CO2e', x = 'Activity',y = 'Tons of CO2e Reduced', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions.png", xtit = '', xfont = 12)
+            mba_chart_onetrace(tables + "/Carbon Reductions.csv", '2030 Carbon Stock Change from Activities', yax = 'Tons of CO2e', x = 'Activity',y = 'Tons of CO2e Reduced', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Stock Change.png", xtit = '', xfont = 12)
         
         mba_chart_onetrace(tables + "/Carbon Reductions Compare.csv", '2014-2030 Carbon Reduction Change', yax = 'Tons of CO2e', x = 'Scenario',y = 'Tons of CO2e', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions Compare.png", xtit = '', xfont = 12)
         

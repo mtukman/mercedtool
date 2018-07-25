@@ -3092,6 +3092,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         """
         import pandas as pd
         import os
+        
         #Import the tables needed
         em = pd.read_csv(outpath + 'emissions.csv')
         
@@ -3110,36 +3111,37 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         ch4_trt = em['ch4_emissions_trt_bau'].sum()
         n2o_2014 = em['n2o_emissions_2014'].sum()
         ch4_2014 = em['ch4_emissions_2014'].sum()
-        years = list(range(16))
+        years = list(range(18))
+        totyears = 17
         
         carbon_trt = df2['trt_bau_total'].sum() 
         carbon_bau = df2['carbon_base_bau'].sum()
         carbon_2014 = df2['carbon2014'].sum()
         n2o_reductions = 0
         
-        carbon_trt_ann = (carbon_trt - carbon_2014)/15
-        carbon_bau_ann = (carbon_bau - carbon_2014)/15
+        carbon_trt_ann = (carbon_trt - carbon_2014)/totyears
+        carbon_bau_ann = (carbon_bau - carbon_2014)/totyears
         
         if os.path.exists(outpath + 'emissions_reductions.csv'):
             if emlist2:
                 for i in emlist2:
                     n2o_reductions = df3[i].sum() + n2o_reductions
-                n2o_reductions2 = n2o_reductions/15
+                n2o_reductions2 = n2o_reductions/totyears
                 Helpers.pmes('N2O Reductions from TRT are: ' + str(n2o_reductions2))
                 Helpers.pmes('N2O Emissions from Landcover are: ' + str(n2o_trt))
 
             
         #Calculate 2014-2030 difference in annual emissions rates
-        n2o_change_bau = n2o_2014 - n2o_base 
-        n2o_change_trt = n2o_2014 - n2o_trt
-        ch4_change_bau = ch4_2014 - ch4_base
-        ch4_change_trt = ch4_2014 - ch4_trt
+        n2o_change_bau = n2o_base -n2o_2014
+        n2o_change_trt = n2o_trt-n2o_2014
+        ch4_change_bau = ch4_base-ch4_2014
+        ch4_change_trt = ch4_trt - ch4_2014
         
         #Calculated annual change in annual emission rate
-        n2o_change_bau_ann = n2o_change_bau/15
-        n2o_change_trt_ann = n2o_change_trt/15
-        ch4_change_bau_ann = ch4_change_bau/15
-        ch4_change_trt_ann = ch4_change_trt/15
+        n2o_change_bau_ann = n2o_change_bau/totyears
+        n2o_change_trt_ann = n2o_change_trt/totyears
+        ch4_change_bau_ann = ch4_change_bau/totyears
+        ch4_change_trt_ann = ch4_change_trt/totyears
         
         #Set empty total variables
         n2o_bau_tot = 0
@@ -3258,7 +3260,7 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
         else:
             df3 = pd.read_csv(outpath + 'emissions_reductions.csv')
         df2 = pd.read_csv(outpath + 'carbon.csv')
-        years = list(range(16))
+        years = list(range(18))
         
         aclist = list(acdict.keys())
         
@@ -3269,7 +3271,7 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
             v = 0
             n2o = 0
             ch4 = 0
-            if 'carbon'+i in df2:
+            if 'carbon_'+i in df2:
                 v = df2['carbon_'+i].sum()
             Helpers.pmes ('Carbon change is : ' + str(v))
             if i == 'rre':
@@ -3277,11 +3279,13 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
                 ch4_reductions = 0
                 
                 #Calculate 
+                Helpers.pmes(em['n2o_emissions_'+i].sum())
+                Helpers.pmes(em['ch4_emissions_'+i].sum())
                 n2o2 = em['n2o_emissions_'+i].sum()*-1
                 ch42 = em['ch4_emissions_'+i].sum()*-1
-                
+                Helpers.pmes(ch42)
                 #Get annual change of annual n2o emissions rate
-                n2o15 = n2o2/15
+                n2o15 = n2o2/17
                 
                 
                 #Accumulate n2o
@@ -3290,7 +3294,7 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
                 n2o = n2o_reductions
                 
                 #Get annual change of annual ch4 emissions rate
-                ch4215 = ch42/15
+                ch4215 = ch42/17
                 
                 #Accumulate ch4
                 for n in years:
@@ -3329,12 +3333,12 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
             
             
             #Accumulate avoided emissions
-            n2o15 = n2o2/15
+            n2o15 = n2o2/17
             for n in years:
                 n2o_reductions = n2o_reductions + (n*n2o15)
             n2o = n2o_reductions
             
-            ch4215 = ch42/15
+            ch4215 = ch42/17
             for n in years:
                 ch4_reductions = ch4_reductions + (n*ch4215)
             ch4 = ch4_reductions
