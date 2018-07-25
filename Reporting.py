@@ -2479,6 +2479,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                     pass
                 elif x == 'urb':
                     pass
+                elif 'ac' in x:
+                    pass
                 else:
                     subfunc(x, 'LC2030_trt_bau', 'bau', dfdict[x],'gridcode30_trt_bau', 'gridcode14')
         
@@ -2519,8 +2521,6 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
     if cproc == 0:
         if watflag ==1:
             watershedintegrity(df,outpath)
-    else:
-        pass
     aqua(df,outpath)
     if terflag == 1:
         thab_func(df,outpath, lupath) 

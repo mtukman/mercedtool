@@ -385,7 +385,7 @@ if arcpy.GetParameterAsText(44):
 else:
     treatmask = 'None'
     
-if arcpy.GetParameterAsText(63) == 'false':
+if arcpy.GetParameterAsText(63) == 'No':
     terflag = 0
     Helpers.pmes('Terrestrial Habitat reporting is turned off')
 
@@ -394,7 +394,7 @@ else:
     Helpers.pmes('Terrestrial Habitat reporting is turned on')
 
     
-if arcpy.GetParameterAsText(64) == 'false':
+if arcpy.GetParameterAsText(64) == 'No':
     watflag = 0
     Helpers.pmes('Watershed Integrity reporting is turned off')
 

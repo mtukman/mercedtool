@@ -40,7 +40,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df = pd.read_csv(afolder + 'act_acres.csv')
             test = df.transpose()
             test.reset_index(inplace = True)
-            test.rename(columns = {'index': 'Activity',0:units}, inplace = True)
+            test.rename(columns = {'index': 'Activity',0:'Acres'}, inplace = True)
             test.to_csv(outfolder + 'act_acres.csv')
         
         
@@ -508,6 +508,8 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
                     temp.loc[temp['Guild'] == 'birds_avg_imp_ha', 'Guild'] = 'Bird Improves'
                     temp.loc[temp['Guild'] == 'amphibians_avg_deg_ha', 'Guild'] = 'Amphibian Degraded'
                     temp.loc[temp['Guild'] == 'amphibians_avg_imp_ha', 'Guild'] = 'Amphibian Improved'
+                    temp.loc[temp['Guild'] == 'reptiles_avg_deg_ha', 'Guild'] = 'Reptiles Degraded'
+                    temp.loc[temp['Guild'] == 'reptiles_avg_imp_ha', 'Guild'] = 'Reptiles Improved'
                     temp.loc[temp['Guild'] == 'tes_avg_deg_ha', 'Guild'] = 'T and E Degraded'
                     temp.loc[temp['Guild'] == 'tes_avg_imp_ha', 'Guild'] = 'T and E Improved'
                 
@@ -691,9 +693,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
           "autosize": False, 
           "hovermode": "closest", 
           "showlegend": True,
-          "legend": {"font": {"size": 14}},
-          "height": 1024,
-          "width": 1280,  
+          "legend": {"font": {"size": 18}},
+          "height": 720,
+          "width": 1080,  
           "title": title,
           "barmode": barmode,
           "bargap": 0.6599999999999999,
@@ -757,7 +759,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
           "autosize": False, 
           "hovermode": "closest", 
           "showlegend": True,
-          "legend": {"font": {"size": 14}},
+          "legend": {"font": {"size": 18}},
           "height": 1024,
           "width": 1280,  
           "title": title,
@@ -791,7 +793,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         py.image.save_as(fig, outfile, format='png')
         return fig
 
-    def mba_chart_onetrace(table, xax = 'holder', yax = 'holder', x = 'None',y = 'None', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = 'temp', xtit = '', xfont = 14):
+    def mba_chart_onetrace(table, xax = 'holder', yax = 'holder', x = 'None',y = 'None', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = 'temp', xtit = '', xfont = 16):
         import plotly.plotly as py
         from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
         #import plotly.plotly as py
@@ -819,8 +821,8 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
           "hovermode": "closest", 
           "showlegend": False,
           "title": xax,
-          "width": 1280,
-          "height": 1024,
+          "width": 1080,
+          "height": 720,
           "titlefont": {
           "size": mba_title_font
               },
@@ -895,7 +897,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         if thabflag == 1:
             import pandas as pd
             tempdf = pd.read_csv(tables + "/2030 Terrestrial Habitat Value.csv")
-            if 'Reference Scenario' in tempdf: #Check if the fields are there
+            if 'Treatment Scenario' in tempdf: #Check if the fields are there
                 mba_twotrace(tables + "/2030 Terrestrial Habitat Value.csv", '2014-2030 Change in Terrestrial Habitat Value', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Guild', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Terrestrial Habitat Value.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 13)
         
     
@@ -905,6 +907,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
     
     
         mba_twotrace(tables + "/2030 ecoresilience_table.csv", '2014-2030 Landcover Change in Areas Important <br>For Natural Resilience', xax = 'holder', yax = 'holder', ytitle = units, x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Natural Resilience.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 13)
+        
         
         import pandas as pd
         import os
@@ -941,7 +944,8 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         mba_chart_onetrace(tables + "/2014 Ag and Urban Water Conservation.csv", xax = '2014 Water Demand', yax = 'Acre Ft/Year', x = 'Landcover',y = 'Acre Feet Annual Water Demand', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Ag and Urban Water Conservation.png")
 
         if cproc == 0:
-            mba_chart_onetrace(tables + "/2014 Watershed Integrity.csv", xax = '2014 Watershed Integrity', yax = units, x = 'Watershed Class',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Watershed Integrity.png")
+            if watflag == 1:
+                mba_chart_onetrace(tables + "/2014 Watershed Integrity.csv", xax = '2014 Watershed Integrity', yax = units, x = 'Watershed Class',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Watershed Integrity.png")
         
         mba_chart_onetrace(tables + "/2014 Water Quality - Nitrate Runoff.csv", xax = '2014 Nitrate Runoff', yax = 'Tons', x = 'Landcover',y = 'Annual Tons of Nitrate Runoff', yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Nitrate Runoff.png")
         
