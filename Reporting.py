@@ -3076,15 +3076,23 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'carbon' + '.csv')
     temp = temp.loc[temp['landcover'] != '0']
     temp.to_csv(outpath+'carbon.csv', index = False)  
-    newlist = list(df)
-    newlist2  = [i for i in newlist if '_er' in i]
     
+    
+    newlist = list(df)
+    Helpers.pmes(newlist)
+    newlist2  = [i for i in newlist if '_n2oer' in i]
+    newlist3  = [i for i in newlist if '_ch4er' in i]
     
     if newlist2:
         newlist2.append('LC2030_bau')
         newdf = df[newlist2]
         newdf2 = newdf.groupby('LC2030_bau', as_index = False).sum()
-        newdf2.to_csv(outpath+'emissions_reductions.csv', index = False) 
+        newdf2.to_csv(outpath+'n2oemissions_reductions.csv', index = False) 
+    if newlist3:
+        newlist3.append('LC2030_bau')
+        newdf = df[newlist3]
+        newdf3 = newdf.groupby('LC2030_bau', as_index = False).sum()
+        newdf3.to_csv(outpath+'ch4emissions_reductions.csv', index = False) 
     
     def emissions():
         """
@@ -3096,12 +3104,21 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         #Import the tables needed
         em = pd.read_csv(outpath + 'emissions.csv')
         
-        if not os.path.exists(outpath + 'emissions_reductions.csv'):
-            Helpers.add_to_logfile(logfile,'No emissions reductions from activities')
+        if not os.path.exists(outpath + 'n2oemissions_reductions.csv'):
+            Helpers.add_to_logfile(logfile,'No n2o emissions reductions from activities')
         else:
-            df3 = pd.read_csv(outpath + 'emissions_reductions.csv')
+            df3 = pd.read_csv(outpath + 'n2oemissions_reductions.csv')
             emlist = list(df3)
-            emlist2 = [i for i in emlist if '_er' in i]
+            emlist2 = [i for i in emlist if '_n2oer' in i]
+            
+            
+            
+        if not os.path.exists(outpath + 'ch4emissions_reductions.csv'):
+            Helpers.add_to_logfile(logfile,'No ch4 emissions reductions from activities')
+        else:
+            df4 = pd.read_csv(outpath + 'ch4emissions_reductions.csv')
+            ch4list = list(df4)
+            ch4list2 = [i for i in ch4list if '_ch4er' in i]
         df2 = pd.read_csv(outpath + 'carbon.csv')
         
         #Create variables of the emission sums for compounds and scenarios
@@ -3118,11 +3135,21 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         carbon_bau = df2['carbon_base_bau'].sum()
         carbon_2014 = df2['carbon2014'].sum()
         n2o_reductions = 0
+        ch4_reductions = 0
         
         carbon_trt_ann = (carbon_trt - carbon_2014)/totyears
         carbon_bau_ann = (carbon_bau - carbon_2014)/totyears
         
-        if os.path.exists(outpath + 'emissions_reductions.csv'):
+        if os.path.exists(outpath + 'ch4emissions_reductions.csv'):
+            if ch4list2:
+                for i in ch4list2:
+                    ch4_reductions = df4[i].sum() + ch4_reductions
+                ch4_reductions2 = ch4_reductions/totyears
+                Helpers.pmes('CH4 Reductions from TRT are: ' + str(ch4_reductions2))
+                Helpers.pmes('CH4 Emissions from Landcover are: ' + str(ch4_trt))
+                
+                
+        if os.path.exists(outpath + 'n2oemissions_reductions.csv'):
             if emlist2:
                 for i in emlist2:
                     n2o_reductions = df3[i].sum() + n2o_reductions
@@ -3159,9 +3186,9 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         
         # For total reductions chart, calculate difference in accumulated emissions between reference and treatment scenarios
         n2o_diff = (n2o_bau_tot-n2o_trt_tot) + n2o_reductions
-        Helpers.pmes('N2O Diff = ' + str(n2o_diff))
-        ch4_diff = (ch4_bau_tot - ch4_trt_tot)
+        ch4_diff = (ch4_bau_tot - ch4_trt_tot) + ch4_reductions
         carb_diff = carbon_trt - carbon_bau
+        
         
         #Calculate cumulative annual CO2e rate
         agg_bau = (n2o_base + ch4_base)-carbon_bau_ann
@@ -3254,11 +3281,17 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
         #look up dictionary to translate activity abbreviations to full names
         ludict = {'ac_wet_arc':'Wetland to Annual Cropland','ac_gra_arc':'Grassland to Annual Cropland','ac_irr_arc':'Irrigated Pasture to Annual Cropland','ac_orc_arc': 'Orchard to Annual Cropland','ac_arc_urb':'Annual Cropland to Urban','ac_gra_urb':'Grassland to Urban','ac_irr_urb':'Irrigated Pasture to Urban','ac_orc_urb':'Orchard to Urban','ac_arc_orc':'Annual Cropland to Orchard','ac_gra_orc':'Grassland to Orchard','ac_irr_orc':'Irrigated Pasture to Orchard','ac_vin_orc':'Vineyard to Orchard','ac_arc_irr':'Annual Cropland to Irrigated Pasture','ac_orc_irr':'Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Restoration','ccr':'Cover Crops','mul':'Mulching','nfm':'Improved Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Native Grassland Restoration','cam':'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments','cag':'Compost Application to Non-irrigated Grasslands'}
         holder1 = 'Yes'
-        if not os.path.exists(outpath + 'emissions_reductions.csv'):
-            Helpers.add_to_logfile(logfile,'No emissions reductions from activities')
+        if not os.path.exists(outpath + 'n2oemissions_reductions.csv'):
+            Helpers.add_to_logfile(logfile,'No n2o emissions reductions from activities')
             holder1 = 'None'
         else:
-            df3 = pd.read_csv(outpath + 'emissions_reductions.csv')
+            df3 = pd.read_csv(outpath + 'n2oemissions_reductions.csv')
+            
+        if not os.path.exists(outpath + 'ch4emissions_reductions.csv'):
+            Helpers.add_to_logfile(logfile,'No ch4 emissions reductions from activities')
+            holder1 = 'None'
+        else:
+            df4 = pd.read_csv(outpath + 'ch4emissions_reductions.csv')
         df2 = pd.read_csv(outpath + 'carbon.csv')
         years = list(range(18))
         
@@ -3273,17 +3306,13 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
             ch4 = 0
             if 'carbon_'+i in df2:
                 v = df2['carbon_'+i].sum()
-            Helpers.pmes ('Carbon change is : ' + str(v))
             if i == 'rre':
                 n2o_reductions = 0
                 ch4_reductions = 0
                 
                 #Calculate 
-                Helpers.pmes(em['n2o_emissions_'+i].sum())
-                Helpers.pmes(em['ch4_emissions_'+i].sum())
                 n2o2 = em['n2o_emissions_'+i].sum()*-1
                 ch42 = em['ch4_emissions_'+i].sum()*-1
-                Helpers.pmes(ch42)
                 #Get annual change of annual n2o emissions rate
                 n2o15 = n2o2/17
                 
@@ -3302,13 +3331,18 @@ def emissions(ttable, outpath,activitylist,acdict = 'None', logfile = 'None'):
                 ch4 = ch4_reductions
                 
             #If the activity has an n2o trt component, get the n2o reduction value
-            if i in ['nfm','hpl','mma','cam','mma','ccr']:
+            if i in ['nfm','hpl','mma','cam','mma','ccr', 'cag']:
                 
                 if holder1 != 'None':
-                    n2o1 = df3[i+'_er'].sum()
+                    n2o1 = df3[i+'_n2oer'].sum()
                     
-                    n2o = n2o1
-            
+                    n2o = n2o1 + n2o
+            if i in ['cam', 'cag']:
+                
+                if holder1 != 'None':
+                    ch41 = df4[i+'_ch4er'].sum()
+                    
+                    ch4 = ch41 + ch4
             #Write the reduction values to the table
             ttable.loc[ttable['Activity'] == ludict[i], 'Total CO2e Reduction'] = str(v)
             ttable.loc[ttable['Activity'] == ludict[i], 'Total N2O Reductions'] = n2o

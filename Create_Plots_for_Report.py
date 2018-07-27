@@ -15,7 +15,7 @@ carb14 = 52406560
 titlefont = 18
 large_x_labs = 14
 import plotly.plotly as py
-py.sign_in('mtukman', 'FbUYCv4tcjCPF2ZdfzKo')
+py.sign_in('mtukman', '5hrjkAYI9sJ73CwKvJsp')
 def  flyingm_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HighDev\carbon.csv', table_medium=r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\carbon.csv', outfile = 'C:/temp/test.png'):
     import pandas as pd
     high = pd.read_csv(table_high)

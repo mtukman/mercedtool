@@ -59,7 +59,7 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
         
         
         #Set the query that will define suitability
-        dictact['rre']['query'] = (df['trt_flag'] ==1) #(df['LC2030_trt_bau'].isin(['Grassland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (df['lcchange'] == 1) & ((df['near_rivers'] < 304.8) | ((df['ripstr_dist'] < 30.48) & (df['ripstr_flag'] == 1))) & (df['near_woody'] != 0) & queryadd #Units are in meters for distance requirements(df['trt_flag'] == 1)#
+        dictact['rre']['query'] = (df['LC2030_trt_bau'].isin(['Grassland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (df['lcchange'] == 1) & ((df['near_rivers'] < 304.8) | ((df['ripstr_dist'] < 30.48) & (df['ripstr_flag'] == 1))) & (df['near_woody'] != 0) & queryadd #Units are in meters for distance requirements(df['trt_flag'] == 1)#
         Helpers.CreateSuitFlags('rre',df,dictact,'rre')
 #        Helpers.CreateEligDict(df, 'rre', dictact,dict_eligibility, 'rre')
         

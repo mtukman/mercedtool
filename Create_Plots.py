@@ -16,7 +16,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
     axis_lab_font = 16
     import plotly.plotly as py
     py.sign_in(username, apikey)
-    
+    import Helpers
     #This dictionary contains acronym to actual activity description lookups
     ludict = {'ac_wet_arc':'AC Wet. to Ann. Crop','ac_gra_arc':'AC Grass. to <br> Ann. Crop','ac_irr_arc':'AC Irr. Pas. to Ann. Crop','ac_orc_arc': 'AC Orc. to Ann. Crop','ac_arc_urb':'AC Ann. Crop to Urban','ac_gra_urb':'AC Grass. to Urban','ac_irr_urb':'AC Irr. Pas. <br> to Urban','ac_orc_urb':'AC Orc. to Urban','ac_arc_orc':'AC Ann. Crop to Orc.','ac_gra_orc':'AC Grass. to Orc.','ac_irr_orc':'AC Irr. Pas. to Orc.','ac_vin_orc':'AC Vin. to Orc.','ac_arc_irr':'AC Ann. Crop to Irr. Pas.','ac_orc_irr':'AC Or. to Irr. Pas.','rre':'Riparian Restoration','oak':'Oak Woodland<br>Restoration','ccr':'Cover Crops','mul':'Mulching','nfm':'Improved Nitrogen<br>Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree<br>Planting','gra':'Native Grass<br>Restoration','cam':'Replacing Synthetic<br>Nitrogen Fertilizer<br>with Soil Amendments','cag':'Compost Application<br>to Non-irrigated<br> Grasslands'}
     if units == 'Acres':
@@ -413,12 +413,12 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df2 = pd.read_csv(afolder + 'countymovement.csv')
             df = pd.read_csv(afolder + 'countymovement.csv')
             df2 = df2[['resistance_class',ubrv + '_change_base_bau']]
-            df2 = df2.rename(columns = {'resistance_class': 'Resistance to Movement',ubrv + '_change_base_bau':'Reference Scenario'})
+            df2 = df2.rename(columns = {'resistance_class': 'Movement Potential',ubrv + '_change_base_bau':'Reference Scenario'})
             df = df[['resistance_class',ubrv + '_change_trt_bau']]
-            df = df.rename(columns = {'resistance_class': 'Resistance to Movement', ubrv + '_change_trt_bau':'Treatment Scenario'})
+            df = df.rename(columns = {'resistance_class': 'Movement Potential', ubrv + '_change_trt_bau':'Treatment Scenario'})
             
             
-            temp = pd.merge(df2, df, on = 'Resistance to Movement', how = 'left')
+            temp = pd.merge(df2, df, on = 'Movement Potential', how = 'left')
             
             a = temp
             c =a.iloc[1]
@@ -438,12 +438,12 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df2 = pd.read_csv(afolder + 'ecamovement.csv')
             df = pd.read_csv(afolder + 'ecamovement.csv')
             df2 = df2[['resistance_class',ubrv + '_change_base_bau']]
-            df2 = df2.rename(columns = {'resistance_class': 'Resistance to Movement',ubrv + '_change_base_bau':'Reference Scenario'})
+            df2 = df2.rename(columns = {'resistance_class': 'Movement Potential',ubrv + '_change_base_bau':'Reference Scenario'})
             df = df[['resistance_class',ubrv + '_change_trt_bau']]
-            df = df.rename(columns = {'resistance_class': 'Resistance to Movement', ubrv + '_change_trt_bau':'Treatment Scenario'})
+            df = df.rename(columns = {'resistance_class': 'Movement Potential', ubrv + '_change_trt_bau':'Treatment Scenario'})
             
             
-            temp = pd.merge(df2, df, on = 'Resistance to Movement', how = 'left')
+            temp = pd.merge(df2, df, on = 'Movement Potential', how = 'left')
             
             a = temp
             c =a.iloc[1]
@@ -502,16 +502,16 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
                     else:
                         temp = df
                     
-                    temp.loc[temp['Guild'] == 'mammals_avg_deg_ha', 'Guild'] = 'Mammal Degraded'
-                    temp.loc[temp['Guild'] == 'mammals_avg_imp_ha', 'Guild'] = 'Mammal Improved'
-                    temp.loc[temp['Guild'] == 'birds_avg_deg_ha', 'Guild'] = 'Bird Degraded'
-                    temp.loc[temp['Guild'] == 'birds_avg_imp_ha', 'Guild'] = 'Bird Improves'
-                    temp.loc[temp['Guild'] == 'amphibians_avg_deg_ha', 'Guild'] = 'Amphibian Degraded'
-                    temp.loc[temp['Guild'] == 'amphibians_avg_imp_ha', 'Guild'] = 'Amphibian Improved'
-                    temp.loc[temp['Guild'] == 'reptiles_avg_deg_ha', 'Guild'] = 'Reptiles Degraded'
-                    temp.loc[temp['Guild'] == 'reptiles_avg_imp_ha', 'Guild'] = 'Reptiles Improved'
-                    temp.loc[temp['Guild'] == 'tes_avg_deg_ha', 'Guild'] = 'T and E Degraded'
-                    temp.loc[temp['Guild'] == 'tes_avg_imp_ha', 'Guild'] = 'T and E Improved'
+                    temp.loc[temp['Guild'] == 'mammals_avg_deg_' + ubrv, 'Guild'] = 'Mammal<br>Degraded'
+                    temp.loc[temp['Guild'] == 'mammals_avg_imp_' + ubrv, 'Guild'] = 'Mammal<br>Improved'
+                    temp.loc[temp['Guild'] == 'birds_avg_deg_' + ubrv, 'Guild'] = 'Bird<br>Degraded'
+                    temp.loc[temp['Guild'] == 'birds_avg_imp_' + ubrv, 'Guild'] = 'Bird<br>Improves'
+                    temp.loc[temp['Guild'] == 'amphibians_avg_deg_' + ubrv, 'Guild'] = 'Amphibian<br>Degraded'
+                    temp.loc[temp['Guild'] == 'amphibians_avg_imp_' + ubrv, 'Guild'] = 'Amphibian<br>Improved'
+                    temp.loc[temp['Guild'] == 'reptiles_avg_deg_' + ubrv, 'Guild'] = 'Reptiles<br>Degraded'
+                    temp.loc[temp['Guild'] == 'reptiles_avg_imp_' + ubrv, 'Guild'] = 'Reptiles<br>Improved'
+                    temp.loc[temp['Guild'] == 'tes_avg_deg_' + ubrv, 'Guild'] = 'Threatened/<br>Endangered<br>Degraded'
+                    temp.loc[temp['Guild'] == 'tes_avg_imp_' + ubrv, 'Guild'] = 'Threatened/<br>Endangered<br>Improved'
                 
                     
                     temp.to_csv(outfolder+'2030 Terrestrial Habitat Value.csv', index = False)    
@@ -717,11 +717,21 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
        
         fig = go.Figure(data=data, layout=layout)
     #    plot(fig, filename= plot_dict[mba]['title'] + '.html')
-        py.image.save_as(fig, outfile, format='png')
+        Helpers.pmes('Creating plot for: ' + title)
+        count = 0
+        while count < 1:
+            try:
+                py.image.save_as(fig, outfile, format='png')
+                count = 1
+                Helpers.pmes(xax + ' Created Successfully')
+                break
+            except: 
+                continue
+        Helpers.pmes(xax + ' Failed to be Created')
         return fig
     
     #Define the plotting functions
-    def mba_twotrace(table, title = 'Nothing' , xax = 'holder', yax = 'holder',  ytitle = 'None', x1 = 'None',  x2 = 'None', x3 = 'None', outfile = 'temp',y1 = 'none',y2 = 'none', xtit = '', a_font = 14):
+    def mba_twotrace(table, title = 'Nothing' , xax = 'holder', yax = 'holder',  ytitle = 'None', x1 = 'None',  x2 = 'None', x3 = 'None', outfile = 'temp',y1 = 'none',y2 = 'none', xtit = '', a_font = 16):
         import plotly.plotly as py
         from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
         #import plotly.plotly as py
@@ -784,7 +794,18 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
        
         fig = go.Figure(data=data, layout=layout)
     #    plot(fig, filename= plot_dict[mba]['title'] + '.html')
-        py.image.save_as(fig, outfile, format='png')
+        Helpers.pmes('Creating plot for: ' + title)
+        count = 0
+        while count < 1:
+            try:
+                py.image.save_as(fig, outfile, format='png')
+                count = 1
+                Helpers.pmes(xax + ' Created Successfully')
+                break
+            except: 
+                continue
+        Helpers.pmes(xax + ' Failed to be Created')
+        
         return fig
 
     def mba_chart_onetrace(table, xax = 'holder', yax = 'holder', x = 'None',y = 'None', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = 'temp', xtit = '', xfont = 16):
@@ -842,8 +863,19 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
        
         fig = go.Figure(data=data, layout=layout)
     #    plot(fig, filename= plot_dict[mba]['title'] + '.html')
-        py.image.save_as(fig, outfile, format='png')
+        Helpers.pmes('Creating plot for: ' + xax)
+        count = 0
+        while count < 1:
+            try:
+                py.image.save_as(fig, outfile, format='png')
+                count = 1
+                Helpers.pmes(xax + ' Created Successfully')
+                break
+            except: 
+                continue
+        Helpers.pmes(xax + ' Failed to be Created')
         return fig
+        
         
         #Create a function to make the plots
     def custom_plots(afolder):
@@ -878,14 +910,14 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         mba_twotrace(tables + "/2030 Flood Risk Reduction.csv", '2014-2030 Change in Landcover in Highly Visible Areas', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'General Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Scenic Value.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
     
     
-        mba_twotrace(tables + "/2030 ECA Terrestrial Connectivity.csv", '2014-2030 Change in Resistance to Species Movement<br>in Essential Connectivity Areas', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Resistance to Movement', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 ECA Terrestrial Connectivity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', xtit = 'Resistance to Movement',a_font = 14)
+        mba_twotrace(tables + "/2030 ECA Terrestrial Connectivity.csv", '2014-2030 2014-2030 Change in Terrestrial<br>Species Movement Potential (From Landcover)<br>in Essential Connectivity Areas', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Movement Potential', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 ECA Terrestrial Connectivity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', xtit = 'Movement Potential',a_font = 14)
     
-        mba_twotrace(tables + "/2030 Terrestrial Connectivity.csv", '2014-2030 Change in Resistance to <br>Species Movement', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Resistance to Movement', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Terrestrial Connectivity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', xtit = 'Resistance to Movement', a_font = 14)
+        mba_twotrace(tables + "/2030 Terrestrial Connectivity.csv", '2014-2030 Change in Terrestrial<br>Species Movement Potential (From Landcover)', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Movement Potential', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Terrestrial Connectivity.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', xtit = 'Movement Potential', a_font = 14)
         
     
         mba_twotrace(tables + "/2030 Priority Conservation Areas.csv", '2014-2030 Change in Landcover in Priority Conservation Areas', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Priority Conservation Areas.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
     
-        mba_twotrace(tables + "/2030 Natural Habitat Area.csv", '2014-2030 Change in Landcover', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Natural Habitat Area.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario')
+        mba_twotrace(tables + "/2030 Natural Habitat Area.csv", '2014-2030 Change in Landcover', xax = 'holder', yax = 'holder',   ytitle = units, x1 = 'Landcover', x2 = 'Reference Scenario', x3 = 'Treatment Scenario',outfile = outpath + "2030 Natural Habitat Area.png", y1 = 'Reference<br>Scenario', y2 = 'Treatment<br>Scenario', a_font = 13)
         
         
         if thabflag == 1:
@@ -911,7 +943,7 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
                 df.loc[df['Activity'] ==  'carbon_' + key, 'Activity'] = ludict[key]
             df.to_csv(tables + "/Carbon Reductions.csv")
         
-            mba_chart_onetrace(tables + "/Carbon Reductions.csv", '2030 Carbon Stock Change from Activities', yax = 'Tons of CO2e', x = 'Activity',y = 'Tons of CO2e Reduced', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Stock Change.png", xtit = '', xfont = 12)
+            mba_chart_onetrace(tables + "/Carbon Reductions.csv", '2030 Carbon Stocks', yax = 'Tons of CO2e', x = 'Activity',y = 'Tons of CO2e Reduced', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Stocks.png", xtit = '', xfont = 14)
         
         mba_chart_onetrace(tables + "/Carbon Reductions Compare.csv", '2014-2030 Carbon Reduction Change', yax = 'Tons of CO2e', x = 'Scenario',y = 'Tons of CO2e', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = outpath + "2030 Carbon Reductions Compare.png", xtit = '', xfont = 12)
         
@@ -967,11 +999,11 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         
         mba_chart_onetrace(tables + "/2014 Natural Resilience.csv", xax = '2014 Landcover in Areas Important <br>For Natural Resilience', yax = units, x = 'Landcover',y = units, yrange = [0,1], remzeros= 1, outfile = outpath + "2014 Natural Resilience.png")
 
-        mba_threetrace(runfolder + "/total_reductions.csv", 'Total Emission Reductions and CO2 Removals<br>Achieved at 2030 from Planned Activities', xax = 'holder', yax = 'Tonnes CO2e', x1 = 'Source', x3 = 'Source', x2 = 'Source',outfile = outpath + "Total Reductions.png", y1 = 'CO2e Reductions', y3 = 'CH4 Reductions',y2 = 'N2O Reductions', a_font = 13, barmode = 'stack', ytitle = 'Tonnes CO2e')
+        mba_threetrace(runfolder + "/total_reductions.csv", 'Total Emission Reductions and CO2 Removals<br>Achieved at 2030 from Planned Activities', xax = 'holder', yax = 'Tonnes CO2e', x1 = 'Source', x3 = 'Source', x2 = 'Source',outfile = outpath + "Total Reductions.png", y1 = 'CO2e Reductions', y3 = 'CH4 Reductions',y2 = 'N2O Reductions', a_font = 14, barmode = 'stack', ytitle = 'Tonnes CO2e')
 
-        mba_twotrace(runfolder + "/ann_emissions_and_CStock_Change.csv", 'A Comparison of 2030 N2O, CH4 Emissions<br>and CO2 Removal Flux (Baseline and Treatment) ', xax = 'holder', yax = 'holder', ytitle = 'Tonnes CO2e', x1 = 'Source', x2 = '2030 Baseline', x3 = '2030 Treatment',outfile = outpath + "Annual Flux.png", y1 = '2030<br>Baseline', y2 = '2030<br>Treatment', a_font = 13)
+        mba_twotrace(runfolder + "/ann_emissions_and_CStock_Change.csv", 'A Comparison of 2030 N2O, CH4 Emissions<br>and CO2 Removal Flux (Baseline and Treatment) ', xax = 'holder', yax = 'holder', ytitle = 'Tonnes CO2e', x1 = 'Source', x2 = '2030 Baseline', x3 = '2030 Treatment',outfile = outpath + "Annual Flux.png", y1 = '2030<br>Baseline', y2 = '2030<br>Treatment', a_font = 16)
 
-        mba_twotrace(runfolder + "/annual_emissions_aggregate.csv", 'A Comparison of 2030 N2O and CH4 Emissions<br>Net of CO2 Removals (Baseline and Treatment) ', xax = 'holder', yax = 'holder', ytitle = 'Tonnes CO2e', x1 = 'Source', x2 = '2030 Baseline', x3 = '2030 Treatment',outfile = outpath + "Aggregate Flux.png", y1 = '2030<br>Baseline', y2 = '2030<br>Treatment', a_font = 13)
+        mba_twotrace(runfolder + "/annual_emissions_aggregate.csv", 'A Comparison of 2030 N2O and CH4 Emissions<br>Net of CO2 Removals (Baseline and Treatment) ', xax = 'holder', yax = 'holder', ytitle = 'Tonnes CO2e', x1 = 'Source', x2 = '2030 Baseline', x3 = '2030 Treatment',outfile = outpath + "Aggregate Flux.png", y1 = '2030<br>Baseline', y2 = '2030<br>Treatment', a_font = 16)
 
 
     simp(runfolder)
