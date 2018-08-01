@@ -1,6 +1,6 @@
 def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Acres', watflag = 0):
     """
-    This function takes the reports from the Reporting module and creates siplified tables and plots using the Plotly website.
+    This function takes the reports from the Reporting module and creates simplified tables and plots using the Plotly website API.
     
     folder - Folder that the tool outputs went into.
     aclist - List of activities chosen for the run of the tool
@@ -44,9 +44,12 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             test.to_csv(outfolder + 'act_acres.csv')
         
         
-        #Create the function that create the simplified tables
+        #Create the functions that create the simplified tables
 
         def fmmp2014():
+            """
+            2014 Farmland Table
+            """
             df = pd.read_csv(afolder + 'fmmp.csv')
             df = df[['fmmp_class',ubrv + '_2014']]
             df = df.loc[df[ubrv + '_2014'] > 0]
@@ -54,12 +57,18 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(outfolder+'2014 Ag Land Quality.csv', index = False)
     
         def crop2014():
+            """
+            2014 crop value table
+            """
             df = pd.read_csv(afolder + 'cropvalue.csv')
             df = df[['landcover','cropvalue_usd_2014']]
             df = df.rename(columns = {'landcover': 'Crop Type', 'cropvalue_usd_2014':'US Dollars'})
             df.to_csv(outfolder+'2014 Crop Value.csv', index = False)
     
         def watcon2014():
+            """
+            2014 water use table
+            """
             df = pd.read_csv(afolder + 'watcon.csv')
             df = df[['landcover','ac_ft_2014']]
             df = df.loc[df['ac_ft_2014'] > 0]
@@ -67,6 +76,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(outfolder+'2014 Ag and Urban Water Conservation.csv', index = False)
 
         def watint2014():
+            """
+            2014 watershed integrity table
+            """
             df = pd.read_csv(afolder + 'watint.csv')
             df = df[['Integrity_Class',ubrv + '_2014']]
             df = df.rename(columns = {'Integrity_Class': 'Watershed Class', ubrv + '_2014':units})
@@ -75,6 +87,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(outfolder+'2014 Watershed Integrity.csv', index = False)
     
         def nitrun2014():
+            """
+            2014 nitrate runoff table
+            """
             df = pd.read_csv(afolder + 'runoff_nitrates.csv')
             df = df[['landcover','tons_no3_14']]
             df = df.loc[df['tons_no3_14'] > 0]
@@ -82,6 +97,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(outfolder+'2014 Water Quality - Nitrate Runoff.csv', index = False)
         
         def nitleach2014():
+            """
+            2014 nitrate leaching table
+            """
             df = pd.read_csv(afolder + 'leach_nitrates.csv')
             df = df[['landcover','tons_no3_14']]
             df = df.loc[df['tons_no3_14'] > 0]
@@ -89,6 +107,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(outfolder+'2014 Water Quality - Nitrate Leaching.csv', index = False)
     
         def flood2014():
+            """
+            2014 floodplain landcover table
+            """
             df = pd.read_csv(afolder + 'flood100.csv')
             df = df[['gen_class',ubrv + '_2014']]
             df = df.loc[df[ubrv + '_2014'] > 0]
@@ -96,6 +117,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(outfolder+'2014 Flood Risk Reduction.csv', index = False)
     
         def air2014():
+            """
+            2014 air pollution sequestration table
+            """
             import functools as fc
             df1 = pd.read_csv(afolder + 'co_val_airpollute.csv')
             df2 = pd.read_csv(afolder + 'no2_val_airpollute.csv')
@@ -134,6 +158,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             return test
     
         def scenic2014():
+            """
+            2014 high visibility table
+            """
             df = pd.read_csv(afolder + 'scenic.csv')
             df = df[['gen_class',ubrv + '_2014']]
 #            df = df.loc[df[ubrv + '_2014'] > 0]
@@ -141,6 +168,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(outfolder+'2014 Scenic Value.csv', index = False)
     
         def move2014():
+            """
+            2014 movemement potential table
+            """
             df = pd.read_csv(afolder + 'countymovement.csv')
             df = df[['resistance_class',ubrv + '_2014']]
 #            df = df.loc[df[ubrv + '_2014'] > 0]
@@ -162,6 +192,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(outfolder+'2014 Terrestrial Connectivity.csv', index = False)
     
         def move2014_eca():
+            """
+            2014 essential connectivity areas movemement potential table
+            """
             df = pd.read_csv(afolder + 'ecamovement.csv')
             df = df[['resistance_class',ubrv + '_2014']]
 #            df = df.loc[df[ubrv + '_2014'] > 0]
@@ -182,6 +215,10 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(outfolder+'2014 ECA Terrestrial Connectivity.csv', index = False)
     
         def lcc2014():
+            """
+            2014 landcover table
+            """
+            
             df = pd.read_csv(afolder + 'lcchange.csv')
             df = df[['landcover',ubrv + '_2014']]
             df = df.loc[df[ubrv + '_2014'] > 0]
@@ -189,6 +226,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(outfolder+'2014 Natural Habitat Area.csv', index = False)
     
         def pcalcc2014():
+            """
+            2014 landcover in priority conservation areas table
+            """
             df = pd.read_csv(afolder + 'pca_cover_change.csv')
             df = df[['landcover',ubrv + '_2014']]
             df = df.loc[df[ubrv + '_2014'] > 0]
@@ -196,6 +236,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(outfolder+'2014 Priority Conservation Areas.csv', index = False)
     
         def aqua2014():
+            """
+            2014 landcover in important aquatic habitats table
+            """
             df = pd.read_csv(afolder + 'aquatic.csv')
             df = df[['gen_class',ubrv + '_2014']]
             df = df.loc[df[ubrv + '_2014'] > 0]
@@ -203,19 +246,25 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(outfolder+'2014 Aquatic Biodiversity.csv', index = False)     
     
         def soc_resi14():
+            """
+            2014 landcover in areas important for social resilience
+            """
             df = pd.read_csv(afolder + 'aquatic.csv')
             df = df[['gen_class',ubrv + '_2014']]
             df = df.loc[df[ubrv + '_2014'] > 0]
             df = df.rename(columns = {'gen_class': 'Landcover', ubrv + '_2014':units})
             df.to_csv(outfolder+'2014 Social Resilience.csv', index = False)        
         def eco_resi14():
+            """
+            2014 landcover in areas important for ecological resilience
+            """
             df = pd.read_csv(afolder + 'aquatic.csv')
             df = df[['gen_class',ubrv + '_2014']]
             df = df.loc[df[ubrv + '_2014'] > 0]
             df = df.rename(columns = {'gen_class': 'Landcover', ubrv + '_2014':units})
             df.to_csv(outfolder+'2014 Natural Resilience.csv', index = False)        
     
-        #Create the 2014 simplified tables
+        #Create the 2014 simplified tables using the aboe functions
         fmmp2014()
         crop2014()
         watcon2014()
@@ -237,6 +286,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         
         
         def fmmp2030():
+            """
+            2030 important farmland table
+            """
             df = pd.read_csv(afolder + 'fmmp.csv')
             df = df[['fmmp_class',ubrv + '_loss_base_bau', ubrv + '_loss_trt_bau' ]]
             df = df.rename(columns = {'fmmp_class': 'Farmland Class', ubrv + '_loss_base_bau':'Reference Scenario', ubrv + '_loss_trt_bau':'Treatment Scenario'})
@@ -249,6 +301,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
     
         
         def crop2030():
+            """
+            2030 crop value table
+            """
             df = pd.read_csv(afolder + 'cropvalue.csv')
             df = df[['landcover','usd_change_base_bau', 'usd_change_trt_bau']]
             df = df.rename(columns = {'landcover': 'Crop Type', 'usd_change_base_bau':'Reference Scenario', 'usd_change_trt_bau':'Treatment Scenario'})
@@ -265,10 +320,12 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         
         
         def watcon2030():
+            """
+            2030 water use table
+            """
             df = pd.read_csv(afolder + 'watcon.csv')
             df = df[['landcover','ac_ft_change_base_bau', 'ac_ft_change_trt_bau']]
             df = df.rename(columns = {'landcover': 'Landcover', 'ac_ft_change_base_bau':'Reference Scenario', 'ac_ft_change_trt_bau':'Treatment Scenario'})
-    #        df2 = df2[df2.values.sum(axis=1) != 0]
             df.set_index(['Landcover'], inplace = True)
             df = df[df.values.sum(axis=1) != 0]
             df.reset_index(inplace = True)
@@ -278,6 +335,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(outfolder+'2030 Ag and Urban Water Conservation.csv', index = False)
     
         def groundwater2030():
+            """
+            2030 groundwater recharge loss table
+            """
             df = pd.read_csv(afolder + 'groundwater.csv')
             df = df[['landcover','ac_ft_rec_lst_base_bau','ac_ft_rec_lst_trt_bau']]
             df.set_index(['landcover'], inplace = True)
@@ -291,6 +351,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         
         
         def watint2030():
+            """
+            2030 watershed integrity table
+            """
             df2 = pd.read_csv(afolder + 'watint.csv')
             df = pd.read_csv(afolder + 'watint.csv')
             df2 = df2[['Integrity_Class',ubrv + '_change_base_bau']]
@@ -307,6 +370,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             
     
         def nitrun2030():
+            """
+            2030 nitrate runoff table
+            """
             df2 = pd.read_csv(afolder + 'runoff_nitrates.csv')
             df = pd.read_csv(afolder + 'runoff_nitrates.csv')
             df2 = df2[['landcover','tons_no3_change_base_bau']]
@@ -323,6 +389,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             temp.to_csv(outfolder+'2030 Water Quality - Nitrate Runoff.csv', index = False)
             
         def nitleach2030():
+            """
+            2030 nitrate leaching table
+            """
             df2 = pd.read_csv(afolder + 'leach_nitrates.csv')
             df = pd.read_csv(afolder + 'leach_nitrates.csv')
             df2 = df2[['landcover','tons_no3_change_base_bau']]
@@ -340,6 +409,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             
         
         def flood2030():
+            """
+            2030 floodplain landcover table
+            """
             df = pd.read_csv(afolder + 'flood100.csv')
             df = df[['gen_class',ubrv + '_change_base_bau', ubrv + '_change_trt_bau' ]]
             df = df.rename(columns = {'gen_class': 'General Landcover', ubrv + '_change_base_bau':'Reference Scenario', ubrv + '_change_trt_bau':'Treatment Scenario'})
@@ -353,6 +425,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         
     
         def air2030():
+            """
+            2030 air pollution sequestration table
+            """
             import functools as fc
             df1 = pd.read_csv(afolder + 'co_val_airpollute.csv')
             df2 = pd.read_csv(afolder + 'no2_val_airpollute.csv')
@@ -397,6 +472,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             return df
     
         def scenic2030():
+            """
+            2030 highly visible landcover table
+            """
             df = pd.read_csv(afolder + 'scenic.csv')
             df = df[['gen_class',ubrv + '_change_base_bau', ubrv + '_change_trt_bau' ]]
             df = df.rename(columns = {'gen_class': 'General Landcover', ubrv + '_change_base_bau':'Reference Scenario', ubrv + '_change_trt_bau':'Treatment Scenario'})
@@ -410,6 +488,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             df.to_csv(outfolder+'2030 Scenic Value.csv', index = False)
     
         def move2030():
+            """
+            2030 movement potential table
+            """
             df2 = pd.read_csv(afolder + 'countymovement.csv')
             df = pd.read_csv(afolder + 'countymovement.csv')
             df2 = df2[['resistance_class',ubrv + '_change_base_bau']]
@@ -435,6 +516,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         
     
         def move2030_eca():
+            """
+            2030 movemement potential in essential connectivity areas table
+            """
             df2 = pd.read_csv(afolder + 'ecamovement.csv')
             df = pd.read_csv(afolder + 'ecamovement.csv')
             df2 = df2[['resistance_class',ubrv + '_change_base_bau']]
@@ -460,6 +544,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
     
     
         def lcc2030():
+            """
+            2030 landcover table
+            """
             df2 = pd.read_csv(afolder + 'lcchange.csv')
             df = pd.read_csv(afolder + 'lcchange.csv')
             df2 = df2[['landcover',ubrv + '_change_base_bau']]
@@ -473,6 +560,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             temp.to_csv(outfolder+'2030 Natural Habitat Area.csv', index = False)
     
         def pcalcc2030():
+            """
+            2030 landcover in priority conservation areas table
+            """
             df2 = pd.read_csv(afolder + 'pca_cover_change.csv')
             df = pd.read_csv(afolder + 'pca_cover_change.csv')
             df2 = df2[['landcover',ubrv + '_change_base_bau']]
@@ -487,6 +577,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
               
         if thabflag == 1:
             def terrhab2030():
+                """
+                2030 terrestrial habitat quality table
+                """
                 if os.path.exists(afolder + '/terrhab.csv'):
                     df2 = pd.read_csv(afolder + 'terrhab.csv')
                     df = pd.read_csv(afolder + 'terrhab.csv')
@@ -517,6 +610,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
                     temp.to_csv(outfolder+'2030 Terrestrial Habitat Value.csv', index = False)    
             
         def aqua2030():
+            """
+            2030 landcover in watershed with important aquatic habitat table
+            """
             df2 = pd.read_csv(afolder + 'aquatic.csv')
             df = pd.read_csv(afolder + 'aquatic.csv')
             df2 = df2[['gen_class',ubrv + '_change_base_bau']]
@@ -532,6 +628,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         
         
         def eco_resi():
+            """
+            2030 landcover in areas important for ecological resilience table
+            """
             df = pd.read_csv(afolder + 'eco_resil.csv')
             df = df[['gen_class',ubrv + '_change_base_bau',ubrv + '_change_trt_bau']]
             df = df.rename(columns = {'gen_class': 'Landcover', ubrv + '_change_base_bau':'Reference Scenario', ubrv + '_change_trt_bau':'Treatment Scenario'})
@@ -543,6 +642,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             temp.to_csv(outfolder+'2030 ecoresilience_table.csv', index = False)
             
         def soc_resi():
+            """
+            2030 landcover in areas important for social resilience table
+            """
             df = pd.read_csv(afolder + 'soc_res.csv')
             df = df[['gen_class',ubrv + '_change_base_bau',ubrv + '_change_trt_bau']]
             df = df.rename(columns = {'gen_class': 'Landcover', ubrv + '_change_base_bau':'Reference Scenario', ubrv + '_change_trt_bau':'Treatment Scenario'})
@@ -554,6 +656,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
             temp.to_csv(outfolder+'2030 socresilience_table.csv', index = False)   
                
         def carbon():
+            """
+            2030 carbon reductions table
+            """
             df = pd.read_csv(afolder + 'carbon.csv')
             alist2 = []
             aclist2 = []
@@ -596,6 +701,9 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
                 test.to_csv(outfolder+'Carbon Reductions.csv', index = False)
 
         def carbon2():
+            """
+            Carbon stock difference
+            """
             df = pd.read_csv(afolder + 'carbon.csv')
             df = df[['landcover','carbon_base_bau','trt_bau_total', 'carbon2014']]
             c14 = df['carbon2014'].sum()
@@ -650,10 +758,10 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
     
     
     def mba_threetrace(table, title = 'Nothing' , xax = 'holder', yax = 'holder',  ytitle = 'None', x1 = 'None',  x2 = 'None', x3 = 'None', outfile = 'temp',y1 = 'none',y2 = 'none',y3 = 'none', xtit = '', a_font = 14, barmode = 'group'):
+        """
+        plotly function for three traces
+        """
         import plotly.plotly as py
-        from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
-        #import plotly.plotly as py
-        from plotly import tools
         import plotly.graph_objs as go
         import pandas as pd
         table = pd.read_csv(table)
@@ -732,10 +840,10 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
     
     #Define the plotting functions
     def mba_twotrace(table, title = 'Nothing' , xax = 'holder', yax = 'holder',  ytitle = 'None', x1 = 'None',  x2 = 'None', x3 = 'None', outfile = 'temp',y1 = 'none',y2 = 'none', xtit = '', a_font = 16):
+        """
+        Plotly function for two traces
+        """
         import plotly.plotly as py
-        from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
-        #import plotly.plotly as py
-        from plotly import tools
         import plotly.graph_objs as go
         import pandas as pd
         table = pd.read_csv(table)
@@ -809,10 +917,10 @@ def Plots(folder, aclist, actlist, thabflag,cproc, apikey, username, units = 'Ac
         return fig
 
     def mba_chart_onetrace(table, xax = 'holder', yax = 'holder', x = 'None',y = 'None', yrange = [0,1], qu = 'None', remzeros = 0, qu2 = 'None', outfile = 'temp', xtit = '', xfont = 16):
+        """
+        Plotly function for one trace
+        """
         import plotly.plotly as py
-        from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
-        #import plotly.plotly as py
-        from plotly import tools
         import plotly.graph_objs as go
         import pandas as pd
         table = pd.read_csv(table)

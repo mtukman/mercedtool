@@ -107,7 +107,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None',cd = 0):
             counter1 = counter1 + 1 
             Helpers.pmes('Total selected pixels = ' + str(tempix))
             if tempix > 0:
-                tempdf[activity +'_carbred'] = tempdf[activity+'selected']*(carb1/pixels)
+                tempdf[activity +'_carbred'] = tempdf[activity+'selected']*(carb1/pixels) #If there are any selected pixels, calculate the per pixel reduction amount
                 
     def UpdateValues_n2 (tempdf,activity,carb,carb2, dictact):
         Helpers.pmes('Updating N2O For: ' + activity)
@@ -137,7 +137,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None',cd = 0):
                     redrate = dfList2[counter1] #Get the carbon reduction rate that corresponds to the activity/landcover
                     counter2 = 0
                     
-                    #Do the first years of activity growth 
+                    #Calculate the first years of activity growth 
                     while counter2 < (dictact[activity]['years']-1) and counter2<maxyrs:
                         
                         carb1 = carb1 + (((counter2 + 1)*anngrowth)*redrate)
@@ -172,7 +172,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None',cd = 0):
                     
                     
             counter1 = counter1 + 1 
-            if tempix > 0:
+            if tempix > 0: #If there are any pixels selected, calculate the per pixel reduction amount
                 tempdf[activity +'_n2oer'] = tempdf[activity+'selected']*(carb1/pixels)
                 
             
@@ -192,7 +192,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None',cd = 0):
         actcount2 = actcount.to_frame()
         #Convert Landcover and reduction rates to their own lists
         dfList = temptrt['Landcover'].tolist()
-        dfList2 = temptrt['ch4_rate'].tolist() #CHANGE TO N2O FIELD
+        dfList2 = temptrt['ch4_rate'].tolist() #CHANGE TO CH4 FIELD
         counter1 = 0
         maxyrs = 2031 - dictact[activity]['adoptyear'] #Max number of years an activity can run between 2014 and 2030 (counting the year 2030)
         fulladoptyrs = (11-dictact[activity]['years']) #How many years an ag activity can run at full capativity between growth and decay
@@ -249,7 +249,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None',cd = 0):
                 tempdf[activity +'_ch4er'] = tempdf[activity+'selected']*(carb1/pixels)
                 
             
-    # Run the above functionf or every activity selected
+    # Run the above function for every activity selected
     for i in activitylist:
         if i in ['cam','cag']:
             UpdateValues_ch4(tempdf,i, carb, carb2, dictact)
@@ -258,7 +258,7 @@ def ApplyGHG(df,activitylist, dictact, trt, ug = 0, logfile = 'None',cd = 0):
         
         
     # Update gridcodes for treatment scenarios
-    gcdict = {'Wetland':0, 'Water':1, 'Grassland':2,'Barren':4, 'Orchard':7,'Vineyard':8,'Annual Cropland':9,'Rice':10,'Irrigated Pasture':11,'Young Forest':14, 'Young Shrubland':15}
+    gcdict = {'Wetland':0, 'Water':1, 'Grassland':2,'Barren':4, 'Orchard':7,'Vineyard':8,'Annual Cropland':9,'Rice':10,'Irrigated Pasture':11,'Young Forest':14, 'Young Shrubland':15, 'Oak Conversion':3, 'Riparian Restoration':3, 'Forest':3, 'Shrubland':5}
     devlist = ['bau','med','max']
     if cd ==1 :
         devlist = ['bau','med','max','cust']

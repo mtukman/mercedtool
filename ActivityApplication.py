@@ -36,7 +36,7 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
 
     #Create an query addon that is based on whether a custom development or treatment mask has been provided by the user.
     queryadd =  ((df['pref_dev_flag'] == 0) & (df['dcode_maxinfill'] == 0))
-    queryadd2 = (df['trt_flag'] == 1)
+    queryadd2 = (df['trt_flag'] == 1) 
     if customdev == 1:
         
         if treatmask != 'None':
@@ -89,9 +89,10 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
         df.loc[df['oakselected'] == 1, 'LC2030_trt_bau'] = 'Forest'
         df.loc[df['oakselected'] == 1, 'LC2030_trt_med'] = 'Forest'
         df.loc[df['oakselected'] == 1, 'LC2030_trt_max'] = 'Forest'
-        df.loc[df['oakselected'] == 1, 'gridcode30_trt_bau'] = 11
-        df.loc[df['oakselected'] == 1, 'gridcode30_trt_med'] = 11
-        df.loc[df['oakselected'] == 1, 'gridcode30_trt_max'] = 11
+        df.loc[df['oakselected'] == 1, 'gridcode30_trt_bau'] = 3
+        df.loc[df['oakselected'] == 1, 'gridcode30_trt_med'] = 3
+        df.loc[df['oakselected'] == 1, 'gridcode30_trt_max'] = 3
+        
         if customdev == 1:
             df.loc[df['oakselected'] == 1, 'LC2030_trt_cust'] = 'Forest'
             df.loc[df['oakselected'] == 1, 'gridcode30_trt_cust'] = 3
@@ -115,7 +116,7 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
     if customdev == 1:
         dlist = ['bau','med','max', 'cust']
     for x in dlist:
-        if treatmask != 'None':
+        if treatmask != 'None': #Do this part if there is a treatment mask provided
             for i in keylist:
                 Helpers.pmes('Doing Selection for: ' + i)
                 df.loc[(df['LC2030_trt_' + x] == df['LC2030_' + x]), 'lcchange'] = 1   
@@ -200,7 +201,7 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
                     Helpers.selectionfunc (ttable,dict_eligibility,df,'aco',dictact, i, logfile, i,1000, x)
                     Helpers.lc_mod(i+'selected',t, 'LC2030_trt_' + x, df,999)
                     Helpers.lc_mod(i+'selected',g, 'gridcode30_trt_' + x, df,999)
-        else:
+        else: #Do this section if there is no treatment mask required
             for i in keylist:
                 Helpers.pmes('Doing Selection for: ' + i)
                 df.loc[(df['LC2030_trt_' + x] == df['LC2030_' + x]), 'lcchange'] = 1   
@@ -321,7 +322,7 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
 
         
         
-    if ug != 0:
+    if ug != 0: #if urban forestry is a selected activity, calculate the # of urban growth hear
         temp = df.loc[(df['LC2030_trt_bau'].isin(['Urban', 'Developed','Developed Roads'])) & (df['lcchange'] == 1)]
         numb = len(temp.index)
         dictact['urb']['adoption'] = numb/4.49555
@@ -329,8 +330,9 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
         Helpers.pmes ('Adoption Goal Acres for Urban: ' + str(dictact['urb']['adoption']))
         
         ghg_selection (df,'urb',dict_eligibility,dictact)
+        
     #This list below is a list of fields to be dropped from the dataframe in order to speed up processing time.
-    blist = ['ccrsuitflag','mulsuitflag','nfmsuitflag','hplsuitflag','camsuitflag','cagsuitflag','grasuitflag','urbsuitflag','urb2suitflag','oaksuitflag','rresuitflag','ac_wet_arc','ac_gra_arc','ac_irr_arc','ac_orc_arc','ac_arc_urb','ac_gra_urb','ac_irr_urb','ac_orc_urb','ac_arc_orc','ac_gra_orc','ac_irr_orc','ac_vin_orc','ac_arc_irr','ac_orc_irr','gp_code','LC2001','hydrovuln_flag','huc12_val','slope_val','medgroup_val','smallgroup_val','gridcode01','pref_dev_flag','near_nwi','near_roads','pref_dev_type','woodyrip_class','near_woody', 'biodiversity_rank','clim_rank','terrhabrank']
+    blist = ['ccrsuitflag','mulsuitflag','nfmsuitflag','hplsuitflag','camsuitflag','cagsuitflag','grasuitflag','urbsuitflag','urb2suitflag','oaksuitflag','rresuitflag','ac_wet_arc','ac_gra_arc','ac_irr_arc','ac_orc_arc','ac_arc_urb','ac_gra_urb','ac_irr_urb','ac_orc_urb','ac_arc_orc','ac_gra_orc','ac_irr_orc','ac_vin_orc','ac_arc_irr','ac_orc_irr','gp_code','LC2001','hydrovuln_flag','huc12_val','slope_val','medgroup_val','smallgroup_val','gridcode01','pref_dev_flag','near_nwi','near_roads','pref_dev_type','woodyrip_class','near_woody', 'biodiversity_rank','clim_rank','terrhabrank'] 
     
     clist = []
     for i in blist:

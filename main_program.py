@@ -18,12 +18,15 @@ import sys
 
 output_file_location = arcpy.GetParameterAsText(0)  #must be a folder
 rootpath = arcpy.GetParameterAsText(1) #Rootpath of data location
-activitylist = []
-timestr = time.strftime("%Y%m%d-%H%M%S")
+activitylist = [] #Create blank list to hold abbreviations of the activities selected from the tool input
+timestr = time.strftime("%Y%m%d-%H%M%S") #Create timedate stamp of when the tool is run
+
 newdir = os.path.join(output_file_location, timestr) #This creates a directory for the tool's outputs. It will create a new folder with a timestamp in the directory specified in the parameters.
 if not os.path.exists(newdir):
     os.makedirs(newdir)
-Generic.set_paths_and_workspaces(rootpath, output_file_location)
+    
+Generic.set_paths_and_workspaces(rootpath, output_file_location) #Run the function that creates global variables for paths
+
 #Create a logfile in the output directory and add information about the tool's input parameter's to it.
 global logfile
 logfile = open(os.path.join(newdir, "logfile.txt"), "w")
@@ -33,9 +36,13 @@ Helpers.add_to_logfile(logfile,'Tool Started at: ' + time.strftime("%Y%m%d-%H%M%
 Helpers.add_to_logfile2(logfile, '')
 
 bit = platform.architecture()
+
+#Check if the tool is running in a 32bit environment, must be in a 64 bit environment due to memory requirements
 if bit[0] == '32bit':
     Helpers.add_to_logfile(logfile, '*******************************************Tool is running in 32bit python, must have 64-bit Background Processing installed and toggled on in Geoprocessing Options.  Go to Geoprocessing-->Geoprocessing Options in ArcMap and click "enable" under background processing. Also, in the "General" tab of the properties of the tool itself, make sure that "always run in the foreground" is unchecked. *******************************************')
     sys.exit()
+    
+#Add all of the tool parameters to the logfile
 Helpers.add_to_logfile2(logfile, 'Writing out the tool parameter inputs','----------------------------------------------------------------------------------')
 Helpers.add_to_logfile(logfile,'Output Folder' + ': ' + arcpy.GetParameterAsText(0))
 Helpers.add_to_logfile(logfile,'Data Rootpath' + ': ' + arcpy.GetParameterAsText(1))
@@ -45,14 +52,15 @@ Helpers.add_to_logfile(logfile,'Development Scenario' + ': ' + arcpy.GetParamete
 Helpers.add_to_logfile(logfile,'Custom Development Mask' + ': ' + arcpy.GetParameterAsText(5))
 Helpers.add_to_logfile(logfile,'Treatment Mask' + ': ' + arcpy.GetParameterAsText(44))
 
-
+#Create a look up dictionary for activity abbreviations to full names
 ludict = {'ac_wet_arc':'AC Wetland to Annual Row Crop','ac_gra_arc':'AC Grassland to Annual Row Crop','ac_irr_arc':'AC Irrigated Pasture to Annual Row Crop','ac_orc_arc': 'AC Orchard to Annual Row Crop','ac_arc_urb':'AC Annual Row Crop to Urban','ac_gra_urb':'AC Grassland to Urban','ac_irr_urb':'AC Irrigated Pasture to Urban','ac_orc_urb':'AC Orchard to Urban','ac_arc_orc':'AC Annual Row Crop to Orchard','ac_gra_orc':'AC Grassland to Orchard','ac_irr_orc':'AC Irrigated Pasture to Orchard','ac_vin_orc':'AC Vineyard to Orchard','ac_arc_irr':'AC Annual Row Crop to Irrigated Pasture','ac_orc_irr':'AC Orchard to Irrigated Pasture','rre':'Riparian Restoration','oak':'Oak Woodland Restoration','ccr':'Cover Crops','mul':'Mulching','nfm':'Improved Nitrogen Fertilizer Management','hpl':'Hedgerow Planting','urb':'Urban Tree Planting','gra':'Native Grassland Restoration','cam':'Replacing Synthetic Nitrogen Fertilizer with Soil Amendments','cag':'Compost Application to Non-irrigated Grasslands'}
+
 #Set the development mask variable, if a development mask is provided, this will point to the polygon feature class
 devmask = arcpy.GetParameterAsText(5)
 
-#Look through the Avoided Conversion parameters and see if any avoided conversion parameters have been set. If they have, add them to the avoided conversion activity dictionary.
+#Loop through the Avoided Conversion parameters and see if any avoided conversion parameters have been set. If they have, add them to the avoided conversion activity dictionary.
 acdict = {}
-aclist2 = [45,47,49,51,53,55,57,59,61]
+aclist2 = [45,47,49,51,53,55,57,59,61] #The parameter inputs for avoided conversion activities
 Helpers.add_to_logfile2(logfile, '')
 Helpers.add_to_logfile2(logfile, 'Checking for Avoided Conversion parameters:')
 
@@ -167,7 +175,7 @@ for i in aclist2:
         
         
 outpath = newdir +  '/'
-#Add activity markers to list
+#Add activity markers to list from tool input parameters
 if arcpy.GetParameterAsText(6) == 'Yes':
     activitylist.append('rre')
     arcpy.AddMessage('added rre to activity list')
@@ -246,6 +254,8 @@ adoptdict = {}
 
 Helpers.add_to_logfile2(logfile, '')
 Helpers.add_to_logfile2(logfile, 'Writing out the Activity Parameters for selected Treatments','----------------------------------------------------------------------------------------')
+
+
 #Check to see what activities have been selected. For each activity that has been selected, add the relevant variables into the activity dictionary and send a message to the console.
 if 'rre' in activitylist:
     rre = 1
@@ -369,7 +379,7 @@ cover14 = Generic.lut_cover14
 cover30 = Generic.lut_cover30
 
 
-
+#Set the reporting units
 if arcpy.GetParameterAsText(68) == 'Acres':
     units = 'Acres'
 
@@ -384,7 +394,8 @@ if arcpy.GetParameterAsText(44):
 
 else:
     treatmask = 'None'
-    
+
+#Set the terrestrial habitat reporting flag
 if arcpy.GetParameterAsText(63) == 'No':
     terflag = 0
     Helpers.pmes('Terrestrial Habitat reporting is turned off')
@@ -393,7 +404,7 @@ else:
     terflag = 1
     Helpers.pmes('Terrestrial Habitat reporting is turned on')
 
-    
+#Set the watershed integrity reporting flag
 if arcpy.GetParameterAsText(64) == 'No':
     watflag = 0
     Helpers.pmes('Watershed Integrity reporting is turned off')
@@ -404,7 +415,7 @@ else:
 
 
 
-
+#Set the urban forest canopy values
 if arcpy.GetParameterAsText(30) == 'Yes':
     ug = float(arcpy.GetParameterAsText(31))
     
@@ -414,9 +425,7 @@ else:
     ug = 0
     ucc = .102
 
-#Check if suitability requirements are wanted
-    
-    
+#Check if plots are desired, if so set username and password variables for plotly
 if arcpy.GetParameterAsText(65) == 'Yes':
     plotlykey = arcpy.GetParameterAsText(66)
 else:
@@ -427,7 +436,7 @@ if arcpy.GetParameterAsText(65) == 'Yes':
 else:
     username = 'None'
  
-#check for plotly package and check plotyly creds
+#check for plotly package and check plotly creds
 import imp
 if (username != "None") and (arcpy.GetParameterAsText(65) == 'Yes'):
     try:
@@ -457,17 +466,17 @@ initout = Initial.DoInitial(mask, cproc, dev, devmask, Generic.Carbon2001, Gener
 
 Helpers.pmes('**FINISHED WITH INITIALIZATION MODULE, ENTERING ACTIVITY APPLICATION MODULE...***')
 outdf = ActivityApplication.DoActivities(total_table,initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug)
-
+#outdf[0].to_csv('P:/Temp/reviewer1.csv')
 
 Helpers.pmes('**FINISHED WITH ACTIVITY APPLICATION MODULE, ENTERING CARBON ACCOUNTING MODULE...')
 templist = ApplyActions.ApplyGHG(outdf[0],activitylist, Generic.dict_activity, trt, ug, logfile, dev)
 
-#Use this line below for debugging purposes
-#templist[0].to_csv('P:/Temp/reviewer.csv')
+##Use this line below for debugging purposes
+#templist[0].to_csv('P:/Temp/reviewer2.csv')
 
-#Helpers.pmes("**CREATING MULTIBENEFIT REPORTS...**")
-#Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc, logfile, units, watflag)
-#Helpers.pmes("**CREATING CARBON REPORTS...**")
+Helpers.pmes("**CREATING MULTIBENEFIT REPORTS...**")
+Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc, logfile, units, watflag)
+Helpers.pmes("**CREATING CARBON REPORTS...**")
 
 
 #Finish other Reports

@@ -2041,7 +2041,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             #Export the merged reporting dataframe to a csv
             temp.to_csv(outpath+y+'_airpollute.csv', index = False)
     
-    
+    temp14df = ''
     def watershedintegrity(df, outpath):
         """
         This function reports on changes in watershed integrity based on landcover change.
@@ -2196,7 +2196,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                     elif (tempripint14 < .7) & (hucpcent14 < .7):
                         temp['watint14'] = 'Degraded'
                         tdict[i]['watint14'] =  'Degraded'
-                    elif (hucpcent14 > .7) & (tempripint14 < .7):
+                    elif (hucpcent14 < .7) & (tempripint14 > .7):
                         temp['watint14'] = 'Degraded'
                         tdict[i]['watint14'] =  'Degraded'
                     
@@ -2212,7 +2212,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                     elif (hucpcent30 < .7) & (tempripint30 < .7) :
                         temp['watint30'] = 'Degraded'
                         tdict[i]['watint30'] =  'Degraded'
-                    elif (hucpcent30 > .7) &(tempripint30 < .7) :
+                    elif (hucpcent30 < .7) &(tempripint30 > .7) :
                         temp['watint30'] = 'Degraded'
                         tdict[i]['watint30'] =  'Degraded'
 
@@ -2270,7 +2270,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
         temp = Helpers.reorder_dataframe_fields(temp)
         Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'watint' + '.csv')
         #Export merged dataframe to a csv
-        temp.to_csv(outpath+'watint.csv', index = False)      
+        temp.to_csv(outpath+'watint.csv', index = False)        
+        
+        
     def thab_func(df, outpath, lupath):
         """
         This function reports on terrestrial habitat quality. Each pixel is evaluated for the species which can utilize that landcover, and depending on lancover change, a pixel is categorized as improved, degraded or unchanged.
@@ -2468,8 +2470,9 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             
             if x in ['base', 'trt']:
                 if x == 'base':
-                    for i in devlist:
-                        subfunc(x, 'LC2030_' + i, i, dfdict[x], 'gridcode30_' + i, 'gridcode14')
+                    pass
+#                    for i in devlist:
+#                        subfunc(x, 'LC2030_' + i, i, dfdict[x], 'gridcode30_' + i, 'gridcode14')
                 else:
                     for i in devlist:
                         subfunc(x, 'LC2030_trt_' + i, i, dfdict[x],'gridcode30_trt_' + i, 'gridcode14')
@@ -2505,36 +2508,36 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
 
     
     #Run all of the reporting functions
-    socresilience(df,outpath)
-    eco_res(df,outpath)
-    fmmp(df,outpath)
-    fema(df,outpath)
-    scenic(df,outpath)
-    wateruse(df,outpath)
-    lcchange(df,outpath)
-    pcalcchange(df,outpath)
-    termovement(df,outpath)
-    cropvalue(df,outpath)
-    groundwater(df,outpath)
-    nitrates(df,outpath)
-    airpol(df,outpath)
+#    socresilience(df,outpath)
+#    eco_res(df,outpath)
+#    fmmp(df,outpath)
+#    fema(df,outpath)
+#    scenic(df,outpath)
+#    wateruse(df,outpath)
+#    lcchange(df,outpath)
+#    pcalcchange(df,outpath)
+#    termovement(df,outpath)
+#    cropvalue(df,outpath)
+#    groundwater(df,outpath)
+#    nitrates(df,outpath)
+#    airpol(df,outpath)
     if cproc == 0:
         if watflag ==1:
             watershedintegrity(df,outpath)
-    aqua(df,outpath)
+#    aqua(df,outpath)
     if terflag == 1:
         thab_func(df,outpath, lupath) 
     
 def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm = 0, ug = 0, logfile = 'None'):
     """
-    This function reporting on carbon totals and carbon changes for the development scenarios and activities
+    This function reports on ch4 and n2o emissions by landcover for the development scenarios and activities
     
     Arguments-
     df: The dataframe, passed from the main program
     outpath: The folder to which reporting csvs will be exported
     activitylist: List of activities selected from the main program module
-    carb14: The location of the 2014 carbon table, from the Generic Module
-    carb30: The location of the 2030 carbon table, from the Generic Module
+    em14: The location of the 2014 emissions table, from the Generic Module
+    em30: The location of the 2030 emissions table, from the Generic Module
     acdict: If avoided conversion activities were selected, this dictionary holds them
     cd: Custom Development flag
     cm: Conservation Mask flag
@@ -2552,6 +2555,7 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
         devlist = ['bau','med','max', 'cust']
     else:
         devlist = ['bau','med','max']
+    
     
     if 'rreselected' in df.columns:
         df.loc[(df['rreselected'] == 1), 'gridcode30_trt_med'] = df['gridcode30_med']
@@ -2621,7 +2625,7 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
     c30 = pd.read_csv(em30)
     c14 = pd.read_csv(em14)
         
-    def carbrepfull(df, name, dev, field, comp):
+    def emissions_calcs(df, name, dev, field, comp):
         """
             This subfunction create a dataframe which is added to a dataframe dictionary (all will be merged at the end of the parent function to create a csv report)
             name: The name of the scenario being processed
@@ -2661,7 +2665,7 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
                 if dev == 'cust':
                     td = df[['LC2030_cust', 'LC2030_trt_cust','gridcode30_cust', 'gridcode30_trt_cust']]
         
-        #Calculate carbon differently for each scenario/activity
+        #Calculate emissions differently for each scenario/activity
         if name == 'base':
             temp = pd.merge(td,c30, how = 'left', left_on = 'LC2030_'+ dev, right_on = 'landcover')
             lct = temp.groupby(['LC2030_'+ dev], as_index = False).sum()
@@ -2669,7 +2673,7 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
             lct = lct.rename(columns = {'LC2030_'+ dev:'landcover',comp + '_em_rate_pix30':comp + '_emissions_' + name +'_'+ dev})
             intdict[name +'_'+ dev + comp] = lct
             
-        #Calculate carbon for treatments
+        #Calculate emissions for treatments
         elif name == 'trt':
             temp = pd.merge(td,c30, how = 'left', left_on = 'LC2030_trt_'+ dev, right_on ='landcover' )
             lct = temp.groupby(['LC2030_trt_'+ dev], as_index = False).sum()
@@ -2678,7 +2682,7 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
             intdict[name +'_'+ dev + comp] = lct
 
                 
-        #Calculate carbon for conservation mask area
+        #Calculate emissions for conservation mask area
         elif name in ['con']:
             temp14 = pd.merge(td,c14, how = 'left', left_on = 'LC2014', right_on = 'landcover')
             temp30 = pd.merge(td,c30, how = 'left', left_on = 'LC2030_trt_bau', right_on = 'gridcode30')
@@ -2694,7 +2698,7 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
             
             intdict[name + comp] = lct
         
-        #If the activity is avoided conversion, then this function will show the change between baseline and treatment carbon totals
+        #If the activity is avoided conversion, then this function will show the change between baseline and treatment emissions totals
         elif 'ac' in name:
             temp30_bau = pd.merge(td,c30, how = 'left', left_on = 'LC2030_' +dev, right_on = 'landcover')
             temp30_trt = pd.merge(td,c30, how = 'left', left_on = 'LC2030_trt_' +dev, right_on = 'landcover')
@@ -2734,8 +2738,7 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
             
     intdict= {}
     
-    #Loop through the list of scenarios/activities and calclulate carbon dataframes
-    
+    #Loop through the list of scenarios/activities and calclulate emissions dataframes
     elist = ['n2o','ch4']
     
     for z in elist:
@@ -2745,22 +2748,22 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
             if i in ['base', 'trt']:
                 if i == 'base':
                     for x in devlist:
-                        carbrepfull(dfdict[i],i, x, 'LC2030_' + x,z )
+                        emissions_calcs(dfdict[i],i, x, 'LC2030_' + x,z )
                 else:
                     for x in devlist:
-                        carbrepfull(dfdict[i],i, x, 'LC2030_trt_' + x,z)
+                        emissions_calcs(dfdict[i],i, x, 'LC2030_trt_' + x,z)
             elif 'ac' in i:
                 if 'bau' in i:
-                    carbrepfull(dfdict[i],i, 'bau', 'LC2030_trt_bau',z)
+                    emissions_calcs(dfdict[i],i, 'bau', 'LC2030_trt_bau',z)
                 if 'med' in i:
-                    carbrepfull(dfdict[i],i, 'med', 'LC2030_trt_med',z)
+                    emissions_calcs(dfdict[i],i, 'med', 'LC2030_trt_med',z)
                 if 'max' in i:
-                    carbrepfull(dfdict[i],i, 'max', 'LC2030_trt_max',z)
+                    emissions_calcs(dfdict[i],i, 'max', 'LC2030_trt_max',z)
                 if 'cust' in i:
-                    carbrepfull(dfdict[i],i, 'cust', 'LC2030_trt_cust',z)
+                    emissions_calcs(dfdict[i],i, 'cust', 'LC2030_trt_cust',z)
             else:
                 if i != 'con':
-                    carbrepfull(dfdict[i],i, 'bau', 'LC2030_trt_bau',z)
+                    emissions_calcs(dfdict[i],i, 'bau', 'LC2030_trt_bau',z)
 
             
     c14 = pd.read_csv(em14)
@@ -2792,10 +2795,10 @@ def emis_report(df, outpath,activitylist,em14,em30,acdict = 'None', cd = 0 , cm 
             count = count + 1
     temp.fillna(0, inplace = True)
 
-    temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]    
+    temp = temp.loc[:, ~temp.columns.str.contains('^Unnamed')]   #Removed unnamed fields  
     temp = Helpers.reorder_dataframe_fields(temp)
 
-    Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'carbon' + '.csv')
+    Helpers.add_to_logfile(logfile,'Exporting .csv to : ' + outpath + 'carbon' + '.csv') #Export the merged dataframe to a csv
     temp = temp.loc[temp['landcover'] != '0']
     temp.to_csv(outpath+'emissions.csv', index = False)  
     
@@ -3001,7 +3004,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
             
     intdict= {}
     
-    #Loop through the list of scenarios/activities and calclulate carbon dataframes
+    #Loop through the list of scenarios/activities and calculate carbon dataframes
     for i in keylist:
         Helpers.pmes(i)
         
@@ -3054,7 +3057,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     temp.fillna(0, inplace = True)
     
     
-
+    #Calculate the total carbon fields (stock + reductions from activities)
     temp['trt_bau_total'] = temp['carbon_trt_bau']
     temp['trt_med_total'] = temp['carbon_trt_med']
     temp['trt_max_total'] = temp['carbon_trt_max']
@@ -3080,17 +3083,17 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
     
     newlist = list(df)
     Helpers.pmes(newlist)
-    newlist2  = [i for i in newlist if '_n2oer' in i]
-    newlist3  = [i for i in newlist if '_ch4er' in i]
+    n2olist  = [i for i in newlist if '_n2oer' in i]
+    ch4list  = [i for i in newlist if '_ch4er' in i]
     
-    if newlist2:
-        newlist2.append('LC2030_bau')
-        newdf = df[newlist2]
+    if n2olist:
+        n2olist.append('LC2030_bau')
+        newdf = df[n2olist]
         newdf2 = newdf.groupby('LC2030_bau', as_index = False).sum()
         newdf2.to_csv(outpath+'n2oemissions_reductions.csv', index = False) 
-    if newlist3:
-        newlist3.append('LC2030_bau')
-        newdf = df[newlist3]
+    if ch4list:
+        ch4list.append('LC2030_bau')
+        newdf = df[ch4list]
         newdf3 = newdf.groupby('LC2030_bau', as_index = False).sum()
         newdf3.to_csv(outpath+'ch4emissions_reductions.csv', index = False) 
     
@@ -3131,15 +3134,20 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
         years = list(range(18))
         totyears = 17
         
+        #Set varuavkes for the carbon sums
         carbon_trt = df2['trt_bau_total'].sum() 
         carbon_bau = df2['carbon_base_bau'].sum()
         carbon_2014 = df2['carbon2014'].sum()
+        
+        #Set variables for the n2o and ch4 reductions
         n2o_reductions = 0
         ch4_reductions = 0
         
+        #Calculate the annualized rate of carbon reductions
         carbon_trt_ann = (carbon_trt - carbon_2014)/totyears
         carbon_bau_ann = (carbon_bau - carbon_2014)/totyears
         
+        #If there are ch4 emissions reductions, calculate the accumulation of reductions between 2014 and 2030
         if os.path.exists(outpath + 'ch4emissions_reductions.csv'):
             if ch4list2:
                 for i in ch4list2:
@@ -3148,7 +3156,7 @@ def carbreport(df, outpath,activitylist,carb14, carb30,acdict = 'None', cd = 0 ,
                 Helpers.pmes('CH4 Reductions from TRT are: ' + str(ch4_reductions2))
                 Helpers.pmes('CH4 Emissions from Landcover are: ' + str(ch4_trt))
                 
-                
+        #If there are n2o emissions reductions, calculate the accumulation of reductions between 2014 and 2030
         if os.path.exists(outpath + 'n2oemissions_reductions.csv'):
             if emlist2:
                 for i in emlist2:
