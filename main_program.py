@@ -466,13 +466,12 @@ initout = Initial.DoInitial(mask, cproc, dev, devmask, Generic.Carbon2001, Gener
 
 Helpers.pmes('**FINISHED WITH INITIALIZATION MODULE, ENTERING ACTIVITY APPLICATION MODULE...***')
 outdf = ActivityApplication.DoActivities(total_table,initout[0],activitylist, Generic.dict_activity,acdict,logfile, treatmask, dev, ug)
-#outdf[0].to_csv('P:/Temp/reviewer1.csv')
+
 
 Helpers.pmes('**FINISHED WITH ACTIVITY APPLICATION MODULE, ENTERING CARBON ACCOUNTING MODULE...')
 templist = ApplyActions.ApplyGHG(outdf[0],activitylist, Generic.dict_activity, trt, ug, logfile, dev)
 
 ##Use this line below for debugging purposes
-#templist[0].to_csv('P:/Temp/reviewer2.csv')
 
 Helpers.pmes("**CREATING MULTIBENEFIT REPORTS...**")
 Reporting.report(templist[0],outpath,gen, water, resistance,crop,nitrate,air,cover14, cover30, Generic.lutables, acdict,oak ,rre ,dev,cm, gra, cproc, terflag, ug, ucc, logfile, units, watflag)
