@@ -61,8 +61,7 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
         #Set the query that will define suitability
         dictact['rre']['query'] = (df['LC2030_trt_bau'].isin(['Grassland','Irrigated Pasture', 'Annual Cropland', 'Vineyard', 'Rice', 'Orchard','Wetland','Barren'])) & (df['lcchange'] == 1) & ((df['near_rivers'] < 304.8) | ((df['ripstr_dist'] < 30.48) & (df['ripstr_flag'] == 1))) & (df['near_woody'] != 0) & queryadd #Units are in meters for distance requirements(df['trt_flag'] == 1)#
         Helpers.CreateSuitFlags('rre',df,dictact,'rre')
-#        Helpers.CreateEligDict(df, 'rre', dictact,dict_eligibility, 'rre')
-        
+
         # Select points randomly that were flagged as suitable
         Helpers.selectionfunc (ttable,dict_eligibility,df, 'rre',dictact, 'rre', logfile)
         queryadd = queryadd & (df['rreselected'] != 1)
@@ -82,7 +81,6 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
         dictact['oak']['query'] =(df['LC2030_trt_bau'].isin(['Grassland','Shrubland','Irrigated Pasture','Barren'])) & (df['lcchange'] == 1) & (df['oakrange_flg'] == 1) & queryadd
         #Create suitability flags for the oak conversion activity
         Helpers.CreateSuitFlags('oak',df,dictact, 'oak')
-#        Helpers.CreateEligDict(df, 'oak', dictact,dict_eligibility, 'oak')
         #Select points randomly for the oak conversion activity
         Helpers.selectionfunc (ttable,dict_eligibility,df, 'oak',dictact, 'oak', logfile)
         queryadd = queryadd & (df['oakselected'] != 1)
@@ -109,7 +107,6 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
     
     #Loop through the keys in the acdict dictionary, created in the main program. For each avoided conversion activity found, perform suitability, eligibility and selection functions.    
     keylist = list(acdict.keys())
-    #Helpers.pmes(keylist)
     Helpers.pmes ('treatment mask: ' + treatmask)
     
     dlist = ['bau','med','max']
@@ -180,7 +177,6 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
                 dictact['aco']['adoption'] = acdict[i]
                 
                 Helpers.CreateSuitFlags('aco',df,dictact, i)
-#                Helpers.CreateEligDict(df, 'aco', dictact,dict_eligibility, i)
                 
                 
             
@@ -265,7 +261,6 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
                 dictact['aco']['adoption'] = acdict[i]
                 
                 Helpers.CreateSuitFlags('aco',df,dictact, i)
-#                Helpers.CreateEligDict(df, 'aco', dictact,dict_eligibility, i)
                 
                 if x == 'bau':
                     Helpers.selectionfunc (ttable,dict_eligibility,df,'aco',dictact, i, logfile, i,1, x)
@@ -302,7 +297,6 @@ def DoActivities(ttable,df,activitylist, dictact,acdict,logfile, treatmask = 'No
     #Create green house gas function to run suitability, eligibility and selection functions from Helpers
     def ghg_selection (df,activity,dict_eligibility,dictact):
         Helpers.CreateSuitFlags(activity,df,dictact, activity)
-#        Helpers.CreateEligDict(df, activity, dictact,dict_eligibility, activity)
         Helpers.selectionfunc (ttable,dict_eligibility,df,activity,dictact, activity, logfile)
     #GHG Suitability Flag and Selection for CCR
     if 'ccr' in activitylist:

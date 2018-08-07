@@ -2518,23 +2518,23 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
 
     
     #Run all of the reporting functions
-#    socresilience(df,outpath)
-#    eco_res(df,outpath)
-#    fmmp(df,outpath)
-#    fema(df,outpath)
-#    scenic(df,outpath)
-#    wateruse(df,outpath)
-#    lcchange(df,outpath)
-#    pcalcchange(df,outpath)
-#    termovement(df,outpath)
-#    cropvalue(df,outpath)
-#    groundwater(df,outpath)
-#    nitrates(df,outpath)
-#    airpol(df,outpath)
+    socresilience(df,outpath)
+    eco_res(df,outpath)
+    fmmp(df,outpath)
+    fema(df,outpath)
+    scenic(df,outpath)
+    wateruse(df,outpath)
+    lcchange(df,outpath)
+    pcalcchange(df,outpath)
+    termovement(df,outpath)
+    cropvalue(df,outpath)
+    groundwater(df,outpath)
+    nitrates(df,outpath)
+    airpol(df,outpath)
     if cproc == 0:
         if watflag ==1:
             watershedintegrity(df,outpath)
-#    aqua(df,outpath)
+    aqua(df,outpath)
     if terflag == 1:
         thab_func(df,outpath, lupath) 
     
