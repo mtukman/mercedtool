@@ -2091,6 +2091,8 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             td['watint14'] = 'na'
             td['watint30'] = 'na'
 
+
+
             #Create a list of HUC_12 codes
             huclist =  td['catch_code'].tolist()
             huclist = list(set(huclist))
@@ -2162,21 +2164,20 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                     nat30 = tempd.iloc[0]['pointid']
                 if len(ctemp30huc.loc[ctemp30huc['natural30'] == 0].index) > 0:
                     tempd = ctemp30huc.loc[ctemp30huc['natural30'] == 0]
-                    unnat30 = tempd.iloc[0]['pointid']                  
-                    
+                    unnat30 = tempd.iloc[0]['pointid']  
+
                 #If there are any riparian pixels, create a naturalness ratio.
-                if (rip14nat != 0) |  (rip14unnat != 0):
+                if (rip14nat > 0) |  (rip14unnat > 0):
                     tempripint14 = rip14nat/(rip14nat+rip14unnat)
                     tempripint14 = float(tempripint14)
                 else: 
                     tempripint14 = None
                     
-                if (rip30nat != 0) |  (rip30unnat != 0):
+                if (rip30nat > 0) |  (rip30unnat > 0):
                     tempripint30 = rip30nat/(rip30nat+rip30unnat)
                     tempripint30 = float(tempripint30)
                 else: 
                     tempripint30 = None
-                
                 
                 #If there are any Watershed pixels, create naturalness ratio
                 hucpcent14 = nat14/(nat14+unnat14)
@@ -2184,41 +2185,49 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                 
                 hucpcent30 = nat30/(nat30+unnat30)
                 hucpcent30 = float(hucpcent30)
-
-                #Calculate Riparian Integrity Class for the Watershed in 2014
-                if tempripint14:
-                    if (tempripint14 > .7) & (hucpcent14 > .7):
+                
+                
+                if not tempripint14:
+                    if hucpcent14 >= .7:
                         temp['watint14'] = 'Natural Catchment'
-                        tdict[i]['watint14'] =  'Natural Catchment'
-                    elif (tempripint14 > .7) & (hucpcent14< .7):
+                    if hucpcent14 < .7:
+                        temp['watint14'] = 'Degraded'
+                    
+                    
+                if not tempripint30:
+                    if hucpcent30 >= .7:
+                        temp['watint30'] = 'Natural Catchment'
+                    if hucpcent30 < .7:
+                        temp['watint30'] = 'Degraded'
+                
+                    
+                    
+                
+                if tempripint14:
+                    #Calculate Riparian Integrity Class for the Watershed in 2014
+                    if (tempripint14 >= .7) & (hucpcent14 >= .7):
+                        temp['watint14'] = 'Natural Catchment'
+                    elif (tempripint14 >= .7) & (hucpcent14<= .7):
                         temp['watint14'] = 'Important Riparian Buffer'
-                        tdict[i]['watint14'] =  'Important Riparian Buffer'
                     elif (tempripint14 < .7) & (hucpcent14 < .7):
                         temp['watint14'] = 'Degraded'
-                        tdict[i]['watint14'] =  'Degraded'
-                    elif (hucpcent14 < .7) & (tempripint14 > .7):
+                    elif (tempripint14 < .7) & (hucpcent14 > .7):
                         temp['watint14'] = 'Degraded'
-                        tdict[i]['watint14'] =  'Degraded'
-                    
-                #Calculate watershed integrity Class for the Watershed in 2030
                 if tempripint30:
-
-                    if (tempripint30 > .7) & (hucpcent30 > .7):
+                    #Calculate watershed integrity Class for the Watershed in 2030
+                    if (tempripint30 >= .7) & (hucpcent30 >= .7):
                         temp['watint30'] = 'Natural Catchment'
-                        tdict[i]['watint30'] =  'Natural Catchment'
-                    elif (tempripint30 > .7) & (hucpcent30 < .7):
+                    elif (tempripint30 >= .7) & (hucpcent30 <= .7):
                         temp['watint30'] = 'Important Riparian Buffer'
-                        tdict[i]['watint30'] =  'Important Riparian Buffer'
-                    elif (hucpcent30 < .7) & (tempripint30 < .7) :
+                    elif (tempripint30 < .7) & (hucpcent30 < .7) :
                         temp['watint30'] = 'Degraded'
-                        tdict[i]['watint30'] =  'Degraded'
-                    elif (hucpcent30 < .7) &(tempripint30 > .7) :
+                    elif (tempripint30 < .7) &(hucpcent30 > .7) :
                         temp['watint30'] = 'Degraded'
-                        tdict[i]['watint30'] =  'Degraded'
 
                 tdf = tdf.append(temp)
             
             #Create a reporting table for 2014 
+            tdf.to_csv('P:/Temp/' + name +'_'+ dev + '.csv')
             temp14 = tdf.groupby(['watint14'], as_index = False).count()
             temp14 = temp14[['pointid','watint14']]
             temp14 = temp14.rename(columns = {'pointid':'count14'})
@@ -2233,6 +2242,7 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
             temp30 = temp30[['pointid','watint30']]
             temp30 = temp30.rename(columns = {'pointid':'count30'})
             tempmerge = pd.merge(temp14,temp30, left_on = 'watint14',right_on='watint30', how = 'outer')
+            
             tempmerge['change'] = tempmerge['count30']-tempmerge['count14']
             tempmerge['change'] = tempmerge['change']*mod #Convert to hectares
             
