@@ -2,7 +2,7 @@
 """
 Created on Wed Apr  4 14:15:37 2018
 
-@author: mtukman
+@author: USERNAME
 """
 
 #This code will produce charts and panels for merced report
@@ -15,7 +15,12 @@ carb14 = 52406560
 titlefont = 18
 large_x_labs = 14
 import plotly.plotly as py
-py.sign_in('mtukman', '5hrjkAYI9sJ73CwKvJsp')
+
+#If you want to use this you will need a PLOTLY username and USERNAME
+py.sign_in('USERNAME', 'USERNAME')
+
+
+
 def  flyingm_reductions(table_high = r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_HighDev\carbon.csv', table_medium=r'E:\Box\Box Sync\Merced Project\Tool\outputs\FlyingM\FlyingM_MedDev\carbon.csv', outfile = 'C:/temp/test.png'):
     import pandas as pd
     high = pd.read_csv(table_high)
@@ -690,7 +695,7 @@ def  tconnect_plot_AC(high_folder, med_folder, outfile):
     medag = med.loc[med['movement_potential'] == 'low']
 
     import plotly.plotly as py
-    py.sign_in('mtukman', 'qfRazO2xuHUGVQH5rJhH')
+    py.sign_in('USERNAME', 'PASSWORD')
     from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
     #import plotly.plotly as py
     from plotly import tools
@@ -1592,7 +1597,7 @@ def make_plots_AC():
     import plotly.plotly as py
 
 
-    py.sign_in('mtukman', 'FbUYCv4tcjCPF2ZdfzKo')
+    py.sign_in('USERNAME', 'PASSWORD')
 
     boxpath = 'E:/Box/'
     print (os.path.join(boxpath,'Tool/outputs/FlyingM/FlyingM_HighDev'))
@@ -1610,7 +1615,7 @@ def make_plots_RRE():
     import os
     import plotly.plotly as py
 
-    py.sign_in('mtukman', 'FbUYCv4tcjCPF2ZdfzKo')
+    py.sign_in('USERNAME', 'PASSWORD')
 
     boxpath = 'E:/Box/'
     countywide_reductions_RRE(os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/Riparian/RRE_COUNTY_100/carbon.csv'), os.path.join(boxpath, 'Box Sync/Merced Project/Case Studies/Riparian/Countywide RRE Reductions.png'))
@@ -1626,7 +1631,7 @@ def make_plots_AG():
     import os
     import plotly.plotly as py
 
-    py.sign_in('mtukman', 'FbUYCv4tcjCPF2ZdfzKo')
+    py.sign_in('USERNAME', 'PASSWORD')
 
     boxpath = 'E:/BoxSync/'
     countywide_reductions_AG(table_hr= os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/hedgerow_100/carbon.csv'),   table_cc=os.path.join(boxpath, r'Box Sync/Merced Project/Tool/outputs/activities/cover_cropping_100/carbon.csv'), outfile = os.path.join(boxpath, r'Box Sync/Merced Project/Case Studies/Burroughs/Countywide AG Reductions.png'))
@@ -1637,7 +1642,7 @@ def make_plot_all_reductions_all_activities():
     import os
     import plotly.plotly as py
 
-    py.sign_in('mtukman', 'FbUYCv4tcjCPF2ZdfzKo')
+    py.sign_in('USERNAME', 'PASSWORD')
 
     boxpath = 'E:/Box/'
     reductions_ALL(os.path.join(boxpath, r'Box Sync/Merced Project/Report_How-To Guide/Tukman Working Material/Countywide GHG Reductions Selected Activities.png'))
