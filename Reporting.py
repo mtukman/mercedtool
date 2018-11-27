@@ -2227,7 +2227,6 @@ def report(df, outpath, glu, wlu, rlu, clu, nlu, alu, cov14, cov30, lupath, acdi
                 tdf = tdf.append(temp)
             
             #Create a reporting table for 2014 
-            tdf.to_csv('P:/Temp/' + name +'_'+ dev + '.csv')
             temp14 = tdf.groupby(['watint14'], as_index = False).count()
             temp14 = temp14[['pointid','watint14']]
             temp14 = temp14.rename(columns = {'pointid':'count14'})
